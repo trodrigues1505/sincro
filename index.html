@@ -3,578 +3,245 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sincronário das 13 Luas — Calculadora de Kin</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>Sincronário das 13 Luas</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0c14;
-    --bg2: #11142a;
-    --card: #161b30;
-    --border: rgba(180,154,240,0.18);
-    --border2: rgba(180,154,240,0.4);
-    --gold: #c9a84c;
-    --gold2: #e8c97a;
-    --purple: #8a6edc;
-    --purple2: #b49af0;
-    --text: #ece9f5;
-    --text2: #9892b0;
-    --text3: #6a647a;
-    --radius: 12px;
-    --radius-sm: 8px;
-    --red: #d63b3b;     --red-bg: #3a1818;
-    --white-c: #f0f0f0; --white-bg: #2a2a2a;
-    --blue: #3b8ed6;    --blue-bg: #18283a;
-    --yellow: #f5c842;  --yellow-bg: #3a2f10;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg); color: var(--text);
-    font-family: 'Crimson Pro', Georgia, serif;
-    font-size: 17px; min-height: 100vh;
-    overflow-x: hidden; line-height: 1.6;
-  }
-  body::before {
-    content: ''; position: fixed; inset: 0;
-    background-image:
-      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 30% 55%, rgba(255,255,255,0.35) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 50% 25%, rgba(255,255,255,0.45) 0%, transparent 100%),
-      radial-gradient(1px 1px at 70% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
-      radial-gradient(1px 1px at 85% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 20% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 60% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,0.55) 0%, transparent 100%),
-      radial-gradient(600px 400px at 50% 0%, rgba(138,110,220,0.1) 0%, transparent 70%);
-    pointer-events: none; z-index: 0;
-  }
-  .container {
-    max-width: 920px; margin: 0 auto;
-    padding: 2.5rem 1.5rem 4rem;
-    position: relative; z-index: 1;
-  }
-  header { text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--border); }
-  .glyph { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; opacity: 0.9; }
-  h1 {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.5rem, 4vw, 2.2rem);
-    font-weight: 600; color: var(--gold2);
-    letter-spacing: 0.1em; line-height: 1.2; margin-bottom: 0.5rem;
-  }
-  .subtitle { font-size: 1rem; color: var(--text2); font-style: italic; font-weight: 300; }
-  .section {
-    background: var(--card);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem; margin-bottom: 1.25rem;
-    transition: border-color 0.3s;
-  }
-  .section:hover { border-color: var(--border2); }
-  .section-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem; font-weight: 600;
-    letter-spacing: 0.15em; color: var(--gold);
-    text-transform: uppercase; margin-bottom: 1rem;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .section-title::after { content: ''; flex: 1; height: 0.5px; background: var(--border); }
-  .info-icon {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 16px; height: 16px; border-radius: 50%;
-    background: rgba(180,154,240,0.15);
-    color: var(--purple2); font-size: 11px;
-    font-family: serif; font-style: italic;
-    cursor: help; margin-left: 6px; vertical-align: middle;
-    position: relative;
-  }
-  .info-icon:hover { background: rgba(180,154,240,0.3); }
-  .info-icon::before { content: 'i'; }
-  [data-tip] { position: relative; cursor: help; }
-  [data-tip]::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: calc(100% + 8px); left: 50%;
-    transform: translateX(-50%);
-    background: #0a0c14; color: var(--text);
-    border: 0.5px solid var(--border2);
-    padding: 10px 14px; border-radius: var(--radius-sm);
-    font-size: 0.82rem; font-style: italic;
-    line-height: 1.5; width: max-content;
-    max-width: 260px; white-space: normal; text-align: left;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.2s; z-index: 100;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-  }
-  [data-tip]:hover::after { opacity: 1; }
-  .form-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  label { font-size: 0.875rem; color: var(--text2); font-style: italic; min-width: 80px; }
-  input[type="date"] {
-    background: var(--bg2);
-    border: 0.5px solid var(--border2);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-family: 'Crimson Pro', serif;
-    font-size: 1rem; padding: 8px 14px;
-    outline: none; color-scheme: dark;
-  }
-  input[type="date"]:focus {
-    border-color: var(--purple);
-    box-shadow: 0 0 0 3px rgba(138,110,220,0.15);
-  }
-  .btn-today {
-    background: none; border: none; color: var(--purple2);
-    font-family: 'Crimson Pro', serif;
-    font-size: 0.875rem; font-style: italic; cursor: pointer;
-    text-decoration: underline; text-underline-offset: 3px;
-    padding: 0; opacity: 0.8;
-  }
-  .btn-today:hover { opacity: 1; }
-  .btn-calc {
-    background: linear-gradient(135deg, rgba(138,110,220,0.2), rgba(201,168,76,0.15));
-    border: 0.5px solid var(--purple);
-    border-radius: var(--radius-sm);
-    color: var(--purple2);
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem; font-weight: 600;
-    letter-spacing: 0.1em; padding: 10px 22px;
-    cursor: pointer; transition: all 0.2s;
-    text-transform: uppercase;
-  }
-  .btn-calc:hover {
-    background: linear-gradient(135deg, rgba(138,110,220,0.35), rgba(201,168,76,0.25));
-    border-color: var(--purple2); transform: translateY(-1px);
-  }
-  .result { margin-top: 1.5rem; animation: fadeIn 0.4s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .kin-hero {
-    text-align: center; padding: 1.5rem 1rem;
-    background: var(--bg2);
-    border-radius: var(--radius);
-    border: 0.5px solid var(--border2);
-    margin-bottom: 1.25rem;
-  }
-  .kin-number {
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem; color: var(--text3);
-    letter-spacing: 0.1em; margin-bottom: 8px;
-  }
-  .kin-glyph-big {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 110px; height: 110px;
-    border-radius: var(--radius);
-    border: 2px solid; margin-bottom: 1rem;
-    font-size: 3.2rem;
-  }
-  .kin-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1.4rem; margin-bottom: 0.5rem;
-    letter-spacing: 0.03em;
-  }
-  .kin-affirm {
-    font-style: italic; font-size: 0.95rem;
-    color: var(--text2); line-height: 1.8;
-    max-width: 480px; margin: 0.75rem auto;
-  }
-  .kin-affirm-quote {
-    margin-top: 1rem; padding-top: 1rem;
-    border-top: 0.5px solid var(--border);
-    font-size: 0.9rem; color: var(--gold2); font-style: italic;
-  }
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px; margin-bottom: 1rem;
-  }
-  .card {
-    background: var(--bg2);
-    border-radius: var(--radius-sm);
-    padding: 0.875rem 1rem;
-    border: 0.5px solid var(--border);
-  }
-  .card-label {
-    font-size: 0.7rem; color: var(--text3);
-    text-transform: uppercase; letter-spacing: 0.08em;
-    margin-bottom: 4px;
-  }
-  .card-val { font-family: 'Cinzel', serif; font-size: 0.95rem; color: var(--text); line-height: 1.3; }
-  .card-sub { font-size: 0.82rem; color: var(--text2); font-style: italic; margin-top: 2px; }
-  .oraculo {
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px; margin: 1rem auto; max-width: 480px;
-  }
-  .oraculo-cell {
-    background: var(--bg2);
-    border-radius: var(--radius-sm);
-    padding: 0.875rem 0.75rem;
-    border: 0.5px solid var(--border);
-    text-align: center; min-height: 130px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 4px;
-  }
-  .oraculo-cell.center { background: rgba(180,154,240,0.06); border-color: var(--border2); }
-  .oraculo-cell.empty { background: transparent; border: none; min-height: 0; }
-  .oraculo-role {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--text3);
-    margin-bottom: 4px;
-  }
-  .oraculo-glyph {
-    width: 56px; height: 56px;
-    border-radius: var(--radius-sm);
-    border: 1.5px solid;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.8rem; margin-bottom: 6px;
-  }
-  .oraculo-name { font-family: 'Cinzel', serif; font-size: 0.78rem; color: var(--text); line-height: 1.3; }
-  .oraculo-kin { font-size: 0.72rem; color: var(--text3); font-style: italic; }
-  .mini-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem; }
-  .mini-glyph {
-    width: 44px; height: 44px;
-    border-radius: var(--radius-sm);
-    border: 1px solid;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; position: relative;
-  }
-  .mini-glyph.active::after {
-    content: ''; position: absolute;
-    bottom: -6px; left: 50%;
-    transform: translateX(-50%);
-    width: 6px; height: 6px;
-    border-radius: 50%; background: var(--gold2);
-  }
-  .color-red    { background: var(--red-bg);    border-color: var(--red);    color: var(--red); }
-  .color-white  { background: var(--white-bg);  border-color: var(--white-c);color: var(--white-c); }
-  .color-blue   { background: var(--blue-bg);   border-color: var(--blue);   color: var(--blue); }
-  .color-yellow { background: var(--yellow-bg); border-color: var(--yellow); color: var(--yellow); }
-  .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.25rem 0; }
-  .subhead {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem; letter-spacing: 0.15em;
-    text-transform: uppercase; color: var(--text3);
-    text-align: center; margin-bottom: 0.75rem;
-  }
-  footer {
-    text-align: center; margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 0.5px solid var(--border);
-    font-size: 0.8rem; color: var(--text3);
-    font-style: italic; line-height: 1.7;
-  }
-  .hidden { display: none; }
-  @media (max-width: 600px) {
-    .container { padding: 1.5rem 1rem 3rem; }
-    .section { padding: 1.25rem; }
-    .oraculo { gap: 6px; }
-    .oraculo-cell { padding: 0.625rem 0.5rem; min-height: 110px; }
-    .oraculo-glyph { width: 44px; height: 44px; font-size: 1.4rem; }
-    .form-row { flex-direction: column; align-items: stretch; }
-    label { min-width: auto; }
-    [data-tip]:hover::after { left: 0; transform: none; max-width: calc(100vw - 60px); }
-  }
+:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--red:#d63b3b;--red-bg:#3a1818;--white-c:#f0f0f0;--white-bg:#2a2a2a;--blue:#3b8ed6;--blue-bg:#18283a;--yellow:#f5c842;--yellow-bg:#3a2f10}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.6;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(600px at 50% 0%,rgba(138,110,220,0.1),transparent 70%);pointer-events:none;z-index:0}
+.container{max-width:920px;margin:0 auto;padding:2rem 1.5rem 3rem;position:relative;z-index:1}
+h1{font-family:'Cinzel',serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:600;color:var(--gold);text-align:center;margin-bottom:0.5rem}
+.subtitle{text-align:center;color:var(--text2);font-style:italic;margin-bottom:2rem}
+.tabs{display:flex;gap:8px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border)}
+.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Cinzel',serif;font-size:0.75rem;padding:12px 20px;cursor:pointer;text-transform:uppercase;letter-spacing:0.1em}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.section{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+.section-title{font-family:'Cinzel',serif;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;letter-spacing:0.15em}
+.kin-hero{text-align:center;padding:1.5rem;background:var(--bg2);border-radius:var(--radius);margin-bottom:1rem}
+.kin-title{font-family:'Cinzel',serif;font-size:1.4rem;margin:1rem 0;letter-spacing:0.03em}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:1rem 0}
+.card{background:var(--bg2);border-radius:8px;padding:0.875rem 1rem;border:0.5px solid var(--border)}
+.card-label{font-size:0.7rem;color:var(--text3);text-transform:uppercase;margin-bottom:4px;letter-spacing:0.08em}
+.card-val{font-family:'Cinzel',serif;font-size:0.95rem;color:var(--text);line-height:1.3}
+.card-sub{font-size:0.82rem;color:var(--text2);margin-top:2px;font-style:italic}
+.oraculo{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:1rem auto;max-width:480px}
+.oraculo-cell{background:var(--bg2);border-radius:8px;padding:1rem 0.75rem;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0.5px solid var(--border)}
+.oraculo-cell.center{background:rgba(180,154,240,0.06)}
+.oraculo-cell.empty{background:transparent;border:none;min-height:0}
+.oraculo-glyph{width:50px;height:50px;border-radius:8px;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:8px 0}
+.onda-container{background:var(--bg2);border-radius:8px;padding:1rem;margin:1rem 0}
+.onda-semana{margin-bottom:1rem}
+.onda-semana-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;font-family:'Cinzel',serif}
+.onda-grid{display:flex;gap:4px;flex-wrap:wrap}
+.onda-kin{width:48px;height:48px;border-radius:6px;border:1.5px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.2rem;position:relative}
+.onda-kin.active{border-width:2px;box-shadow:0 0 0 3px var(--gold)}
+.onda-kin-num{position:absolute;top:2px;right:2px;font-size:0.55rem;opacity:0.7}
+.pratica-box{background:var(--bg2);padding:1rem;border-radius:8px;white-space:pre-wrap;line-height:1.7;font-size:0.9rem;margin:1rem 0;border:0.5px solid var(--border)}
+.frase-destaque{background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(138,110,220,0.1));border:0.5px solid var(--gold);border-radius:8px;padding:1.5rem;text-align:center;font-style:italic;color:var(--gold);font-size:1.05rem;line-height:1.8;margin:1.5rem 0}
+.color-red{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.color-white{background:var(--white-bg);border-color:var(--white-c);color:var(--white-c)}
+.color-blue{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
+.color-yellow{background:var(--yellow-bg);border-color:var(--yellow);color:var(--yellow)}
+.divider{border:none;border-top:0.5px solid var(--border);margin:1.25rem 0}
+.hidden{display:none}
+input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;color:var(--text);padding:8px 14px;font-family:inherit;color-scheme:dark}
+.btn-calc{background:linear-gradient(135deg,rgba(138,110,220,0.2),rgba(201,168,76,0.15));border:0.5px solid var(--gold);border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.75rem;padding:10px 22px;cursor:pointer;text-transform:uppercase;letter-spacing:0.1em}
+.btn-calc:hover{opacity:0.9}
+@media(max-width:600px){.onda-kin{width:40px;height:40px;font-size:1rem}.tabs{overflow-x:auto}}
 </style>
 </head>
 <body>
 <div class="container">
-  <header>
-    <span class="glyph">🌀</span>
-    <h1>Sincronário das 13 Luas</h1>
-    <p class="subtitle">Calculadora de Kin Galáctico · Lei do Tempo</p>
-  </header>
+<h1>🌀 Sincronário das 13 Luas</h1>
+<p class="subtitle">Calculadora Completa · Lei do Tempo</p>
 
-  <div class="section">
-    <div class="section-title">Kin do dia</div>
-    <div class="form-row">
-      <label for="dia-inp">Data</label>
-      <input type="date" id="dia-inp">
-      <button class="btn-today" onclick="setToday()">hoje</button>
-      <button class="btn-calc" onclick="calcDia()">Calcular</button>
-    </div>
-    <div id="res-dia" class="result hidden"></div>
-  </div>
+<div class="tabs">
+<button class="tab active" onclick="switchTab('dia')">Kin do Dia</button>
+<button class="tab" onclick="switchTab('natal')">Kin Natal</button>
+<button class="tab" onclick="switchTab('orientacoes')">Orientações Diárias</button>
+</div>
 
-  <div class="section">
-    <div class="section-title">Kin natal</div>
-    <div class="form-row">
-      <label for="nasc-inp">Nascimento</label>
-      <input type="date" id="nasc-inp">
-      <button class="btn-calc" onclick="calcNatal()">Calcular</button>
-    </div>
-    <div id="res-natal" class="result hidden"></div>
-  </div>
+<div id="tab-dia" class="tab-content active">
+<div class="section"><div id="res-dia-auto"></div></div>
+</div>
 
-  <footer>
-    Baseado no Calendário da Paz de 13 Luas · José Argüelles / Valum Votan<br>
-    Datum: 26/07/1987 = Kin 34 (Mago Magnético Branco) · O dia 29/02 não conta no Tzolkin
-  </footer>
+<div id="tab-natal" class="tab-content">
+<div class="section">
+<div class="section-title">Kin natal</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<label style="min-width:80px;color:var(--text2);font-style:italic">Nascimento</label>
+<input type="date" id="nasc-inp">
+<button class="btn-calc" onclick="calcNatal()">Calcular</button>
+</div>
+<div id="res-natal" class="hidden" style="margin-top:1.5rem"></div>
+</div>
+</div>
+
+<div id="tab-orientacoes" class="tab-content">
+<div class="section"><div id="res-orientacoes"></div></div>
+</div>
+
 </div>
 
 <script>
-const SELOS = [
-  {n:"Dragão",         cor:"red",    glifo:"🐉", acao:"Nutre",       essencia:"Ser",        poder:"Nascimento",   dir:"Leste"},
-  {n:"Vento",          cor:"white",  glifo:"💨", acao:"Comunica",    essencia:"Respiração", poder:"Espírito",     dir:"Norte"},
-  {n:"Noite",          cor:"blue",   glifo:"🌌", acao:"Sonha",       essencia:"Intuição",   poder:"Abundância",   dir:"Oeste"},
-  {n:"Semente",        cor:"yellow", glifo:"🌱", acao:"Floresce",    essencia:"Objetivo",   poder:"Florescimento",dir:"Sul"},
-  {n:"Serpente",       cor:"red",    glifo:"🐍", acao:"Sobrevive",   essencia:"Instinto",   poder:"Vida-Força",   dir:"Leste"},
-  {n:"Conectador",     cor:"white",  glifo:"☯",  acao:"Equaliza",    essencia:"Morte",      poder:"Oportunidade", dir:"Norte"},
-  {n:"Mão",            cor:"blue",   glifo:"✋", acao:"Conhece",     essencia:"Cura",       poder:"Realização",   dir:"Oeste"},
-  {n:"Estrela",        cor:"yellow", glifo:"⭐", acao:"Embeleza",    essencia:"Arte",       poder:"Elegância",    dir:"Sul"},
-  {n:"Lua",            cor:"red",    glifo:"🌙", acao:"Purifica",    essencia:"Fluxo",      poder:"Água",         dir:"Leste"},
-  {n:"Cão",            cor:"white",  glifo:"🐕", acao:"Ama",         essencia:"Lealdade",   poder:"Coração",      dir:"Norte"},
-  {n:"Macaco",         cor:"blue",   glifo:"🐒", acao:"Brinca",      essencia:"Ilusão",     poder:"Magia",        dir:"Oeste"},
-  {n:"Humano",         cor:"yellow", glifo:"👤", acao:"Influencia",  essencia:"Sabedoria",  poder:"Livre-Arbítrio",dir:"Sul"},
-  {n:"Caminhante",     cor:"red",    glifo:"🚶", acao:"Explora",     essencia:"Vigilância", poder:"Espaço",       dir:"Leste"},
-  {n:"Feiticeiro",     cor:"white",  glifo:"🧙", acao:"Encanta",     essencia:"Receptividade",poder:"Atemporalidade",dir:"Norte"},
-  {n:"Águia",          cor:"blue",   glifo:"🦅", acao:"Cria",        essencia:"Mente",      poder:"Visão",        dir:"Oeste"},
-  {n:"Guerreiro",      cor:"yellow", glifo:"⚔️", acao:"Questiona",   essencia:"Intrepidez", poder:"Inteligência", dir:"Sul"},
-  {n:"Terra",          cor:"red",    glifo:"🌍", acao:"Navega",      essencia:"Sincronicidade",poder:"Evolução",  dir:"Leste"},
-  {n:"Espelho",        cor:"white",  glifo:"🪞", acao:"Reflete",     essencia:"Ordem",      poder:"Sem-Fim",      dir:"Norte"},
-  {n:"Tempestade",     cor:"blue",   glifo:"⛈️", acao:"Cataliza",    essencia:"Energia",    poder:"Autogeração",  dir:"Oeste"},
-  {n:"Sol",            cor:"yellow", glifo:"☀️", acao:"Ilumina",     essencia:"Vida",       poder:"Fogo Universal",dir:"Sul"}
+const S=[
+{n:"Dragão",g:"m",c:"red",e:"🐉",a:"nutrir",v:"Nutrir",d:"Leste"},
+{n:"Vento",g:"m",c:"white",e:"💨",a:"comunicar",v:"Comunicar",d:"Norte"},
+{n:"Noite",g:"f",c:"blue",e:"🌌",a:"sonhar",v:"Sonhar",d:"Oeste"},
+{n:"Semente",g:"f",c:"yellow",e:"🌱",a:"florescer",v:"Florescer",d:"Sul"},
+{n:"Serpente",g:"f",c:"red",e:"🐍",a:"sobreviver",v:"Sobreviver",d:"Leste"},
+{n:"Enlaçador de Mundos",g:"m",c:"white",e:"☯",a:"igualar",v:"Equalizar",d:"Norte"},
+{n:"Mão",g:"f",c:"blue",e:"✋",a:"realizar",v:"Conhecer",d:"Oeste"},
+{n:"Estrela",g:"f",c:"yellow",e:"⭐",a:"embelezar",v:"Embelezar",d:"Sul"},
+{n:"Lua",g:"f",c:"red",e:"🌙",a:"purificar",v:"Purificar",d:"Leste"},
+{n:"Cão",g:"m",c:"white",e:"🐕",a:"amar",v:"Amar",d:"Norte"},
+{n:"Macaco",g:"m",c:"blue",e:"🐒",a:"brincar",v:"Brincar",d:"Oeste"},
+{n:"Humano",g:"m",c:"yellow",e:"👤",a:"influenciar",v:"Influenciar",d:"Sul"},
+{n:"Caminhante do Céu",g:"m",c:"red",e:"🚶",a:"explorar",v:"Explorar",d:"Leste"},
+{n:"Feiticeiro",g:"m",c:"white",e:"🧙",a:"encantar",v:"Encantar",d:"Norte"},
+{n:"Águia",g:"f",c:"blue",e:"🦅",a:"criar",v:"Criar",d:"Oeste"},
+{n:"Guerreiro",g:"m",c:"yellow",e:"⚔️",a:"questionar",v:"Questionar",d:"Sul"},
+{n:"Terra",g:"f",c:"red",e:"🌍",a:"navegar",v:"Navegar",d:"Leste"},
+{n:"Espelho",g:"m",c:"white",e:"🪞",a:"refletir",v:"Refletir",d:"Norte"},
+{n:"Tormenta",g:"f",c:"blue",e:"⛈️",a:"catalizar",v:"Catalizar",d:"Oeste"},
+{n:"Sol",g:"m",c:"yellow",e:"☀️",a:"iluminar",v:"Iluminar",d:"Sul"}
+];
+const T=[
+{n:"Magnético",v:"unificar",o:"propósito"},
+{n:"Lunar",v:"polarizar",o:"desafio"},
+{n:"Elétrico",v:"ativar",o:"serviço"},
+{n:"Autoexistente",v:"medir",o:"forma"},
+{n:"Overtone",v:"comandar",o:"radiância"},
+{n:"Rítmico",v:"equilibrar",o:"igualdade"},
+{n:"Ressonante",v:"inspirar",o:"alinhamento"},
+{n:"Galáctico",v:"modelar",o:"integridade"},
+{n:"Solar",v:"realizar",o:"intenção"},
+{n:"Planetário",v:"produzir",o:"perfeição"},
+{n:"Espectral",v:"liberar",o:"libertação"},
+{n:"Cristal",v:"universalizar",o:"cooperação"},
+{n:"Cósmico",v:"transcender",o:"presença"}
+];
+const L=[{n:"Magnética",t:"Morcego"},{n:"Lunar",t:"Escorpião"},{n:"Elétrica",t:"Veado"},{n:"Autoexistente",t:"Coruja"},{n:"Overtone",t:"Pavão"},{n:"Rítmica",t:"Lagarto"},{n:"Ressonante",t:"Macaco"},{n:"Galáctica",t:"Falcão"},{n:"Solar",t:"Jaguar"},{n:"Planetária",t:"Cão"},{n:"Espectral",t:"Serpente"},{n:"Cristal",t:"Coelho"},{n:"Cósmica",t:"Tartaruga"}];
+const PR=[
+"Prática dia 01\nPrece das sete direções galácticas\nMeditação do selo\nSelf design sounds\nLeitura da página 1 do ebook",
+"Prática 02\nOuça a prece\nOuça meditação do selo\nOuça self design sounds\nLeitura da página 2 do ebook",
+"Prática dia 03\nOuça a Prece\nMeditação do selo\nSelf design sounds\nLeitura da página 3 do ebook",
+"Prática dia 04\nPrece\nMeditação do selo\nSelf design sounds\nLeitura da página 4 do ebook",
+"Prática dia 05\nPrece\nMeditação do selo\nSelf design sounds\nLeitura da página 1 do ebook",
+"Prática dia 06\nPrece\nMeditação do selo\nSelf design sounds\nLeitura da página 2 do ebook",
+"Prática dia 07\nPrece\nMeditação do selo\nSelf design sounds\nLeitura da página 3 do ebook",
+"Prática dia 08\nPrece\nMeditação do selo\nSelf design sounds\nLeitura da página 4 do ebook",
+"Prática dia 09\nPrece\nMeditação do selo\nSelf design sounds\nLeitura da página 1 do ebook",
+"Prática dia 10\nPrece\nMeditação do selo\nSelf design sounds\nLer pág 2 do e-book",
+"Prática dia 11\nPrece\nMeditação do selo\nSelf design sounds\nLeitura da página 3 do ebook",
+"Prática dia 12\nPrece\nMeditação do selo\nSelf design sounds\nLeitura da página 4 do ebook",
+"Prática dia 13\nPrece\nMeditação do selo\nSelf design sounds\nLer pág 5 do e-book"
 ];
 
-const TONS = [
-  {n:"Magnético",     num:1,  acao:"Unificar",      forca:"Atrair",      poder:"Propósito",   pergunta:"Qual é o meu propósito?"},
-  {n:"Lunar",         num:2,  acao:"Polarizar",     forca:"Estabilizar", poder:"Desafio",     pergunta:"Qual é o meu desafio?"},
-  {n:"Elétrico",      num:3,  acao:"Ativar",        forca:"Ligar",       poder:"Serviço",     pergunta:"Como posso servir melhor?"},
-  {n:"Autoexistente", num:4,  acao:"Medir",         forca:"Definir",     poder:"Forma",       pergunta:"Que forma posso dar à ação?"},
-  {n:"Overtone",      num:5,  acao:"Comandar",      forca:"Empoderar",   poder:"Radiância",   pergunta:"Como posso me empoderar?"},
-  {n:"Rítmico",       num:6,  acao:"Equilibrar",    forca:"Organizar",   poder:"Igualdade",   pergunta:"Como ampliar minha igualdade?"},
-  {n:"Ressonante",    num:7,  acao:"Inspirar",      forca:"Canalizar",   poder:"Alinhamento", pergunta:"Como me alinhar ao serviço?"},
-  {n:"Galáctico",     num:8,  acao:"Modelar",       forca:"Harmonizar",  poder:"Integridade", pergunta:"Eu vivo o que acredito?"},
-  {n:"Solar",         num:9,  acao:"Realizar",      forca:"Pulsar",      poder:"Intenção",    pergunta:"Como alcançar meu propósito?"},
-  {n:"Planetário",    num:10, acao:"Produzir",      forca:"Manifestar",  poder:"Perfeição",   pergunta:"Como aperfeiçoar o que faço?"},
-  {n:"Espectral",     num:11, acao:"Liberar",       forca:"Dissolver",   poder:"Libertação",  pergunta:"Como me libertar e deixar ir?"},
-  {n:"Cristal",       num:12, acao:"Universalizar", forca:"Dedicar",     poder:"Cooperação",  pergunta:"Como me dedico a todo ser?"},
-  {n:"Cósmico",       num:13, acao:"Transcender",   forca:"Durar",       poder:"Presença",    pergunta:"Como expandir alegria e amor?"}
+function corPT(cor,gen){
+if(cor==='red')return gen==='f'?'Vermelha':'Vermelho';
+if(cor==='white')return gen==='f'?'Branca':'Branco';
+if(cor==='blue')return'Azul';
+if(cor==='yellow')return gen==='f'?'Amarela':'Amarelo';
+return''}
+
+const CA=[
+{nu:1,no:"Castelo Vermelho do Girar",c:"red",ki:1,kf:52,ct:"Nascimento",di:"Leste"},
+{nu:2,no:"Castelo Branco do Cruzar",c:"white",ki:53,kf:104,ct:"Morte",di:"Norte"},
+{nu:3,no:"Castelo Azul do Queimar",c:"blue",ki:105,kf:156,ct:"Magia",di:"Oeste"},
+{nu:4,no:"Castelo Amarelo do Dar",c:"yellow",ki:157,kf:208,ct:"Inteligência",di:"Sul"},
+{nu:5,no:"Castelo Verde do Encantar",c:"green",ki:209,kf:260,ct:"Matriz",di:"Centro"}
 ];
 
-const LUAS = [
-  {n:"Magnética",  totem:"Morcego"},   {n:"Lunar",      totem:"Escorpião"},
-  {n:"Elétrica",   totem:"Veado"},     {n:"Autoexistente",totem:"Coruja"},
-  {n:"Overtone",   totem:"Pavão"},     {n:"Rítmica",    totem:"Lagarto"},
-  {n:"Ressonante", totem:"Macaco"},    {n:"Galáctica",  totem:"Falcão"},
-  {n:"Solar",      totem:"Jaguar"},    {n:"Planetária", totem:"Cão"},
-  {n:"Espectral",  totem:"Serpente"},  {n:"Cristal",    totem:"Coelho"},
-  {n:"Cósmica",    totem:"Tartaruga"}
-];
+function nc(s,t){const tn=s.g==='f'&&['Magnético','Elétrico','Galáctico','Espectral','Cósmico'].includes(t.n)?t.n.replace(/o$/,'a'):t.n;return`${s.n} ${tn} ${corPT(s.c,s.g)}`}
+function isLeapDay(d){return d.getMonth()===1&&d.getDate()===29}
+function daysBetweenSkipLeap(f,t){if(f>t)return-daysBetweenSkipLeap(t,f);let c=0;const d=new Date(f.getTime());while(d<t){d.setDate(d.getDate()+1);if(!isLeapDay(d))c++}return c}
+function dateToKin(dt){if(isLeapDay(dt))return dateToKin(new Date(dt.getFullYear(),1,28));const b=new Date(1987,6,26);const d=daysBetweenSkipLeap(b,dt);return((34-1+d)%260+260)%260+1}
+function kS(k){return(k-1)%20}
+function kT(k){return(k-1)%13}
+function kFS(si,ti){for(let k=1;k<=260;k++)if(kS(k)===si&&kT(k)===ti)return k;return 1}
+function ant(si){return(si+10)%20}
+function ana(si){return 19-si}
+function ocu(k){return 261-k}
+function gui(si,ti){const o=[0,4,8,12,16,0,4,8,12,16,0,4,8];return(si+o[ti])%20}
+function luaG(dt){const a=dt.getFullYear();let ag=a;if(dt<new Date(a,6,26))ag--;if(dt.getMonth()===6&&dt.getDate()===25)return{lua:0,dia:0,ag:ag+1,dft:true};const ini=new Date(ag,6,26);let c=0;const cu=new Date(ini.getTime());while(cu<dt){cu.setDate(cu.getDate()+1);if(!(cu.getMonth()===6&&cu.getDate()===25))c++}if(c>=364)return{lua:0,dia:0,ag:ag+1,dft:false};return{lua:Math.floor(c/28)+1,dia:(c%28)+1,ag:ag+1}}
+function getOnda(k){const n=Math.floor((k-1)/13)+1;const i=((n-1)*13)+1;const d=((k-1)%13)+1;return{n,i,f:i+12,d,s:S[kS(i)]}}
+function getCas(k){return CA.find(c=>k>=c.ki&&k<=c.kf)}
+function getPl(dt){const lg=luaG(dt);if(lg.dft)return null;const da=((lg.lua-1)*28)+lg.dia;const ps=["Dali","Seli","Gama","Kali","Alfa","Limi","Silio"];const ch=["Coroa","Raiz","Terceiro Olho","Sexual","Laríngeo","Plexo Solar","Cardíaco"];return{n:ps[da%7],c:ch[da%7]}}
+function getFase(dt){const r=new Date(2000,0,6,18,14);const df=(dt-r)/86400000;const cy=df/29.530588853;const ph=(cy%1)*8;if(ph<1)return"Lua Nova";if(ph<3)return"Lua Crescente";if(ph<5)return"Lua Cheia";if(ph<7)return"Lua Minguante";return"Lua Nova"}
+function getAS(k){const ca=getCas(k);return{s:S[kS(ca.ki)],t:T[kT(ca.ki)]}}
+function getFr(k){const si=kS(k),ti=kT(k);const s=S[si],t=T[ti];const obj=s.g==='f'?'a':'o';return`Concentro e ${t.v} meus pensamentos para ${s.a} com ${t.o}`}
+function cc(c){return`color-${c}`}
+function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.getElementById(`tab-${tab}`).classList.add('active');if(tab==='orientacoes')calcOrientacoes()}
 
-const COR_PT = { red:"Vermelho", white:"Branco", blue:"Azul", yellow:"Amarelo" };
-const COR_ACAO = { red:"Inicia", white:"Refina", blue:"Transforma", yellow:"Madura" };
+function heroHTML(k){const si=kS(k),ti=kT(k);const s=S[si],t=T[ti];return`<div class="kin-hero">
+<div style="font-size:3rem;margin-bottom:1rem">${s.e}</div>
+<div class="kin-title">${nc(s,t)}</div>
+<div style="color:var(--text2);font-size:0.85rem">Kin ${k} de 260</div>
+</div>`}
 
-/* Base: 26/07/1987 = Kin 34. O dia 29/02 não conta. */
-function isLeapDay(d) { return d.getMonth() === 1 && d.getDate() === 29; }
+function oraculoHTML(k){const si=kS(k),ti=kT(k);const gi=gui(si,ti);const ai=ant(si);const ali=ana(si);const ok=ocu(k);const osi=kS(ok),oti=kT(ok);const mkCell=(r,si,ti)=>{const kk=kFS(si,ti);const ss=S[si],tt=T[ti];return`<div class="oraculo-cell${r==='Kin'?' center':''}">
+<div style="font-size:0.65rem;text-transform:uppercase;color:var(--text3);margin-bottom:4px">${r}</div>
+<div class="oraculo-glyph ${cc(ss.c)}">${ss.e}</div>
+<div style="font-size:0.78rem;font-family:Cinzel">${nc(ss,tt)}</div>
+<div style="font-size:0.7rem;color:var(--text3);margin-top:4px">Kin ${kk}</div>
+</div>`};return`<div class="oraculo">
+<div class="oraculo-cell empty"></div>${mkCell("Guia",gi,ti)}<div class="oraculo-cell empty"></div>
+${mkCell("Análogo",ali,ti)}${mkCell("Kin",si,ti)}${mkCell("Antípoda",ai,ti)}
+<div class="oraculo-cell empty"></div>${mkCell("Oculto",osi,oti)}<div class="oraculo-cell empty"></div>
+</div>`}
 
-function daysBetweenSkipLeap(dFrom, dTo) {
-  if (dFrom > dTo) return -daysBetweenSkipLeap(dTo, dFrom);
-  let total = 0;
-  const cur = new Date(dFrom.getFullYear(), dFrom.getMonth(), dFrom.getDate());
-  const end = new Date(dTo.getFullYear(), dTo.getMonth(), dTo.getDate());
-  while (cur < end) {
-    cur.setDate(cur.getDate() + 1);
-    if (!isLeapDay(cur)) total++;
-  }
-  return total;
-}
+function ondaHTML(k){const on=getOnda(k);const kins13=[];for(let i=0;i<13;i++)kins13.push(on.i+i);const semanas=[
+{n:"Semana Vermelha",c:"red",k:kins13.slice(0,4)},
+{n:"Semana Branca",c:"white",k:kins13.slice(4,8)},
+{n:"Semana Azul",c:"blue",k:kins13.slice(8,12)},
+{n:"Semana Amarela",c:"yellow",k:kins13.slice(12,13)}
+];let h='<div class="onda-container">';for(const sem of semanas){h+=`<div class="onda-semana">
+<div class="onda-semana-label" style="color:var(--${sem.c})">${sem.n}</div>
+<div class="onda-grid">`;for(const kk of sem.k){const ss=S[kS(kk)];h+=`<div class="onda-kin ${cc(ss.c)} ${kk===k?'active':''}" title="Kin ${kk}">
+${ss.e}<div class="onda-kin-num">${kk-on.i+1}</div></div>`}h+='</div></div>'}h+='</div>';return h}
 
-function dateToKin(dt) {
-  if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
-  const base = new Date(1987, 6, 26);
-  const diff = daysBetweenSkipLeap(base, dt);
-  return ((34 - 1 + diff) % 260 + 260) % 260 + 1;
-}
+function fullDisplay(k,dt){const si=kS(k),ti=kT(k);const s=S[si],t=T[ti];const lg=luaG(dt);const on=getOnda(k);const ca=getCas(k);const pl=getPl(dt);const as=getAS(k);const fa=getFase(dt);const fr=getFr(k);const ondas=[];for(let i=0;i<4;i++){const ko=ca.ki+(i*13);ondas.push({k:ko,s:S[kS(ko)]})}return`${heroHTML(k)}
+<div class="cards">
+<div class="card"><div class="card-label">Tom</div><div class="card-val">${t.n}</div><div class="card-sub">${t.v}, ${t.o}</div></div>
+<div class="card"><div class="card-label">Selo</div><div class="card-val">${s.e} ${s.n}</div><div class="card-sub">${corPT(s.c,s.g)} · ${s.v}</div></div>
+<div class="card"><div class="card-label">Direção</div><div class="card-val">${s.d}</div></div>
+<div class="card"><div class="card-label">Lua Galáctica</div><div class="card-val">${lg.dft?"Dia Fora do Tempo":`Lua ${lg.lua}, Dia ${lg.dia}`}</div><div class="card-sub">${lg.dft?"25/07":(lg.lua>=1?`${L[lg.lua-1].n} do ${L[lg.lua-1].t}`:'')}</div></div>
+<div class="card"><div class="card-label">Fase Lunar</div><div class="card-val">${fa}</div></div>
+</div>
+<div class="frase-destaque">"${fr}"</div>
+<hr class="divider">
+<div class="section-title">Oráculo do Destino</div>
+${oraculoHTML(k)}
+<hr class="divider">
+<div class="section-title">Onda Encantada da ${on.s.n} (Onda ${on.n})</div>
+${ondaHTML(k)}
+<div class="cards" style="margin-top:1rem">
+<div class="card"><div class="card-label">Onda ${on.n}</div><div class="card-val">${on.s.e} ${on.s.n}</div><div class="card-sub">Kin ${on.i} a ${on.f}</div></div>
+<div class="card"><div class="card-label">Dia da Onda</div><div class="card-val">Dia ${on.d} de 13</div><div class="card-sub">${T[ti].n}</div></div>
+</div>
+<hr class="divider">
+<div class="section-title">Castelo & Ondas</div>
+<div class="cards">
+<div class="card"><div class="card-label">Castelo</div><div class="card-val">${ca.no}</div><div class="card-sub">Corte do ${ca.ct}</div></div>
+<div class="card"><div class="card-label">Direção do Castelo</div><div class="card-val">${ca.di}</div></div>
+<div class="card"><div class="card-label">Ondas do Castelo</div><div class="card-val">${ondas.map(o=>o.s.e).join(' ')}</div><div class="card-sub">${ondas.map(o=>o.s.n).join(', ')}</div></div>
+</div>
+<hr class="divider">
+<div class="section-title">Anel Solar & Plasma</div>
+<div class="cards">
+<div class="card"><div class="card-label">Anel Solar</div><div class="card-val">${as.s.e} ${nc(as.s,as.t)}</div><div class="card-sub">Kin ${ca.ki}</div></div>
+${pl?`<div class="card"><div class="card-label">Plasma Radial</div><div class="card-val">${pl.n}</div><div class="card-sub">Chakra ${pl.c}</div></div>`:''}
+</div>`}
 
-function kinToSelo(kin) { return (kin - 1) % 20; }
-function kinToTon(kin)  { return (kin - 1) % 13; }
-function kinFromST(si, ti) {
-  for (let k = 1; k <= 260; k++) if (kinToSelo(k) === si && kinToTon(k) === ti) return k;
-  return 1;
-}
+function calcNatal(){const v=document.getElementById('nasc-inp').value;if(!v)return;const[y,m,d]=v.split('-').map(Number);const dt=new Date(y,m-1,d);const k=dateToKin(dt);document.getElementById('res-natal').innerHTML=fullDisplay(k,dt);document.getElementById('res-natal').classList.remove('hidden')}
 
-function antipoda(si)  { return (si + 10) % 20; }
-function analogico(si) { return 19 - si; }
-function ocultoKin(kin) { return 261 - kin; }
-function guia(si, ti) {
-  const offsets = [0, 4, 8, 12, 16, 0, 4, 8, 12, 16, 0, 4, 8];
-  return (si + offsets[ti]) % 20;
-}
+function calcOrientacoes(){const dt=new Date();const k=dateToKin(dt);const on=getOnda(k);const pr=PR[on.d-1];document.getElementById('res-orientacoes').innerHTML=`${fullDisplay(k,dt)}<hr class="divider"><div class="section-title">Práticas do Dia ${on.d}</div><div class="pratica-box">${pr}</div>`}
 
-function luaGalatica(dt) {
-  const ano = dt.getFullYear();
-  let anoGal = ano;
-  if (dt < new Date(ano, 6, 26)) anoGal = ano - 1;
-  if (dt.getMonth() === 6 && dt.getDate() === 25 && dt.getFullYear() === anoGal + 1) {
-    return { lua: 0, dia: 0, anoGal: anoGal + 1, dft: true };
-  }
-  const inicio = new Date(anoGal, 6, 26);
-  let count = 0;
-  const cur = new Date(inicio);
-  while (cur < dt) {
-    cur.setDate(cur.getDate() + 1);
-    if (cur.getMonth() === 6 && cur.getDate() === 25 && cur.getFullYear() === anoGal + 1) continue;
-    count++;
-  }
-  if (count >= 364) return { lua: 0, dia: 0, anoGal: anoGal + 1, dft: false };
-  return { lua: Math.floor(count / 28) + 1, dia: (count % 28) + 1, anoGal: anoGal + 1 };
-}
-
-function setToday() {
-  const t = new Date();
-  document.getElementById('dia-inp').value =
-    `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
-}
-
-function corClasse(c) { return `color-${c}`; }
-
-function heroHTML(kin) {
-  const si = kinToSelo(kin), ti = kinToTon(kin);
-  const s = SELOS[si], t = TONS[ti];
-  return `<div class="kin-hero">
-    <div class="kin-number">Kin ${kin} de 260</div>
-    <div class="kin-glyph-big ${corClasse(s.cor)}">${s.glifo}</div>
-    <div class="kin-title">${t.n} ${s.n} ${COR_PT[s.cor]}</div>
-    <div class="kin-affirm">
-      Eu ${t.acao.toLowerCase()} para <strong style="color:var(--gold2)">${s.acao.toLowerCase()}</strong><br>
-      ${t.forca} a <strong style="color:var(--gold2)">${s.essencia.toLowerCase()}</strong><br>
-      Selo a ação com o tom ${t.n.toLowerCase()} do <strong style="color:var(--gold2)">${t.poder.toLowerCase()}</strong>
-    </div>
-    <div class="kin-affirm-quote">"${t.pergunta}"</div>
-  </div>`;
-}
-
-function oraculoCellHTML(role, si, ti, tip) {
-  const kin = kinFromST(si, ti);
-  const s = SELOS[si], t = TONS[ti];
-  return `<div class="oraculo-cell${role==='Kin'?' center':''}" data-tip="${tip}">
-    <div class="oraculo-role">${role}</div>
-    <div class="oraculo-glyph ${corClasse(s.cor)}">${s.glifo}</div>
-    <div class="oraculo-name">${t.n}<br>${s.n} ${COR_PT[s.cor]}</div>
-    <div class="oraculo-kin">Kin ${kin}</div>
-  </div>`;
-}
-
-function oraculoHTML(kin) {
-  const si = kinToSelo(kin), ti = kinToTon(kin);
-  const gi = guia(si, ti);
-  const ai = antipoda(si);
-  const ali = analogico(si);
-  const ocKin = ocultoKin(kin);
-  const oSi = kinToSelo(ocKin);
-  const oTi = kinToTon(ocKin);
-  return `<div class="oraculo">
-    <div class="oraculo-cell empty"></div>
-    ${oraculoCellHTML("Guia", gi, ti, "GUIA — Orienta seu caminho. Arquétipo que ilumina sua jornada. Tem a mesma cor do seu kin e o mesmo tom.")}
-    <div class="oraculo-cell empty"></div>
-    ${oraculoCellHTML("Análogo", ali, ti, "ANÁLOGO — Aliado e parceiro. Energia complementar que te apoia. Seus selos somam 21 (ex: Dragão+Sol, Serpente+Guerreiro).")}
-    ${oraculoCellHTML("Kin", si, ti, "KIN — Sua essência. A combinação de tom galáctico e selo solar que define sua assinatura.")}
-    ${oraculoCellHTML("Antípoda", ai, ti, "ANTÍPODA — Desafio que fortalece. Selo oposto no Tzolkin (+10 posições). Cor complementar.")}
-    <div class="oraculo-cell empty"></div>
-    ${oraculoCellHTML("Oculto", oSi, oTi, "OCULTO — Dom secreto que se revela. Kin 261 menos o seu kin. Espelha tanto o selo quanto o tom.")}
-    <div class="oraculo-cell empty"></div>
-  </div>`;
-}
-
-function familiaCardinalHTML(si) {
-  const dir = SELOS[si].dir;
-  const familia = SELOS.map((s, i) => ({ s, i })).filter(x => x.s.dir === dir);
-  return `<div class="mini-grid">
-    ${familia.map(x => `
-      <div class="mini-glyph ${corClasse(x.s.cor)} ${x.i === si ? 'active' : ''}"
-           data-tip="${x.s.n} ${COR_PT[x.s.cor]} — ${x.s.acao} ${x.s.essencia.toLowerCase()}">${x.s.glifo}</div>
-    `).join('')}
-  </div>`;
-}
-
-function claDoCeuHTML(si) {
-  const cor = SELOS[si].cor;
-  const cla = SELOS.map((s, i) => ({ s, i })).filter(x => x.s.cor === cor);
-  return `<div class="mini-grid">
-    ${cla.map(x => `
-      <div class="mini-glyph ${corClasse(x.s.cor)} ${x.i === si ? 'active' : ''}"
-           data-tip="${x.s.n} ${COR_PT[x.s.cor]} — ${x.s.acao} ${x.s.essencia.toLowerCase()}">${x.s.glifo}</div>
-    `).join('')}
-  </div>`;
-}
-
-function fullKinDisplay(kin, dt) {
-  const si = kinToSelo(kin), ti = kinToTon(kin);
-  const s = SELOS[si], t = TONS[ti];
-  let extraCards = '';
-  if (dt) {
-    const lg = luaGalatica(dt);
-    const luaNome = lg.dft ? "Dia Fora do Tempo" :
-                    (lg.lua >= 1 ? `${LUAS[lg.lua-1].n} (${LUAS[lg.lua-1].totem})` : '—');
-    extraCards = `
-      <div class="card" data-tip="LUA GALÁCTICA — Cada uma das 13 luas tem 28 dias e um totem animal. O dia 25/07 é o Dia Fora do Tempo.">
-        <div class="card-label">Lua galáctica</div>
-        <div class="card-val">${lg.dft ? "Dia fora do tempo" : `Lua ${lg.lua}, Dia ${lg.dia}`}</div>
-        <div class="card-sub">${luaNome}</div>
-      </div>
-      <div class="card" data-tip="ANO GALÁCTICO — Começa em 26/07 e termina em 24/07. Cada ano tem o nome do kin de seu primeiro dia.">
-        <div class="card-label">Ano galáctico</div>
-        <div class="card-val">${lg.anoGal}</div>
-        <div class="card-sub">26/07 → 24/07</div>
-      </div>
-    `;
-  }
-  return `
-    ${heroHTML(kin)}
-    <div class="cards">
-      <div class="card" data-tip="TOM GALÁCTICO — Os 13 tons são frequências criativas que vão do Magnético (1) ao Cósmico (13). Cada um tem uma ação, força e poder.">
-        <div class="card-label">Tom galáctico</div>
-        <div class="card-val">${t.num} · ${t.n}</div>
-        <div class="card-sub">${t.acao} · ${t.forca}</div>
-      </div>
-      <div class="card" data-tip="SELO SOLAR — Os 20 selos são arquétipos energéticos. Cada um tem uma cor (Vermelho/Branco/Azul/Amarelo) e direção cardeal.">
-        <div class="card-label">Selo solar</div>
-        <div class="card-val">${s.glifo} ${s.n} ${COR_PT[s.cor]}</div>
-        <div class="card-sub">${s.acao} · ${s.essencia}</div>
-      </div>
-      <div class="card" data-tip="COR / CLÃ — As 4 cores definem o clã do selo. Vermelho inicia, Branco refina, Azul transforma, Amarelo amadurece.">
-        <div class="card-label">Cor / Clã</div>
-        <div class="card-val">${COR_PT[s.cor]}</div>
-        <div class="card-sub">${COR_ACAO[s.cor]}</div>
-      </div>
-      <div class="card" data-tip="DIREÇÃO CARDEAL — Leste (vermelho), Norte (branco), Oeste (azul) ou Sul (amarelo). Indica orientação energética.">
-        <div class="card-label">Direção</div>
-        <div class="card-val">${s.dir}</div>
-        <div class="card-sub">${s.poder}</div>
-      </div>
-      ${extraCards}
-    </div>
-    <hr class="divider">
-    <div class="subhead">Oráculo do Destino <span class="info-icon" data-tip="ORÁCULO DO DESTINO — Os 5 kins que formam sua matriz energética: Kin natal no centro, Guia em cima, Análogo à esquerda, Antípoda à direita, Oculto embaixo."></span></div>
-    ${oraculoHTML(kin)}
-    <hr class="divider">
-    <div class="subhead">Família Cardinal <span class="info-icon" data-tip="FAMÍLIA CARDINAL — Os 5 selos que compartilham a mesma direção cardeal do seu selo (Leste, Norte, Oeste ou Sul). Formam uma família energética por orientação."></span></div>
-    ${familiaCardinalHTML(si)}
-    <hr class="divider">
-    <div class="subhead">Clã do Céu <span class="info-icon" data-tip="CLÃ DO CÉU — Os 5 selos que compartilham a mesma cor do seu kin. Mesmo arquétipo de ação (Inicia/Refina/Transforma/Madura)."></span></div>
-    ${claDoCeuHTML(si)}
-  `;
-}
-
-function calcDia() {
-  const v = document.getElementById('dia-inp').value;
-  if (!v) return;
-  const [y, m, d] = v.split('-').map(Number);
-  const dt = new Date(y, m - 1, d);
-  const kin = dateToKin(dt);
-  document.getElementById('res-dia').innerHTML = fullKinDisplay(kin, dt);
-  document.getElementById('res-dia').classList.remove('hidden');
-}
-
-function calcNatal() {
-  const v = document.getElementById('nasc-inp').value;
-  if (!v) return;
-  const [y, m, d] = v.split('-').map(Number);
-  const dt = new Date(y, m - 1, d);
-  const kin = dateToKin(dt);
-  document.getElementById('res-natal').innerHTML = fullKinDisplay(kin, dt);
-  document.getElementById('res-natal').classList.remove('hidden');
-}
-
-setToday();
+(function(){const dt=new Date();const k=dateToKin(dt);document.getElementById('res-dia-auto').innerHTML=fullDisplay(k,dt)})();
 </script>
 </body>
 </html>
