@@ -3640,6 +3640,7 @@
       "num": 1,
       "nome": "Vermelho",
       "dir": "Leste",
+      "proposito": "Corte do Nascimento",
       "ondas": [
         "Dragão",
         "Mago",
@@ -3651,9 +3652,10 @@
       "num": 2,
       "nome": "Branco",
       "dir": "Norte",
+      "proposito": "Corte do Cruzamento",
       "ondas": [
         "Vento",
-        "Feiticeiro",
+        "Águia",
         "Estrela",
         "Caminhante do Céu"
       ]
@@ -3662,19 +3664,21 @@
       "num": 3,
       "nome": "Azul",
       "dir": "Oeste",
+      "proposito": "Corte do Queimar",
       "ondas": [
+        "Noite",
         "Serpente",
         "Espelho",
-        "Macaco",
-        "Semente"
+        "Macaco"
       ]
     },
     {
       "num": 4,
       "nome": "Amarelo",
       "dir": "Sul",
+      "proposito": "Corte do Dar",
       "ondas": [
-        "Noite",
+        "Semente",
         "Enlaçador de Mundos",
         "Humano",
         "Guerreiro"
@@ -3684,6 +3688,7 @@
       "num": 5,
       "nome": "Verde",
       "dir": "Centro",
+      "proposito": "Corte da Matriz",
       "ondas": [
         "Lua",
         "Cão",
