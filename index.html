@@ -120,14 +120,9 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Forçar persistência LOCAL (essencial!)
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-  .then(() => {
-    console.log('✅ Persistência LOCAL ativada');
-  })
-  .catch((err) => {
-    console.error('❌ Erro ao set persistência:', err);
-  });
+  .then(() => console.log('✅ Persistência LOCAL ativada'))
+  .catch((err) => console.error('❌ Erro persistência:', err));
 
 // Login com Popup
 document.getElementById('btn-login').onclick = () => {
@@ -143,45 +138,28 @@ document.getElementById('btn-login').onclick = () => {
     .then((result) => {
       console.log('✅ Login bem-sucedido!');
       console.log('📧 Email:', result.user.email);
-      console.log('👤 Nome:', result.user.displayName);
-      console.log('🖼️ Foto:', result.user.photoURL);
-      // onAuthStateChanged vai pegar daqui
     })
     .catch((error) => {
       console.error('❌ Erro no popup:', error.code, error.message);
-      
-      // Tratar erros específicos
       if (error.code === 'auth/popup-blocked') {
-        document.getElementById('login-error').textContent = '⚠️ Popup bloqueado! Desbloqueia popups do Google no navegador.';
+        document.getElementById('login-error').textContent = '⚠️ Popup bloqueado! Desbloqueia no navegador.';
       } else if (error.code === 'auth/popup-closed-by-user') {
         document.getElementById('login-error').textContent = 'Login cancelado.';
-      } else if (error.code === 'auth/network-request-failed') {
-        document.getElementById('login-error').textContent = '🌐 Erro de conexão. Verifica sua internet.';
       } else {
         document.getElementById('login-error').textContent = '❌ Erro: ' + error.message;
       }
-      
       document.getElementById('login-error').classList.remove('hidden');
       document.getElementById('login-loading').classList.add('hidden');
     });
 };
 
-// Capturar resultado do redirect (caso volte do redirect)
-auth.getRedirectResult()
-  .then((result) => {
-    if (result.user) {
-      console.log('✅ Retornou do redirect:', result.user.email);
-    }
-  })
-  .catch((error) => {
-    console.error('❌ Erro ao processar redirect:', error);
-  });
+auth.getRedirectResult().catch(err => console.error('❌ Erro redirect:', err));
 
 // Monitorar autenticação
 let authChecked = false;
 const authTimeout = setTimeout(() => {
   if (!authChecked) {
-    console.warn('⏱️ Timeout: nenhum usuário detectado após 5 segundos');
+    console.warn('⏱️ Timeout: nenhum usuário detectado');
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app-screen').classList.remove('active');
   }
@@ -190,35 +168,21 @@ const authTimeout = setTimeout(() => {
 auth.onAuthStateChanged(async (user) => {
   authChecked = true;
   clearTimeout(authTimeout);
-  
   console.log('🔵 onAuthStateChanged:', user ? user.email : 'null');
-  console.log('👤 User objeto completo:', user);
   
   if (user) {
     console.log('✅ Usuário logado:', user.email);
     console.log('🔑 UID:', user.uid);
-    console.log('🖼️ PhotoURL:', user.photoURL);
     
     try {
       const userRef = db.collection('users').doc(user.uid);
-      console.log('🔍 Buscando documento:', user.uid);
-      
       const userDoc = await userRef.get();
-      console.log('📄 Documento existe?', userDoc.exists);
       
       if (userDoc.exists) {
         const data = userDoc.data();
         console.log('📋 Dados do documento:', data);
-        console.log('📋 Chaves do documento:', Object.keys(data));
         
-        // Acessar os valores corretamente
-        const authorized = data.authorized;
-        const role = data.role;
-        
-        console.log('✔️ Autorizado?', authorized, typeof authorized);
-        console.log('👑 Role:', role, typeof role);
-        
-        if (authorized === true) {
+        if (data.authorized === true) {
           console.log('✅✅✅ ACESSO LIBERADO!');
           
           document.getElementById('login-screen').style.display = 'none';
@@ -234,19 +198,36 @@ auth.onAuthStateChanged(async (user) => {
           
           loadToday();
         } else {
-          console.log('❌ Usuário não autorizado');
-          document.getElementById('login-error').textContent = '⏳ Aguarde autorização do admin.';
+          console.log('⏳ Usuário pendente de autorização');
+          document.getElementById('login-error').textContent = '⏳ Sua conta foi criada! Aguarde o admin autorizar seu acesso.';
+          document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
+          document.getElementById('login-error').style.borderColor = '#f5c842';
+          document.getElementById('login-error').style.color = '#f5c842';
           document.getElementById('login-error').classList.remove('hidden');
-          setTimeout(() => auth.signOut(), 3000);
+          setTimeout(() => auth.signOut(), 4000);
         }
       } else {
-        console.log('❌ Documento não existe no Firestore');
-        document.getElementById('login-error').textContent = '❌ Conta não encontrada. Entre em contato com o admin.';
+        console.log('📝 Criando novo documento para:', user.uid);
+        await userRef.set({
+          authorized: false,
+          displayName: user.displayName || 'Usuário',
+          email: user.email,
+          photoURL: user.photoURL || '',
+          role: 'usuário',
+          createdAt: new Date()
+        });
+        
+        console.log('✅ Documento criado com sucesso!');
+        
+        document.getElementById('login-error').textContent = '⏳ Sua conta foi criada! Aguarde o admin autorizar seu acesso.';
+        document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
+        document.getElementById('login-error').style.borderColor = '#f5c842';
+        document.getElementById('login-error').style.color = '#f5c842';
         document.getElementById('login-error').classList.remove('hidden');
-        setTimeout(() => auth.signOut(), 3000);
+        setTimeout(() => auth.signOut(), 4000);
       }
     } catch (error) {
-      console.error('❌ Erro ao buscar dados:', error);
+      console.error('❌ Erro:', error);
       document.getElementById('login-error').textContent = '❌ Erro: ' + error.message;
       document.getElementById('login-error').classList.remove('hidden');
     }
