@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sincronário das 13 Luas - Completo</title>
+<title>Sincronário das 13 Luas</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -14,20 +14,17 @@ body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font
 .login-box{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:3rem 2rem;max-width:400px;width:100%;text-align:center}
 .login-box h1{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);margin-bottom:1rem}
 .login-box p{color:var(--text2);margin-bottom:2rem}
-.btn-google{background:#fff;color:#333;border:none;border-radius:8px;padding:12px 24px;font-family:'Cinzel',serif;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:all 0.2s}
-.btn-google:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,255,255,0.2)}
+.btn-google{background:#fff;color:#333;border:none;border-radius:8px;padding:12px 24px;font-family:'Cinzel',serif;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
 .error-msg{background:rgba(214,59,59,0.1);border:0.5px solid var(--red);color:var(--red);padding:1rem;border-radius:8px;margin-top:1rem;font-size:0.9rem}
 .loading{color:var(--text2);margin-top:1rem}
 .container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem;display:none}
 .container.active{display:block}
 h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center;margin-bottom:0.5rem}
 .user-bar{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.user-info{display:flex;align-items:center;gap:12px}
 .user-avatar{width:40px;height:40px;border-radius:50%;border:2px solid var(--gold)}
 .btn-logout,.btn-admin,.btn-export{background:rgba(180,154,240,0.1);border:0.5px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 16px;font-family:'Cinzel',serif;font-size:0.75rem;cursor:pointer;text-transform:uppercase}
 .btn-admin{border-color:var(--gold);color:var(--gold)}
-.btn-export{border-color:var(--blue);color:var(--blue)}
-.tabs{display:flex;gap:8px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border);flex-wrap:wrap}
+.tabs{display:flex;gap:8px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border)}
 .tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Cinzel',serif;font-size:0.75rem;padding:12px 20px;cursor:pointer;text-transform:uppercase}
 .tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-content{display:none}
@@ -36,12 +33,12 @@ h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center
 .kin-hero{text-align:center;padding:2rem;background:linear-gradient(135deg,var(--bg2),var(--bg));border-radius:var(--radius);margin-bottom:1.5rem;border:0.5px solid var(--border)}
 .kin-emoji{font-size:4rem;margin-bottom:1rem}
 .kin-title{font-family:'Cinzel',serif;font-size:1.8rem;margin:1rem 0;letter-spacing:0.05em;color:var(--gold)}
-.kin-subtitle{color:var(--text2);font-size:0.9rem;margin-bottom:1rem}
-.kin-frase{color:var(--gold);font-size:1rem;font-style:italic;margin:1.5rem 0;padding:1.5rem;background:rgba(201,168,76,0.08);border-left:3px solid var(--gold);border-radius:4px;line-height:1.8}
+.kin-subtitle{color:var(--text2);font-size:0.9rem}
+.kin-frase{color:var(--gold);font-size:1.1rem;font-style:italic;margin:1.5rem auto;padding:1.5rem;background:rgba(201,168,76,0.08);border-left:3px solid var(--gold);border-radius:4px;max-width:700px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:1.5rem 0}
 .card{background:var(--bg2);border-radius:8px;padding:1.2rem;border:0.5px solid var(--border)}
-.card-label{font-size:0.75rem;color:var(--text3);text-transform:uppercase;margin-bottom:8px;letter-spacing:0.1em}
-.card-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--text);line-height:1.5}
+.card-label{font-size:0.75rem;color:var(--text3);text-transform:uppercase;margin-bottom:8px}
+.card-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--text)}
 .oraculo-container{display:flex;justify-content:center;align-items:center;margin:2rem 0;position:relative;min-height:300px}
 .oraculo-central,.oraculo-side{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:1rem;text-align:center;position:absolute}
 .oraculo-central{width:120px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-color:var(--gold);z-index:10}
@@ -52,23 +49,37 @@ h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center
 .oraculo-oculto{right:0;top:50%;transform:translateY(-50%)}
 .oraculo-emoji{font-size:2rem}
 .oraculo-nome{font-size:0.7rem;margin-top:0.5rem;color:var(--text2)}
-.onda-visual{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
-.onda-kin{width:50px;height:50px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;border:2px solid transparent;transition:all 0.2s;cursor:pointer}
-.onda-kin:hover{transform:scale(1.1)}
-.onda-kin.active{border-color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,0.4)}
+.onda-L{display:grid;grid-template-columns:repeat(4,55px);grid-template-rows:repeat(4,55px);gap:6px;margin:1.5rem auto;width:fit-content}
+.onda-L .onda-kin:nth-child(1){grid-column:1;grid-row:1}
+.onda-L .onda-kin:nth-child(2){grid-column:2;grid-row:1}
+.onda-L .onda-kin:nth-child(3){grid-column:3;grid-row:1}
+.onda-L .onda-kin:nth-child(4){grid-column:4;grid-row:1}
+.onda-L .onda-kin:nth-child(5){grid-column:1;grid-row:2}
+.onda-L .onda-kin:nth-child(6){grid-column:1;grid-row:3}
+.onda-L .onda-kin:nth-child(7){grid-column:1;grid-row:4}
+.onda-L .onda-kin:nth-child(8){grid-column:2;grid-row:4}
+.onda-L .onda-kin:nth-child(9){grid-column:3;grid-row:4}
+.onda-L .onda-kin:nth-child(10){grid-column:4;grid-row:2}
+.onda-L .onda-kin:nth-child(11){grid-column:4;grid-row:3}
+.onda-L .onda-kin:nth-child(12){grid-column:4;grid-row:4}
+.onda-L .onda-kin:nth-child(13){grid-column:2/4;grid-row:2/4;width:auto;height:auto;font-size:2.5rem;border-width:3px}
+.onda-kin{width:55px;height:55px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;border:2px solid transparent}
+.onda-kin.active{border-color:var(--gold)!important;box-shadow:0 0 15px rgba(201,168,76,0.5)}
 .cor-red{background:rgba(214,59,59,0.3);border-color:var(--red)}
 .cor-white{background:rgba(240,240,240,0.2);border-color:var(--white)}
 .cor-blue{background:rgba(59,142,214,0.3);border-color:var(--blue)}
 .cor-yellow{background:rgba(245,200,66,0.3);border-color:var(--yellow)}
+.lua-visual{display:flex;gap:4px;margin:1rem 0;flex-wrap:wrap}
+.lua-semana{display:flex;flex-direction:column;gap:4px}
+.lua-dia{width:32px;height:32px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.65rem}
+.lua-dia.active{background:var(--gold);color:var(--bg);font-weight:bold}
 .praticas-list{list-style:none;padding:0}
 .praticas-list li{padding:0.8rem 1rem;margin-bottom:0.5rem;background:var(--bg2);border-radius:6px;border-left:3px solid var(--gold);display:flex;align-items:center;gap:10px}
 .praticas-list li:before{content:'♥';color:var(--gold);font-size:1.2rem}
 .hidden{display:none}
-input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-family:inherit;color-scheme:dark;width:100%;max-width:200px}
+input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-family:inherit;color-scheme:dark;max-width:200px}
 .btn-calc{background:linear-gradient(135deg,rgba(138,110,220,0.2),rgba(201,168,76,0.15));border:0.5px solid var(--gold);border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.75rem;padding:10px 22px;cursor:pointer;text-transform:uppercase}
-.input-group{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.divider{border:none;border-top:0.5px solid var(--border);margin:2rem 0}
-.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:1.5rem}
 </style>
 </head>
 <body>
@@ -88,7 +99,7 @@ Entrar com Google
 
 <div id="app-screen" class="container">
 <div class="user-bar">
-<div class="user-info">
+<div style="display:flex;align-items:center;gap:12px">
 <img id="user-avatar" class="user-avatar" src="" alt="">
 <div>
 <div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
@@ -118,7 +129,7 @@ Entrar com Google
 <div id="tab-natal" class="tab-content">
 <div class="section">
 <div style="font-family:Cinzel;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem">Kin Natal</div>
-<div class="input-group">
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
 <label style="color:var(--text2);font-style:italic">Data de Nascimento</label>
 <input type="date" id="nasc-inp">
 <button class="btn-calc" onclick="calcNatal()">Calcular</button>
@@ -135,334 +146,232 @@ Entrar com Google
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-// Dados completos carregados
-let KINS_DATA = {};
-let RITUAIS_DATA = {};
-let PLASMAS_DATA = [];
+let DATA={};
+fetch('./sincronario_dados.json').then(r=>r.json()).then(d=>{DATA=d;console.log('✓ Dados:',Object.keys(DATA.kins).length,'kins')}).catch(e=>console.warn('⚠️',e));
 
-// Carregar dados
-fetch('./sincronario_dados.json')
-  .then(r => r.json())
-  .then(data => {
-    KINS_DATA = data.kins;
-    RITUAIS_DATA = data.rituais;
-    PLASMAS_DATA = data.plasmas;
-    console.log('✓ Dados carregados:', Object.keys(KINS_DATA).length, 'kins');
-  })
-  .catch(err => console.warn('⚠️ Erro ao carregar JSON:', err));
+const EMOJIS=['🐉','💨','🌌','🌱','🐍','☯️','✋','⭐','🌙','🐕','🐒','👤','🚶','🧙','🦅','⚔️','🌍','🪞','⛈️','☀️'];
+const CORES_ONDA=['red','red','red','red','white','white','white','white','blue','blue','blue','blue','yellow'];
+const FEMININOS=new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
 
-const EMOJIS = ['🐉', '💨', '🌌', '🌱', '🐍', '☯️', '✋', '⭐', '🌙', '🐕', '🐒', '👤', '🚶', '🧙', '🦅', '⚔️', '🌍', '🪞', '⛈️', '☀️'];
-const CORES_ONDA = ['red', 'red', 'red', 'red', 'white', 'white', 'white', 'white', 'blue', 'blue', 'blue', 'blue', 'yellow'];
-const FEMININOS = new Set(['Noite', 'Serpente', 'Mão', 'Estrela', 'Lua', 'Águia', 'Terra', 'Semente', 'Tormenta']);
+function getSeloEmoji(n){const i=['Dragão','Vento','Noite','Semente','Serpente','Enlaçador','Mão','Estrela','Lua','Cão','Macaco','Humano','Caminhante','Mago','Águia','Guerreiro','Terra','Espelho','Tormenta','Sol'].findIndex(s=>n.includes(s));return i>=0?EMOJIS[i]:'🌀'}
+function getSeloBase(n){return n.split(' ').slice(0,-1).join(' ')}
+function concordar(selo,tom){for(let p of FEMININOS)if(selo.includes(p))return tom.replace('Magnético','Magnética').replace('Elétrico','Elétrica').replace('Rítmico','Rítmica').replace('Galáctico','Galáctica').replace('Planetário','Planetária').replace('Cósmico','Cósmica');return tom}
 
-function getSeloEmoji(nome) {
-  const idx = ['Dragão', 'Vento', 'Noite', 'Semente', 'Serpente', 'Enlaçador', 'Mão', 'Estrela', 'Lua', 'Cão', 'Macaco', 'Humano', 'Caminhante', 'Mago', 'Águia', 'Guerreiro', 'Terra', 'Espelho', 'Tormenta', 'Sol'].findIndex(s => nome.includes(s));
-  return idx >= 0 ? EMOJIS[idx] : '🌀';
-}
-
-function getSeloBase(nome_completo) {
-  // Remove a cor (última palavra)
-  const partes = nome_completo.split(' ');
-  return partes.slice(0, -1).join(' ');
-}
-
-function concordarGenero(selo, tom) {
-  let eh_fem = false;
-  for (let pal of FEMININOS) {
-    if (selo.includes(pal)) {
-      eh_fem = true;
-      break;
-    }
-  }
-  if (!eh_fem) return tom;
-  return tom.replace('Magnético', 'Magnética').replace('Elétrico', 'Elétrica').replace('Rítmico', 'Rítmica').replace('Galáctico', 'Galáctica').replace('Planetário', 'Planetária').replace('Cósmico', 'Cósmica');
-}
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",
-  authDomain: "sincro13luas.firebaseapp.com",
-  projectId: "sincro13luas",
-  storageBucket: "sincro13luas.firebasestorage.app",
-  messagingSenderId: "886057704979",
-  appId: "1:886057704979:web:31b8348110ff8649c369e6"
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
+const fc={apiKey:"AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",authDomain:"sincro13luas.firebaseapp.com",projectId:"sincro13luas",storageBucket:"sincro13luas.firebasestorage.app",messagingSenderId:"886057704979",appId:"1:886057704979:web:31b8348110ff8649c369e6"};
+firebase.initializeApp(fc);
+const auth=firebase.auth(),db=firebase.firestore();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-document.getElementById('btn-login').onclick = () => {
-  document.getElementById('login-loading').classList.remove('hidden');
-  document.getElementById('login-error').classList.add('hidden');
-  const provider = new firebase.auth.GoogleAuthProvider();
-  provider.addScope('profile');
-  provider.addScope('email');
-  auth.signInWithPopup(provider)
-    .then(() => console.log('✅ Login OK'))
-    .catch((error) => {
-      if (error.code === 'auth/popup-blocked') {
-        document.getElementById('login-error').textContent = '⚠️ Popup bloqueado!';
-      } else {
-        document.getElementById('login-error').textContent = '❌ Erro: ' + error.message;
-      }
-      document.getElementById('login-error').classList.remove('hidden');
-      document.getElementById('login-loading').classList.add('hidden');
-    });
-};
+document.getElementById('btn-login').onclick=()=>{
+document.getElementById('login-loading').classList.remove('hidden');
+const p=new firebase.auth.GoogleAuthProvider();
+p.addScope('profile');p.addScope('email');
+auth.signInWithPopup(p).catch(e=>{
+document.getElementById('login-error').textContent=e.code==='auth/popup-blocked'?'⚠️ Popup bloqueado!':'❌ '+e.message;
+document.getElementById('login-error').classList.remove('hidden');
+document.getElementById('login-loading').classList.add('hidden');
+});};
 
-let authChecked = false;
-setTimeout(() => {
-  if (!authChecked) {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('app-screen').classList.remove('active');
-  }
-}, 5000);
-
-auth.onAuthStateChanged(async (user) => {
-  authChecked = true;
-  if (user) {
-    try {
-      const userRef = db.collection('users').doc(user.uid);
-      const userDoc = await userRef.get();
-      
-      if (userDoc.exists) {
-        const data = userDoc.data();
-        if (data.authorized === true) {
-          document.getElementById('login-screen').style.display = 'none';
-          document.getElementById('app-screen').classList.add('active');
-          document.getElementById('user-avatar').src = user.photoURL || '';
-          document.getElementById('user-name').textContent = user.displayName;
-          document.getElementById('user-role').textContent = data.role || 'usuário';
-          if (data.role === 'admin') {
-            document.getElementById('btn-admin').classList.remove('hidden');
-          }
-          loadToday();
-        } else {
-          document.getElementById('login-error').textContent = '⏳ Aguarde autorização do admin.';
-          document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
-          document.getElementById('login-error').style.borderColor = '#f5c842';
-          document.getElementById('login-error').style.color = '#f5c842';
-          document.getElementById('login-error').classList.remove('hidden');
-          setTimeout(() => auth.signOut(), 4000);
-        }
-      } else {
-        await userRef.set({
-          authorized: false,
-          displayName: user.displayName || 'Usuário',
-          email: user.email,
-          photoURL: user.photoURL || '',
-          role: 'usuário',
-          createdAt: new Date()
-        });
-        document.getElementById('login-error').textContent = '⏳ Conta criada! Aguarde autorização.';
-        document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
-        document.getElementById('login-error').style.borderColor = '#f5c842';
-        document.getElementById('login-error').style.color = '#f5c842';
-        document.getElementById('login-error').classList.remove('hidden');
-        setTimeout(() => auth.signOut(), 4000);
-      }
-    } catch (error) {
-      document.getElementById('login-error').textContent = '❌ Erro: ' + error.message;
-      document.getElementById('login-error').classList.remove('hidden');
-    }
-    document.getElementById('login-loading').classList.add('hidden');
-  } else {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('app-screen').classList.remove('active');
-  }
+auth.onAuthStateChanged(async u=>{
+if(u){
+try{
+const uR=db.collection('users').doc(u.uid),uD=await uR.get();
+if(uD.exists){
+const d=uD.data();
+if(d.authorized===true){
+document.getElementById('login-screen').style.display='none';
+document.getElementById('app-screen').classList.add('active');
+document.getElementById('user-avatar').src=u.photoURL||'';
+document.getElementById('user-name').textContent=u.displayName;
+document.getElementById('user-role').textContent=d.role||'usuário';
+if(d.role==='admin')document.getElementById('btn-admin').classList.remove('hidden');
+loadToday();
+}else{
+document.getElementById('login-error').textContent='⏳ Aguarde autorização.';
+document.getElementById('login-error').style.background='rgba(245,200,66,0.1)';
+document.getElementById('login-error').classList.remove('hidden');
+setTimeout(()=>auth.signOut(),4000);
+}
+}else{
+await uR.set({authorized:false,displayName:u.displayName||'Usuário',email:u.email,photoURL:u.photoURL||'',role:'usuário',createdAt:new Date()});
+document.getElementById('login-error').textContent='⏳ Conta criada! Aguarde autorização.';
+document.getElementById('login-error').style.background='rgba(245,200,66,0.1)';
+document.getElementById('login-error').classList.remove('hidden');
+setTimeout(()=>auth.signOut(),4000);
+}
+}catch(e){
+document.getElementById('login-error').textContent='❌ '+e.message;
+document.getElementById('login-error').classList.remove('hidden');
+}
+document.getElementById('login-loading').classList.add('hidden');
+}else{
+document.getElementById('login-screen').style.display='flex';
+document.getElementById('app-screen').classList.remove('active');
+}
 });
 
-document.getElementById('btn-logout').onclick = () => auth.signOut();
+document.getElementById('btn-logout').onclick=()=>auth.signOut();
 
-async function exportPNG() {
-  const area = document.getElementById('export-area');
-  const canvas = await html2canvas(area, {backgroundColor: '#0a0c14', scale: 2});
-  const link = document.createElement('a');
-  link.download = `sincronario-${new Date().toISOString().split('T')[0]}.png`;
-  link.href = canvas.toDataURL();
-  link.click();
+async function exportPNG(){
+const a=document.getElementById('export-area');
+const c=await html2canvas(a,{backgroundColor:'#0a0c14',scale:2});
+const l=document.createElement('a');
+l.download=`sincronario-${new Date().toISOString().split('T')[0]}.png`;
+l.href=c.toDataURL();
+l.click();
 }
 
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById(`tab-${tab}`).classList.add('active');
+function switchTab(t){
+document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+event.target.classList.add('active');
+document.getElementById(`tab-${t}`).classList.add('active');
 }
 
-function isLeapDay(d) {
-  return d.getMonth() === 1 && d.getDate() === 29;
-}
+function isLeapDay(d){return d.getMonth()===1&&d.getDate()===29}
+function daysBetween(f,t){if(f>t)return-daysBetween(t,f);let c=0;const d=new Date(f.getTime());while(d<t){d.setDate(d.getDate()+1);if(!isLeapDay(d))c++}return c}
+function dateToKin(dt){if(isLeapDay(dt))return dateToKin(new Date(dt.getFullYear(),1,28));const b=new Date(1987,6,26);const d=daysBetween(b,dt);return((34-1+d)%260+260)%260+1}
 
-function daysBetween(f, t) {
-  if (f > t) return -daysBetween(t, f);
-  let c = 0;
-  const d = new Date(f.getTime());
-  while (d < t) {
-    d.setDate(d.getDate() + 1);
-    if (!isLeapDay(d)) c++;
-  }
-  return c;
-}
+function getFaseLunar(d){const lc=29.53;const nk=new Date(2000,0,6,18,14);const df=(d-nk)/(1000*60*60*24);const ph=(df%lc)/lc;if(ph<0.03||ph>0.97)return'Nova';if(ph<0.28)return'Crescente';if(ph<0.53)return'Cheia';if(ph<0.78)return'Minguante';return'Nova'}
 
-function dateToKin(dt) {
-  if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
-  const b = new Date(1987, 6, 26);
-  const d = daysBetween(b, dt);
-  return ((34 - 1 + d) % 260 + 260) % 260 + 1;
-}
+function kinHTML(kn){
+const kD=DATA.kins[kn];
+if(!kD)return'<p>Carregando...</p>';
 
-function kinHTML(kin_num) {
-  const kinData = KINS_DATA[kin_num];
-  if (!kinData) return '<p>Carregando dados...</p>';
-  
-  // Separar selo base da cor
-  const selo_completo = kinData.selo;
-  const partes = selo_completo.split(' ');
-  const cor = partes[partes.length - 1]; // Última palavra = cor
-  const selo_base = partes.slice(0, -1).join(' '); // Tudo menos a cor
-  
-  const tom_original = kinData.tom_nome;
-  const tom_concordado = concordarGenero(selo_completo, tom_original);
-  
-  // ORDEM CORRETA: SELO + TOM + COR
-  const nome_completo = `${selo_base} ${tom_concordado} ${cor}`;
-  
-  const emoji = getSeloEmoji(selo_completo);
-  const frase = kinData.frase || '';
-  
-  // Oráculo
-  const guia = kinData.oraculo.guia;
-  const analogo = kinData.oraculo.analogo;
-  const antipoda = kinData.oraculo.antipoda;
-  const oculto = kinData.oraculo.oculto;
-  
-  // Onda Encantada (13 kins)
-  const onda_inicio = Math.floor((kin_num - 1) / 13) * 13 + 1;
-  const dia_onda = ((kin_num - 1) % 13) + 1;
-  let onda_html = '<div class="onda-visual">';
-  for (let i = 0; i < 13; i++) {
-    const k = onda_inicio + i;
-    const cor = CORES_ONDA[i];
-    const ativo = k === kin_num ? 'active' : '';
-    const kData = KINS_DATA[k];
-    const em = kData ? getSeloEmoji(kData.selo) : '?';
-    onda_html += `<div class="onda-kin cor-${cor} ${ativo}" title="Kin ${k}">${em}</div>`;
-  }
-  onda_html += '</div>';
-  
-  // Castelo
-  const castelo_num = Math.floor((kin_num - 1) / 52) + 1;
-  const castelos = ['Vermelho (Leste)', 'Branco (Norte)', 'Azul (Oeste)', 'Amarelo (Sul)', 'Verde (Centro)'];
-  const castelo_nome = castelos[castelo_num - 1] || 'Desconhecido';
-  
-  // Plasma
-  const dia_semana = (kin_num - 1) % 7;
-  const plasma = PLASMAS_DATA[dia_semana] || 'Desconhecido';
-  
-  // Ritual
-  const ritual = RITUAIS_DATA[dia_onda];
-  const ritual_nome = ritual ? ritual.ritual : 'Desconhecido';
-  
-  // Lua Galáctica (simplificado - dia do ano / 28)
-  const hoje = new Date();
-  const inicio_ano = new Date(hoje.getFullYear(), 6, 26); // 26 de julho
-  const dias_passados = daysBetween(inicio_ano, hoje);
-  const lua_num = Math.floor(dias_passados / 28) + 1;
-  const dia_lua = (dias_passados % 28) + 1;
-  
-  return `
+const sc=kD.selo,p=sc.split(' '),cor=p[p.length-1],sb=p.slice(0,-1).join(' ');
+const to=kD.tom_nome,tc=concordar(sc,to),nc=`${sb} ${tc} ${cor}`;
+const em=getSeloEmoji(sc),fr=kD.frase_curta||'';
+const{guia:g,analogo:an,antipoda:at,oculto:oc}=kD.oraculo;
+
+const oi=Math.floor((kn-1)/13)*13+1,dw=((kn-1)%13)+1;
+let oh='<div class="onda-L">';
+for(let i=0;i<13;i++){
+const k=oi+i,co=CORES_ONDA[i],ac=k===kn?'active':'';
+const kd=DATA.kins[k],e=kd?getSeloEmoji(kd.selo):'?';
+oh+=`<div class="onda-kin cor-${co} ${ac}" title="Kin ${k}">${e}</div>`;
+}
+oh+='</div>';
+
+const cn=Math.floor((kn-1)/52),cas=DATA.castelos[cn]||{};
+const ds=(kn-1)%7,pl=DATA.plasmas[ds]||'';
+const rt=DATA.rituais[dw]||{},rn=rt.ritual||'';
+
+const hj=new Date(),ia=new Date(hj.getFullYear(),6,26),dp=daysBetween(ia,hj);
+const ln=Math.floor(dp/28)+1,dl=(dp%28)+1;
+let lh='<div class="lua-visual">';
+for(let s=0;s<4;s++){
+lh+='<div class="lua-semana">';
+for(let d=1;d<=7;d++){
+const dd=s*7+d;
+const ac=dd===dl?'active':'';
+lh+=`<div class="lua-dia ${ac}">${dd}</div>`;
+}
+lh+='</div>';
+}
+lh+='</div>';
+
+const on=Math.floor((kn-1)/13)+1,od=DATA.ondas[on-1]||{};
+const fl=getFaseLunar(hj);
+
+const anel_kin=((kn-1)%20)+1;
+const anel_selo=DATA.selos[anel_kin]||{};
+
+return`
 <div class="section">
-  <div class="kin-hero">
-    <div class="kin-emoji">${emoji}</div>
-    <div class="kin-title">${nome_completo}</div>
-    <div class="kin-subtitle">Kin ${kin_num} de 260</div>
-  </div>
-  
-  ${frase ? `<div class="kin-frase">"${frase.substring(0, 200)}..."</div>` : ''}
-  
-  <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin:2rem 0 1rem 0;text-transform:uppercase;text-align:center">Oráculo do Destino</div>
-  <div class="oraculo-container">
-    <div class="oraculo-central">
-      <div class="oraculo-emoji">${emoji}</div>
-      <div class="oraculo-nome">${selo_base}</div>
-    </div>
-    <div class="oraculo-side oraculo-guia">
-      <div class="oraculo-emoji">${getSeloEmoji(guia)}</div>
-      <div class="oraculo-nome">${getSeloBase(guia)}</div>
-    </div>
-    <div class="oraculo-side oraculo-analogo">
-      <div class="oraculo-emoji">${getSeloEmoji(analogo)}</div>
-      <div class="oraculo-nome">${getSeloBase(analogo)}</div>
-    </div>
-    <div class="oraculo-side oraculo-antipoda">
-      <div class="oraculo-emoji">${getSeloEmoji(antipoda)}</div>
-      <div class="oraculo-nome">${getSeloBase(antipoda)}</div>
-    </div>
-    <div class="oraculo-side oraculo-oculto">
-      <div class="oraculo-emoji">${getSeloEmoji(oculto)}</div>
-      <div class="oraculo-nome">${getSeloBase(oculto)}</div>
-    </div>
-  </div>
+<div class="kin-hero">
+<div class="kin-emoji">${em}</div>
+<div class="kin-title">${nc}</div>
+<div class="kin-subtitle">Kin ${kn} de 260</div>
+</div>
+${fr?`<div class="kin-frase">"${fr}"</div>`:''}
+<div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin:2rem 0 1rem 0;text-transform:uppercase;text-align:center">Oráculo do Destino</div>
+<div class="oraculo-container">
+<div class="oraculo-central">
+<div class="oraculo-emoji">${em}</div>
+<div class="oraculo-nome">${sb}</div>
+</div>
+<div class="oraculo-side oraculo-guia">
+<div class="oraculo-emoji">${getSeloEmoji(g)}</div>
+<div class="oraculo-nome">${getSeloBase(g)}</div>
+</div>
+<div class="oraculo-side oraculo-analogo">
+<div class="oraculo-emoji">${getSeloEmoji(an)}</div>
+<div class="oraculo-nome">${getSeloBase(an)}</div>
+</div>
+<div class="oraculo-side oraculo-antipoda">
+<div class="oraculo-emoji">${getSeloEmoji(at)}</div>
+<div class="oraculo-nome">${getSeloBase(at)}</div>
+</div>
+<div class="oraculo-side oraculo-oculto">
+<div class="oraculo-emoji">${getSeloEmoji(oc)}</div>
+<div class="oraculo-nome">${getSeloBase(oc)}</div>
+</div>
+</div>
 </div>
 
 <div class="section">
-  <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Onda Encantada</div>
-  <p style="color:var(--text2);margin-bottom:1rem">Dia ${dia_onda} da Onda</p>
-  ${onda_html}
+<div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Onda Encantada ${on} - Dia ${dw}</div>
+${oh}
 </div>
 
 <div class="grid-2">
-  <div class="section">
-    <div class="cards">
-      <div class="card">
-        <div class="card-label">🏰 Castelo</div>
-        <div class="card-val">${castelo_nome}</div>
-      </div>
-      <div class="card">
-        <div class="card-label">🌙 Lua Galáctica</div>
-        <div class="card-val">Lua ${lua_num}, Dia ${dia_lua}</div>
-      </div>
-      <div class="card">
-        <div class="card-label">⚡ Plasma</div>
-        <div class="card-val">${plasma}</div>
-      </div>
-      <div class="card">
-        <div class="card-label">📿 Prática</div>
-        <div class="card-val">${ritual_nome}</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="section">
-    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Prática Diária</div>
-    <ul class="praticas-list">
-      <li>Ouça a prece das 7 direções galácticas</li>
-      <li>Ouça a meditação do selo</li>
-      <li>Ouça o Self Design Sounds</li>
-      <li>Faça a leitura da página ${dia_onda} do e-book</li>
-      <li>${ritual_nome}</li>
-    </ul>
-  </div>
+<div class="section">
+<div class="cards">
+<div class="card">
+<div class="card-label">🏰 Castelo</div>
+<div class="card-val">${cas.nome||''} (${cas.direcao||''})</div>
 </div>
-  `;
+<div class="card">
+<div class="card-label">🌙 Lua Galáctica</div>
+<div class="card-val">Lua ${ln}, Dia ${dl}</div>
+</div>
+<div class="card">
+<div class="card-label">⚡ Plasma</div>
+<div class="card-val">${pl}</div>
+</div>
+<div class="card">
+<div class="card-label">🌕 Fase Lunar</div>
+<div class="card-val">${fl}</div>
+</div>
+<div class="card">
+<div class="card-label">⭐ Anel Solar</div>
+<div class="card-val">${anel_selo.nome||''}</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Lua ${ln} com Semanas</div>
+${lh}
+</div>
+</div>
+
+<div class="section">
+<div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Prática Diária</div>
+<ul class="praticas-list">
+<li>Ouça a prece das 7 direções galácticas</li>
+<li>Ouça a meditação do selo</li>
+<li>Ouça o Self Design Sounds</li>
+<li>Faça a leitura da página ${dw} do e-book</li>
+<li>${rn}</li>
+</ul>
+</div>
+`;
 }
 
-function calcNatal() {
-  const v = document.getElementById('nasc-inp').value;
-  if (!v) return;
-  const [y, m, d] = v.split('-').map(Number);
-  const dt = new Date(y, m - 1, d);
-  const k = dateToKin(dt);
-  document.getElementById('res-natal').innerHTML = kinHTML(k);
-  document.getElementById('res-natal').classList.remove('hidden');
+function calcNatal(){
+const v=document.getElementById('nasc-inp').value;
+if(!v)return;
+const[y,m,d]=v.split('-').map(Number);
+const dt=new Date(y,m-1,d);
+const k=dateToKin(dt);
+document.getElementById('res-natal').innerHTML=kinHTML(k);
+document.getElementById('res-natal').classList.remove('hidden');
 }
 
-function loadToday() {
-  const k = dateToKin(new Date());
-  document.getElementById('res-dia').innerHTML = kinHTML(k);
+function loadToday(){
+const k=dateToKin(new Date());
+document.getElementById('res-dia').innerHTML=kinHTML(k);
 }
 </script>
 </body>
