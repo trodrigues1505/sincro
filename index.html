@@ -86,6 +86,14 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
 .tooltip:hover::after{content:attr(data-tooltip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--card);color:var(--text);padding:0.5rem 1rem;border-radius:4px;border:0.5px solid var(--border);white-space:nowrap;z-index:1000;margin-bottom:5px;font-size:0.75rem}
 .info-text{color:var(--text2);font-size:0.9rem;line-height:1.6;margin:0.5rem 0}
 .info-box{background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid var(--blue);margin:1rem 0}
+.lua-dia{width:32px;height:32px;background:var(--bg2);border:2px solid;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:bold}
+.lua-dia.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.lua-red{border-color:var(--red);color:var(--red)}
+.lua-white{border-color:var(--white);color:var(--white)}
+.lua-blue{border-color:var(--blue);color:var(--blue)}
+.lua-yellow{border-color:var(--yellow);color:var(--yellow)}
+.lua-red.active,.lua-white.active,.lua-blue.active,.lua-yellow.active{color:var(--bg)}
+
 </style>
 </head>
 <body>
@@ -339,7 +347,6 @@ function kinHTML(kinNum) {
   const kD = DATA.kins[kinNum];
   if (!kD) return '<p>Carregando dados...</p>';
 
-  // Processar nome do kin
   const seloCompleto = kD.selo;
   const partes = seloCompleto.split(' ');
   const cor = partes[partes.length - 1];
@@ -351,37 +358,36 @@ function kinHTML(kinNum) {
   const fraseCurta = kD.frase_curta || '';
   const corSelo = getSeloCor(seloCompleto);
 
-  // Oráculo
   const { guia, analogo, antipoda, oculto } = kD.oraculo;
-
-  // Tom info
   const tomNum = kD.tom;
   const tomInfo = DATA.tons[tomNum] || {};
-  const tomVerbo = tomInfo.verbo || '';
-  const tomPergunta = tomInfo.pergunta || '';
 
-  // Onda Encantada
+  // Onda Encantada com CORES INDIVIDUAIS
   const ondaInicio = Math.floor((kinNum - 1) / 13) * 13 + 1;
   const diaOnda = ((kinNum - 1) % 13) + 1;
   let ondaHTML = '<div class="onda-L">';
   for (let i = 0; i < 13; i++) {
     const k = ondaInicio + i;
-    const corOnda = CORES_ONDA[i];
-    const ativo = k === kinNum ? 'active' : '';
     const kData = DATA.kins[k];
     const em = kData ? getSeloEmoji(kData.selo) : '?';
+    const corKin = kData ? getSeloCor(kData.selo) : 'white';
+    const ativo = k === kinNum ? 'active' : '';
     const tooltip = kData ? `Kin ${k} - ${kData.selo} ${kData.tom_nome}` : '';
-    ondaHTML += `<div class="onda-kin cor-${corOnda} ${ativo}" title="${tooltip}">${em}</div>`;
+    ondaHTML += `<div class="onda-kin selo-${corKin} ${ativo}" title="${tooltip}">${em}</div>`;
   }
   ondaHTML += '</div>';
 
-  // Castelo
+  // Castelo COMPLETO
   const casteloNum = Math.floor((kinNum - 1) / 52);
   const castelo = DATA.castelos[casteloNum] || {};
-  const casteloNome = castelo.nome || '';
-  const casteloDirecao = castelo.dir || '';
+  const casteloTexto = `🏰 Castelo ${castelo.nome} ${castelo.dir} do ${castelo.proposito}`;
   const casteloOndas = castelo.ondas || [];
-  const casteloInfo = `Castelo ${casteloNome} ${casteloDirecao} - ${casteloOndas.join(', ')}`;
+  let casteloOndasHTML = '<div style="display:flex;gap:8px;justify-content:center;margin-top:0.5rem">';
+  for (let ondaNome of casteloOndas) {
+    const ondaEmoji = getSeloEmoji(ondaNome);
+    casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="font-size:2rem">${ondaEmoji}</div>`;
+  }
+  casteloOndasHTML += '</div>';
 
   // Plasma
   const diaSemana = (kinNum - 1) % 7;
@@ -389,9 +395,8 @@ function kinHTML(kinNum) {
 
   // Ritual
   const ritual = DATA.rituais[diaOnda] || {};
-  const ritualNome = ritual.ritual || '';
 
-  // Lua Galáctica
+  // Lua Galáctica com SEMANAS COLORIDAS
   const hoje = new Date();
   const anoGal = hoje >= new Date(hoje.getFullYear(), 6, 26) ? hoje.getFullYear() : hoje.getFullYear() - 1;
   const inicioAno = new Date(anoGal, 6, 26);
@@ -399,17 +404,31 @@ function kinHTML(kinNum) {
   const luaNum = Math.floor(diasPassados / 28) + 1;
   const diaLua = (diasPassados % 28) + 1;
   const luaNome = DATA.luas[luaNum - 1] || '';
+  
+  let luaHTML = '<div style="display:flex;gap:6px;margin-top:1rem">';
+  const coresSemana = ['red', 'white', 'blue', 'yellow'];
+  for (let sem = 0; sem < 4; sem++) {
+    luaHTML += '<div style="display:flex;flex-direction:column;gap:4px">';
+    for (let d = 1; d <= 7; d++) {
+      const diaNum = sem * 7 + d;
+      const ativo = diaNum === diaLua ? 'active' : '';
+      luaHTML += `<div class="lua-dia lua-${coresSemana[sem]} ${ativo}">${diaNum}</div>`;
+    }
+    luaHTML += '</div>';
+  }
+  luaHTML += '</div>';
 
   // Fase Lunar
   const faseLunar = getFaseLunar(hoje);
 
-  // Anel Solar
+  // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
   const anelSelo = DATA.selos[anelKin] || {};
+  const anelEmoji = getSeloEmoji(anelSelo.nome || '');
   const anelNome = anelSelo.nome || '';
   const anelAcao = anelSelo.acao || '';
 
-  // Onda número e nome
+  // Onda propósito
   const ondaNum = Math.floor((kinNum - 1) / 13) + 1;
   const ondaSelo = DATA.selos[((ondaNum - 1) % 20) + 1] || {};
 
@@ -454,40 +473,36 @@ function kinHTML(kinNum) {
   <p class="info-text">Propósito: ${ondaSelo.acao || ''}</p>
   ${ondaHTML}
   <div class="info-box">
-    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--text);margin-bottom:0.5rem">TOM ${tomNum} - ${tomOriginal.toUpperCase()}</div>
-    <p class="info-text"><strong>${tomVerbo}</strong></p>
-    <p class="info-text">${tomPergunta}</p>
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--text);margin-bottom:0.5rem">${tomOriginal.toUpperCase()}: ${tomInfo.verbo || ''}</div>
+    <p class="info-text">${tomInfo.pergunta || ''}</p>
   </div>
 </div>
 
 <div class="grid-2">
   <div class="section">
     <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Informações</div>
-    <div class="grid-3">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">${casteloTexto}</div>
+      ${casteloOndasHTML}
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">🌙 ${luaNome}</div>
+      ${luaHTML}
+    </div>
+    <div class="grid-3" style="margin-top:1.5rem">
       <div class="card">
-        <div class="card-label">🏰 Castelo</div>
-        <div class="card-val">${casteloNome} (${casteloDirecao})</div>
-      </div>
-      <div class="card">
-        <div class="card-label">🌙 Lua Galáctica</div>
-        <div class="card-val">${luaNome}<br>Dia ${diaLua}</div>
+        <div class="card-label">⭐ Anel Solar</div>
+        <div style="font-size:2rem;text-align:center;margin:0.5rem 0">${anelEmoji}</div>
+        <div class="card-val" style="text-align:center">${anelNome}<br><small style="font-size:0.75rem;color:var(--text2)">${anelAcao}</small></div>
       </div>
       <div class="card">
         <div class="card-label">⚡ Plasma</div>
         <div class="card-val">${plasma}</div>
       </div>
       <div class="card">
-        <div class="card-label">🌕 Fase Lunar</div>
+        <div class="card-label">Fase Lunar</div>
         <div class="card-val">${faseLunar}</div>
       </div>
-      <div class="card">
-        <div class="card-label">⭐ Anel Solar</div>
-        <div class="card-val">${anelNome}<br><small>${anelAcao}</small></div>
-      </div>
-    </div>
-    <div style="margin-top:1.5rem">
-      <div style="font-size:0.75rem;color:var(--text3);text-transform:uppercase;margin-bottom:0.5rem">4 Ondas do Castelo ${casteloNome}</div>
-      <p class="info-text">${casteloOndas.join(' • ')}</p>
     </div>
   </div>
 
@@ -498,12 +513,13 @@ function kinHTML(kinNum) {
       <li>Ouça a meditação do selo</li>
       <li>Ouça o Self Design Sounds</li>
       <li>Faça a leitura da página ${diaOnda} do e-book</li>
-      <li>${ritualNome}</li>
+      <li>${ritual.ritual || ''}</li>
     </ul>
   </div>
 </div>
   `;
 }
+
 
 function calcNatal() {
   const v = document.getElementById('nasc-inp').value;
