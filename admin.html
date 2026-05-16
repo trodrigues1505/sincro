@@ -3,89 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Admin - Sincronário</title>
+<title>Painel Admin - Sincronário das 13 Luas</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--green:#4caf50;--red:#d63b3b}
+:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--red:#d63b3b;--white-c:#f0f0f0;--blue:#3b8ed6;--yellow:#f5c842;--green:#4caf50}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.6;min-height:100vh;padding:2rem}
-.container{max-width:1200px;margin:0 auto}
-h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);margin-bottom:0.5rem}
-.subtitle{color:var(--text2);margin-bottom:2rem}
-.back-btn{background:rgba(180,154,240,0.1);border:0.5px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 16px;font-family:'Cinzel',serif;font-size:0.75rem;cursor:pointer;text-transform:uppercase;text-decoration:none;display:inline-block;margin-bottom:1.5rem}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.6;min-height:100vh}
+.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center;margin-bottom:0.5rem}
+.user-bar{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.user-info{display:flex;align-items:center;gap:12px}
+.user-avatar{width:40px;height:40px;border-radius:50%;border:2px solid var(--gold)}
+.btn-logout,.btn-back{background:rgba(180,154,240,0.1);border:0.5px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 16px;font-family:'Cinzel',serif;font-size:0.75rem;cursor:pointer;text-transform:uppercase}
+.btn-back{border-color:var(--blue);color:var(--blue)}
 .section{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
-.section-title{font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;letter-spacing:0.15em}
-.user-list{display:grid;gap:12px}
-.user-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:1rem;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
-.user-avatar{width:48px;height:48px;border-radius:50%;border:2px solid var(--gold)}
-.user-name{font-family:'Cinzel',serif;font-size:1rem;color:var(--text)}
-.user-email{font-size:0.85rem;color:var(--text2)}
-.user-status{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px}
-.status-authorized{color:var(--green)}
-.status-pending{color:var(--gold)}
-.user-actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:none;border-radius:6px;padding:8px 14px;font-family:'Cinzel',serif;font-size:0.7rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em}
-.btn-authorize{background:var(--green);color:#fff}
-.btn-revoke{background:var(--red);color:#fff}
-.btn-make-admin{background:var(--gold);color:var(--bg)}
-.btn-remove-admin{background:rgba(201,168,76,0.2);border:0.5px solid var(--gold);color:var(--gold)}
-.btn-delete{background:rgba(214,59,59,0.1);border:0.5px solid var(--red);color:var(--red)}
-.loading{text-align:center;padding:2rem;color:var(--text2)}
-.empty{text-align:center;padding:2rem;color:var(--text3);font-style:italic}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:1.5rem}
-.stat-card{background:var(--card);border:0.5px solid var(--border);border-radius:8px;padding:1.25rem;text-align:center}
+.section h2{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase}
+.user-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.user-details{flex:1;min-width:200px}
+.user-email{font-family:'Cinzel',serif;color:var(--gold);font-size:0.9rem}
+.user-uid{font-size:0.75rem;color:var(--text3);word-break:break-all;margin-top:4px}
+.user-status{display:flex;gap:8px;align-items:center}
+.badge{padding:4px 12px;border-radius:4px;font-size:0.75rem;text-transform:uppercase;font-weight:600}
+.badge.authorized{background:rgba(76,175,80,0.2);color:#4caf50;border:0.5px solid #4caf50}
+.badge.pending{background:rgba(245,200,66,0.2);color:#f5c842;border:0.5px solid #f5c842}
+.badge.admin{background:rgba(201,168,76,0.2);color:var(--gold);border:0.5px solid var(--gold)}
+.btn-authorize,.btn-admin-toggle,.btn-remove{border:none;border-radius:4px;padding:8px 14px;font-family:'Cinzel',serif;font-size:0.7rem;cursor:pointer;text-transform:uppercase;transition:all 0.2s}
+.btn-authorize{background:rgba(76,175,80,0.2);color:#4caf50;border:0.5px solid #4caf50}
+.btn-authorize:hover{background:#4caf50;color:white}
+.btn-admin-toggle{background:rgba(201,168,76,0.2);color:var(--gold);border:0.5px solid var(--gold)}
+.btn-admin-toggle:hover{background:var(--gold);color:var(--bg)}
+.btn-remove{background:rgba(214,59,59,0.2);color:var(--red);border:0.5px solid var(--red)}
+.btn-remove:hover{background:var(--red);color:white}
+.loading{color:var(--text2);text-align:center;padding:1rem}
+.empty{color:var(--text3);text-align:center;padding:2rem;font-style:italic}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
 .stat-number{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);margin-bottom:0.5rem}
-.stat-label{font-size:0.8rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em}
+.stat-label{font-size:0.75rem;color:var(--text3);text-transform:uppercase}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:400px;width:90%}
+.modal-content h3{color:var(--gold);margin-bottom:1rem}
+.modal-content p{color:var(--text2);margin-bottom:1.5rem}
+.modal-buttons{display:flex;gap:10px;justify-content:flex-end}
+.btn-confirm,.btn-cancel{padding:10px 20px;border:none;border-radius:4px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase}
+.btn-confirm{background:var(--red);color:white}
+.btn-cancel{background:var(--border);color:var(--text2)}
 </style>
 </head>
 <body>
+
 <div class="container">
-<a href="index.html" class="back-btn">← Voltar ao App</a>
+  <div class="user-bar">
+    <div class="user-info">
+      <img id="user-avatar" class="user-avatar" src="" alt="">
+      <div>
+        <div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
+        <div style="font-size:0.75rem;color:var(--gold);text-transform:uppercase">ADMIN</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-back" onclick="window.location.href='index.html'">← Voltar</button>
+      <button class="btn-logout" id="btn-logout">Sair</button>
+    </div>
+  </div>
 
-<h1>🔐 Painel de Administração</h1>
-<p class="subtitle">Gerencie usuários e permissões</p>
+  <h1>👑 Painel Admin</h1>
+  <p style="text-align:center;color:var(--text2);margin-bottom:2rem">Gerenciar usuários e permissões</p>
 
-<div class="stats">
-<div class="stat-card">
-<div class="stat-number" id="stat-total">0</div>
-<div class="stat-label">Total de Usuários</div>
-</div>
-<div class="stat-card">
-<div class="stat-number" id="stat-authorized">0</div>
-<div class="stat-label">Autorizados</div>
-</div>
-<div class="stat-card">
-<div class="stat-number" id="stat-pending">0</div>
-<div class="stat-label">Pendentes</div>
-</div>
-<div class="stat-card">
-<div class="stat-number" id="stat-admins">0</div>
-<div class="stat-label">Administradores</div>
-</div>
-</div>
+  <div class="stats" id="stats"></div>
 
-<div class="section">
-<div class="section-title">👤 Usuários Pendentes</div>
-<div id="pending-users" class="user-list">
-<div class="loading">Carregando...</div>
-</div>
-</div>
+  <div class="section">
+    <h2>⏳ Pendentes de Autorização</h2>
+    <div id="pending-users" class="loading">Carregando...</div>
+  </div>
 
-<div class="section">
-<div class="section-title">✅ Usuários Autorizados</div>
-<div id="authorized-users" class="user-list">
-<div class="loading">Carregando...</div>
-</div>
-</div>
+  <div class="section">
+    <h2>✅ Usuários Autorizados</h2>
+    <div id="authorized-users" class="loading">Carregando...</div>
+  </div>
 </div>
 
-<!-- Firebase SDK v8 (sem imports) -->
+<div id="confirm-modal" class="modal">
+  <div class="modal-content">
+    <h3 id="modal-title">Confirmar ação</h3>
+    <p id="modal-message"></p>
+    <div class="modal-buttons">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-confirm" id="modal-confirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-// Configuração Firebase - sincro13luas
 const firebaseConfig = {
   apiKey: "AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",
   authDomain: "sincro13luas.firebaseapp.com",
@@ -95,134 +109,162 @@ const firebaseConfig = {
   appId: "1:886057704979:web:31b8348110ff8649c369e6"
 };
 
-// Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Verificar se é admin
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+let currentUser = null;
+let currentAction = null;
+
 auth.onAuthStateChanged(async (user) => {
-  if (!user) {
+  if (user) {
+    // Verificar se é admin
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    if (!userDoc.exists || userDoc.data().role !== 'admin') {
+      alert('❌ Acesso negado! Você não é admin.');
+      window.location.href = 'index.html';
+      return;
+    }
+
+    currentUser = user;
+    document.getElementById('user-avatar').src = user.photoURL || '';
+    document.getElementById('user-name').textContent = user.displayName;
+    loadUsers();
+  } else {
     window.location.href = 'index.html';
-    return;
   }
-  
-  const userDoc = await db.collection('users').doc(user.uid).get();
-  if (!userDoc.exists || userDoc.data().role !== 'admin') {
-    alert('Acesso negado. Apenas administradores podem acessar esta página.');
-    window.location.href = 'index.html';
-    return;
-  }
-  
-  loadUsers();
 });
+
+document.getElementById('btn-logout').onclick = () => auth.signOut();
 
 async function loadUsers() {
   try {
-    const usersSnapshot = await db.collection('users').get();
+    const snapshot = await db.collection('users').get();
     const users = [];
-    
-    usersSnapshot.forEach(doc => {
+    snapshot.forEach(doc => {
       users.push({ id: doc.id, ...doc.data() });
     });
-    
-    // Estatísticas
-    const total = users.length;
-    const authorized = users.filter(u => u.authorized).length;
-    const pending = users.filter(u => !u.authorized).length;
-    const admins = users.filter(u => u.role === 'admin').length;
-    
-    document.getElementById('stat-total').textContent = total;
-    document.getElementById('stat-authorized').textContent = authorized;
-    document.getElementById('stat-pending').textContent = pending;
-    document.getElementById('stat-admins').textContent = admins;
-    
-    // Separar usuários
-    const pendingUsers = users.filter(u => !u.authorized);
-    const authorizedUsers = users.filter(u => u.authorized);
-    
-    renderUserList('pending-users', pendingUsers);
-    renderUserList('authorized-users', authorizedUsers);
-  } catch (error) {
-    console.error('Erro ao carregar usuários:', error);
-  }
-}
 
-function renderUserList(containerId, users) {
-  const container = document.getElementById(containerId);
-  
-  if (users.length === 0) {
-    container.innerHTML = '<div class="empty">Nenhum usuário nesta categoria</div>';
-    return;
-  }
-  
-  container.innerHTML = users.map(user => `
-    <div class="user-item">
-      <img src="${user.photoURL || ''}" alt="${user.displayName}" class="user-avatar">
-      <div>
-        <div class="user-name">${user.displayName || 'Sem nome'}</div>
-        <div class="user-email">${user.email}</div>
-        <div class="user-status ${user.authorized ? 'status-authorized' : 'status-pending'}">
-          ${user.authorized ? '✓ Autorizado' : '⏳ Pendente'} 
-          ${user.role === 'admin' ? '· 👑 Admin' : ''}
+    const pending = users.filter(u => !u.authorized);
+    const authorized = users.filter(u => u.authorized);
+
+    // Stats
+    document.getElementById('stats').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-number">${users.length}</div>
+        <div class="stat-label">Total de Usuários</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${pending.length}</div>
+        <div class="stat-label">Pendentes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${authorized.length}</div>
+        <div class="stat-label">Autorizados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${users.filter(u => u.role === 'admin').length}</div>
+        <div class="stat-label">Admins</div>
+      </div>
+    `;
+
+    // Pending users
+    if (pending.length === 0) {
+      document.getElementById('pending-users').innerHTML = '<div class="empty">✅ Ninguém aguardando autorização</div>';
+    } else {
+      document.getElementById('pending-users').innerHTML = pending.map(u => `
+        <div class="user-item">
+          <div class="user-details">
+            <div class="user-email">${u.email}</div>
+            <div class="user-uid">UID: ${u.id}</div>
+          </div>
+          <div class="user-status">
+            <span class="badge pending">Pendente</span>
+            <button class="btn-authorize" onclick="authorize('${u.id}')">✅ Autorizar</button>
+            <button class="btn-remove" onclick="removeUser('${u.id}')">🗑️ Remover</button>
+          </div>
         </div>
-      </div>
-      <div class="user-actions">
-        ${!user.authorized ? `
-          <button class="btn btn-authorize" onclick="authorizeUser('${user.id}')">Autorizar</button>
-        ` : `
-          <button class="btn btn-revoke" onclick="revokeUser('${user.id}')">Revogar</button>
-        `}
-        ${user.authorized && user.role !== 'admin' ? `
-          <button class="btn btn-make-admin" onclick="makeAdmin('${user.id}')">Admin</button>
-        ` : ''}
-        ${user.role === 'admin' ? `
-          <button class="btn btn-remove-admin" onclick="removeAdmin('${user.id}')">Remover Admin</button>
-        ` : ''}
-        <button class="btn btn-delete" onclick="deleteUser('${user.id}')">Excluir</button>
-      </div>
-    </div>
-  `).join('');
-}
+      `).join('');
+    }
 
-async function authorizeUser(userId) {
-  if (!confirm('Autorizar este usuário?')) return;
-  await db.collection('users').doc(userId).update({ authorized: true });
-  loadUsers();
-}
-
-async function revokeUser(userId) {
-  if (!confirm('Revogar acesso deste usuário?')) return;
-  await db.collection('users').doc(userId).update({ authorized: false });
-  loadUsers();
-}
-
-async function makeAdmin(userId) {
-  if (!confirm('Tornar este usuário administrador?')) return;
-  await db.collection('users').doc(userId).update({ role: 'admin' });
-  loadUsers();
-}
-
-async function removeAdmin(userId) {
-  const currentUser = auth.currentUser;
-  if (userId === currentUser.uid) {
-    alert('Você não pode remover seu próprio cargo de admin!');
-    return;
+    // Authorized users
+    if (authorized.length === 0) {
+      document.getElementById('authorized-users').innerHTML = '<div class="empty">Nenhum usuário autorizado</div>';
+    } else {
+      document.getElementById('authorized-users').innerHTML = authorized.map(u => `
+        <div class="user-item">
+          <div class="user-details">
+            <div class="user-email">${u.email}</div>
+            <div style="color:var(--text3);font-size:0.75rem;margin-top:4px">UID: ${u.id}</div>
+          </div>
+          <div class="user-status">
+            <span class="badge authorized">✅ Autorizado</span>
+            ${u.role === 'admin' ? '<span class="badge admin">👑 Admin</span>' : ''}
+            <button class="btn-admin-toggle" onclick="toggleAdmin('${u.id}', ${u.role === 'admin'})">
+              ${u.role === 'admin' ? '👤 Remover Admin' : '👑 Fazer Admin'}
+            </button>
+            <button class="btn-remove" onclick="removeUser('${u.id}')">🗑️ Remover</button>
+          </div>
+        </div>
+      `).join('');
+    }
+  } catch (err) {
+    console.error('Erro ao carregar usuários:', err);
+    document.getElementById('pending-users').innerHTML = '<div class="empty">❌ Erro ao carregar</div>';
   }
-  if (!confirm('Remover privilégios de administrador?')) return;
-  await db.collection('users').doc(userId).update({ role: 'user' });
-  loadUsers();
 }
 
-async function deleteUser(userId) {
-  const currentUser = auth.currentUser;
-  if (userId === currentUser.uid) {
-    alert('Você não pode excluir sua própria conta!');
-    return;
-  }
-  if (!confirm('ATENÇÃO: Isso excluirá permanentemente o usuário. Confirmar?')) return;
-  await db.collection('users').doc(userId).delete();
-  loadUsers();
+function showModal(title, message, action) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-message').textContent = message;
+  currentAction = action;
+  document.getElementById('confirm-modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('confirm-modal').classList.remove('active');
+  currentAction = null;
+}
+
+document.getElementById('modal-confirm').onclick = () => {
+  if (currentAction) currentAction();
+  closeModal();
+};
+
+async function authorize(uid) {
+  showModal(
+    'Autorizar Usuário',
+    'Deseja autorizar este usuário a acessar o app?',
+    async () => {
+      await db.collection('users').doc(uid).update({ authorized: true });
+      loadUsers();
+    }
+  );
+}
+
+async function toggleAdmin(uid, isAdmin) {
+  const action = isAdmin ? 'remover' : 'tornar';
+  showModal(
+    `${isAdmin ? 'Remover' : 'Tornar'} Admin`,
+    `Deseja ${action} este usuário como admin?`,
+    async () => {
+      await db.collection('users').doc(uid).update({ role: isAdmin ? 'usuário' : 'admin' });
+      loadUsers();
+    }
+  );
+}
+
+async function removeUser(uid) {
+  showModal(
+    'Remover Usuário',
+    'Esta ação é irreversível. Deseja continuar?',
+    async () => {
+      await db.collection('users').doc(uid).delete();
+      loadUsers();
+    }
+  );
 }
 </script>
 </body>
