@@ -54,7 +54,7 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
 Entrar com Google
 </button>
 <div id="login-error" class="error-msg hidden"></div>
-<div id="login-loading" class="loading hidden">Verificando acesso...</div>
+<div id="login-loading" class="loading hidden">Aguarde...</div>
 </div>
 </div>
 
@@ -102,13 +102,11 @@ Entrar com Google
 
 </div>
 
-<!-- Firebase SDK v8 (sem imports) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-// Configuração Firebase - sincro13luas
 const firebaseConfig = {
   apiKey: "AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",
   authDomain: "sincro13luas.firebaseapp.com",
@@ -118,27 +116,24 @@ const firebaseConfig = {
   appId: "1:886057704979:web:31b8348110ff8649c369e6"
 };
 
-// Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Login com Google
-document.getElementById('btn-login').onclick = async () => {
-  try {
-    document.getElementById('login-error').classList.add('hidden');
-    document.getElementById('login-loading').classList.remove('hidden');
-    
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const result = await auth.signInWithPopup(provider);
+// Login com REDIRECT (funciona melhor no GitHub Pages)
+document.getElementById('btn-login').onclick = () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithRedirect(provider);
+};
+
+// Processar resultado do redirect
+auth.getRedirectResult().then(async (result) => {
+  if (result.user) {
     const user = result.user;
-    
-    // Verificar se usuário já existe
     const userRef = db.collection('users').doc(user.uid);
     const userDoc = await userRef.get();
     
     if (!userDoc.exists) {
-      // Criar novo usuário
       await userRef.set({
         email: user.email,
         displayName: user.displayName,
@@ -148,17 +143,15 @@ document.getElementById('btn-login').onclick = async () => {
         createdAt: new Date()
       });
       
-      document.getElementById('login-error').textContent = 'Conta criada! Aguarde autorização do administrador.';
+      document.getElementById('login-error').textContent = 'Conta criada! Aguarde autorização.';
       document.getElementById('login-error').classList.remove('hidden');
-      document.getElementById('login-loading').classList.add('hidden');
       await auth.signOut();
     }
-  } catch (error) {
-    document.getElementById('login-error').textContent = 'Erro ao fazer login: ' + error.message;
-    document.getElementById('login-error').classList.remove('hidden');
-    document.getElementById('login-loading').classList.add('hidden');
   }
-};
+}).catch((error) => {
+  document.getElementById('login-error').textContent = 'Erro: ' + error.message;
+  document.getElementById('login-error').classList.remove('hidden');
+});
 
 // Monitorar autenticação
 auth.onAuthStateChanged(async (user) => {
@@ -168,11 +161,10 @@ auth.onAuthStateChanged(async (user) => {
     const userDoc = await db.collection('users').doc(user.uid).get();
     
     if (userDoc.exists && userDoc.data().authorized) {
-      // Usuário autorizado - mostrar app
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app-screen').classList.add('active');
       
-      document.getElementById('user-avatar').src = user.photoURL;
+      document.getElementById('user-avatar').src = user.photoURL || '';
       document.getElementById('user-name').textContent = user.displayName;
       document.getElementById('user-role').textContent = userDoc.data().role || 'usuário';
       
@@ -182,40 +174,29 @@ auth.onAuthStateChanged(async (user) => {
       
       loadToday();
     } else {
-      // Não autorizado
-      document.getElementById('login-error').textContent = 'Acesso negado. Aguarde autorização do administrador.';
+      document.getElementById('login-error').textContent = 'Aguarde autorização do admin.';
       document.getElementById('login-error').classList.remove('hidden');
       document.getElementById('login-loading').classList.add('hidden');
       await auth.signOut();
     }
   } else {
-    // Não logado - mostrar tela de login
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app-screen').classList.remove('active');
     document.getElementById('login-loading').classList.add('hidden');
   }
 });
 
-// Logout
-document.getElementById('btn-logout').onclick = () => {
-  auth.signOut();
-};
+document.getElementById('btn-logout').onclick = () => auth.signOut();
 
-// Exportar PNG
 async function exportPNG() {
   const area = document.getElementById('export-area');
-  const canvas = await html2canvas(area, {
-    backgroundColor: '#0a0c14',
-    scale: 2
-  });
-  
+  const canvas = await html2canvas(area, {backgroundColor: '#0a0c14', scale: 2});
   const link = document.createElement('a');
   link.download = `sincronario-${new Date().toISOString().split('T')[0]}.png`;
   link.href = canvas.toDataURL();
   link.click();
 }
 
-// === SINCRONÁRIO - Cálculos ===
 const S=[{n:"Dragão",g:"m",c:"red",e:"🐉"},{n:"Vento",g:"m",c:"white",e:"💨"},{n:"Noite",g:"f",c:"blue",e:"🌌"},{n:"Semente",g:"f",c:"yellow",e:"🌱"},{n:"Serpente",g:"f",c:"red",e:"🐍"},{n:"Enlaçador de Mundos",g:"m",c:"white",e:"☯"},{n:"Mão",g:"f",c:"blue",e:"✋"},{n:"Estrela",g:"f",c:"yellow",e:"⭐"},{n:"Lua",g:"f",c:"red",e:"🌙"},{n:"Cão",g:"m",c:"white",e:"🐕"},{n:"Macaco",g:"m",c:"blue",e:"🐒"},{n:"Humano",g:"m",c:"yellow",e:"👤"},{n:"Caminhante do Céu",g:"m",c:"red",e:"🚶"},{n:"Feiticeiro",g:"m",c:"white",e:"🧙"},{n:"Águia",g:"f",c:"blue",e:"🦅"},{n:"Guerreiro",g:"m",c:"yellow",e:"⚔️"},{n:"Terra",g:"f",c:"red",e:"🌍"},{n:"Espelho",g:"m",c:"white",e:"🪞"},{n:"Tormenta",g:"f",c:"blue",e:"⛈️"},{n:"Sol",g:"m",c:"yellow",e:"☀️"}];
 const T=[{n:"Magnético"},{n:"Lunar"},{n:"Elétrico"},{n:"Autoexistente"},{n:"Overtone"},{n:"Rítmico"},{n:"Ressonante"},{n:"Galáctico"},{n:"Solar"},{n:"Planetário"},{n:"Espectral"},{n:"Cristal"},{n:"Cósmico"}];
 
