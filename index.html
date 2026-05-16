@@ -14,7 +14,7 @@ body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font
 .login-box{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:3rem 2rem;max-width:400px;width:100%;text-align:center}
 .login-box h1{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);margin-bottom:1rem}
 .login-box p{color:var(--text2);margin-bottom:2rem}
-.btn-google{background:#fff;color:#333;border:none;border-radius:8px;padding:12px 24px;font-family:'Cinzel',serif;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+.btn-google{background:#fff;color:#333;border:none;border-radius:8px;padding:12px 24px;font-family:'Cinzel',serif;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:all 0.2s}
 .btn-google:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,255,255,0.2)}
 .error-msg{background:rgba(214,59,59,0.1);border:0.5px solid var(--red);color:var(--red);padding:1rem;border-radius:8px;margin-top:1rem;font-size:0.9rem}
 .loading{color:var(--text2);margin-top:1rem}
@@ -54,7 +54,7 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
 Entrar com Google
 </button>
 <div id="login-error" class="error-msg hidden"></div>
-<div id="login-loading" class="loading hidden">Verificando...</div>
+<div id="login-loading" class="loading hidden">Verificando acesso...</div>
 </div>
 </div>
 
@@ -67,15 +67,15 @@ Entrar com Google
 <div id="user-role" style="font-size:0.75rem;color:var(--gold);text-transform:uppercase"></div>
 </div>
 </div>
-<div style="display:flex;gap:8px">
-<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Admin</button>
-<button class="btn-export" onclick="exportPNG()">📸 PNG</button>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Painel Admin</button>
+<button class="btn-export" onclick="exportPNG()">📸 Exportar PNG</button>
 <button class="btn-logout" id="btn-logout">Sair</button>
 </div>
 </div>
 
 <h1>🌀 Sincronário das 13 Luas</h1>
-<p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Lei do Tempo</p>
+<p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Calculadora Completa · Lei do Tempo</p>
 
 <div class="tabs">
 <button class="tab active" onclick="switchTab('dia')">Kin do Dia</button>
@@ -86,10 +86,12 @@ Entrar com Google
 <div id="tab-dia" class="tab-content active">
 <div class="section"><div id="res-dia"></div></div>
 </div>
+
 <div id="tab-natal" class="tab-content">
 <div class="section">
 <div style="font-family:Cinzel;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem">Kin Natal</div>
-<div style="display:flex;gap:10px;align-items:center">
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<label style="min-width:80px;color:var(--text2);font-style:italic">Nascimento</label>
 <input type="date" id="nasc-inp">
 <button class="btn-calc" onclick="calcNatal()">Calcular</button>
 </div>
@@ -97,20 +99,16 @@ Entrar com Google
 </div>
 </div>
 </div>
+
 </div>
 
+<!-- Firebase SDK v8 (sem imports) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-// ⚠️ COLE SUAS CREDENCIAIS AQUI ⚠️
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+// Configuração Firebase - sincro13luas
 const firebaseConfig = {
   apiKey: "AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",
   authDomain: "sincro13luas.firebaseapp.com",
@@ -120,14 +118,12 @@ const firebaseConfig = {
   appId: "1:886057704979:web:31b8348110ff8649c369e6"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
+// Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Login
+// Login com Google
 document.getElementById('btn-login').onclick = async () => {
   try {
     document.getElementById('login-error').classList.add('hidden');
@@ -137,10 +133,12 @@ document.getElementById('btn-login').onclick = async () => {
     const result = await auth.signInWithPopup(provider);
     const user = result.user;
     
+    // Verificar se usuário já existe
     const userRef = db.collection('users').doc(user.uid);
     const userDoc = await userRef.get();
     
     if (!userDoc.exists) {
+      // Criar novo usuário
       await userRef.set({
         email: user.email,
         displayName: user.displayName,
@@ -150,23 +148,27 @@ document.getElementById('btn-login').onclick = async () => {
         createdAt: new Date()
       });
       
-      document.getElementById('login-error').textContent = 'Conta criada! Aguarde autorização.';
+      document.getElementById('login-error').textContent = 'Conta criada! Aguarde autorização do administrador.';
       document.getElementById('login-error').classList.remove('hidden');
+      document.getElementById('login-loading').classList.add('hidden');
       await auth.signOut();
     }
   } catch (error) {
-    document.getElementById('login-error').textContent = 'Erro: ' + error.message;
+    document.getElementById('login-error').textContent = 'Erro ao fazer login: ' + error.message;
     document.getElementById('login-error').classList.remove('hidden');
-  } finally {
     document.getElementById('login-loading').classList.add('hidden');
   }
 };
 
+// Monitorar autenticação
 auth.onAuthStateChanged(async (user) => {
   if (user) {
+    document.getElementById('login-loading').classList.remove('hidden');
+    
     const userDoc = await db.collection('users').doc(user.uid).get();
     
     if (userDoc.exists && userDoc.data().authorized) {
+      // Usuário autorizado - mostrar app
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app-screen').classList.add('active');
       
@@ -180,16 +182,40 @@ auth.onAuthStateChanged(async (user) => {
       
       loadToday();
     } else {
-      document.getElementById('login-error').textContent = 'Aguarde autorização do admin.';
+      // Não autorizado
+      document.getElementById('login-error').textContent = 'Acesso negado. Aguarde autorização do administrador.';
       document.getElementById('login-error').classList.remove('hidden');
+      document.getElementById('login-loading').classList.add('hidden');
       await auth.signOut();
     }
+  } else {
+    // Não logado - mostrar tela de login
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app-screen').classList.remove('active');
+    document.getElementById('login-loading').classList.add('hidden');
   }
 });
 
-document.getElementById('btn-logout').onclick = () => auth.signOut();
+// Logout
+document.getElementById('btn-logout').onclick = () => {
+  auth.signOut();
+};
 
-// Sincronário
+// Exportar PNG
+async function exportPNG() {
+  const area = document.getElementById('export-area');
+  const canvas = await html2canvas(area, {
+    backgroundColor: '#0a0c14',
+    scale: 2
+  });
+  
+  const link = document.createElement('a');
+  link.download = `sincronario-${new Date().toISOString().split('T')[0]}.png`;
+  link.href = canvas.toDataURL();
+  link.click();
+}
+
+// === SINCRONÁRIO - Cálculos ===
 const S=[{n:"Dragão",g:"m",c:"red",e:"🐉"},{n:"Vento",g:"m",c:"white",e:"💨"},{n:"Noite",g:"f",c:"blue",e:"🌌"},{n:"Semente",g:"f",c:"yellow",e:"🌱"},{n:"Serpente",g:"f",c:"red",e:"🐍"},{n:"Enlaçador de Mundos",g:"m",c:"white",e:"☯"},{n:"Mão",g:"f",c:"blue",e:"✋"},{n:"Estrela",g:"f",c:"yellow",e:"⭐"},{n:"Lua",g:"f",c:"red",e:"🌙"},{n:"Cão",g:"m",c:"white",e:"🐕"},{n:"Macaco",g:"m",c:"blue",e:"🐒"},{n:"Humano",g:"m",c:"yellow",e:"👤"},{n:"Caminhante do Céu",g:"m",c:"red",e:"🚶"},{n:"Feiticeiro",g:"m",c:"white",e:"🧙"},{n:"Águia",g:"f",c:"blue",e:"🦅"},{n:"Guerreiro",g:"m",c:"yellow",e:"⚔️"},{n:"Terra",g:"f",c:"red",e:"🌍"},{n:"Espelho",g:"m",c:"white",e:"🪞"},{n:"Tormenta",g:"f",c:"blue",e:"⛈️"},{n:"Sol",g:"m",c:"yellow",e:"☀️"}];
 const T=[{n:"Magnético"},{n:"Lunar"},{n:"Elétrico"},{n:"Autoexistente"},{n:"Overtone"},{n:"Rítmico"},{n:"Ressonante"},{n:"Galáctico"},{n:"Solar"},{n:"Planetário"},{n:"Espectral"},{n:"Cristal"},{n:"Cósmico"}];
 
@@ -204,19 +230,17 @@ function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList
 
 function kinHTML(k){const si=kS(k),ti=kT(k);const s=S[si],t=T[ti];return`<div class="kin-hero">
 <div style="font-size:3rem;margin-bottom:1rem">${s.e}</div>
-<div style="font-family:Cinzel;font-size:1.4rem;margin:1rem 0">${nc(s,t)}</div>
+<div style="font-family:Cinzel;font-size:1.4rem;margin:1rem 0;letter-spacing:0.03em">${nc(s,t)}</div>
 <div style="color:var(--text2);font-size:0.85rem">Kin ${k} de 260</div>
 </div><div class="cards">
-<div class="card"><div class="card-label">Tom</div><div class="card-val">${t.n}</div></div>
-<div class="card"><div class="card-label">Selo</div><div class="card-val">${s.e} ${s.n}</div></div>
+<div class="card"><div class="card-label">Tom Galáctico</div><div class="card-val">${t.n}</div></div>
+<div class="card"><div class="card-label">Selo Solar</div><div class="card-val">${s.e} ${s.n}</div></div>
 <div class="card"><div class="card-label">Cor</div><div class="card-val">${corPT(s.c,s.g)}</div></div>
 </div>`}
 
 function calcNatal(){const v=document.getElementById('nasc-inp').value;if(!v)return;const[y,m,d]=v.split('-').map(Number);const dt=new Date(y,m-1,d);const k=dateToKin(dt);document.getElementById('res-natal').innerHTML=kinHTML(k);document.getElementById('res-natal').classList.remove('hidden')}
 
 function loadToday(){const k=dateToKin(new Date());document.getElementById('res-dia').innerHTML=kinHTML(k)}
-
-async function exportPNG(){const area=document.getElementById('export-area');const canvas=await html2canvas(area,{backgroundColor:'#0a0c14',scale:2});const link=document.createElement('a');link.download=`kin-${new Date().toISOString().split('T')[0]}.png`;link.href=canvas.toDataURL();link.click()}
 </script>
 </body>
 </html>
