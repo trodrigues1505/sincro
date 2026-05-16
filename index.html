@@ -209,10 +209,16 @@ auth.onAuthStateChanged(async (user) => {
       if (userDoc.exists) {
         const data = userDoc.data();
         console.log('📋 Dados do documento:', data);
-        console.log('✔️ Autorizado?', data.authorized);
-        console.log('👑 Role:', data.role);
+        console.log('📋 Chaves do documento:', Object.keys(data));
         
-        if (data.authorized) {
+        // Acessar os valores corretamente
+        const authorized = data.authorized;
+        const role = data.role;
+        
+        console.log('✔️ Autorizado?', authorized, typeof authorized);
+        console.log('👑 Role:', role, typeof role);
+        
+        if (authorized === true) {
           console.log('✅✅✅ ACESSO LIBERADO!');
           
           document.getElementById('login-screen').style.display = 'none';
