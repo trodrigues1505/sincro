@@ -121,12 +121,44 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 // Login com REDIRECT
+// NOTA: Se o problema persistir, descomente a linha abaixo para usar Popup em vez de Redirect
 document.getElementById('btn-login').onclick = () => {
   console.log('🔵 Iniciando login...');
   document.getElementById('login-loading').classList.remove('hidden');
   const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithRedirect(provider);
+  
+  // ✅ OPÇÃO 1: Usar Popup (mais confiável em certos ambientes)
+  auth.signInWithPopup(provider)
+    .then((result) => {
+      console.log('✅ Login popup bem-sucedido:', result.user.email);
+    })
+    .catch((err) => {
+      console.error('❌ Erro no popup:', err);
+      document.getElementById('login-error').textContent = 'Erro: ' + err.message;
+      document.getElementById('login-error').classList.remove('hidden');
+      document.getElementById('login-loading').classList.add('hidden');
+    });
+
+  // ⚠️ OPÇÃO 2: Se preferir Redirect, descomente abaixo e comente o Popup acima
+  /*
+  auth.signInWithRedirect(provider).catch(err => {
+    console.error('❌ Erro no redirect:', err);
+    document.getElementById('login-error').textContent = 'Erro: ' + err.message;
+    document.getElementById('login-error').classList.remove('hidden');
+    document.getElementById('login-loading').classList.add('hidden');
+  });
+  */
 };
+
+// Capturar resultado do redirect (caso use a OPÇÃO 2)
+auth.getRedirectResult().then((result) => {
+  console.log('🔵 getRedirectResult:', result.user ? result.user.email : 'null');
+  if (result.user) {
+    console.log('✅ Login redirect bem-sucedido:', result.user.email);
+  }
+}).catch((error) => {
+  console.error('❌ Erro ao processar redirect:', error);
+});
 
 // Monitorar autenticação
 auth.onAuthStateChanged(async (user) => {
