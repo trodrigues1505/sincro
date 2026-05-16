@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sincronário das 13 Luas</title>
+<title>Sincronário das 13 Luas - Completo</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--red:#d63b3b;--white-c:#f0f0f0;--blue:#3b8ed6;--yellow:#f5c842}
+:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--red:#d63b3b;--blue:#3b8ed6;--yellow:#f5c842}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.6;min-height:100vh}
 .login-container{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
@@ -18,7 +18,7 @@ body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font
 .btn-google:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,255,255,0.2)}
 .error-msg{background:rgba(214,59,59,0.1);border:0.5px solid var(--red);color:var(--red);padding:1rem;border-radius:8px;margin-top:1rem;font-size:0.9rem}
 .loading{color:var(--text2);margin-top:1rem}
-.container{max-width:920px;margin:0 auto;padding:2rem 1.5rem;display:none}
+.container{max-width:1000px;margin:0 auto;padding:2rem 1.5rem;display:none}
 .container.active{display:block}
 h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center;margin-bottom:0.5rem}
 .user-bar{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
@@ -27,20 +27,24 @@ h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center
 .btn-logout,.btn-admin,.btn-export{background:rgba(180,154,240,0.1);border:0.5px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 16px;font-family:'Cinzel',serif;font-size:0.75rem;cursor:pointer;text-transform:uppercase}
 .btn-admin{border-color:var(--gold);color:var(--gold)}
 .btn-export{border-color:var(--blue);color:var(--blue)}
-.tabs{display:flex;gap:8px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border)}
+.tabs{display:flex;gap:8px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border);flex-wrap:wrap}
 .tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Cinzel',serif;font-size:0.75rem;padding:12px 20px;cursor:pointer;text-transform:uppercase}
 .tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-content{display:none}
 .tab-content.active{display:block}
 .section{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
-.kin-hero{text-align:center;padding:1.5rem;background:var(--bg2);border-radius:var(--radius);margin-bottom:1rem}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:1rem 0}
-.card{background:var(--bg2);border-radius:8px;padding:0.875rem 1rem;border:0.5px solid var(--border)}
-.card-label{font-size:0.7rem;color:var(--text3);text-transform:uppercase;margin-bottom:4px}
+.kin-hero{text-align:center;padding:2rem;background:linear-gradient(135deg,var(--bg2),var(--bg));border-radius:var(--radius);margin-bottom:1.5rem;border:0.5px solid var(--border)}
+.kin-emoji{font-size:4rem;margin-bottom:1rem}
+.kin-title{font-family:'Cinzel',serif;font-size:1.8rem;margin:1rem 0;letter-spacing:0.05em;color:var(--gold)}
+.kin-subtitle{color:var(--text2);font-size:0.9rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:1.5rem 0}
+.card{background:var(--bg2);border-radius:8px;padding:1rem;border:0.5px solid var(--border)}
+.card-label{font-size:0.75rem;color:var(--text3);text-transform:uppercase;margin-bottom:8px}
 .card-val{font-family:'Cinzel',serif;font-size:0.95rem;color:var(--text)}
 .hidden{display:none}
-input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;color:var(--text);padding:8px 14px;font-family:inherit;color-scheme:dark}
+input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-family:inherit;color-scheme:dark;width:100%;max-width:200px}
 .btn-calc{background:linear-gradient(135deg,rgba(138,110,220,0.2),rgba(201,168,76,0.15));border:0.5px solid var(--gold);border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.75rem;padding:10px 22px;cursor:pointer;text-transform:uppercase}
+.input-group{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -90,8 +94,8 @@ Entrar com Google
 <div id="tab-natal" class="tab-content">
 <div class="section">
 <div style="font-family:Cinzel;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem">Kin Natal</div>
-<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-<label style="min-width:80px;color:var(--text2);font-style:italic">Nascimento</label>
+<div class="input-group">
+<label style="color:var(--text2);font-style:italic">Data de Nascimento</label>
 <input type="date" id="nasc-inp">
 <button class="btn-calc" onclick="calcNatal()">Calcular</button>
 </div>
@@ -107,6 +111,44 @@ Entrar com Google
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
+// Dados dos selos com cores
+const SELOS_NOMES = [
+  'Dragão Vermelho', 'Vento Branco', 'Noite Azul', 'Semente Amarela',
+  'Serpente Vermelha', 'Enlaçador de Mundos Branco', 'Mão Azul', 'Estrela Amarela',
+  'Lua Vermelha', 'Cão Branco', 'Macaco Azul', 'Humano Amarelo',
+  'Caminhante do Céu Vermelho', 'Mago Branco', 'Águia Azul', 'Guerreiro Amarelo',
+  'Terra Vermelha', 'Espelho Branco', 'Tormenta Azul', 'Sol Amarelo'
+];
+
+const TONS_NOMES = ['', 'Magnético', 'Lunar', 'Elétrico', 'Autoexistente', 'Harmônico', 'Rítmico', 'Ressonante', 'Galáctico', 'Solar', 'Planetário', 'Espectral', 'Cristal', 'Cósmico'];
+
+const EMOJIS = ['🐉', '💨', '🌌', '🌱', '🐍', '☯️', '✋', '⭐', '🌙', '🐕', '🐒', '👤', '🚶', '🧙', '🦅', '⚔️', '🌍', '🪞', '⛈️', '☀️'];
+
+// Seletos femininos para concordância
+const FEMININOS = new Set(['Noite', 'Serpente', 'Mão', 'Estrela', 'Lua', 'Águia', 'Terra', 'Semente', 'Tormenta']);
+
+function concordarGenero(selo, tom) {
+  // Verificar se é feminino
+  let eh_fem = false;
+  for (let pal of FEMININOS) {
+    if (selo.includes(pal)) {
+      eh_fem = true;
+      break;
+    }
+  }
+  
+  if (!eh_fem) return tom;
+  
+  // Converter para feminino
+  return tom
+    .replace('Magnético', 'Magnética')
+    .replace('Elétrico', 'Elétrica')
+    .replace('Rítmico', 'Rítmica')
+    .replace('Galáctico', 'Galáctica')
+    .replace('Planetário', 'Planetária')
+    .replace('Cósmico', 'Cósmica');
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",
   authDomain: "sincro13luas.firebaseapp.com",
@@ -124,7 +166,6 @@ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
   .then(() => console.log('✅ Persistência LOCAL ativada'))
   .catch((err) => console.error('❌ Erro persistência:', err));
 
-// Login com Popup
 document.getElementById('btn-login').onclick = () => {
   console.log('🔵 Iniciando login...');
   document.getElementById('login-loading').classList.remove('hidden');
@@ -140,7 +181,7 @@ document.getElementById('btn-login').onclick = () => {
       console.log('📧 Email:', result.user.email);
     })
     .catch((error) => {
-      console.error('❌ Erro no popup:', error.code, error.message);
+      console.error('❌ Erro no popup:', error.code);
       if (error.code === 'auth/popup-blocked') {
         document.getElementById('login-error').textContent = '⚠️ Popup bloqueado! Desbloqueia no navegador.';
       } else if (error.code === 'auth/popup-closed-by-user') {
@@ -155,11 +196,10 @@ document.getElementById('btn-login').onclick = () => {
 
 auth.getRedirectResult().catch(err => console.error('❌ Erro redirect:', err));
 
-// Monitorar autenticação
 let authChecked = false;
 const authTimeout = setTimeout(() => {
   if (!authChecked) {
-    console.warn('⏱️ Timeout: nenhum usuário detectado');
+    console.warn('⏱️ Timeout');
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app-screen').classList.remove('active');
   }
@@ -168,11 +208,9 @@ const authTimeout = setTimeout(() => {
 auth.onAuthStateChanged(async (user) => {
   authChecked = true;
   clearTimeout(authTimeout);
-  console.log('🔵 onAuthStateChanged:', user ? user.email : 'null');
   
   if (user) {
     console.log('✅ Usuário logado:', user.email);
-    console.log('🔑 UID:', user.uid);
     
     try {
       const userRef = db.collection('users').doc(user.uid);
@@ -180,10 +218,9 @@ auth.onAuthStateChanged(async (user) => {
       
       if (userDoc.exists) {
         const data = userDoc.data();
-        console.log('📋 Dados do documento:', data);
         
         if (data.authorized === true) {
-          console.log('✅✅✅ ACESSO LIBERADO!');
+          console.log('✅ ACESSO LIBERADO!');
           
           document.getElementById('login-screen').style.display = 'none';
           document.getElementById('app-screen').classList.add('active');
@@ -198,7 +235,7 @@ auth.onAuthStateChanged(async (user) => {
           
           loadToday();
         } else {
-          console.log('⏳ Usuário pendente de autorização');
+          console.log('⏳ Pendente de autorização');
           document.getElementById('login-error').textContent = '⏳ Sua conta foi criada! Aguarde o admin autorizar seu acesso.';
           document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
           document.getElementById('login-error').style.borderColor = '#f5c842';
@@ -207,7 +244,7 @@ auth.onAuthStateChanged(async (user) => {
           setTimeout(() => auth.signOut(), 4000);
         }
       } else {
-        console.log('📝 Criando novo documento para:', user.uid);
+        console.log('📝 Criando novo documento');
         await userRef.set({
           authorized: false,
           displayName: user.displayName || 'Usuário',
@@ -217,7 +254,7 @@ auth.onAuthStateChanged(async (user) => {
           createdAt: new Date()
         });
         
-        console.log('✅ Documento criado com sucesso!');
+        console.log('✅ Documento criado!');
         
         document.getElementById('login-error').textContent = '⏳ Sua conta foi criada! Aguarde o admin autorizar seu acesso.';
         document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
@@ -234,7 +271,6 @@ auth.onAuthStateChanged(async (user) => {
     
     document.getElementById('login-loading').classList.add('hidden');
   } else {
-    console.log('🔵 Nenhum usuário logado');
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app-screen').classList.remove('active');
     document.getElementById('login-loading').classList.add('hidden');
@@ -253,31 +289,77 @@ async function exportPNG() {
   link.click();
 }
 
-const S=[{n:"Dragão",g:"m",c:"red",e:"🐉"},{n:"Vento",g:"m",c:"white",e:"💨"},{n:"Noite",g:"f",c:"blue",e:"🌌"},{n:"Semente",g:"f",c:"yellow",e:"🌱"},{n:"Serpente",g:"f",c:"red",e:"🐍"},{n:"Enlaçador de Mundos",g:"m",c:"white",e:"☯"},{n:"Mão",g:"f",c:"blue",e:"✋"},{n:"Estrela",g:"f",c:"yellow",e:"⭐"},{n:"Lua",g:"f",c:"red",e:"🌙"},{n:"Cão",g:"m",c:"white",e:"🐕"},{n:"Macaco",g:"m",c:"blue",e:"🐒"},{n:"Humano",g:"m",c:"yellow",e:"👤"},{n:"Caminhante do Céu",g:"m",c:"red",e:"🚶"},{n:"Feiticeiro",g:"m",c:"white",e:"🧙"},{n:"Águia",g:"f",c:"blue",e:"🦅"},{n:"Guerreiro",g:"m",c:"yellow",e:"⚔️"},{n:"Terra",g:"f",c:"red",e:"🌍"},{n:"Espelho",g:"m",c:"white",e:"🪞"},{n:"Tormenta",g:"f",c:"blue",e:"⛈️"},{n:"Sol",g:"m",c:"yellow",e:"☀️"}];
-const T=[{n:"Magnético"},{n:"Lunar"},{n:"Elétrico"},{n:"Autoexistente"},{n:"Overtone"},{n:"Rítmico"},{n:"Ressonante"},{n:"Galáctico"},{n:"Solar"},{n:"Planetário"},{n:"Espectral"},{n:"Cristal"},{n:"Cósmico"}];
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(`tab-${tab}`).classList.add('active');
+}
 
-function corPT(c,g){if(c==='red')return g==='f'?'Vermelha':'Vermelho';if(c==='white')return g==='f'?'Branca':'Branco';if(c==='blue')return'Azul';if(c==='yellow')return g==='f'?'Amarela':'Amarelo';return''}
-function nc(s,t){const tn=s.g==='f'&&['Magnético','Elétrico','Galáctico','Espectral','Cósmico'].includes(t.n)?t.n.replace(/o$/,'a'):t.n;return`${s.n} ${tn} ${corPT(s.c,s.g)}`}
-function isLeapDay(d){return d.getMonth()===1&&d.getDate()===29}
-function daysBetween(f,t){if(f>t)return-daysBetween(t,f);let c=0;const d=new Date(f.getTime());while(d<t){d.setDate(d.getDate()+1);if(!isLeapDay(d))c++}return c}
-function dateToKin(dt){if(isLeapDay(dt))return dateToKin(new Date(dt.getFullYear(),1,28));const b=new Date(1987,6,26);const d=daysBetween(b,dt);return((34-1+d)%260+260)%260+1}
-function kS(k){return(k-1)%20}
-function kT(k){return(k-1)%13}
-function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.getElementById(`tab-${tab}`).classList.add('active')}
+function isLeapDay(d) {
+  return d.getMonth() === 1 && d.getDate() === 29;
+}
 
-function kinHTML(k){const si=kS(k),ti=kT(k);const s=S[si],t=T[ti];return`<div class="kin-hero">
-<div style="font-size:3rem;margin-bottom:1rem">${s.e}</div>
-<div style="font-family:Cinzel;font-size:1.4rem;margin:1rem 0;letter-spacing:0.03em">${nc(s,t)}</div>
-<div style="color:var(--text2);font-size:0.85rem">Kin ${k} de 260</div>
-</div><div class="cards">
-<div class="card"><div class="card-label">Tom Galáctico</div><div class="card-val">${t.n}</div></div>
-<div class="card"><div class="card-label">Selo Solar</div><div class="card-val">${s.e} ${s.n}</div></div>
-<div class="card"><div class="card-label">Cor</div><div class="card-val">${corPT(s.c,s.g)}</div></div>
-</div>`}
+function daysBetween(f, t) {
+  if (f > t) return -daysBetween(t, f);
+  let c = 0;
+  const d = new Date(f.getTime());
+  while (d < t) {
+    d.setDate(d.getDate() + 1);
+    if (!isLeapDay(d)) c++;
+  }
+  return c;
+}
 
-function calcNatal(){const v=document.getElementById('nasc-inp').value;if(!v)return;const[y,m,d]=v.split('-').map(Number);const dt=new Date(y,m-1,d);const k=dateToKin(dt);document.getElementById('res-natal').innerHTML=kinHTML(k);document.getElementById('res-natal').classList.remove('hidden')}
+function dateToKin(dt) {
+  if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
+  const b = new Date(1987, 6, 26);
+  const d = daysBetween(b, dt);
+  return ((34 - 1 + d) % 260 + 260) % 260 + 1;
+}
 
-function loadToday(){const k=dateToKin(new Date());document.getElementById('res-dia').innerHTML=kinHTML(k)}
+function kinHTML(kin_num) {
+  const selos_idx = (kin_num - 1) % 20;
+  const tom_idx = Math.floor((kin_num - 1) / 20) + 1;
+  
+  const selo = SELOS_NOMES[selos_idx];
+  const tom = TONS_NOMES[tom_idx];
+  const emoji = EMOJIS[selos_idx];
+  const tom_concordado = concordarGenero(selo, tom);
+  
+  return `
+    <div class="kin-hero">
+      <div class="kin-emoji">${emoji}</div>
+      <div class="kin-title">${selo} ${tom_concordado}</div>
+      <div class="kin-subtitle">Kin ${kin_num} de 260</div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">🌟 Selo Solar</div>
+        <div class="card-val">${selo}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">🎯 Tom Galáctico</div>
+        <div class="card-val">${tom_concordado}</div>
+      </div>
+    </div>
+  `;
+}
+
+function calcNatal() {
+  const v = document.getElementById('nasc-inp').value;
+  if (!v) return;
+  const [y, m, d] = v.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  const k = dateToKin(dt);
+  document.getElementById('res-natal').innerHTML = kinHTML(k);
+  document.getElementById('res-natal').classList.remove('hidden');
+}
+
+function loadToday() {
+  const k = dateToKin(new Date());
+  document.getElementById('res-dia').innerHTML = kinHTML(k);
+}
 </script>
 </body>
 </html>
