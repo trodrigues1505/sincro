@@ -3,91 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sincronário das 13 Luas - Login</title>
+<title>Sincronário das 13 Luas</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--red:#d63b3b;--red-bg:#3a1818;--white-c:#f0f0f0;--white-bg:#2a2a2a;--blue:#3b8ed6;--blue-bg:#18283a;--yellow:#f5c842;--yellow-bg:#3a2f10}
+:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--red:#d63b3b;--white-c:#f0f0f0;--blue:#3b8ed6;--yellow:#f5c842}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.6;min-height:100vh}
 .login-container{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
 .login-box{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:3rem 2rem;max-width:400px;width:100%;text-align:center}
 .login-box h1{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);margin-bottom:1rem}
 .login-box p{color:var(--text2);margin-bottom:2rem}
-.btn-google{background:#fff;color:#333;border:none;border-radius:8px;padding:12px 24px;font-family:'Cinzel',serif;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:all 0.2s}
+.btn-google{background:#fff;color:#333;border:none;border-radius:8px;padding:12px 24px;font-family:'Cinzel',serif;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
 .btn-google:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,255,255,0.2)}
-.btn-google img{width:20px;height:20px}
 .error-msg{background:rgba(214,59,59,0.1);border:0.5px solid var(--red);color:var(--red);padding:1rem;border-radius:8px;margin-top:1rem;font-size:0.9rem}
 .loading{color:var(--text2);margin-top:1rem}
-.container{max-width:920px;margin:0 auto;padding:2rem 1.5rem 3rem;position:relative;display:none}
+.container{max-width:920px;margin:0 auto;padding:2rem 1.5rem;display:none}
 .container.active{display:block}
-h1{font-family:'Cinzel',serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:600;color:var(--gold);text-align:center;margin-bottom:0.5rem}
+h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center;margin-bottom:0.5rem}
 .user-bar{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .user-info{display:flex;align-items:center;gap:12px}
 .user-avatar{width:40px;height:40px;border-radius:50%;border:2px solid var(--gold)}
-.user-name{font-family:'Cinzel',serif;color:var(--text)}
-.user-role{font-size:0.75rem;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em}
-.btn-logout,.btn-admin,.btn-export{background:rgba(180,154,240,0.1);border:0.5px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 16px;font-family:'Cinzel',serif;font-size:0.75rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s}
-.btn-logout:hover,.btn-admin:hover,.btn-export:hover{background:rgba(180,154,240,0.2);color:var(--text)}
+.btn-logout,.btn-admin,.btn-export{background:rgba(180,154,240,0.1);border:0.5px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 16px;font-family:'Cinzel',serif;font-size:0.75rem;cursor:pointer;text-transform:uppercase}
 .btn-admin{border-color:var(--gold);color:var(--gold)}
 .btn-export{border-color:var(--blue);color:var(--blue)}
 .tabs{display:flex;gap:8px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border)}
-.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Cinzel',serif;font-size:0.75rem;padding:12px 20px;cursor:pointer;text-transform:uppercase;letter-spacing:0.1em}
+.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Cinzel',serif;font-size:0.75rem;padding:12px 20px;cursor:pointer;text-transform:uppercase}
 .tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-content{display:none}
 .tab-content.active{display:block}
 .section{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
-.section-title{font-family:'Cinzel',serif;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;letter-spacing:0.15em}
 .kin-hero{text-align:center;padding:1.5rem;background:var(--bg2);border-radius:var(--radius);margin-bottom:1rem}
-.kin-title{font-family:'Cinzel',serif;font-size:1.4rem;margin:1rem 0;letter-spacing:0.03em}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:1rem 0}
 .card{background:var(--bg2);border-radius:8px;padding:0.875rem 1rem;border:0.5px solid var(--border)}
-.card-label{font-size:0.7rem;color:var(--text3);text-transform:uppercase;margin-bottom:4px;letter-spacing:0.08em}
-.card-val{font-family:'Cinzel',serif;font-size:0.95rem;color:var(--text);line-height:1.3}
-.color-red{background:var(--red-bg);border-color:var(--red);color:var(--red)}
-.color-white{background:var(--white-bg);border-color:var(--white-c);color:var(--white-c)}
-.color-blue{background:var(--blue-bg);border-color:var(--blue);color:var(--blue)}
-.color-yellow{background:var(--yellow-bg);border-color:var(--yellow);color:var(--yellow)}
+.card-label{font-size:0.7rem;color:var(--text3);text-transform:uppercase;margin-bottom:4px}
+.card-val{font-family:'Cinzel',serif;font-size:0.95rem;color:var(--text)}
 .hidden{display:none}
 input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;color:var(--text);padding:8px 14px;font-family:inherit;color-scheme:dark}
-.btn-calc{background:linear-gradient(135deg,rgba(138,110,220,0.2),rgba(201,168,76,0.15));border:0.5px solid var(--gold);border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.75rem;padding:10px 22px;cursor:pointer;text-transform:uppercase;letter-spacing:0.1em}
+.btn-calc{background:linear-gradient(135deg,rgba(138,110,220,0.2),rgba(201,168,76,0.15));border:0.5px solid var(--gold);border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.75rem;padding:10px 22px;cursor:pointer;text-transform:uppercase}
 </style>
 </head>
 <body>
 
-<!-- TELA DE LOGIN -->
 <div id="login-screen" class="login-container">
 <div class="login-box">
 <h1>🌀 Sincronário das 13 Luas</h1>
-<p>Faça login com sua conta Google para acessar</p>
+<p>Faça login com sua conta Google</p>
 <button class="btn-google" id="btn-login">
-<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath fill='%234285F4' d='M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z'/%3E%3Cpath fill='%2334A853' d='M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z'/%3E%3Cpath fill='%23FBBC05' d='M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z'/%3E%3Cpath fill='%23EA4335' d='M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z'/%3E%3C/svg%3E" alt="Google">
+<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
 Entrar com Google
 </button>
 <div id="login-error" class="error-msg hidden"></div>
-<div id="login-loading" class="loading hidden">Verificando acesso...</div>
+<div id="login-loading" class="loading hidden">Verificando...</div>
 </div>
 </div>
 
-<!-- APP PRINCIPAL -->
 <div id="app-screen" class="container">
 <div class="user-bar">
 <div class="user-info">
 <img id="user-avatar" class="user-avatar" src="" alt="">
 <div>
-<div id="user-name" class="user-name"></div>
-<div id="user-role" class="user-role"></div>
+<div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
+<div id="user-role" style="font-size:0.75rem;color:var(--gold);text-transform:uppercase"></div>
 </div>
 </div>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Painel Admin</button>
-<button class="btn-export" onclick="exportarPNG()">📸 Exportar PNG</button>
-<button class="btn-logout" id="btn-logout-top">Sair</button>
+<div style="display:flex;gap:8px">
+<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Admin</button>
+<button class="btn-export" onclick="exportPNG()">📸 PNG</button>
+<button class="btn-logout" id="btn-logout">Sair</button>
 </div>
 </div>
 
 <h1>🌀 Sincronário das 13 Luas</h1>
-<p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Calculadora Completa · Lei do Tempo</p>
+<p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Lei do Tempo</p>
 
 <div class="tabs">
 <button class="tab active" onclick="switchTab('dia')">Kin do Dia</button>
@@ -96,14 +84,12 @@ Entrar com Google
 
 <div id="export-area">
 <div id="tab-dia" class="tab-content active">
-<div class="section"><div id="res-dia-auto"></div></div>
+<div class="section"><div id="res-dia"></div></div>
 </div>
-
 <div id="tab-natal" class="tab-content">
 <div class="section">
-<div class="section-title">Kin natal</div>
-<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-<label style="min-width:80px;color:var(--text2);font-style:italic">Nascimento</label>
+<div style="font-family:Cinzel;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem">Kin Natal</div>
+<div style="display:flex;gap:10px;align-items:center">
 <input type="date" id="nasc-inp">
 <button class="btn-calc" onclick="calcNatal()">Calcular</button>
 </div>
@@ -111,16 +97,14 @@ Entrar com Google
 </div>
 </div>
 </div>
-
 </div>
 
-<!-- Firebase SDK (versão compatível) -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
-// ⚠️ COLE SUAS CREDENCIAIS AQUI
+// ⚠️ COLE SUAS CREDENCIAIS AQUI ⚠️
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -139,13 +123,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Inicializar Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Login com Google
-document.getElementById('btn-login').addEventListener('click', async () => {
+// Login
+document.getElementById('btn-login').onclick = async () => {
   try {
     document.getElementById('login-error').classList.add('hidden');
     document.getElementById('login-loading').classList.remove('hidden');
@@ -154,7 +137,6 @@ document.getElementById('btn-login').addEventListener('click', async () => {
     const result = await auth.signInWithPopup(provider);
     const user = result.user;
     
-    // Criar documento se não existir
     const userRef = db.collection('users').doc(user.uid);
     const userDoc = await userRef.get();
     
@@ -165,30 +147,26 @@ document.getElementById('btn-login').addEventListener('click', async () => {
         photoURL: user.photoURL,
         role: 'user',
         authorized: false,
-        createdAt: new Date().toISOString()
+        createdAt: new Date()
       });
       
-      document.getElementById('login-error').textContent = 'Conta criada! Aguarde autorização do administrador.';
+      document.getElementById('login-error').textContent = 'Conta criada! Aguarde autorização.';
       document.getElementById('login-error').classList.remove('hidden');
-      document.getElementById('login-loading').classList.add('hidden');
       await auth.signOut();
     }
   } catch (error) {
-    document.getElementById('login-error').textContent = 'Erro ao fazer login: ' + error.message;
+    document.getElementById('login-error').textContent = 'Erro: ' + error.message;
     document.getElementById('login-error').classList.remove('hidden');
+  } finally {
     document.getElementById('login-loading').classList.add('hidden');
   }
-});
+};
 
-// Listener de autenticação
 auth.onAuthStateChanged(async (user) => {
   if (user) {
-    document.getElementById('login-loading').classList.remove('hidden');
-    
     const userDoc = await db.collection('users').doc(user.uid).get();
     
     if (userDoc.exists && userDoc.data().authorized) {
-      // Usuário autorizado
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app-screen').classList.add('active');
       
@@ -200,54 +178,33 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById('btn-admin').classList.remove('hidden');
       }
       
-      autoLoadToday();
+      loadToday();
     } else {
-      document.getElementById('login-error').textContent = 'Acesso negado. Aguarde autorização do administrador.';
+      document.getElementById('login-error').textContent = 'Aguarde autorização do admin.';
       document.getElementById('login-error').classList.remove('hidden');
-      document.getElementById('login-loading').classList.add('hidden');
       await auth.signOut();
     }
-  } else {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('app-screen').classList.remove('active');
   }
 });
 
-// Logout
-document.getElementById('btn-logout-top').addEventListener('click', () => {
-  auth.signOut();
-});
+document.getElementById('btn-logout').onclick = () => auth.signOut();
 
-// Exportar PNG
-async function exportarPNG() {
-  const area = document.getElementById('export-area');
-  const canvas = await html2canvas(area, {
-    backgroundColor: '#0a0c14',
-    scale: 2
-  });
-  
-  const link = document.createElement('a');
-  link.download = `sincronario-${new Date().toISOString().split('T')[0]}.png`;
-  link.href = canvas.toDataURL();
-  link.click();
-}
-
-// Funções do Sincronário
+// Sincronário
 const S=[{n:"Dragão",g:"m",c:"red",e:"🐉"},{n:"Vento",g:"m",c:"white",e:"💨"},{n:"Noite",g:"f",c:"blue",e:"🌌"},{n:"Semente",g:"f",c:"yellow",e:"🌱"},{n:"Serpente",g:"f",c:"red",e:"🐍"},{n:"Enlaçador de Mundos",g:"m",c:"white",e:"☯"},{n:"Mão",g:"f",c:"blue",e:"✋"},{n:"Estrela",g:"f",c:"yellow",e:"⭐"},{n:"Lua",g:"f",c:"red",e:"🌙"},{n:"Cão",g:"m",c:"white",e:"🐕"},{n:"Macaco",g:"m",c:"blue",e:"🐒"},{n:"Humano",g:"m",c:"yellow",e:"👤"},{n:"Caminhante do Céu",g:"m",c:"red",e:"🚶"},{n:"Feiticeiro",g:"m",c:"white",e:"🧙"},{n:"Águia",g:"f",c:"blue",e:"🦅"},{n:"Guerreiro",g:"m",c:"yellow",e:"⚔️"},{n:"Terra",g:"f",c:"red",e:"🌍"},{n:"Espelho",g:"m",c:"white",e:"🪞"},{n:"Tormenta",g:"f",c:"blue",e:"⛈️"},{n:"Sol",g:"m",c:"yellow",e:"☀️"}];
 const T=[{n:"Magnético"},{n:"Lunar"},{n:"Elétrico"},{n:"Autoexistente"},{n:"Overtone"},{n:"Rítmico"},{n:"Ressonante"},{n:"Galáctico"},{n:"Solar"},{n:"Planetário"},{n:"Espectral"},{n:"Cristal"},{n:"Cósmico"}];
 
-function corPT(cor,gen){if(cor==='red')return gen==='f'?'Vermelha':'Vermelho';if(cor==='white')return gen==='f'?'Branca':'Branco';if(cor==='blue')return'Azul';if(cor==='yellow')return gen==='f'?'Amarela':'Amarelo';return''}
+function corPT(c,g){if(c==='red')return g==='f'?'Vermelha':'Vermelho';if(c==='white')return g==='f'?'Branca':'Branco';if(c==='blue')return'Azul';if(c==='yellow')return g==='f'?'Amarela':'Amarelo';return''}
 function nc(s,t){const tn=s.g==='f'&&['Magnético','Elétrico','Galáctico','Espectral','Cósmico'].includes(t.n)?t.n.replace(/o$/,'a'):t.n;return`${s.n} ${tn} ${corPT(s.c,s.g)}`}
 function isLeapDay(d){return d.getMonth()===1&&d.getDate()===29}
-function daysBetweenSkipLeap(f,t){if(f>t)return-daysBetweenSkipLeap(t,f);let c=0;const d=new Date(f.getTime());while(d<t){d.setDate(d.getDate()+1);if(!isLeapDay(d))c++}return c}
-function dateToKin(dt){if(isLeapDay(dt))return dateToKin(new Date(dt.getFullYear(),1,28));const b=new Date(1987,6,26);const d=daysBetweenSkipLeap(b,dt);return((34-1+d)%260+260)%260+1}
+function daysBetween(f,t){if(f>t)return-daysBetween(t,f);let c=0;const d=new Date(f.getTime());while(d<t){d.setDate(d.getDate()+1);if(!isLeapDay(d))c++}return c}
+function dateToKin(dt){if(isLeapDay(dt))return dateToKin(new Date(dt.getFullYear(),1,28));const b=new Date(1987,6,26);const d=daysBetween(b,dt);return((34-1+d)%260+260)%260+1}
 function kS(k){return(k-1)%20}
 function kT(k){return(k-1)%13}
 function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.getElementById(`tab-${tab}`).classList.add('active')}
 
-function heroHTML(k){const si=kS(k),ti=kT(k);const s=S[si],t=T[ti];return`<div class="kin-hero">
+function kinHTML(k){const si=kS(k),ti=kT(k);const s=S[si],t=T[ti];return`<div class="kin-hero">
 <div style="font-size:3rem;margin-bottom:1rem">${s.e}</div>
-<div class="kin-title">${nc(s,t)}</div>
+<div style="font-family:Cinzel;font-size:1.4rem;margin:1rem 0">${nc(s,t)}</div>
 <div style="color:var(--text2);font-size:0.85rem">Kin ${k} de 260</div>
 </div><div class="cards">
 <div class="card"><div class="card-label">Tom</div><div class="card-val">${t.n}</div></div>
@@ -255,9 +212,11 @@ function heroHTML(k){const si=kS(k),ti=kT(k);const s=S[si],t=T[ti];return`<div c
 <div class="card"><div class="card-label">Cor</div><div class="card-val">${corPT(s.c,s.g)}</div></div>
 </div>`}
 
-function calcNatal(){const v=document.getElementById('nasc-inp').value;if(!v)return;const[y,m,d]=v.split('-').map(Number);const dt=new Date(y,m-1,d);const k=dateToKin(dt);document.getElementById('res-natal').innerHTML=heroHTML(k);document.getElementById('res-natal').classList.remove('hidden')}
+function calcNatal(){const v=document.getElementById('nasc-inp').value;if(!v)return;const[y,m,d]=v.split('-').map(Number);const dt=new Date(y,m-1,d);const k=dateToKin(dt);document.getElementById('res-natal').innerHTML=kinHTML(k);document.getElementById('res-natal').classList.remove('hidden')}
 
-function autoLoadToday(){const dt=new Date();const k=dateToKin(dt);document.getElementById('res-dia-auto').innerHTML=heroHTML(k)}
+function loadToday(){const k=dateToKin(new Date());document.getElementById('res-dia').innerHTML=kinHTML(k)}
+
+async function exportPNG(){const area=document.getElementById('export-area');const canvas=await html2canvas(area,{backgroundColor:'#0a0c14',scale:2});const link=document.createElement('a');link.download=`kin-${new Date().toISOString().split('T')[0]}.png`;link.href=canvas.toDataURL();link.click()}
 </script>
 </body>
 </html>
