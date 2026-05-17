@@ -3,88 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Admin - Sincronário das 13 Luas</title>
+<title>Painel Admin — Sincronário</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#1a1210;--bg2:#221815;--card:#2a1f1a;--border:rgba(165,124,0,0.22);--gold:#A57C00;--gold2:#c9a030;--green:#009739;--brown:#3C2F2F;--brown2:#2a1f1a;--text:#f0e8d8;--text2:#b8a88a;--text3:#7a6a50;--red:#c0392b;--white-c:#e8e0d0;--blue:#1a6b8a;--yellow:#A57C00;--green-ok:#009739;--radius:10px}
+/* Mesmo design system do index */
+:root{
+  --bg:#071209;--bg2:#0a1a0c;--card:#0d1f0f;--card2:#112613;
+  --green:#009739;--green2:#00b544;--green3:#006828;
+  --gold:#A57C00;--gold2:#c9a030;
+  --brown:#3C2F2F;
+  --border:rgba(0,151,57,.20);--border2:rgba(0,151,57,.40);--border-g:rgba(165,124,0,.28);
+  --text:#c0dcc4;--text2:#5a8860;--text3:#2e5034;
+  --red:#8a2018;--radius:8px;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.6;min-height:100vh}
-.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
-h1{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold2);text-align:center;margin-bottom:0.3rem;letter-spacing:0.04em}
-.user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0.9rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.user-info{display:flex;align-items:center;gap:12px}
-.user-avatar{width:38px;height:38px;border-radius:50%;border:2px solid var(--gold)}
-.btn-logout,.btn-back{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text2);padding:7px 14px;font-family:'Cinzel',serif;font-size:0.7rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;transition:all 0.2s}
-.btn-logout:hover{border-color:var(--text2);color:var(--text)}
-.btn-back{border-color:var(--green);color:var(--green)}
-.btn-back:hover{background:var(--green);color:#fff}
-.section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
-.section h2{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold2);margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.06em}
-.user-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:0.8rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:15px;transition:border-color 0.2s}
-.user-item:hover{border-color:rgba(165,124,0,0.4)}
-.user-details{flex:1;min-width:200px}
-.user-email{font-family:'Cinzel',serif;color:var(--gold2);font-size:0.88rem}
-.user-uid{font-size:0.72rem;color:var(--text3);word-break:break-all;margin-top:4px}
-.user-status{display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:flex-end;min-width:280px}
-.badge{padding:3px 10px;border-radius:4px;font-size:0.68rem;text-transform:uppercase;font-weight:600;letter-spacing:0.05em}
-.badge.authorized{background:rgba(0,151,57,0.15);color:#009739;border:1px solid rgba(0,151,57,0.4)}
-.badge.pending{background:rgba(165,124,0,0.12);color:var(--gold2);border:1px solid rgba(165,124,0,0.35)}
-.badge.admin{background:rgba(165,124,0,0.18);color:var(--gold2);border:1px solid rgba(165,124,0,0.5)}
-.btn-authorize,.btn-admin-toggle,.btn-remove{border:1px solid;border-radius:5px;padding:7px 13px;font-family:'Cinzel',serif;font-size:0.68rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;transition:all 0.2s;background:transparent}
-.btn-authorize{color:var(--green);border-color:rgba(0,151,57,0.45)}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:16px;line-height:1.65;min-height:100vh}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.anim-1{animation:fadeUp .28s both}
+.anim-2{animation:fadeUp .28s .1s both}
+.anim-3{animation:fadeUp .28s .2s both}
+
+.container{max-width:820px;margin:0 auto;padding:1rem;animation:fadeUp .3s both}
+h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--green2);text-align:center;margin-bottom:.2rem;letter-spacing:.06em}
+
+.user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.9rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px}
+.user-info{display:flex;align-items:center;gap:10px}
+.user-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--green3)}
+
+.btn-logout,.btn-back{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:5px 11px;font-family:'Cinzel',serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
+.btn-logout:hover{border-color:var(--green3);color:var(--text2)}
+.btn-back{border-color:var(--border2);color:var(--green2)}
+.btn-back:hover{background:var(--green3);color:var(--text);border-color:var(--green3)}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:.6rem}
+.section h2{font-family:'Cinzel',serif;font-size:.6rem;color:var(--text3);margin-bottom:.9rem;text-transform:uppercase;letter-spacing:.13em;display:flex;align-items:center;gap:.5rem}
+.section h2::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.user-item{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.85rem;margin-bottom:.45rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;transition:border-color .2s}
+.user-item:hover{border-color:var(--border2)}
+.user-details{flex:1;min-width:180px}
+.user-email{font-family:'Cinzel',serif;color:var(--green2);font-size:.83rem}
+.user-uid{font-size:.63rem;color:var(--text3);word-break:break-all;margin-top:3px}
+.user-status{display:flex;flex-wrap:wrap;gap:5px;align-items:center;justify-content:flex-end;min-width:240px}
+
+.badge{padding:2px 8px;border-radius:3px;font-size:.6rem;text-transform:uppercase;font-weight:600;letter-spacing:.05em}
+.badge.authorized{background:rgba(0,151,57,.12);color:var(--green2);border:1px solid rgba(0,151,57,.3)}
+.badge.pending   {background:rgba(165,124,0,.1);color:var(--gold2);border:1px solid rgba(165,124,0,.27)}
+.badge.admin     {background:rgba(165,124,0,.14);color:var(--gold2);border:1px solid rgba(165,124,0,.38)}
+
+.btn-authorize,.btn-admin-toggle,.btn-remove{border:1px solid;border-radius:4px;padding:5px 10px;font-family:'Cinzel',serif;font-size:.58rem;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;transition:all .2s;background:transparent}
+.btn-authorize{color:var(--green2);border-color:rgba(0,151,57,.35)}
 .btn-authorize:hover{background:var(--green);color:#fff;border-color:var(--green)}
-.btn-admin-toggle{color:var(--gold2);border-color:rgba(165,124,0,0.45)}
-.btn-admin-toggle:hover{background:var(--gold);color:var(--bg);border-color:var(--gold)}
-.btn-remove{color:var(--red);border-color:rgba(192,57,43,0.4)}
+.btn-admin-toggle{color:var(--gold2);border-color:rgba(165,124,0,.35)}
+.btn-admin-toggle:hover{background:rgba(165,124,0,.18);border-color:var(--gold2)}
+.btn-remove{color:var(--red);border-color:rgba(138,32,24,.32)}
 .btn-remove:hover{background:var(--red);color:#fff;border-color:var(--red)}
-.loading{color:var(--text3);text-align:center;padding:1rem;font-style:italic}
-.empty{color:var(--text3);text-align:center;padding:2rem;font-style:italic}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.8rem;margin-bottom:1.5rem}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;transition:border-color 0.2s}
-.stat-card:hover{border-color:rgba(165,124,0,0.45)}
-.stat-number{font-family:'Cinzel',serif;font-size:1.9rem;color:var(--gold2);margin-bottom:0.3rem}
-.stat-label{font-size:0.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em}
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center}
+
+.loading{color:var(--text3);text-align:center;padding:1rem;font-style:italic;font-size:.84rem}
+.empty  {color:var(--text3);text-align:center;padding:1.8rem;font-style:italic;font-size:.84rem}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.55rem;margin-bottom:.9rem}
+.stat-card{background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:.8rem;text-align:center;transition:border-color .2s}
+.stat-card:hover{border-color:var(--border2)}
+.stat-number{font-family:'Cinzel',serif;font-size:1.65rem;color:var(--green2);margin-bottom:.2rem}
+.stat-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.82);z-index:1000;align-items:center;justify-content:center}
 .modal.active{display:flex}
-.modal-content{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:400px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,0.6)}
-.modal-content h3{color:var(--gold2);margin-bottom:0.8rem;font-family:'Cinzel',serif;font-size:1rem;letter-spacing:0.04em}
-.modal-content p{color:var(--text2);margin-bottom:1.5rem;font-size:0.92rem}
-.modal-buttons{display:flex;gap:8px;justify-content:flex-end}
-.btn-confirm,.btn-cancel{padding:9px 18px;border:1px solid;border-radius:5px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase;font-size:0.7rem;letter-spacing:0.04em;transition:all 0.2s;background:transparent}
-.btn-confirm{color:var(--red);border-color:rgba(192,57,43,0.5)}
+.modal-content{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1.7rem;max-width:360px;width:90%}
+.modal-content h3{color:var(--green2);margin-bottom:.65rem;font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:.05em}
+.modal-content p{color:var(--text2);margin-bottom:1.3rem;font-size:.87rem}
+.modal-buttons{display:flex;gap:6px;justify-content:flex-end}
+.btn-confirm,.btn-cancel{padding:6px 14px;border:1px solid;border-radius:4px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase;font-size:.6rem;letter-spacing:.05em;transition:all .2s;background:transparent}
+.btn-confirm{color:var(--red);border-color:rgba(138,32,24,.42)}
 .btn-confirm:hover{background:var(--red);color:#fff;border-color:var(--red)}
 .btn-cancel{color:var(--text2);border-color:var(--border)}
-.btn-cancel:hover{border-color:var(--text2);color:var(--text)}
+.btn-cancel:hover{border-color:var(--green3);color:var(--text2)}
+
+/* MEDIA QUERIES */
+@media (max-width:768px){
+  .container{padding:.9rem .75rem}
+  h1{font-size:1.15rem}
+  .user-bar{flex-direction:column;align-items:flex-start;padding:.65rem}
+  .user-bar>div:last-child{width:100%;display:flex;gap:5px;flex-wrap:wrap}
+  .btn-logout,.btn-back{flex:1;text-align:center;font-size:.57rem;padding:5px 8px}
+  .user-item{flex-direction:column;gap:7px}
+  .user-status{width:100%;flex-direction:column;min-width:auto;gap:4px}
+  .btn-authorize,.btn-admin-toggle,.btn-remove{width:100%}
+  .stat-number{font-size:1.35rem}
+}
+@media (max-width:480px){
+  body{font-size:14px}
+  .container{padding:.75rem .6rem}
+  h1{font-size:.98rem}
+  .user-bar{padding:.6rem}
+  .user-avatar{width:26px;height:26px}
+  .btn-logout,.btn-back{padding:4px 7px;font-size:.54rem}
+  .section{padding:.8rem;margin-bottom:.45rem}
+  .user-item{padding:.7rem;gap:6px}
+  .user-email{font-size:.76rem}
+  .user-uid{font-size:.57rem}
+  .badge{padding:2px 6px;font-size:.55rem}
+  .btn-authorize,.btn-admin-toggle,.btn-remove{padding:5px 8px;font-size:.54rem}
+  .stats{grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:.75rem}
+  .stat-card{padding:.65rem}
+  .stat-number{font-size:1.2rem}
+  .modal-content{padding:1.3rem}
+  .modal-content h3{font-size:.8rem}
+  .btn-confirm,.btn-cancel{padding:5px 11px;font-size:.57rem}
+}
+@media (max-width:360px){
+  .container{padding:.6rem .45rem}
+  h1{font-size:.88rem}
+  .stats{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="user-bar">
+  <div class="user-bar anim-1">
     <div class="user-info">
       <img id="user-avatar" class="user-avatar" src="" alt="">
       <div>
-        <div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
-        <div style="font-size:0.75rem;color:var(--gold);text-transform:uppercase">ADMIN</div>
+        <div id="user-name" style="font-family:Cinzel;color:var(--text);font-size:.85rem"></div>
+        <div style="font-size:.58rem;color:var(--gold2);text-transform:uppercase;letter-spacing:.08em">Admin</div>
       </div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="btn-back" onclick="window.location.href='index.html'">← Voltar</button>
       <button class="btn-logout" id="btn-logout">Sair</button>
     </div>
   </div>
 
-  <h1>👑 Painel Admin</h1>
-  <p style="text-align:center;color:var(--text2);margin-bottom:2rem">Gerenciar usuários e permissões</p>
+  <h1 class="anim-1">👑 Painel Admin</h1>
+  <p style="text-align:center;color:var(--text3);margin-bottom:1.2rem;font-size:.82rem;font-style:italic">Gerenciar usuários e permissões</p>
 
-  <div class="stats" id="stats"></div>
+  <div class="stats anim-2" id="stats"></div>
 
-  <div class="section">
+  <div class="section anim-3">
     <h2>⏳ Pendentes de Autorização</h2>
     <div id="pending-users" class="loading">Carregando...</div>
   </div>
 
-  <div class="section">
+  <div class="section anim-3">
     <h2>✅ Usuários Autorizados</h2>
     <div id="authorized-users" class="loading">Carregando...</div>
   </div>
@@ -101,53 +164,6 @@ h1{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold2);text-align:cen
   </div>
 </div>
 
-
-/* ===== MEDIA QUERIES RESPONSIVAS ===== */
-@media (max-width: 768px) {
-  .container { padding: 1.5rem 1rem; }
-  h1 { font-size: 1.5rem; }
-  .user-bar { flex-direction: column; align-items: flex-start; padding: 1rem; }
-  .user-bar > div:last-child { width: 100%; display: flex; gap: 8px; flex-wrap: wrap; }
-  .btn-logout, .btn-back { padding: 6px 12px; font-size: 0.68rem; flex: 1; text-align: center; }
-  .section { padding: 1.2rem; }
-  .section h2 { font-size: 0.9rem; }
-  .user-item { flex-direction: column; gap: 10px; }
-  .user-status { width: 100%; flex-direction: column; min-width: auto; gap: 6px; }
-  .btn-authorize, .btn-admin-toggle, .btn-remove { width: 100%; }
-  .stat-card { padding: 0.8rem; }
-  .stat-number { font-size: 1.5rem; }
-  .stat-label { font-size: 0.62rem; }
-}
-@media (max-width: 480px) {
-  body { font-size: 14px; }
-  .container { padding: 1rem 0.75rem; }
-  h1 { font-size: 1.2rem; }
-  .user-bar { padding: 0.8rem; }
-  .user-avatar { width: 34px; height: 34px; }
-  .btn-logout, .btn-back { padding: 5px 10px; font-size: 0.62rem; }
-  .section { padding: 1rem; margin-bottom: 0.8rem; }
-  .section h2 { font-size: 0.85rem; margin-bottom: 0.7rem; }
-  .user-item { padding: 0.8rem; gap: 8px; }
-  .user-email { font-size: 0.78rem; }
-  .user-uid { font-size: 0.62rem; }
-  .badge { padding: 3px 8px; font-size: 0.62rem; }
-  .btn-authorize, .btn-admin-toggle, .btn-remove { padding: 6px 10px; font-size: 0.58rem; }
-  .stats { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; margin-bottom: 1rem; }
-  .stat-card { padding: 0.7rem; }
-  .stat-number { font-size: 1.3rem; margin-bottom: 0.25rem; }
-  .stat-label { font-size: 0.58rem; }
-  .modal-content { padding: 1.5rem; }
-  .modal-content h3 { font-size: 0.9rem; }
-  .modal-content p { font-size: 0.85rem; }
-  .btn-confirm, .btn-cancel { padding: 8px 14px; font-size: 0.62rem; }
-}
-@media (max-width: 360px) {
-  .container { padding: 0.8rem 0.5rem; }
-  h1 { font-size: 1rem; }
-  .stats { grid-template-columns: 1fr; gap: 0.5rem; }
-  .btn-logout, .btn-back { padding: 4px 8px; font-size: 0.58rem; }
-}
-</style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
