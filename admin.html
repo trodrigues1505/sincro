@@ -6,49 +6,55 @@
 <title>Painel Admin - Sincronário das 13 Luas</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--red:#d63b3b;--white-c:#f0f0f0;--blue:#3b8ed6;--yellow:#f5c842;--green:#4caf50}
+:root{--bg:#1a1210;--bg2:#221815;--card:#2a1f1a;--border:rgba(165,124,0,0.22);--gold:#A57C00;--gold2:#c9a030;--green:#009739;--brown:#3C2F2F;--brown2:#2a1f1a;--text:#f0e8d8;--text2:#b8a88a;--text3:#7a6a50;--red:#c0392b;--white-c:#e8e0d0;--blue:#1a6b8a;--yellow:#A57C00;--green-ok:#009739;--radius:10px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.6;min-height:100vh}
 .container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
-h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center;margin-bottom:0.5rem}
-.user-bar{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+h1{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold2);text-align:center;margin-bottom:0.3rem;letter-spacing:0.04em}
+.user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0.9rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .user-info{display:flex;align-items:center;gap:12px}
-.user-avatar{width:40px;height:40px;border-radius:50%;border:2px solid var(--gold)}
-.btn-logout,.btn-back{background:rgba(180,154,240,0.1);border:0.5px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 16px;font-family:'Cinzel',serif;font-size:0.75rem;cursor:pointer;text-transform:uppercase}
-.btn-back{border-color:var(--blue);color:var(--blue)}
-.section{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
-.section h2{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase}
-.user-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:15px}
+.user-avatar{width:38px;height:38px;border-radius:50%;border:2px solid var(--gold)}
+.btn-logout,.btn-back{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text2);padding:7px 14px;font-family:'Cinzel',serif;font-size:0.7rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;transition:all 0.2s}
+.btn-logout:hover{border-color:var(--text2);color:var(--text)}
+.btn-back{border-color:var(--green);color:var(--green)}
+.btn-back:hover{background:var(--green);color:#fff}
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
+.section h2{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold2);margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.06em}
+.user-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:0.8rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:15px;transition:border-color 0.2s}
+.user-item:hover{border-color:rgba(165,124,0,0.4)}
 .user-details{flex:1;min-width:200px}
-.user-email{font-family:'Cinzel',serif;color:var(--gold);font-size:0.9rem}
-.user-uid{font-size:0.75rem;color:var(--text3);word-break:break-all;margin-top:4px}
-.user-status{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;min-width:280px}
-.badge{padding:4px 12px;border-radius:4px;font-size:0.75rem;text-transform:uppercase;font-weight:600}
-.badge.authorized{background:rgba(76,175,80,0.2);color:#4caf50;border:0.5px solid #4caf50}
-.badge.pending{background:rgba(245,200,66,0.2);color:#f5c842;border:0.5px solid #f5c842}
-.badge.admin{background:rgba(201,168,76,0.2);color:var(--gold);border:0.5px solid var(--gold)}
-.btn-authorize,.btn-admin-toggle,.btn-remove{border:none;border-radius:4px;padding:8px 14px;font-family:'Cinzel',serif;font-size:0.7rem;cursor:pointer;text-transform:uppercase;transition:all 0.2s}
-.btn-authorize{background:rgba(76,175,80,0.2);color:#4caf50;border:0.5px solid #4caf50}
-.btn-authorize:hover{background:#4caf50;color:white}
-.btn-admin-toggle{background:rgba(201,168,76,0.2);color:var(--gold);border:0.5px solid var(--gold)}
-.btn-admin-toggle:hover{background:var(--gold);color:var(--bg)}
-.btn-remove{background:rgba(214,59,59,0.2);color:var(--red);border:0.5px solid var(--red)}
-.btn-remove:hover{background:var(--red);color:white}
-.loading{color:var(--text2);text-align:center;padding:1rem}
+.user-email{font-family:'Cinzel',serif;color:var(--gold2);font-size:0.88rem}
+.user-uid{font-size:0.72rem;color:var(--text3);word-break:break-all;margin-top:4px}
+.user-status{display:flex;flex-wrap:wrap;gap:7px;align-items:center;justify-content:flex-end;min-width:280px}
+.badge{padding:3px 10px;border-radius:4px;font-size:0.68rem;text-transform:uppercase;font-weight:600;letter-spacing:0.05em}
+.badge.authorized{background:rgba(0,151,57,0.15);color:#009739;border:1px solid rgba(0,151,57,0.4)}
+.badge.pending{background:rgba(165,124,0,0.12);color:var(--gold2);border:1px solid rgba(165,124,0,0.35)}
+.badge.admin{background:rgba(165,124,0,0.18);color:var(--gold2);border:1px solid rgba(165,124,0,0.5)}
+.btn-authorize,.btn-admin-toggle,.btn-remove{border:1px solid;border-radius:5px;padding:7px 13px;font-family:'Cinzel',serif;font-size:0.68rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.04em;transition:all 0.2s;background:transparent}
+.btn-authorize{color:var(--green);border-color:rgba(0,151,57,0.45)}
+.btn-authorize:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-admin-toggle{color:var(--gold2);border-color:rgba(165,124,0,0.45)}
+.btn-admin-toggle:hover{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.btn-remove{color:var(--red);border-color:rgba(192,57,43,0.4)}
+.btn-remove:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.loading{color:var(--text3);text-align:center;padding:1rem;font-style:italic}
 .empty{color:var(--text3);text-align:center;padding:2rem;font-style:italic}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
-.stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
-.stat-number{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);margin-bottom:0.5rem}
-.stat-label{font-size:0.75rem;color:var(--text3);text-transform:uppercase}
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.8rem;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;transition:border-color 0.2s}
+.stat-card:hover{border-color:rgba(165,124,0,0.45)}
+.stat-number{font-family:'Cinzel',serif;font-size:1.9rem;color:var(--gold2);margin-bottom:0.3rem}
+.stat-label{font-size:0.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center}
 .modal.active{display:flex}
-.modal-content{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:400px;width:90%}
-.modal-content h3{color:var(--gold);margin-bottom:1rem}
-.modal-content p{color:var(--text2);margin-bottom:1.5rem}
-.modal-buttons{display:flex;gap:10px;justify-content:flex-end}
-.btn-confirm,.btn-cancel{padding:10px 20px;border:none;border-radius:4px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase}
-.btn-confirm{background:var(--red);color:white}
-.btn-cancel{background:var(--border);color:var(--text2)}
+.modal-content{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:400px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,0.6)}
+.modal-content h3{color:var(--gold2);margin-bottom:0.8rem;font-family:'Cinzel',serif;font-size:1rem;letter-spacing:0.04em}
+.modal-content p{color:var(--text2);margin-bottom:1.5rem;font-size:0.92rem}
+.modal-buttons{display:flex;gap:8px;justify-content:flex-end}
+.btn-confirm,.btn-cancel{padding:9px 18px;border:1px solid;border-radius:5px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase;font-size:0.7rem;letter-spacing:0.04em;transition:all 0.2s;background:transparent}
+.btn-confirm{color:var(--red);border-color:rgba(192,57,43,0.5)}
+.btn-confirm:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-cancel{color:var(--text2);border-color:var(--border)}
+.btn-cancel:hover{border-color:var(--text2);color:var(--text)}
 </style>
 </head>
 <body>
@@ -102,43 +108,44 @@ h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center
   h1 { font-size: 1.5rem; }
   .user-bar { flex-direction: column; align-items: flex-start; padding: 1rem; }
   .user-bar > div:last-child { width: 100%; display: flex; gap: 8px; flex-wrap: wrap; }
-  .btn-logout, .btn-back { padding: 6px 12px; font-size: 0.7rem; flex: 1; text-align: center; }
+  .btn-logout, .btn-back { padding: 6px 12px; font-size: 0.68rem; flex: 1; text-align: center; }
   .section { padding: 1.2rem; }
-  .section h2 { font-size: 1rem; }
+  .section h2 { font-size: 0.9rem; }
   .user-item { flex-direction: column; gap: 10px; }
   .user-status { width: 100%; flex-direction: column; min-width: auto; gap: 6px; }
   .btn-authorize, .btn-admin-toggle, .btn-remove { width: 100%; }
   .stat-card { padding: 0.8rem; }
   .stat-number { font-size: 1.5rem; }
-  .stat-label { font-size: 0.65rem; }
+  .stat-label { font-size: 0.62rem; }
 }
 @media (max-width: 480px) {
   body { font-size: 14px; }
   .container { padding: 1rem 0.75rem; }
   h1 { font-size: 1.2rem; }
   .user-bar { padding: 0.8rem; }
-  .user-avatar { width: 35px; height: 35px; }
-  .btn-logout, .btn-back { padding: 5px 10px; font-size: 0.65rem; }
+  .user-avatar { width: 34px; height: 34px; }
+  .btn-logout, .btn-back { padding: 5px 10px; font-size: 0.62rem; }
   .section { padding: 1rem; margin-bottom: 0.8rem; }
-  .section h2 { font-size: 0.9rem; margin-bottom: 0.7rem; }
+  .section h2 { font-size: 0.85rem; margin-bottom: 0.7rem; }
   .user-item { padding: 0.8rem; gap: 8px; }
-  .user-email { font-size: 0.8rem; }
-  .user-uid { font-size: 0.65rem; }
-  .badge { padding: 3px 8px; font-size: 0.65rem; }
-  .btn-authorize, .btn-admin-toggle, .btn-remove { padding: 6px 10px; font-size: 0.6rem; }
-  .stats { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; margin-bottom: 1rem; }
+  .user-email { font-size: 0.78rem; }
+  .user-uid { font-size: 0.62rem; }
+  .badge { padding: 3px 8px; font-size: 0.62rem; }
+  .btn-authorize, .btn-admin-toggle, .btn-remove { padding: 6px 10px; font-size: 0.58rem; }
+  .stats { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; margin-bottom: 1rem; }
   .stat-card { padding: 0.7rem; }
-  .stat-number { font-size: 1.3rem; margin-bottom: 0.3rem; }
-  .stat-label { font-size: 0.6rem; }
+  .stat-number { font-size: 1.3rem; margin-bottom: 0.25rem; }
+  .stat-label { font-size: 0.58rem; }
   .modal-content { padding: 1.5rem; }
-  .modal-content h3 { font-size: 1rem; }
-  .btn-confirm, .btn-cancel { padding: 8px 14px; font-size: 0.65rem; }
+  .modal-content h3 { font-size: 0.9rem; }
+  .modal-content p { font-size: 0.85rem; }
+  .btn-confirm, .btn-cancel { padding: 8px 14px; font-size: 0.62rem; }
 }
 @media (max-width: 360px) {
   .container { padding: 0.8rem 0.5rem; }
   h1 { font-size: 1rem; }
-  .stats { grid-template-columns: 1fr; gap: 0.6rem; }
-  .btn-logout, .btn-back { padding: 4px 8px; font-size: 0.6rem; }
+  .stats { grid-template-columns: 1fr; gap: 0.5rem; }
+  .btn-logout, .btn-back { padding: 4px 8px; font-size: 0.58rem; }
 }
 </style>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
