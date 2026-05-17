@@ -93,7 +93,492 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
 .lua-blue{border-color:var(--blue);color:var(--blue)}
 .lua-yellow{border-color:var(--yellow);color:var(--yellow)}
 .lua-red.active,.lua-white.active,.lua-blue.active,.lua-yellow.active{color:var(--bg)}
+/* 
+  CORREÇÕES PARA OTIMIZAÇÃO MOBILE
+  Adicionar estas media queries ao final do <style> do index.html
+  Antes de </style>
+*/
 
+/* ============================================
+   TABLET & DESKTOP (max-width: 768px)
+   ============================================ */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+  
+  .container {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .user-bar {
+    padding: 1rem;
+    gap: 8px;
+  }
+  
+  .btn-logout, .btn-admin, .btn-export {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+  }
+  
+  .section {
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .section h2 {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .kin-title {
+    font-size: 1.5rem;
+  }
+  
+  .kin-frase {
+    font-size: 1rem;
+    padding: 1.2rem;
+    margin: 1rem auto;
+  }
+  
+  .cards {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  /* Grid 2 colunas em tablet fica 1 coluna */
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Grid 3 colunas ajusta para 2 */
+  .grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  
+  /* CRÍTICO: Onda Encantada responsiva */
+  .onda-L {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 330px;
+    margin: 1.5rem auto;
+    width: 100%;
+  }
+  
+  .onda-kin {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 1.8rem !important;
+    border-width: 2px !important;
+  }
+  
+  /* Remove posicionamento grid da Onda */
+  .onda-L .onda-kin {
+    position: relative !important;
+    grid-column: unset !important;
+    grid-row: unset !important;
+  }
+  
+  /* Ajustar central em flex */
+  .onda-L .onda-kin:nth-child(13) {
+    font-size: 2.5rem !important;
+    border-width: 3px !important;
+  }
+  
+  /* Oráculo reduzido */
+  .oraculo-container {
+    min-height: 300px;
+  }
+  
+  .oraculo-central {
+    width: 110px;
+  }
+  
+  .oraculo-side {
+    width: 90px;
+  }
+  
+  input[type="date"] {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .tab {
+    padding: 10px 14px;
+    font-size: 0.7rem;
+  }
+  
+  .tabs {
+    gap: 4px;
+  }
+  
+  .praticas-list li {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+  }
+}
+
+
+/* ============================================
+   MOBILE PEQUENO (max-width: 480px)
+   ============================================ */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+  
+  body {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .login-container {
+    padding: 1rem;
+  }
+  
+  .login-box {
+    padding: 2rem 1.5rem;
+  }
+  
+  .login-box h1 {
+    font-size: 1.5rem;
+  }
+  
+  .login-box p {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn-google {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .container {
+    padding: 1rem 0.75rem;
+    margin: 0;
+  }
+  
+  h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  p {
+    font-size: 0.8rem;
+  }
+  
+  .user-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.8rem;
+    gap: 8px;
+  }
+  
+  .user-info {
+    width: 100%;
+  }
+  
+  .user-bar > div:last-child {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  
+  .btn-logout, .btn-admin, .btn-export {
+    padding: 6px 10px;
+    font-size: 0.65rem;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .section {
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    border-radius: 8px;
+  }
+  
+  .section h2 {
+    font-size: 0.95rem;
+    margin-bottom: 0.7rem;
+  }
+  
+  .kin-hero {
+    padding: 1.2rem 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .kin-title {
+    font-size: 1.2rem;
+    margin: 0.8rem 0;
+  }
+  
+  .kin-subtitle {
+    font-size: 0.75rem;
+  }
+  
+  .kin-frase {
+    font-size: 0.9rem;
+    padding: 1rem;
+    margin: 0.8rem auto;
+    border-left: 2px solid var(--gold);
+  }
+  
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin: 1rem 0;
+  }
+  
+  .card {
+    padding: 0.8rem;
+  }
+  
+  .card-label {
+    font-size: 0.65rem;
+    margin-bottom: 4px;
+  }
+  
+  .card-val {
+    font-size: 0.9rem;
+  }
+  
+  .selo-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+    margin: 0 auto 0.8rem;
+  }
+  
+  /* ONDA ENCANTADA RESPONSIVA MOBILE */
+  .onda-L {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    max-width: 280px;
+    margin: 1rem auto;
+  }
+  
+  .onda-kin {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 1.5rem !important;
+    border-width: 2px !important;
+    border-radius: 8px !important;
+  }
+  
+  .onda-L .onda-kin:nth-child(13) {
+    font-size: 2rem !important;
+    border-width: 2px !important;
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .semana-label {
+    font-size: 0.6rem;
+    margin-top: 4px;
+  }
+  
+  /* ORÁCULO MOBILE */
+  .oraculo-container {
+    min-height: 220px;
+    margin: 1rem 0;
+  }
+  
+  .oraculo-central {
+    width: 80px;
+    font-size: 0.8rem;
+  }
+  
+  .oraculo-side {
+    width: 70px;
+    font-size: 0.7rem;
+  }
+  
+  .oraculo-nome {
+    font-size: 0.6rem;
+    margin-top: 4px;
+  }
+  
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  
+  input[type="date"] {
+    max-width: 100%;
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+  
+  .btn-calc {
+    padding: 8px 16px;
+    font-size: 0.65rem;
+    width: 100%;
+    margin-top: 8px;
+  }
+  
+  .tabs {
+    gap: 2px;
+    margin-bottom: 1rem;
+  }
+  
+  .tab {
+    padding: 8px 10px;
+    font-size: 0.65rem;
+  }
+  
+  .tab-content {
+    margin: 0;
+  }
+  
+  .praticas-list {
+    padding: 0;
+  }
+  
+  .praticas-list li {
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+    gap: 8px;
+  }
+  
+  .praticas-list li:before {
+    font-size: 1rem;
+  }
+  
+  .info-box {
+    padding: 0.8rem;
+    margin: 0.8rem 0;
+    font-size: 0.85rem;
+  }
+  
+  .info-text {
+    font-size: 0.8rem;
+    margin: 0.3rem 0;
+  }
+  
+  /* Tooltip - desativar em mobile touch */
+  @supports (hover: none) {
+    .tooltip:hover::after {
+      display: none;
+    }
+    
+    .tooltip {
+      border-bottom: 1px dashed var(--gold);
+    }
+  }
+  
+  .lua-dia {
+    width: 28px;
+    height: 28px;
+    font-size: 0.6rem;
+  }
+  
+  /* Remover elementos que ocupam muito espaço em mobile */
+  .section.hidden-mobile {
+    display: none;
+  }
+}
+
+
+/* ============================================
+   MOBILE MÍNIMO (max-width: 360px)
+   ============================================ */
+@media (max-width: 360px) {
+  .container {
+    padding: 0.8rem 0.5rem;
+  }
+  
+  h1 {
+    font-size: 1.1rem;
+  }
+  
+  .onda-L {
+    max-width: 250px;
+    gap: 5px;
+  }
+  
+  .onda-kin {
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 1.3rem !important;
+    border-width: 1px !important;
+  }
+  
+  .onda-L .onda-kin:nth-child(13) {
+    font-size: 1.8rem !important;
+  }
+  
+  .btn-logout, .btn-admin, .btn-export {
+    padding: 5px 8px;
+    font-size: 0.6rem;
+  }
+}
+
+
+/* ============================================
+   LANDSCAPE MODE (Mobile horizontal)
+   ============================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+  .kin-hero {
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .kin-title {
+    font-size: 1.3rem;
+    margin: 0.5rem 0;
+  }
+  
+  .kin-frase {
+    font-size: 0.85rem;
+    padding: 0.8rem;
+    margin: 0.5rem auto;
+  }
+  
+  .oraculo-container {
+    min-height: 280px;
+  }
+}
+
+
+/* ============================================
+   PREFERÊNCIAS DE SISTEMA
+   ============================================ */
+
+/* Reduzir movimento para usuários que preferem */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Aumentar contraste para acessibilidade */
+@media (prefers-contrast: more) {
+  :root {
+    --border: rgba(180,154,240,0.35);
+    --text3: #8a8799;
+  }
+}
 </style>
 </head>
 <body>
