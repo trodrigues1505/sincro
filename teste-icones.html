@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teste de Ícones - Sincronário</title>
+<style>
+body{background:#0a0c14;color:#fff;font-family:Arial;padding:2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
+.icon-test{background:#161b30;border:1px solid #333;border-radius:8px;padding:1rem;text-align:center}
+.icon-test img{width:80px;height:80px;object-fit:contain;margin:0 auto}
+.icon-test p{margin-top:0.5rem;font-size:0.75rem}
+.error{border-color:red!important}
+</style>
+</head>
+<body>
+<h1>🧪 Teste de Ícones dos Selos</h1>
+<p>Verifique quais ícones carregam e quais dão erro:</p>
+
+<div class="grid">
+<div class="icon-test"><img src="./assets/icons/dragao.png" onerror="this.parentElement.classList.add('error')"><p>dragao.png</p></div>
+<div class="icon-test"><img src="./assets/icons/vento.png" onerror="this.parentElement.classList.add('error')"><p>vento.png</p></div>
+<div class="icon-test"><img src="./assets/icons/noite.png" onerror="this.parentElement.classList.add('error')"><p>noite.png</p></div>
+<div class="icon-test"><img src="./assets/icons/semente.png" onerror="this.parentElement.classList.add('error')"><p>semente.png</p></div>
+<div class="icon-test"><img src="./assets/icons/serpente.png" onerror="this.parentElement.classList.add('error')"><p>serpente.png</p></div>
+<div class="icon-test"><img src="./assets/icons/enlacador.png" onerror="this.parentElement.classList.add('error')"><p>enlacador.png</p></div>
+<div class="icon-test"><img src="./assets/icons/mao.png" onerror="this.parentElement.classList.add('error')"><p>mao.png</p></div>
+<div class="icon-test"><img src="./assets/icons/estrela.png" onerror="this.parentElement.classList.add('error')"><p>estrela.png</p></div>
+<div class="icon-test"><img src="./assets/icons/lua.png" onerror="this.parentElement.classList.add('error')"><p>lua.png</p></div>
+<div class="icon-test"><img src="./assets/icons/cao.png" onerror="this.parentElement.classList.add('error')"><p>cao.png</p></div>
+<div class="icon-test"><img src="./assets/icons/macaco.png" onerror="this.parentElement.classList.add('error')"><p>macaco.png</p></div>
+<div class="icon-test"><img src="./assets/icons/humano.png" onerror="this.parentElement.classList.add('error')"><p>humano.png</p></div>
+<div class="icon-test"><img src="./assets/icons/caminhante.png" onerror="this.parentElement.classList.add('error')"><p>caminhante.png</p></div>
+<div class="icon-test"><img src="./assets/icons/mago.png" onerror="this.parentElement.classList.add('error')"><p>mago.png</p></div>
+<div class="icon-test"><img src="./assets/icons/aguia.png" onerror="this.parentElement.classList.add('error')"><p>aguia.png</p></div>
+<div class="icon-test"><img src="./assets/icons/guerreiro.png" onerror="this.parentElement.classList.add('error')"><p>guerreiro.png</p></div>
+<div class="icon-test"><img src="./assets/icons/terra.png" onerror="this.parentElement.classList.add('error')"><p>terra.png</p></div>
+<div class="icon-test"><img src="./assets/icons/espelho.png" onerror="this.parentElement.classList.add('error')"><p>espelho.png</p></div>
+<div class="icon-test"><img src="./assets/icons/tormenta.png" onerror="this.parentElement.classList.add('error')"><p>tormenta.png</p></div>
+<div class="icon-test"><img src="./assets/icons/sol.png" onerror="this.parentElement.classList.add('error')"><p>sol.png</p></div>
+</div>
+
+<div style="margin-top:2rem;padding:1rem;background:#161b30;border-radius:8px">
+<h3>📝 Legenda:</h3>
+<p>✅ Ícone aparece = Arquivo OK</p>
+<p>❌ Borda vermelha = Arquivo não encontrado ou erro no caminho</p>
+</div>
+
+</body>
+</html>
