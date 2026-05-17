@@ -49,6 +49,55 @@ h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center
 .btn-confirm,.btn-cancel{padding:10px 20px;border:none;border-radius:4px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase}
 .btn-confirm{background:var(--red);color:white}
 .btn-cancel{background:var(--border);color:var(--text2)}
+/* Mobile responsivo */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  .user-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .user-status {
+    flex-direction: column;
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .btn-authorize, .btn-admin-toggle, .btn-remove {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem 0.75rem;
+  }
+  
+  h1 {
+    font-size: 1.2rem;
+  }
+  
+  .section {
+    padding: 1rem;
+  }
+  
+  .user-item {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .badge {
+    padding: 3px 8px;
+    font-size: 0.65rem;
+  }
+}
 </style>
 </head>
 <body>
