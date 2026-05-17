@@ -94,7 +94,8 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
 .lua-yellow{border-color:var(--yellow);color:var(--yellow)}
 .lua-red.active,.lua-white.active,.lua-blue.active,.lua-yellow.active{color:var(--bg)}
 
-/* MEDIA QUERIES RESPONSIVAS */
+
+/* ===== MEDIA QUERIES RESPONSIVAS ===== */
 @media (max-width: 768px) {
   body { font-size: 16px; }
   .container { padding: 1.5rem 1rem; max-width: 100%; }
@@ -109,10 +110,9 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
   .card { padding: 1rem; }
   .grid-2 { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-  .onda-L { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 330px; margin: 1.5rem auto; width: 100%; }
-  .onda-kin { width: 60px !important; height: 60px !important; font-size: 1.8rem !important; border-width: 2px !important; }
-  .onda-L .onda-kin { position: relative !important; grid-column: unset !important; grid-row: unset !important; }
-  .onda-L .onda-kin:nth-child(13) { font-size: 2.5rem !important; border-width: 3px !important; }
+  .onda-L { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 330px; margin: 1.5rem auto; width: 100%; }
+  .onda-L .onda-kin { width: 60px !important; height: 60px !important; font-size: 1.8rem !important; border-width: 2px !important; grid-column: unset !important; grid-row: unset !important; }
+  .onda-L .onda-kin:nth-child(13) { font-size: 2.5rem !important; border-width: 3px !important; width: 60px !important; height: 60px !important; }
   .oraculo-container { min-height: 300px; }
   .oraculo-central { width: 110px; }
   .oraculo-side { width: 90px; }
@@ -121,7 +121,6 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
   .tabs { gap: 4px; }
   .praticas-list li { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
 }
-
 @media (max-width: 480px) {
   html { font-size: 14px; }
   body { font-size: 14px; line-height: 1.5; }
@@ -132,13 +131,10 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
   .btn-google { padding: 10px 16px; font-size: 0.8rem; width: 100%; justify-content: center; }
   .container { padding: 1rem 0.75rem; margin: 0; }
   h1 { font-size: 1.3rem; margin-bottom: 0.25rem; }
-  p { font-size: 0.8rem; }
   .user-bar { flex-direction: column; align-items: flex-start; padding: 0.8rem; gap: 8px; }
-  .user-info { width: 100%; }
   .user-bar > div:last-child { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
   .btn-logout, .btn-admin, .btn-export { padding: 6px 10px; font-size: 0.65rem; width: 100%; text-align: center; }
   .section { padding: 1rem; margin-bottom: 0.8rem; border-radius: 8px; }
-  .section h2 { font-size: 0.95rem; margin-bottom: 0.7rem; }
   .kin-hero { padding: 1.2rem 1rem; margin-bottom: 1rem; }
   .kin-title { font-size: 1.2rem; margin: 0.8rem 0; }
   .kin-subtitle { font-size: 0.75rem; }
@@ -148,8 +144,8 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
   .card-label { font-size: 0.65rem; margin-bottom: 4px; }
   .card-val { font-size: 0.9rem; }
   .selo-icon { width: 60px; height: 60px; font-size: 2rem; margin: 0 auto 0.8rem; }
-  .onda-L { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 280px; margin: 1rem auto; }
-  .onda-kin { width: 50px !important; height: 50px !important; font-size: 1.5rem !important; border-width: 2px !important; border-radius: 8px !important; }
+  .onda-L { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 280px; margin: 1rem auto; }
+  .onda-L .onda-kin { width: 50px !important; height: 50px !important; font-size: 1.5rem !important; border-width: 2px !important; border-radius: 8px !important; grid-column: unset !important; grid-row: unset !important; }
   .onda-L .onda-kin:nth-child(13) { font-size: 2rem !important; border-width: 2px !important; width: 50px !important; height: 50px !important; }
   .semana-label { font-size: 0.6rem; margin-top: 4px; }
   .oraculo-container { min-height: 220px; margin: 1rem 0; }
@@ -161,46 +157,32 @@ input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border
   .btn-calc { padding: 8px 16px; font-size: 0.65rem; width: 100%; margin-top: 8px; }
   .tabs { gap: 2px; margin-bottom: 1rem; }
   .tab { padding: 8px 10px; font-size: 0.65rem; }
-  .tab-content { margin: 0; }
-  .praticas-list { padding: 0; }
   .praticas-list li { padding: 0.6rem 0.8rem; margin-bottom: 4px; font-size: 0.85rem; gap: 8px; }
   .praticas-list li:before { font-size: 1rem; }
   .info-box { padding: 0.8rem; margin: 0.8rem 0; font-size: 0.85rem; }
   .info-text { font-size: 0.8rem; margin: 0.3rem 0; }
-  @supports (hover: none) {
-    .tooltip:hover::after { display: none; }
-    .tooltip { border-bottom: 1px dashed var(--gold); }
-  }
   .lua-dia { width: 28px; height: 28px; font-size: 0.6rem; }
-  .section.hidden-mobile { display: none; }
 }
-
 @media (max-width: 360px) {
   .container { padding: 0.8rem 0.5rem; }
   h1 { font-size: 1.1rem; }
   .onda-L { max-width: 250px; gap: 5px; }
-  .onda-kin { width: 45px !important; height: 45px !important; font-size: 1.3rem !important; border-width: 1px !important; }
-  .onda-L .onda-kin:nth-child(13) { font-size: 1.8rem !important; }
+  .onda-L .onda-kin { width: 45px !important; height: 45px !important; font-size: 1.3rem !important; border-width: 1px !important; }
   .btn-logout, .btn-admin, .btn-export { padding: 5px 8px; font-size: 0.6rem; }
 }
-
 @media (max-height: 500px) and (orientation: landscape) {
   .kin-hero { padding: 1rem; margin-bottom: 0.8rem; }
   .kin-title { font-size: 1.3rem; margin: 0.5rem 0; }
   .kin-frase { font-size: 0.85rem; padding: 0.8rem; margin: 0.5rem auto; }
   .oraculo-container { min-height: 280px; }
 }
-
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
-
 @media (prefers-contrast: more) {
   :root { --border: rgba(180,154,240,0.35); --text3: #8a8799; }
 }
-
 </style>
-</head>
 <body>
 
 <div id="login-screen" class="login-container">
@@ -253,21 +235,107 @@ Entrar com Google
 <input type="date" id="nasc-inp">
 <button class="btn-calc" onclick="calcNatal()">Calcular</button>
 </div>
+<div id="res-natal" class="hidden" style="margin-top:1.5rem"></div>
 </div>
-<div id="res-natal" class="hidden"></div>
 </div>
 </div>
+
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/js-joda@1.11.0/dist/js-joda.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/js-joda-timezone@2.3.0/dist/js-joda-timezone.min.js"></script>
-
 <script>
-const firebaseConfig = {
+// DADOS E CONFIGURAÇÕES
+let DATA = {};
+fetch('./sincronario_dados.json')
+  .then(r => r.json())
+  .then(d => {
+    DATA = d;
+    console.log('✓ Dados carregados:', Object.keys(DATA.kins).length, 'kins');
+  })
+  .catch(e => console.warn('⚠️ Erro:', e));
+
+const EMOJIS = ['🐉', '💨', '🌌', '🌱', '🐍', '☯️', '✋', '⭐', '🌙', '🐕', '🐒', '👤', '🚶', '🧙', '🦅', '⚔️', '🌍', '🪞', '⛈️', '☀️'];
+const CORES_SELO = ['red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow'];
+const CORES_ONDA = ['red', 'red', 'red', 'red', 'white', 'white', 'white', 'white', 'blue', 'blue', 'blue', 'blue', 'yellow'];
+const FEMININOS = new Set(['Noite', 'Serpente', 'Mão', 'Estrela', 'Lua', 'Águia', 'Terra', 'Semente', 'Tormenta']);
+
+function getSeloEmoji(nome) {
+  const nomes = ['Dragão', 'Vento', 'Noite', 'Semente', 'Serpente', 'Enlaçador', 'Mão', 'Estrela', 'Lua', 'Cão', 'Macaco', 'Humano', 'Caminhante', 'Mago', 'Águia', 'Guerreiro', 'Terra', 'Espelho', 'Tormenta', 'Sol'];
+  const idx = nomes.findIndex(s => nome.includes(s));
+  return idx >= 0 ? EMOJIS[idx] : '🌀';
+}
+
+
+function getSeloIconURL(nomeCompleto) {
+  const partes = nomeCompleto.split(' ');
+  const nomeBase = partes.slice(0, -1).join(' ');
+  const mapa = {
+    'Dragão': './assets/icons/dragao.png',
+    'Vento': './assets/icons/vento.png',
+    'Noite': './assets/icons/noite.png',
+    'Semente': './assets/icons/semente.png',
+    'Serpente': './assets/icons/serpente.png',
+    'Enlaçador': './assets/icons/enlacador.png',
+    'Enlaçador de Mundos': './assets/icons/enlacador.png',
+    'Mão': './assets/icons/mao.png',
+    'Estrela': './assets/icons/estrela.png',
+    'Lua': './assets/icons/lua.png',
+    'Cão': './assets/icons/cao.png',
+    'Cachorro': './assets/icons/cao.png',
+    'Macaco': './assets/icons/macaco.png',
+    'Humano': './assets/icons/humano.png',
+    'Caminhante': './assets/icons/caminhante.png',
+    'Caminhante do Céu': './assets/icons/caminhante.png',
+    'Mago': './assets/icons/mago.png',
+    'Feiticeiro': './assets/icons/mago.png',
+    'Águia': './assets/icons/aguia.png',
+    'Guerreiro': './assets/icons/guerreiro.png',
+    'Terra': './assets/icons/terra.png',
+    'Espelho': './assets/icons/espelho.png',
+    'Tormenta': './assets/icons/tormenta.png',
+    'Sol': './assets/icons/sol.png'
+  };
+  return mapa[nomeBase] || './assets/icons/default.png';
+}
+
+
+function getSeloBase(nomeCompleto) {
+  const partes = nomeCompleto.split(' ');
+  return partes.slice(0, -1).join(' ');
+}
+
+function getSeloCor(nomeCompleto) {
+  const partes = nomeCompleto.split(' ');
+  return partes[partes.length - 1].toLowerCase();
+}
+
+function concordar(selo, tom) {
+  for (let p of FEMININOS) {
+    if (selo.includes(p)) {
+      return tom
+        .replace('Magnético', 'Magnética')
+        .replace('Lunar', 'Lunar')
+        .replace('Elétrico', 'Elétrica')
+        .replace('Autoexistente', 'Autoexistente')
+        .replace('Overtone', 'Overtone')
+        .replace('Rítmico', 'Rítmica')
+        .replace('Ressonante', 'Ressonante')
+        .replace('Galáctico', 'Galáctica')
+        .replace('Solar', 'Solar')
+        .replace('Planetário', 'Planetária')
+        .replace('Espectral', 'Espectral')
+        .replace('Cristal', 'Cristal')
+        .replace('Cósmico', 'Cósmica');
+    }
+  }
+  return tom;
+}
+
+// FIREBASE
+const fc = {
   apiKey: "AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",
   authDomain: "sincro13luas.firebaseapp.com",
   projectId: "sincro13luas",
@@ -276,94 +344,238 @@ const firebaseConfig = {
   appId: "1:886057704979:web:31b8348110ff8649c369e6"
 };
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(fc);
 const auth = firebase.auth();
 const db = firebase.firestore();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-let currentUser = null;
+document.getElementById('btn-login').onclick = () => {
+  document.getElementById('login-loading').classList.remove('hidden');
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('profile');
+  provider.addScope('email');
+  auth.signInWithPopup(provider).catch(e => {
+    document.getElementById('login-error').textContent = e.code === 'auth/popup-blocked' ? '⚠️ Popup bloqueado!' : '❌ ' + e.message;
+    document.getElementById('login-error').classList.remove('hidden');
+    document.getElementById('login-loading').classList.add('hidden');
+  });
+};
 
-auth.onAuthStateChanged(async (user) => {
-  if (user) {
-    const userDoc = await db.collection('users').doc(user.uid).get();
-    if (!userDoc.exists || !userDoc.data().authorized) {
-      alert('❌ Sua conta está aguardando autorização do administrador.');
-      auth.signOut();
-      return;
+auth.onAuthStateChanged(async u => {
+  if (u) {
+    try {
+      const uR = db.collection('users').doc(u.uid);
+      const uD = await uR.get();
+      if (uD.exists) {
+        const d = uD.data();
+        if (d.authorized === true) {
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('app-screen').classList.add('active');
+          document.getElementById('user-avatar').src = u.photoURL || '';
+          document.getElementById('user-name').textContent = u.displayName;
+          document.getElementById('user-role').textContent = d.role || 'usuário';
+          if (d.role === 'admin') document.getElementById('btn-admin').classList.remove('hidden');
+          loadToday();
+        } else {
+          document.getElementById('login-error').textContent = '⏳ Aguarde autorização.';
+          document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
+          document.getElementById('login-error').classList.remove('hidden');
+          setTimeout(() => auth.signOut(), 4000);
+        }
+      } else {
+        await uR.set({
+          authorized: false,
+          displayName: u.displayName || 'Usuário',
+          email: u.email,
+          photoURL: u.photoURL || '',
+          role: 'usuário',
+          createdAt: new Date()
+        });
+        document.getElementById('login-error').textContent = '⏳ Conta criada! Aguarde autorização.';
+        document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
+        document.getElementById('login-error').classList.remove('hidden');
+        setTimeout(() => auth.signOut(), 4000);
+      }
+    } catch (e) {
+      document.getElementById('login-error').textContent = '❌ ' + e.message;
+      document.getElementById('login-error').classList.remove('hidden');
     }
-    currentUser = user;
-    document.getElementById('user-avatar').src = user.photoURL || '';
-    document.getElementById('user-name').textContent = user.displayName;
-    const role = userDoc.data().role || 'usuário';
-    document.getElementById('user-role').textContent = role === 'admin' ? '👑 ADMIN' : role;
-    if (role === 'admin') document.getElementById('btn-admin').classList.remove('hidden');
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app-screen').classList.add('active');
-    loadToday();
+    document.getElementById('login-loading').classList.add('hidden');
   } else {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app-screen').classList.remove('active');
   }
 });
 
-document.getElementById('btn-login').addEventListener('click', () => {
-  document.getElementById('login-loading').classList.remove('hidden');
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch(err => {
-    document.getElementById('login-error').textContent = '❌ Erro ao fazer login: ' + err.message;
-    document.getElementById('login-error').classList.remove('hidden');
-    document.getElementById('login-loading').classList.add('hidden');
-  });
-});
+document.getElementById('btn-logout').onclick = () => auth.signOut();
 
-document.getElementById('btn-logout').addEventListener('click', () => auth.signOut());
+async function exportPNG() {
+  const area = document.getElementById('export-area');
+  const canvas = await html2canvas(area, { backgroundColor: '#0a0c14', scale: 2 });
+  const link = document.createElement('a');
+  link.download = `sincronario-${new Date().toISOString().split('T')[0]}.png`;
+  link.href = canvas.toDataURL();
+  link.click();
+}
 
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
   event.target.classList.add('active');
-  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById(`tab-${t}`).classList.add('active');
 }
 
-async function dateToKin(date) {
-  const baseDate = new Date(1987, 7, 13);
-  const diffTime = Math.abs(date - baseDate);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  const kin = (diffDays % 260) + 1;
-  const snapshot = await db.collection('sincronario').doc('dados').get();
-  const allKins = snapshot.data().kins || [];
-  return allKins[kin - 1] || { kin, seal: '?' };
+// CÁLCULOS DE DATA
+function isLeapDay(d) {
+  return d.getMonth() === 1 && d.getDate() === 29;
 }
 
-function kinHTML(k) {
-  const seloCompleto = k.seal || 'Sol Autoexistente Amarelo';
-  const seloBase = seloCompleto.split(' ')[0];
-  const corSelo = k.sealColor || 'yellow';
-  const ondaNum = k.wave || 13;
-  const diaOnda = k.dayInWave || 4;
-  const ondaSelo = { acao: 'explorar, espaço, vigilância' };
-  const tom = k.tone || 'AUTOEXISTENTE';
-  const tomInfo = { verbo: 'Qual forma de agir?', pergunta: 'Como potencializar-me?' };
-  const tomOriginal = tom;
-  const castelo = 'Castelo Amarelo Sul do Corte do Dar';
-  const casteloTexto = '🏰 ' + castelo;
-  const luaNome = '🌙 Espectral (Serpente)';
-  const luaHTML = Array(28).fill(0).map((_, i) => `<div class="lua-dia ${i+1==diaOnda?'active':''} lua-${corSelo}" style="margin:2px">${i+1}</div>`).join('');
-  const anelNome = 'Dragão Vermelho';
-  const anelAcao = 'iluminar, fogo universal, vida';
-  const anelIconURL = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23d63b3b%22/%3E%3C/svg%3E';
-  const plasma = '⚡ Limi - Plexo Solar';
-  const faseLunar = '🌒 Crescente';
-  const ritual = { ritual: 'Ouça o Self Design Sounds' };
-  const fraseCurta = seloCompleto;
-  const ondaHTML = '<div class="onda-L">' + Array(13).fill(0).map((_, i) => `<div class="onda-kin cor-${corSelo}"><div class="semana-label">${i+1}</div></div>`).join('') + '</div>';
-  const casteloOndasHTML = '';
+function daysBetween(f, t) {
+  if (f > t) return -daysBetween(t, f);
+  let c = 0;
+  const d = new Date(f.getTime());
+  while (d < t) {
+    d.setDate(d.getDate() + 1);
+    if (!isLeapDay(d)) c++;
+  }
+  return c;
+}
+
+function dateToKin(dt) {
+  if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
+  const base = new Date(1987, 6, 26);
+  const dias = daysBetween(base, dt);
+  return ((34 - 1 + dias) % 260 + 260) % 260 + 1;
+}
+
+function getFaseLunar(d) {
+  const lc = 29.53;
+  const nk = new Date(2000, 0, 6, 18, 14);
+  const df = (d - nk) / (1000 * 60 * 60 * 24);
+  const ph = (df % lc) / lc;
+  if (ph < 0.03 || ph > 0.97) return '🌑 Nova';
+  if (ph < 0.28) return '🌒 Crescente';
+  if (ph < 0.53) return '🌕 Cheia';
+  if (ph < 0.78) return '🌘 Minguante';
+  return '🌑 Nova';
+}
+
+// PARTE 3 CONTINUA NA PRÓXIMA MENSAGEM (função kinHTML)
+
+
+// FUNÇÃO PRINCIPAL - GERA TODO O HTML DO KIN
+function kinHTML(kinNum) {
+  const kD = DATA.kins[kinNum];
+  if (!kD) return '<p>Carregando dados...</p>';
+
+  const seloCompleto = kD.selo;
+  const partes = seloCompleto.split(' ');
+  const cor = partes[partes.length - 1];
+  const seloBase = partes.slice(0, -1).join(' ');
+  const tomOriginal = kD.tom_nome;
+  const tomConcordado = concordar(seloCompleto, tomOriginal);
+  const nomeCompleto = `${seloBase} ${tomConcordado} ${cor}`;
+  const emoji = getSeloEmoji(seloCompleto);
+  const fraseCurta = kD.frase_curta || '';
+  const corSelo = getSeloCor(seloCompleto);
+
+  const { guia, analogo, antipoda, oculto } = kD.oraculo;
+  const tomNum = kD.tom;
+  const tomInfo = DATA.tons[tomNum] || {};
+
+  // Onda Encantada com CORES INDIVIDUAIS
+  const ondaInicio = Math.floor((kinNum - 1) / 13) * 13 + 1;
+  const diaOnda = ((kinNum - 1) % 13) + 1;
+  let ondaHTML = '<div class="onda-L">';
+  for (let i = 0; i < 13; i++) {
+    const k = ondaInicio + i;
+    const kData = DATA.kins[k];
+    const em = kData ? getSeloEmoji(kData.selo) : '?';
+    const corKin = kData ? getSeloCor(kData.selo) : 'white';
+    const ativo = k === kinNum ? 'active' : '';
+    const tooltip = kData ? `Kin ${k} - ${kData.selo} ${kData.tom_nome}` : '';
+    ondaHTML += `<div class="onda-kin selo-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData.selo)}" style="width:100%;height:100%;object-fit:contain"></div>`;
+  }
+  ondaHTML += '</div>';
+
+  // Castelo COMPLETO
+  const casteloNum = Math.floor((kinNum - 1) / 52);
+  const castelo = DATA.castelos[casteloNum] || {};
+  const casteloTexto = `🏰 Castelo ${castelo.nome} ${castelo.dir} do ${castelo.proposito}`;
+  const casteloOndas = castelo.ondas || [];
+  let casteloOndasHTML = '<div style="display:flex;gap:8px;justify-content:center;margin-top:0.5rem">';
+  for (let ondaNome of casteloOndas) {
+    // Pegar o selo completo da onda para ter a cor
+    const ondaIdx = casteloOndas.indexOf(ondaNome);
+    const ondaKinInicio = casteloNum * 52 + ondaIdx * 13 + 1;
+    const ondaKinData = DATA.kins && DATA.kins[ondaKinInicio] ? DATA.kins[ondaKinInicio] : null;
+    
+    let ondaSeloCompleto, ondaIconURL;
+    if (ondaKinData && ondaKinData.selo) {
+      ondaSeloCompleto = ondaKinData.selo;
+      ondaIconURL = getSeloIconURL(ondaSeloCompleto);
+    } else {
+      // Fallback: usar o nome da onda + cor padrão baseado no índice
+      const cores = ['Vermelho', 'Branco', 'Azul', 'Amarelo'];
+      ondaSeloCompleto = ondaNome + ' ' + cores[ondaIdx % 4];
+      ondaIconURL = getSeloIconURL(ondaSeloCompleto);
+    }
+    
+    casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="width:50px;height:50px"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='${getSeloEmoji(ondaNome)}'"></div>`;
+  }
+  casteloOndasHTML += '</div>';
+
+  // Plasma
+  const diaSemana = (kinNum - 1) % 7;
+  const plasma = DATA.plasmas[diaSemana] || '';
+
+  // Ritual
+  const ritual = DATA.rituais[diaOnda] || {};
+
+  // Lua Galáctica com SEMANAS COLORIDAS
+  const hoje = new Date();
+  const anoGal = hoje >= new Date(hoje.getFullYear(), 6, 26) ? hoje.getFullYear() : hoje.getFullYear() - 1;
+  const inicioAno = new Date(anoGal, 6, 26);
+  const diasPassados = daysBetween(inicioAno, hoje);
+  const luaNum = Math.floor(diasPassados / 28) + 1;
+  const diaLua = (diasPassados % 28) + 1;
+  const luaNome = DATA.luas[luaNum - 1] || '';
+  
+  let luaHTML = '<div style="display:flex;gap:6px;margin-top:1rem">';
+  const coresSemana = ['red', 'white', 'blue', 'yellow'];
+  for (let sem = 0; sem < 4; sem++) {
+    luaHTML += '<div style="display:flex;flex-direction:column;gap:4px">';
+    for (let d = 1; d <= 7; d++) {
+      const diaNum = sem * 7 + d;
+      const ativo = diaNum === diaLua ? 'active' : '';
+      luaHTML += `<div class="lua-dia lua-${coresSemana[sem]} ${ativo}">${diaNum}</div>`;
+    }
+    luaHTML += '</div>';
+  }
+  luaHTML += '</div>';
+
+  // Fase Lunar
+  const faseLunar = getFaseLunar(hoje);
+
+  // Anel Solar com ÍCONE
+  const anelKin = ((kinNum - 1) % 20) + 1;
+  const anelSelo = DATA.selos[anelKin] || {};
+  const anelNomeCompleto = anelSelo.nome || '';
+  const anelIconURL = getSeloIconURL(anelNomeCompleto);
+  const anelNome = anelSelo.nome || '';
+  const anelAcao = anelSelo.acao || '';
+
+  // Onda propósito
+  const ondaNum = Math.floor((kinNum - 1) / 13) + 1;
+  const ondaSelo = DATA.selos[((ondaNum - 1) % 20) + 1] || {};
 
   return `
-<div class="kin-hero">
-  <div class="kin-title">${seloBase}</div>
-  <div class="kin-subtitle">${seloCompleto}</div>
-  <div style="color:var(--text2);font-size:0.85rem;margin-top:1rem">Kin ${k.kin || '?'} de 260</div>
+<div class="section">
+  <div class="kin-hero">
+    <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+    <div class="kin-title">${nomeCompleto}</div>
+    <div class="kin-subtitle">Kin ${kinNum} de 260</div>
+  </div>
   ${fraseCurta ? `<div class="kin-frase">"${fraseCurta}"</div>` : ''}
 </div>
 
@@ -371,24 +583,24 @@ function kinHTML(k) {
   <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1.5rem;text-transform:uppercase;text-align:center">Oráculo do Destino</div>
   <div class="oraculo-container">
     <div class="oraculo-item oraculo-central">
-      <div class="selo-icon selo-${corSelo}">🌀</div>
+      <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome">${seloBase}</div>
     </div>
     <div class="oraculo-item oraculo-side oraculo-guia">
-      <div class="selo-icon selo-${corSelo}">💫</div>
-      <div class="oraculo-nome">Guia<br>${seloBase}</div>
+      <div class="selo-icon selo-${getSeloCor(guia)}"><img src="${getSeloIconURL(guia)}" alt="${getSeloBase(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Guia<br>${getSeloBase(guia)}</div>
     </div>
     <div class="oraculo-item oraculo-side oraculo-analogo">
-      <div class="selo-icon selo-${corSelo}">⭐</div>
-      <div class="oraculo-nome">Análogo<br>${seloBase}</div>
+      <div class="selo-icon selo-${getSeloCor(analogo)}"><img src="${getSeloIconURL(analogo)}" alt="${getSeloBase(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Análogo<br>${getSeloBase(analogo)}</div>
     </div>
     <div class="oraculo-item oraculo-side oraculo-antipoda">
-      <div class="selo-icon selo-${corSelo}">🔮</div>
-      <div class="oraculo-nome">Antípoda<br>${seloBase}</div>
+      <div class="selo-icon selo-${getSeloCor(antipoda)}"><img src="${getSeloIconURL(antipoda)}" alt="${getSeloBase(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Antípoda<br>${getSeloBase(antipoda)}</div>
     </div>
     <div class="oraculo-item oraculo-side oraculo-oculto">
-      <div class="selo-icon selo-${corSelo}">🌙</div>
-      <div class="oraculo-nome">Oculto<br>${seloBase}</div>
+      <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Oculto<br>${getSeloBase(oculto)}</div>
     </div>
   </div>
 </div>
@@ -411,13 +623,13 @@ function kinHTML(k) {
       ${casteloOndasHTML}
     </div>
     <div style="margin-bottom:1.5rem">
-      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">${luaNome}</div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">${luaHTML}</div>
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">🌙 ${luaNome}</div>
+      ${luaHTML}
     </div>
     <div class="grid-3" style="margin-top:1.5rem">
       <div class="card">
         <div class="card-label">⭐ Anel Solar</div>
-        <div style="text-align:center;margin:0.5rem 0">🌈</div>
+        <div style="text-align:center;margin:0.5rem 0"><img src="${anelIconURL}" style="width:60px;height:60px;object-fit:contain"></div>
         <div class="card-val" style="text-align:center">${anelNome}<br><small style="font-size:0.75rem;color:var(--text2)">${anelAcao}</small></div>
       </div>
       <div class="card">
@@ -445,32 +657,22 @@ function kinHTML(k) {
   `;
 }
 
+
 function calcNatal() {
   const v = document.getElementById('nasc-inp').value;
   if (!v) return;
   const [y, m, d] = v.split('-').map(Number);
   const dt = new Date(y, m - 1, d);
-  dateToKin(dt).then(k => {
-    document.getElementById('res-natal').innerHTML = kinHTML(k);
-    document.getElementById('res-natal').classList.remove('hidden');
-  });
+  const k = dateToKin(dt);
+  document.getElementById('res-natal').innerHTML = kinHTML(k);
+  document.getElementById('res-natal').classList.remove('hidden');
 }
 
 function loadToday() {
-  dateToKin(new Date()).then(k => {
-    document.getElementById('res-dia').innerHTML = kinHTML(k);
-  });
+  const k = dateToKin(new Date());
+  document.getElementById('res-dia').innerHTML = kinHTML(k);
 }
 
-function exportPNG() {
-  const element = document.getElementById('export-area');
-  html2canvas(element, { backgroundColor: '#0a0c14', scale: 2 }).then(canvas => {
-    const link = document.createElement('a');
-    link.href = canvas.toDataURL();
-    link.download = 'sincronario-kin-' + new Date().toISOString().slice(0, 10) + '.png';
-    link.click();
-  });
-}
 </script>
 </body>
 </html>
