@@ -405,7 +405,7 @@ function kinHTML(kinNum) {
     const corKin = kData ? getSeloCor(kData.selo) : 'white';
     const ativo = k === kinNum ? 'active' : '';
     const tooltip = kData ? `Kin ${k} - ${kData.selo} ${kData.tom_nome}` : '';
-    ondaHTML += `<div class="onda-kin selo-${corKin} ${ativo}" title="${tooltip}">${em}</div>`;
+    ondaHTML += `<div class="onda-kin selo-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData.selo)}" style="width:100%;height:100%;object-fit:contain"></div>`;
   }
   ondaHTML += '</div>';
 
@@ -416,8 +416,8 @@ function kinHTML(kinNum) {
   const casteloOndas = castelo.ondas || [];
   let casteloOndasHTML = '<div style="display:flex;gap:8px;justify-content:center;margin-top:0.5rem">';
   for (let ondaNome of casteloOndas) {
-    const ondaEmoji = getSeloEmoji(ondaNome);
-    casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="font-size:2rem">${ondaEmoji}</div>`;
+    const ondaIconURL = getSeloIconURL(ondaNome + " Vermelho");
+    casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="width:50px;height:50px"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain"></div>`;
   }
   casteloOndasHTML += '</div>';
 
@@ -456,7 +456,7 @@ function kinHTML(kinNum) {
   // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
   const anelSelo = DATA.selos[anelKin] || {};
-  const anelEmoji = getSeloEmoji(anelSelo.nome || '');
+  const anelIconURL = getSeloIconURL((anelSelo.nome || '') + " Vermelho");
   const anelNome = anelSelo.nome || '';
   const anelAcao = anelSelo.acao || '';
 
@@ -467,7 +467,7 @@ function kinHTML(kinNum) {
   return `
 <div class="section">
   <div class="kin-hero">
-    <div class="selo-icon selo-${corSelo}">${emoji}</div>
+    <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
     <div class="kin-title">${nomeCompleto}</div>
     <div class="kin-subtitle">Kin ${kinNum} de 260</div>
   </div>
@@ -478,23 +478,23 @@ function kinHTML(kinNum) {
   <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1.5rem;text-transform:uppercase;text-align:center">Oráculo do Destino</div>
   <div class="oraculo-container">
     <div class="oraculo-item oraculo-central">
-      <div class="selo-icon selo-${corSelo}">${emoji}</div>
+      <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome">${seloBase}</div>
     </div>
     <div class="oraculo-item oraculo-side oraculo-guia">
-      <div class="selo-icon selo-${getSeloCor(guia)}">${getSeloEmoji(guia)}</div>
+      <div class="selo-icon selo-${getSeloCor(guia)}"><img src="${getSeloIconURL(guia)}" alt="${getSeloBase(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome">Guia<br>${getSeloBase(guia)}</div>
     </div>
     <div class="oraculo-item oraculo-side oraculo-analogo">
-      <div class="selo-icon selo-${getSeloCor(analogo)}">${getSeloEmoji(analogo)}</div>
+      <div class="selo-icon selo-${getSeloCor(analogo)}"><img src="${getSeloIconURL(analogo)}" alt="${getSeloBase(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome">Análogo<br>${getSeloBase(analogo)}</div>
     </div>
     <div class="oraculo-item oraculo-side oraculo-antipoda">
-      <div class="selo-icon selo-${getSeloCor(antipoda)}">${getSeloEmoji(antipoda)}</div>
+      <div class="selo-icon selo-${getSeloCor(antipoda)}"><img src="${getSeloIconURL(antipoda)}" alt="${getSeloBase(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome">Antípoda<br>${getSeloBase(antipoda)}</div>
     </div>
     <div class="oraculo-item oraculo-side oraculo-oculto">
-      <div class="selo-icon selo-${getSeloCor(oculto)}">${getSeloEmoji(oculto)}</div>
+      <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome">Oculto<br>${getSeloBase(oculto)}</div>
     </div>
   </div>
@@ -524,7 +524,7 @@ function kinHTML(kinNum) {
     <div class="grid-3" style="margin-top:1.5rem">
       <div class="card">
         <div class="card-label">⭐ Anel Solar</div>
-        <div style="font-size:2rem;text-align:center;margin:0.5rem 0">${anelEmoji}</div>
+        <div style="text-align:center;margin:0.5rem 0"><img src="${anelIconURL}" style="width:60px;height:60px;object-fit:contain"></div>
         <div class="card-val" style="text-align:center">${anelNome}<br><small style="font-size:0.75rem;color:var(--text2)">${anelAcao}</small></div>
       </div>
       <div class="card">
