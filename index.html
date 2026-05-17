@@ -3,155 +3,268 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Admin - Sincronário das 13 Luas</title>
+<title>Sincronário das 13 Luas - Completo</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--red:#d63b3b;--white-c:#f0f0f0;--blue:#3b8ed6;--yellow:#f5c842;--green:#4caf50}
+:root{--bg:#0a0c14;--bg2:#11142a;--card:#161b30;--border:rgba(180,154,240,0.18);--gold:#c9a84c;--text:#ece9f5;--text2:#9892b0;--text3:#6a647a;--radius:12px;--red:#d63b3b;--blue:#3b8ed6;--yellow:#f5c842;--white:#f0f0f0}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.6;min-height:100vh}
-.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+.login-container{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+.login-box{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:3rem 2rem;max-width:400px;width:100%;text-align:center}
+.login-box h1{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);margin-bottom:1rem}
+.login-box p{color:var(--text2);margin-bottom:2rem}
+.btn-google{background:#fff;color:#333;border:none;border-radius:8px;padding:12px 24px;font-family:'Cinzel',serif;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+.error-msg{background:rgba(214,59,59,0.1);border:0.5px solid var(--red);color:var(--red);padding:1rem;border-radius:8px;margin-top:1rem;font-size:0.9rem}
+.loading{color:var(--text2);margin-top:1rem}
+.container{max-width:1400px;margin:0 auto;padding:2rem 1.5rem;display:none}
+.container.active{display:block}
 h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center;margin-bottom:0.5rem}
 .user-bar{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.user-info{display:flex;align-items:center;gap:12px}
 .user-avatar{width:40px;height:40px;border-radius:50%;border:2px solid var(--gold)}
-.btn-logout,.btn-back{background:rgba(180,154,240,0.1);border:0.5px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 16px;font-family:'Cinzel',serif;font-size:0.75rem;cursor:pointer;text-transform:uppercase}
-.btn-back{border-color:var(--blue);color:var(--blue)}
-.section{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
-.section h2{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase}
-.user-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:15px}
-.user-details{flex:1;min-width:200px}
-.user-email{font-family:'Cinzel',serif;color:var(--gold);font-size:0.9rem}
-.user-uid{font-size:0.75rem;color:var(--text3);word-break:break-all;margin-top:4px}
-.user-status{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;min-width:280px}
-.badge{padding:4px 12px;border-radius:4px;font-size:0.75rem;text-transform:uppercase;font-weight:600}
-.badge.authorized{background:rgba(76,175,80,0.2);color:#4caf50;border:0.5px solid #4caf50}
-.badge.pending{background:rgba(245,200,66,0.2);color:#f5c842;border:0.5px solid #f5c842}
-.badge.admin{background:rgba(201,168,76,0.2);color:var(--gold);border:0.5px solid var(--gold)}
-.btn-authorize,.btn-admin-toggle,.btn-remove{border:none;border-radius:4px;padding:8px 14px;font-family:'Cinzel',serif;font-size:0.7rem;cursor:pointer;text-transform:uppercase;transition:all 0.2s}
-.btn-authorize{background:rgba(76,175,80,0.2);color:#4caf50;border:0.5px solid #4caf50}
-.btn-authorize:hover{background:#4caf50;color:white}
-.btn-admin-toggle{background:rgba(201,168,76,0.2);color:var(--gold);border:0.5px solid var(--gold)}
-.btn-admin-toggle:hover{background:var(--gold);color:var(--bg)}
-.btn-remove{background:rgba(214,59,59,0.2);color:var(--red);border:0.5px solid var(--red)}
-.btn-remove:hover{background:var(--red);color:white}
-.loading{color:var(--text2);text-align:center;padding:1rem}
-.empty{color:var(--text3);text-align:center;padding:2rem;font-style:italic}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
-.stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
-.stat-number{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);margin-bottom:0.5rem}
-.stat-label{font-size:0.75rem;color:var(--text3);text-transform:uppercase}
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center}
-.modal.active{display:flex}
-.modal-content{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:400px;width:90%}
-.modal-content h3{color:var(--gold);margin-bottom:1rem}
-.modal-content p{color:var(--text2);margin-bottom:1.5rem}
-.modal-buttons{display:flex;gap:10px;justify-content:flex-end}
-.btn-confirm,.btn-cancel{padding:10px 20px;border:none;border-radius:4px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase}
-.btn-confirm{background:var(--red);color:white}
-.btn-cancel{background:var(--border);color:var(--text2)}
+.btn-logout,.btn-admin,.btn-export{background:rgba(180,154,240,0.1);border:0.5px solid var(--border);border-radius:8px;color:var(--text2);padding:8px 16px;font-family:'Cinzel',serif;font-size:0.75rem;cursor:pointer;text-transform:uppercase}
+.btn-admin{border-color:var(--gold);color:var(--gold)}
+.tabs{display:flex;gap:8px;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border)}
+.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Cinzel',serif;font-size:0.75rem;padding:12px 20px;cursor:pointer;text-transform:uppercase}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.section{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+.kin-hero{text-align:center;padding:2rem;background:linear-gradient(135deg,var(--bg2),var(--bg));border-radius:var(--radius);margin-bottom:1.5rem;border:0.5px solid var(--border)}
+.kin-title{font-family:'Cinzel',serif;font-size:2rem;margin:1rem 0;letter-spacing:0.05em;color:var(--gold);line-height:1.3}
+.kin-subtitle{color:var(--text2);font-size:0.9rem}
+.kin-frase{color:var(--gold);font-size:1.15rem;font-style:italic;margin:1.5rem auto;padding:1.5rem;background:rgba(201,168,76,0.08);border-left:3px solid var(--gold);border-radius:4px;max-width:800px;line-height:1.8}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:1.5rem 0}
+.card{background:var(--bg2);border-radius:8px;padding:1.2rem;border:0.5px solid var(--border)}
+.card-label{font-size:0.75rem;color:var(--text3);text-transform:uppercase;margin-bottom:8px}
+.card-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--text)}
+.selo-icon{width:80px;height:80px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;border:3px solid;margin:0 auto 1rem auto}
+.selo-red{background:rgba(214,59,59,0.3);border-color:var(--red)}
+.selo-white{background:rgba(240,240,240,0.2);border-color:var(--white)}
+.selo-blue{background:rgba(59,142,214,0.3);border-color:var(--blue)}
+.selo-yellow{background:rgba(245,200,66,0.3);border-color:var(--yellow)}
+.oraculo-container{display:flex;justify-content:center;align-items:center;margin:2rem 0;position:relative;min-height:400px}
+.oraculo-item{position:absolute;text-align:center}
+.oraculo-central{width:140px}
+.oraculo-side{width:110px}
+.oraculo-guia{top:0;left:50%;transform:translateX(-50%)}
+.oraculo-analogo{left:0;top:50%;transform:translateY(-50%)}
+.oraculo-antipoda{bottom:0;left:50%;transform:translateX(-50%)}
+.oraculo-oculto{right:0;top:50%;transform:translateY(-50%)}
+.oraculo-nome{font-size:0.75rem;margin-top:0.5rem;color:var(--text2);font-family:'Cinzel',serif}
+.onda-L{display:grid;grid-template-columns:repeat(4,70px);grid-template-rows:repeat(4,70px);gap:8px;margin:1.5rem auto;width:fit-content}
+.onda-L .onda-kin:nth-child(1){grid-column:1;grid-row:1}
+.onda-L .onda-kin:nth-child(2){grid-column:2;grid-row:1}
+.onda-L .onda-kin:nth-child(3){grid-column:3;grid-row:1}
+.onda-L .onda-kin:nth-child(4){grid-column:4;grid-row:1}
+.onda-L .onda-kin:nth-child(5){grid-column:1;grid-row:2}
+.onda-L .onda-kin:nth-child(6){grid-column:1;grid-row:3}
+.onda-L .onda-kin:nth-child(7){grid-column:1;grid-row:4}
+.onda-L .onda-kin:nth-child(8){grid-column:2;grid-row:4}
+.onda-L .onda-kin:nth-child(9){grid-column:3;grid-row:4}
+.onda-L .onda-kin:nth-child(10){grid-column:4;grid-row:2}
+.onda-L .onda-kin:nth-child(11){grid-column:4;grid-row:3}
+.onda-L .onda-kin:nth-child(12){grid-column:4;grid-row:4}
+.onda-L .onda-kin:nth-child(13){grid-column:2/4;grid-row:2/4;width:auto;height:auto;font-size:3rem;border-width:4px}
+.onda-kin{width:70px;height:70px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2rem;border:3px solid;cursor:pointer;transition:all 0.2s}
+.onda-kin:hover{transform:scale(1.05)}
+.onda-kin.active{box-shadow:0 0 20px rgba(201,168,76,0.6);border-color:var(--gold)!important}
+.cor-red{background:rgba(214,59,59,0.3);border-color:var(--red)}
+.cor-white{background:rgba(240,240,240,0.2);border-color:var(--white)}
+.cor-blue{background:rgba(59,142,214,0.3);border-color:var(--blue)}
+.cor-yellow{background:rgba(245,200,66,0.3);border-color:var(--yellow)}
+.semana-label{text-align:center;font-size:0.75rem;color:var(--text3);margin-top:0.5rem;text-transform:uppercase}
+.praticas-list{list-style:none;padding:0}
+.praticas-list li{padding:0.8rem 1rem;margin-bottom:0.5rem;background:var(--bg2);border-radius:6px;border-left:3px solid var(--gold);display:flex;align-items:center;gap:10px}
+.praticas-list li:before{content:'♥';color:var(--gold);font-size:1.2rem}
+.hidden{display:none}
+input[type="date"]{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-family:inherit;color-scheme:dark;max-width:200px}
+.btn-calc{background:linear-gradient(135deg,rgba(138,110,220,0.2),rgba(201,168,76,0.15));border:0.5px solid var(--gold);border-radius:8px;color:var(--gold);font-family:'Cinzel',serif;font-size:0.75rem;padding:10px 22px;cursor:pointer;text-transform:uppercase}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:1.5rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.tooltip{position:relative;cursor:help}
+.tooltip:hover::after{content:attr(data-tooltip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--card);color:var(--text);padding:0.5rem 1rem;border-radius:4px;border:0.5px solid var(--border);white-space:nowrap;z-index:1000;margin-bottom:5px;font-size:0.75rem}
+.info-text{color:var(--text2);font-size:0.9rem;line-height:1.6;margin:0.5rem 0}
+.info-box{background:var(--bg2);padding:1rem;border-radius:8px;border-left:3px solid var(--blue);margin:1rem 0}
+.lua-dia{width:32px;height:32px;background:var(--bg2);border:2px solid;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:bold}
+.lua-dia.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.lua-red{border-color:var(--red);color:var(--red)}
+.lua-white{border-color:var(--white);color:var(--white)}
+.lua-blue{border-color:var(--blue);color:var(--blue)}
+.lua-yellow{border-color:var(--yellow);color:var(--yellow)}
+.lua-red.active,.lua-white.active,.lua-blue.active,.lua-yellow.active{color:var(--bg)}
 
 /* MEDIA QUERIES RESPONSIVAS */
 @media (max-width: 768px) {
-  .container { padding: 1.5rem 1rem; }
-  h1 { font-size: 1.5rem; }
-  .user-bar { flex-direction: column; align-items: flex-start; padding: 1rem; }
-  .user-bar > div:last-child { width: 100%; display: flex; gap: 8px; flex-wrap: wrap; }
-  .btn-logout, .btn-back { padding: 6px 12px; font-size: 0.7rem; width: 100%; text-align: center; }
-  .section { padding: 1.2rem; }
-  .section h2 { font-size: 1rem; }
-  .user-item { flex-direction: column; gap: 10px; }
-  .user-status { width: 100%; flex-direction: column; min-width: auto; gap: 6px; }
-  .btn-authorize, .btn-admin-toggle, .btn-remove { width: 100%; }
-  .stat-card { padding: 0.8rem; }
-  .stat-number { font-size: 1.5rem; }
-  .stat-label { font-size: 0.65rem; }
+  body { font-size: 16px; }
+  .container { padding: 1.5rem 1rem; max-width: 100%; }
+  h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  .user-bar { padding: 1rem; gap: 8px; }
+  .btn-logout, .btn-admin, .btn-export { padding: 6px 12px; font-size: 0.7rem; }
+  .section { padding: 1.2rem; margin-bottom: 1rem; }
+  .section h2 { font-size: 1rem; margin-bottom: 0.8rem; }
+  .kin-title { font-size: 1.5rem; }
+  .kin-frase { font-size: 1rem; padding: 1.2rem; margin: 1rem auto; }
+  .cards { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+  .card { padding: 1rem; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .onda-L { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 330px; margin: 1.5rem auto; width: 100%; }
+  .onda-kin { width: 60px !important; height: 60px !important; font-size: 1.8rem !important; border-width: 2px !important; }
+  .onda-L .onda-kin { position: relative !important; grid-column: unset !important; grid-row: unset !important; }
+  .onda-L .onda-kin:nth-child(13) { font-size: 2.5rem !important; border-width: 3px !important; }
+  .oraculo-container { min-height: 300px; }
+  .oraculo-central { width: 110px; }
+  .oraculo-side { width: 90px; }
+  input[type="date"] { max-width: 100%; width: 100%; }
+  .tab { padding: 10px 14px; font-size: 0.7rem; }
+  .tabs { gap: 4px; }
+  .praticas-list li { padding: 0.7rem 0.9rem; font-size: 0.9rem; }
 }
 
 @media (max-width: 480px) {
-  .container { padding: 1rem 0.75rem; }
-  body { font-size: 14px; }
-  h1 { font-size: 1.2rem; }
-  .user-bar { padding: 0.8rem; }
-  .user-info { gap: 8px; }
-  .user-avatar { width: 35px; height: 35px; }
-  .user-bar > div:first-child > div:last-child { font-size: 0.7rem; }
-  .user-bar > div:last-child { gap: 4px; }
-  .btn-logout, .btn-back { padding: 5px 10px; font-size: 0.65rem; }
-  .section { padding: 1rem; margin-bottom: 0.8rem; }
-  .section h2 { font-size: 0.9rem; margin-bottom: 0.7rem; }
-  .user-item { padding: 0.8rem; gap: 8px; }
-  .user-email { font-size: 0.8rem; }
-  .user-uid { font-size: 0.65rem; }
-  .badge { padding: 3px 8px; font-size: 0.65rem; }
-  .btn-authorize, .btn-admin-toggle, .btn-remove { padding: 6px 10px; font-size: 0.6rem; }
-  .stats { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; margin-bottom: 1rem; }
-  .stat-card { padding: 0.7rem; }
-  .stat-number { font-size: 1.3rem; margin-bottom: 0.3rem; }
-  .stat-label { font-size: 0.6rem; }
-  .modal-content { padding: 1.5rem; max-width: 90vw; }
-  .modal-content h3 { font-size: 1rem; }
-  .modal-content p { font-size: 0.85rem; }
-  .btn-confirm, .btn-cancel { padding: 8px 14px; font-size: 0.65rem; }
+  html { font-size: 14px; }
+  body { font-size: 14px; line-height: 1.5; }
+  .login-container { padding: 1rem; }
+  .login-box { padding: 2rem 1.5rem; }
+  .login-box h1 { font-size: 1.5rem; }
+  .login-box p { font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .btn-google { padding: 10px 16px; font-size: 0.8rem; width: 100%; justify-content: center; }
+  .container { padding: 1rem 0.75rem; margin: 0; }
+  h1 { font-size: 1.3rem; margin-bottom: 0.25rem; }
+  p { font-size: 0.8rem; }
+  .user-bar { flex-direction: column; align-items: flex-start; padding: 0.8rem; gap: 8px; }
+  .user-info { width: 100%; }
+  .user-bar > div:last-child { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .btn-logout, .btn-admin, .btn-export { padding: 6px 10px; font-size: 0.65rem; width: 100%; text-align: center; }
+  .section { padding: 1rem; margin-bottom: 0.8rem; border-radius: 8px; }
+  .section h2 { font-size: 0.95rem; margin-bottom: 0.7rem; }
+  .kin-hero { padding: 1.2rem 1rem; margin-bottom: 1rem; }
+  .kin-title { font-size: 1.2rem; margin: 0.8rem 0; }
+  .kin-subtitle { font-size: 0.75rem; }
+  .kin-frase { font-size: 0.9rem; padding: 1rem; margin: 0.8rem auto; border-left: 2px solid var(--gold); }
+  .cards { grid-template-columns: 1fr; gap: 8px; margin: 1rem 0; }
+  .card { padding: 0.8rem; }
+  .card-label { font-size: 0.65rem; margin-bottom: 4px; }
+  .card-val { font-size: 0.9rem; }
+  .selo-icon { width: 60px; height: 60px; font-size: 2rem; margin: 0 auto 0.8rem; }
+  .onda-L { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 280px; margin: 1rem auto; }
+  .onda-kin { width: 50px !important; height: 50px !important; font-size: 1.5rem !important; border-width: 2px !important; border-radius: 8px !important; }
+  .onda-L .onda-kin:nth-child(13) { font-size: 2rem !important; border-width: 2px !important; width: 50px !important; height: 50px !important; }
+  .semana-label { font-size: 0.6rem; margin-top: 4px; }
+  .oraculo-container { min-height: 220px; margin: 1rem 0; }
+  .oraculo-central { width: 80px; font-size: 0.8rem; }
+  .oraculo-side { width: 70px; font-size: 0.7rem; }
+  .oraculo-nome { font-size: 0.6rem; margin-top: 4px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 0.8rem; }
+  input[type="date"] { max-width: 100%; width: 100%; padding: 8px 10px; font-size: 0.9rem; }
+  .btn-calc { padding: 8px 16px; font-size: 0.65rem; width: 100%; margin-top: 8px; }
+  .tabs { gap: 2px; margin-bottom: 1rem; }
+  .tab { padding: 8px 10px; font-size: 0.65rem; }
+  .tab-content { margin: 0; }
+  .praticas-list { padding: 0; }
+  .praticas-list li { padding: 0.6rem 0.8rem; margin-bottom: 4px; font-size: 0.85rem; gap: 8px; }
+  .praticas-list li:before { font-size: 1rem; }
+  .info-box { padding: 0.8rem; margin: 0.8rem 0; font-size: 0.85rem; }
+  .info-text { font-size: 0.8rem; margin: 0.3rem 0; }
+  @supports (hover: none) {
+    .tooltip:hover::after { display: none; }
+    .tooltip { border-bottom: 1px dashed var(--gold); }
+  }
+  .lua-dia { width: 28px; height: 28px; font-size: 0.6rem; }
+  .section.hidden-mobile { display: none; }
 }
 
 @media (max-width: 360px) {
   .container { padding: 0.8rem 0.5rem; }
-  h1 { font-size: 1rem; }
-  .user-bar { padding: 0.6rem; }
-  .btn-logout, .btn-back { padding: 4px 8px; font-size: 0.6rem; }
-  .section { padding: 0.8rem; }
-  .stats { grid-template-columns: 1fr; gap: 0.6rem; }
+  h1 { font-size: 1.1rem; }
+  .onda-L { max-width: 250px; gap: 5px; }
+  .onda-kin { width: 45px !important; height: 45px !important; font-size: 1.3rem !important; border-width: 1px !important; }
+  .onda-L .onda-kin:nth-child(13) { font-size: 1.8rem !important; }
+  .btn-logout, .btn-admin, .btn-export { padding: 5px 8px; font-size: 0.6rem; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .kin-hero { padding: 1rem; margin-bottom: 0.8rem; }
+  .kin-title { font-size: 1.3rem; margin: 0.5rem 0; }
+  .kin-frase { font-size: 0.85rem; padding: 0.8rem; margin: 0.5rem auto; }
+  .oraculo-container { min-height: 280px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+@media (prefers-contrast: more) {
+  :root { --border: rgba(180,154,240,0.35); --text3: #8a8799; }
 }
 
 </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="user-bar">
-    <div class="user-info">
-      <img id="user-avatar" class="user-avatar" src="" alt="">
-      <div>
-        <div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
-        <div style="font-size:0.75rem;color:var(--gold);text-transform:uppercase">ADMIN</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn-back" onclick="window.location.href='index.html'">← Voltar</button>
-      <button class="btn-logout" id="btn-logout">Sair</button>
-    </div>
-  </div>
-
-  <h1>👑 Painel Admin</h1>
-  <p style="text-align:center;color:var(--text2);margin-bottom:2rem">Gerenciar usuários e permissões</p>
-
-  <div class="stats" id="stats"></div>
-
-  <div class="section">
-    <h2>⏳ Pendentes de Autorização</h2>
-    <div id="pending-users" class="loading">Carregando...</div>
-  </div>
-
-  <div class="section">
-    <h2>✅ Usuários Autorizados</h2>
-    <div id="authorized-users" class="loading">Carregando...</div>
-  </div>
+<div id="login-screen" class="login-container">
+<div class="login-box">
+<h1>🌀 Sincronário das 13 Luas</h1>
+<p>Faça login com sua conta Google</p>
+<button class="btn-google" id="btn-login">
+<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
+Entrar com Google
+</button>
+<div id="login-error" class="error-msg hidden"></div>
+<div id="login-loading" class="loading hidden">Entrando...</div>
+</div>
 </div>
 
-<div id="confirm-modal" class="modal">
-  <div class="modal-content">
-    <h3 id="modal-title">Confirmar ação</h3>
-    <p id="modal-message"></p>
-    <div class="modal-buttons">
-      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-confirm" id="modal-confirm">Confirmar</button>
-    </div>
-  </div>
+<div id="app-screen" class="container">
+<div class="user-bar">
+<div style="display:flex;align-items:center;gap:12px">
+<img id="user-avatar" class="user-avatar" src="" alt="">
+<div>
+<div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
+<div id="user-role" style="font-size:0.75rem;color:var(--gold);text-transform:uppercase"></div>
+</div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Painel Admin</button>
+<button class="btn-export" onclick="exportPNG()">📸 Exportar PNG</button>
+<button class="btn-logout" id="btn-logout">Sair</button>
+</div>
+</div>
+
+<h1>🌀 Sincronário das 13 Luas</h1>
+<p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Calculadora Completa · Lei do Tempo</p>
+
+<div class="tabs">
+<button class="tab active" onclick="switchTab('dia')">Kin do Dia</button>
+<button class="tab" onclick="switchTab('natal')">Kin Natal</button>
+</div>
+
+<div id="export-area">
+<div id="tab-dia" class="tab-content active">
+<div id="res-dia"></div>
+</div>
+
+<div id="tab-natal" class="tab-content">
+<div class="section">
+<div style="font-family:Cinzel;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem">Kin Natal</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<label style="color:var(--text2);font-style:italic">Data de Nascimento</label>
+<input type="date" id="nasc-inp">
+<button class="btn-calc" onclick="calcNatal()">Calcular</button>
+</div>
+</div>
+<div id="res-natal" class="hidden"></div>
+</div>
+</div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/js-joda@1.11.0/dist/js-joda.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-joda-timezone@2.3.0/dist/js-joda-timezone.min.js"></script>
 
 <script>
 const firebaseConfig = {
@@ -166,155 +279,197 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 let currentUser = null;
-let currentAction = null;
 
 auth.onAuthStateChanged(async (user) => {
   if (user) {
     const userDoc = await db.collection('users').doc(user.uid).get();
-    if (!userDoc.exists || userDoc.data().role !== 'admin') {
-      alert('❌ Acesso negado! Você não é admin.');
-      window.location.href = 'index.html';
+    if (!userDoc.exists || !userDoc.data().authorized) {
+      alert('❌ Sua conta está aguardando autorização do administrador.');
+      auth.signOut();
       return;
     }
-
     currentUser = user;
     document.getElementById('user-avatar').src = user.photoURL || '';
     document.getElementById('user-name').textContent = user.displayName;
-    loadUsers();
+    const role = userDoc.data().role || 'usuário';
+    document.getElementById('user-role').textContent = role === 'admin' ? '👑 ADMIN' : role;
+    if (role === 'admin') document.getElementById('btn-admin').classList.remove('hidden');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').classList.add('active');
+    loadToday();
   } else {
-    window.location.href = 'index.html';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app-screen').classList.remove('active');
   }
 });
 
-document.getElementById('btn-logout').onclick = () => auth.signOut();
+document.getElementById('btn-login').addEventListener('click', () => {
+  document.getElementById('login-loading').classList.remove('hidden');
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(err => {
+    document.getElementById('login-error').textContent = '❌ Erro ao fazer login: ' + err.message;
+    document.getElementById('login-error').classList.remove('hidden');
+    document.getElementById('login-loading').classList.add('hidden');
+  });
+});
 
-async function loadUsers() {
-  try {
-    const snapshot = await db.collection('users').get();
-    const users = [];
-    snapshot.forEach(doc => {
-      users.push({ id: doc.id, ...doc.data() });
-    });
+document.getElementById('btn-logout').addEventListener('click', () => auth.signOut());
 
-    const pending = users.filter(u => !u.authorized);
-    const authorized = users.filter(u => u.authorized);
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
 
-    document.getElementById('stats').innerHTML = `
-      <div class="stat-card">
-        <div class="stat-number">${users.length}</div>
-        <div class="stat-label">Total de Usuários</div>
+async function dateToKin(date) {
+  const baseDate = new Date(1987, 7, 13);
+  const diffTime = Math.abs(date - baseDate);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const kin = (diffDays % 260) + 1;
+  const snapshot = await db.collection('sincronario').doc('dados').get();
+  const allKins = snapshot.data().kins || [];
+  return allKins[kin - 1] || { kin, seal: '?' };
+}
+
+function kinHTML(k) {
+  const seloCompleto = k.seal || 'Sol Autoexistente Amarelo';
+  const seloBase = seloCompleto.split(' ')[0];
+  const corSelo = k.sealColor || 'yellow';
+  const ondaNum = k.wave || 13;
+  const diaOnda = k.dayInWave || 4;
+  const ondaSelo = { acao: 'explorar, espaço, vigilância' };
+  const tom = k.tone || 'AUTOEXISTENTE';
+  const tomInfo = { verbo: 'Qual forma de agir?', pergunta: 'Como potencializar-me?' };
+  const tomOriginal = tom;
+  const castelo = 'Castelo Amarelo Sul do Corte do Dar';
+  const casteloTexto = '🏰 ' + castelo;
+  const luaNome = '🌙 Espectral (Serpente)';
+  const luaHTML = Array(28).fill(0).map((_, i) => `<div class="lua-dia ${i+1==diaOnda?'active':''} lua-${corSelo}" style="margin:2px">${i+1}</div>`).join('');
+  const anelNome = 'Dragão Vermelho';
+  const anelAcao = 'iluminar, fogo universal, vida';
+  const anelIconURL = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23d63b3b%22/%3E%3C/svg%3E';
+  const plasma = '⚡ Limi - Plexo Solar';
+  const faseLunar = '🌒 Crescente';
+  const ritual = { ritual: 'Ouça o Self Design Sounds' };
+  const fraseCurta = seloCompleto;
+  const ondaHTML = '<div class="onda-L">' + Array(13).fill(0).map((_, i) => `<div class="onda-kin cor-${corSelo}"><div class="semana-label">${i+1}</div></div>`).join('') + '</div>';
+  const casteloOndasHTML = '';
+
+  return `
+<div class="kin-hero">
+  <div class="kin-title">${seloBase}</div>
+  <div class="kin-subtitle">${seloCompleto}</div>
+  <div style="color:var(--text2);font-size:0.85rem;margin-top:1rem">Kin ${k.kin || '?'} de 260</div>
+  ${fraseCurta ? `<div class="kin-frase">"${fraseCurta}"</div>` : ''}
+</div>
+
+<div class="section">
+  <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1.5rem;text-transform:uppercase;text-align:center">Oráculo do Destino</div>
+  <div class="oraculo-container">
+    <div class="oraculo-item oraculo-central">
+      <div class="selo-icon selo-${corSelo}">🌀</div>
+      <div class="oraculo-nome">${seloBase}</div>
+    </div>
+    <div class="oraculo-item oraculo-side oraculo-guia">
+      <div class="selo-icon selo-${corSelo}">💫</div>
+      <div class="oraculo-nome">Guia<br>${seloBase}</div>
+    </div>
+    <div class="oraculo-item oraculo-side oraculo-analogo">
+      <div class="selo-icon selo-${corSelo}">⭐</div>
+      <div class="oraculo-nome">Análogo<br>${seloBase}</div>
+    </div>
+    <div class="oraculo-item oraculo-side oraculo-antipoda">
+      <div class="selo-icon selo-${corSelo}">🔮</div>
+      <div class="oraculo-nome">Antípoda<br>${seloBase}</div>
+    </div>
+    <div class="oraculo-item oraculo-side oraculo-oculto">
+      <div class="selo-icon selo-${corSelo}">🌙</div>
+      <div class="oraculo-nome">Oculto<br>${seloBase}</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Onda Encantada ${ondaNum} - Dia ${diaOnda}</div>
+  <p class="info-text">Propósito: ${ondaSelo.acao || ''}</p>
+  ${ondaHTML}
+  <div class="info-box">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--text);margin-bottom:0.5rem">${tomOriginal.toUpperCase()}: ${tomInfo.verbo || ''}</div>
+    <p class="info-text">${tomInfo.pergunta || ''}</p>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="section">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Informações</div>
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">${casteloTexto}</div>
+      ${casteloOndasHTML}
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">${luaNome}</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">${luaHTML}</div>
+    </div>
+    <div class="grid-3" style="margin-top:1.5rem">
+      <div class="card">
+        <div class="card-label">⭐ Anel Solar</div>
+        <div style="text-align:center;margin:0.5rem 0">🌈</div>
+        <div class="card-val" style="text-align:center">${anelNome}<br><small style="font-size:0.75rem;color:var(--text2)">${anelAcao}</small></div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number">${pending.length}</div>
-        <div class="stat-label">Pendentes</div>
+      <div class="card">
+        <div class="card-label">⚡ Plasma</div>
+        <div class="card-val">${plasma}</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number">${authorized.length}</div>
-        <div class="stat-label">Autorizados</div>
+      <div class="card">
+        <div class="card-label">Fase Lunar</div>
+        <div class="card-val">${faseLunar}</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number">${users.filter(u => u.role === 'admin').length}</div>
-        <div class="stat-label">Admins</div>
-      </div>
-    `;
+    </div>
+  </div>
 
-    if (pending.length === 0) {
-      document.getElementById('pending-users').innerHTML = '<div class="empty">✅ Ninguém aguardando autorização</div>';
-    } else {
-      document.getElementById('pending-users').innerHTML = pending.map(u => `
-        <div class="user-item">
-          <div class="user-details">
-            <div class="user-email">${u.email}</div>
-            <div class="user-uid">UID: ${u.id}</div>
-          </div>
-          <div class="user-status">
-            <span class="badge pending">Pendente</span>
-            <button class="btn-authorize" onclick="authorize('${u.id}')">✅ Autorizar</button>
-            <button class="btn-remove" onclick="removeUser('${u.id}')">🗑️ Remover</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    if (authorized.length === 0) {
-      document.getElementById('authorized-users').innerHTML = '<div class="empty">Nenhum usuário autorizado</div>';
-    } else {
-      document.getElementById('authorized-users').innerHTML = authorized.map(u => `
-        <div class="user-item">
-          <div class="user-details">
-            <div class="user-email">${u.email}</div>
-            <div style="color:var(--text3);font-size:0.75rem;margin-top:4px">UID: ${u.id}</div>
-          </div>
-          <div class="user-status">
-            <span class="badge authorized">✅ Autorizado</span>
-            ${u.role === 'admin' ? '<span class="badge admin">👑 Admin</span>' : ''}
-            <button class="btn-admin-toggle" onclick="toggleAdmin('${u.id}', ${u.role === 'admin'})">
-              ${u.role === 'admin' ? '👤 Remover Admin' : '👑 Fazer Admin'}
-            </button>
-            <button class="btn-remove" onclick="removeUser('${u.id}')">🗑️ Remover</button>
-          </div>
-        </div>
-      `).join('');
-    }
-  } catch (err) {
-    console.error('Erro ao carregar usuários:', err);
-    document.getElementById('pending-users').innerHTML = '<div class="empty">❌ Erro ao carregar</div>';
-  }
+  <div class="section">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Prática Diária</div>
+    <ul class="praticas-list">
+      <li>Ouça a prece das 7 direções galácticas</li>
+      <li>Ouça a meditação do selo</li>
+      <li>Ouça o Self Design Sounds</li>
+      <li>Faça a leitura da página ${diaOnda} do e-book</li>
+      <li>${ritual.ritual || ''}</li>
+    </ul>
+  </div>
+</div>
+  `;
 }
 
-function showModal(title, message, action) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-message').textContent = message;
-  currentAction = action;
-  document.getElementById('confirm-modal').classList.add('active');
+function calcNatal() {
+  const v = document.getElementById('nasc-inp').value;
+  if (!v) return;
+  const [y, m, d] = v.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  dateToKin(dt).then(k => {
+    document.getElementById('res-natal').innerHTML = kinHTML(k);
+    document.getElementById('res-natal').classList.remove('hidden');
+  });
 }
 
-function closeModal() {
-  document.getElementById('confirm-modal').classList.remove('active');
-  currentAction = null;
+function loadToday() {
+  dateToKin(new Date()).then(k => {
+    document.getElementById('res-dia').innerHTML = kinHTML(k);
+  });
 }
 
-document.getElementById('modal-confirm').onclick = () => {
-  if (currentAction) currentAction();
-  closeModal();
-};
-
-async function authorize(uid) {
-  showModal(
-    'Autorizar Usuário',
-    'Deseja autorizar este usuário a acessar o app?',
-    async () => {
-      await db.collection('users').doc(uid).update({ authorized: true });
-      loadUsers();
-    }
-  );
-}
-
-async function toggleAdmin(uid, isAdmin) {
-  const action = isAdmin ? 'remover' : 'tornar';
-  showModal(
-    `${isAdmin ? 'Remover' : 'Tornar'} Admin`,
-    `Deseja ${action} este usuário como admin?`,
-    async () => {
-      await db.collection('users').doc(uid).update({ role: isAdmin ? 'usuário' : 'admin' });
-      loadUsers();
-    }
-  );
-}
-
-async function removeUser(uid) {
-  showModal(
-    'Remover Usuário',
-    'Esta ação é irreversível. Deseja continuar?',
-    async () => {
-      await db.collection('users').doc(uid).delete();
-      loadUsers();
-    }
-  );
+function exportPNG() {
+  const element = document.getElementById('export-area');
+  html2canvas(element, { backgroundColor: '#0a0c14', scale: 2 }).then(canvas => {
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL();
+    link.download = 'sincronario-kin-' + new Date().toISOString().slice(0, 10) + '.png';
+    link.click();
+  });
 }
 </script>
 </body>
