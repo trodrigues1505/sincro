@@ -416,7 +416,12 @@ function kinHTML(kinNum) {
   const casteloOndas = castelo.ondas || [];
   let casteloOndasHTML = '<div style="display:flex;gap:8px;justify-content:center;margin-top:0.5rem">';
   for (let ondaNome of casteloOndas) {
-    const ondaIconURL = getSeloIconURL(ondaNome + " Vermelho");
+    // Pegar o selo completo da onda para ter a cor
+    const ondaIdx = casteloOndas.indexOf(ondaNome);
+    const ondaKinInicio = casteloNum * 52 + ondaIdx * 13 + 1;
+    const ondaKinData = DATA.kins[ondaKinInicio] || {};
+    const ondaSeloCompleto = ondaKinData.selo || ondaNome + ' Vermelho';
+    const ondaIconURL = getSeloIconURL(ondaSeloCompleto);
     casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="width:50px;height:50px"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain"></div>`;
   }
   casteloOndasHTML += '</div>';
@@ -456,7 +461,8 @@ function kinHTML(kinNum) {
   // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
   const anelSelo = DATA.selos[anelKin] || {};
-  const anelIconURL = getSeloIconURL((anelSelo.nome || '') + " Vermelho");
+  const anelNomeCompleto = anelSelo.nome || '';
+  const anelIconURL = getSeloIconURL(anelNomeCompleto);
   const anelNome = anelSelo.nome || '';
   const anelAcao = anelSelo.acao || '';
 
