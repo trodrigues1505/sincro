@@ -49,55 +49,60 @@ h1{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);text-align:center
 .btn-confirm,.btn-cancel{padding:10px 20px;border:none;border-radius:4px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase}
 .btn-confirm{background:var(--red);color:white}
 .btn-cancel{background:var(--border);color:var(--text2)}
-/* Mobile responsivo */
+
+/* MEDIA QUERIES RESPONSIVAS */
 @media (max-width: 768px) {
-  .container {
-    padding: 1.5rem 1rem;
-  }
-  
-  h1 {
-    font-size: 1.5rem;
-  }
-  
-  .user-bar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .user-status {
-    flex-direction: column;
-    min-width: auto;
-    width: 100%;
-  }
-  
-  .btn-authorize, .btn-admin-toggle, .btn-remove {
-    width: 100%;
-  }
+  .container { padding: 1.5rem 1rem; }
+  h1 { font-size: 1.5rem; }
+  .user-bar { flex-direction: column; align-items: flex-start; padding: 1rem; }
+  .user-bar > div:last-child { width: 100%; display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn-logout, .btn-back { padding: 6px 12px; font-size: 0.7rem; width: 100%; text-align: center; }
+  .section { padding: 1.2rem; }
+  .section h2 { font-size: 1rem; }
+  .user-item { flex-direction: column; gap: 10px; }
+  .user-status { width: 100%; flex-direction: column; min-width: auto; gap: 6px; }
+  .btn-authorize, .btn-admin-toggle, .btn-remove { width: 100%; }
+  .stat-card { padding: 0.8rem; }
+  .stat-number { font-size: 1.5rem; }
+  .stat-label { font-size: 0.65rem; }
 }
 
 @media (max-width: 480px) {
-  .container {
-    padding: 1rem 0.75rem;
-  }
-  
-  h1 {
-    font-size: 1.2rem;
-  }
-  
-  .section {
-    padding: 1rem;
-  }
-  
-  .user-item {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .badge {
-    padding: 3px 8px;
-    font-size: 0.65rem;
-  }
+  .container { padding: 1rem 0.75rem; }
+  body { font-size: 14px; }
+  h1 { font-size: 1.2rem; }
+  .user-bar { padding: 0.8rem; }
+  .user-info { gap: 8px; }
+  .user-avatar { width: 35px; height: 35px; }
+  .user-bar > div:first-child > div:last-child { font-size: 0.7rem; }
+  .user-bar > div:last-child { gap: 4px; }
+  .btn-logout, .btn-back { padding: 5px 10px; font-size: 0.65rem; }
+  .section { padding: 1rem; margin-bottom: 0.8rem; }
+  .section h2 { font-size: 0.9rem; margin-bottom: 0.7rem; }
+  .user-item { padding: 0.8rem; gap: 8px; }
+  .user-email { font-size: 0.8rem; }
+  .user-uid { font-size: 0.65rem; }
+  .badge { padding: 3px 8px; font-size: 0.65rem; }
+  .btn-authorize, .btn-admin-toggle, .btn-remove { padding: 6px 10px; font-size: 0.6rem; }
+  .stats { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; margin-bottom: 1rem; }
+  .stat-card { padding: 0.7rem; }
+  .stat-number { font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .stat-label { font-size: 0.6rem; }
+  .modal-content { padding: 1.5rem; max-width: 90vw; }
+  .modal-content h3 { font-size: 1rem; }
+  .modal-content p { font-size: 0.85rem; }
+  .btn-confirm, .btn-cancel { padding: 8px 14px; font-size: 0.65rem; }
 }
+
+@media (max-width: 360px) {
+  .container { padding: 0.8rem 0.5rem; }
+  h1 { font-size: 1rem; }
+  .user-bar { padding: 0.6rem; }
+  .btn-logout, .btn-back { padding: 4px 8px; font-size: 0.6rem; }
+  .section { padding: 0.8rem; }
+  .stats { grid-template-columns: 1fr; gap: 0.6rem; }
+}
+
 </style>
 </head>
 <body>
@@ -169,7 +174,6 @@ let currentAction = null;
 
 auth.onAuthStateChanged(async (user) => {
   if (user) {
-    // Verificar se é admin
     const userDoc = await db.collection('users').doc(user.uid).get();
     if (!userDoc.exists || userDoc.data().role !== 'admin') {
       alert('❌ Acesso negado! Você não é admin.');
@@ -199,7 +203,6 @@ async function loadUsers() {
     const pending = users.filter(u => !u.authorized);
     const authorized = users.filter(u => u.authorized);
 
-    // Stats
     document.getElementById('stats').innerHTML = `
       <div class="stat-card">
         <div class="stat-number">${users.length}</div>
@@ -219,7 +222,6 @@ async function loadUsers() {
       </div>
     `;
 
-    // Pending users
     if (pending.length === 0) {
       document.getElementById('pending-users').innerHTML = '<div class="empty">✅ Ninguém aguardando autorização</div>';
     } else {
@@ -238,7 +240,6 @@ async function loadUsers() {
       `).join('');
     }
 
-    // Authorized users
     if (authorized.length === 0) {
       document.getElementById('authorized-users').innerHTML = '<div class="empty">Nenhum usuário autorizado</div>';
     } else {
