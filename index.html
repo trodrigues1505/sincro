@@ -197,11 +197,13 @@ function getSeloIconURL(nomeCompleto) {
     'Estrela': './assets/icons/estrela.png',
     'Lua': './assets/icons/lua.png',
     'Cão': './assets/icons/cao.png',
+    'Cachorro': './assets/icons/cao.png',
     'Macaco': './assets/icons/macaco.png',
     'Humano': './assets/icons/humano.png',
     'Caminhante': './assets/icons/caminhante.png',
     'Caminhante do Céu': './assets/icons/caminhante.png',
     'Mago': './assets/icons/mago.png',
+    'Feiticeiro': './assets/icons/mago.png',
     'Águia': './assets/icons/aguia.png',
     'Guerreiro': './assets/icons/guerreiro.png',
     'Terra': './assets/icons/terra.png',
@@ -419,10 +421,20 @@ function kinHTML(kinNum) {
     // Pegar o selo completo da onda para ter a cor
     const ondaIdx = casteloOndas.indexOf(ondaNome);
     const ondaKinInicio = casteloNum * 52 + ondaIdx * 13 + 1;
-    const ondaKinData = DATA.kins[ondaKinInicio] || {};
-    const ondaSeloCompleto = ondaKinData.selo || ondaNome + ' Vermelho';
-    const ondaIconURL = getSeloIconURL(ondaSeloCompleto);
-    casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="width:50px;height:50px"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain"></div>`;
+    const ondaKinData = DATA.kins && DATA.kins[ondaKinInicio] ? DATA.kins[ondaKinInicio] : null;
+    
+    let ondaSeloCompleto, ondaIconURL;
+    if (ondaKinData && ondaKinData.selo) {
+      ondaSeloCompleto = ondaKinData.selo;
+      ondaIconURL = getSeloIconURL(ondaSeloCompleto);
+    } else {
+      // Fallback: usar o nome da onda + cor padrão baseado no índice
+      const cores = ['Vermelho', 'Branco', 'Azul', 'Amarelo'];
+      ondaSeloCompleto = ondaNome + ' ' + cores[ondaIdx % 4];
+      ondaIconURL = getSeloIconURL(ondaSeloCompleto);
+    }
+    
+    casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="width:50px;height:50px"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='${getSeloEmoji(ondaNome)}'"></div>`;
   }
   casteloOndasHTML += '</div>';
 
