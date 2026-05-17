@@ -249,13 +249,13 @@ Entrar com Google
 <script>
 // DADOS E CONFIGURAÇÕES
 let DATA = {};
-fetch('./sincronario_dados.json')
+const DATA_PRONTO = fetch('./sincronario_dados.json')
   .then(r => r.json())
   .then(d => {
     DATA = d;
     console.log('✓ Dados carregados:', Object.keys(DATA.kins).length, 'kins');
   })
-  .catch(e => console.warn('⚠️ Erro:', e));
+  .catch(e => console.warn('⚠️ Erro ao carregar JSON:', e));
 
 const EMOJIS = ['🐉', '💨', '🌌', '🌱', '🐍', '☯️', '✋', '⭐', '🌙', '🐕', '🐒', '👤', '🚶', '🧙', '🦅', '⚔️', '🌍', '🪞', '⛈️', '☀️'];
 const CORES_SELO = ['red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow'];
@@ -658,7 +658,8 @@ function kinHTML(kinNum) {
 }
 
 
-function calcNatal() {
+async function calcNatal() {
+  await DATA_PRONTO;
   const v = document.getElementById('nasc-inp').value;
   if (!v) return;
   const [y, m, d] = v.split('-').map(Number);
@@ -668,7 +669,8 @@ function calcNatal() {
   document.getElementById('res-natal').classList.remove('hidden');
 }
 
-function loadToday() {
+async function loadToday() {
+  await DATA_PRONTO;
   const k = dateToKin(new Date());
   document.getElementById('res-dia').innerHTML = kinHTML(k);
 }
