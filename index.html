@@ -181,6 +181,38 @@ function getSeloEmoji(nome) {
   return idx >= 0 ? EMOJIS[idx] : '🌀';
 }
 
+
+function getSeloIconURL(nomeCompleto) {
+  const partes = nomeCompleto.split(' ');
+  const nomeBase = partes.slice(0, -1).join(' ');
+  const mapa = {
+    'Dragão': './assets/icons/dragao.png',
+    'Vento': './assets/icons/vento.png',
+    'Noite': './assets/icons/noite.png',
+    'Semente': './assets/icons/semente.png',
+    'Serpente': './assets/icons/serpente.png',
+    'Enlaçador': './assets/icons/enlacador.png',
+    'Enlaçador de Mundos': './assets/icons/enlacador.png',
+    'Mão': './assets/icons/mao.png',
+    'Estrela': './assets/icons/estrela.png',
+    'Lua': './assets/icons/lua.png',
+    'Cão': './assets/icons/cao.png',
+    'Macaco': './assets/icons/macaco.png',
+    'Humano': './assets/icons/humano.png',
+    'Caminhante': './assets/icons/caminhante.png',
+    'Caminhante do Céu': './assets/icons/caminhante.png',
+    'Mago': './assets/icons/mago.png',
+    'Águia': './assets/icons/aguia.png',
+    'Guerreiro': './assets/icons/guerreiro.png',
+    'Terra': './assets/icons/terra.png',
+    'Espelho': './assets/icons/espelho.png',
+    'Tormenta': './assets/icons/tormenta.png',
+    'Sol': './assets/icons/sol.png'
+  };
+  return mapa[nomeBase] || './assets/icons/default.png';
+}
+
+
 function getSeloBase(nomeCompleto) {
   const partes = nomeCompleto.split(' ');
   return partes.slice(0, -1).join(' ');
