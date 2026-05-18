@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sincronário das 13 Luas</title>
+
+<!-- PWA -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#009739">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="13 Luas">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -150,22 +160,41 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--green2);text-align:ce
 .selo-blue {background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .selo-yellow{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 
-/* ── ORÁCULO — CSS GRID, SEM POSITION ABSOLUTE ── */
-.oraculo-grid{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  grid-template-rows:auto auto auto;
-  gap:10px;align-items:center;justify-items:center;
-  margin:.7rem auto;max-width:340px;
+/* ── ORÁCULO — SVG COM LINHAS DE CONEXÃO ── */
+.oraculo-svg-wrap{
+  position:relative;width:100%;max-width:340px;margin:.7rem auto;
+  aspect-ratio:1/1;
 }
-.oraculo-cell-top   {grid-column:2;grid-row:1}
-.oraculo-cell-left  {grid-column:1;grid-row:2}
+.oraculo-svg-lines{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;
+}
+.oraculo-svg-lines line{
+  stroke:var(--green3);stroke-width:1;opacity:.35;
+  stroke-dasharray:3 4;
+}
+.oraculo-svg-lines line.strong{opacity:.55;stroke-dasharray:none}
+.oraculo-svg-lines circle.center-glow{
+  fill:none;stroke:var(--gold);stroke-width:1;opacity:.25;
+  animation:oraculoPulse 4s ease-in-out infinite;
+}
+@keyframes oraculoPulse{
+  0%,100%{opacity:.15;r:50}
+  50%    {opacity:.4; r:58}
+}
+.oraculo-svg-wrap .oraculo-grid{
+  position:absolute;inset:0;width:100%;height:100%;
+  z-index:1;margin:0;max-width:none;
+  display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:1fr auto 1fr;
+}
+.oraculo-cell-top   {grid-column:2;grid-row:1;align-self:start}
+.oraculo-cell-left  {grid-column:1;grid-row:2;justify-self:start}
 .oraculo-cell-center{grid-column:2;grid-row:2}
-.oraculo-cell-right {grid-column:3;grid-row:2}
-.oraculo-cell-bottom{grid-column:2;grid-row:3}
+.oraculo-cell-right {grid-column:3;grid-row:2;justify-self:end}
+.oraculo-cell-bottom{grid-column:2;grid-row:3;align-self:end}
 .oraculo-item{text-align:center}
-.oraculo-central .selo-icon{width:74px;height:74px;border-radius:8px}
-.oraculo-side    .selo-icon{width:55px;height:55px;border-radius:6px}
+.oraculo-central .selo-icon{width:78px;height:78px;border-radius:8px}
+.oraculo-side    .selo-icon{width:56px;height:56px;border-radius:6px}
 .oraculo-nome{font-size:.54rem;margin-top:.28rem;color:var(--text3);font-family:'Cinzel',serif;letter-spacing:.04em;line-height:1.3}
 
 /* ── ONDA ENCANTADA — GRID COM --cell ESCALÁVEL ── */
@@ -216,16 +245,34 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .info-text{color:var(--text2);font-size:.82rem;line-height:1.65;margin:.28rem 0}
 .info-box{background:var(--bg2);padding:.75rem .85rem;border-radius:5px;border-left:2px solid var(--green3);margin:.55rem 0}
 
-/* ── LUA GALÁCTICA ── */
-.lua-grid{display:flex;gap:3px}
-.lua-col{display:flex;flex-direction:column;gap:3px}
-.lua-dia{width:26px;height:26px;background:var(--bg2);border:1px solid;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.52rem;font-weight:600;transition:all .14s;font-family:'Cinzel',serif}
-.lua-dia.active{background:var(--gold);color:#1a1000;border-color:var(--gold)}
-.lua-red   {border-color:rgba(138,32,24,.38);color:rgba(138,32,24,.6)}
-.lua-white {border-color:rgba(168,184,144,.2);color:rgba(168,184,144,.5)}
-.lua-blue  {border-color:rgba(26,72,96,.38);color:rgba(26,72,96,.7)}
-.lua-yellow{border-color:rgba(165,124,0,.32);color:rgba(165,124,0,.65)}
-.lua-red.active,.lua-white.active,.lua-blue.active,.lua-yellow.active{color:#1a1000}
+/* ── LUA GALÁCTICA — CIRCULAR EM SVG ── */
+.lua-circular{
+  width:100%;max-width:260px;margin:0 auto;display:block;
+}
+.lua-circular .seg{
+  fill:var(--bg2);stroke:rgba(0,151,57,0.18);stroke-width:1;
+  transition:fill .2s,stroke .2s;cursor:default;
+}
+.lua-circular .seg.red   {stroke:rgba(138,32,24,.38)}
+.lua-circular .seg.white {stroke:rgba(168,184,144,.2)}
+.lua-circular .seg.blue  {stroke:rgba(26,72,96,.38)}
+.lua-circular .seg.yellow{stroke:rgba(165,124,0,.32)}
+.lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
+.lua-circular .seg-label{
+  font-family:'Cinzel',serif;font-size:6px;fill:var(--text3);
+  pointer-events:none;text-anchor:middle;dominant-baseline:central;
+}
+.lua-circular .seg.active + .seg-label,
+.lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
+.lua-circular .ring-label{
+  font-family:'Cinzel',serif;font-size:5px;fill:var(--text3);
+  text-transform:uppercase;letter-spacing:.15em;text-anchor:middle;
+}
+.lua-circular .center-text{
+  font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle;
+}
+.lua-circular .center-num{font-size:18px;dominant-baseline:central}
+.lua-circular .center-sub{font-size:5px;fill:var(--text3);letter-spacing:.1em;text-transform:uppercase;dominant-baseline:central}
 
 /* ── MEDIA QUERIES ── */
 @media (max-width:600px){
@@ -249,9 +296,7 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
   input[type="date"]{width:100%}
   .btn-calc{width:100%;margin-top:5px}
   .tab{padding:7px 10px;font-size:.58rem}
-  .lua-dia{width:22px;height:22px;font-size:.46rem}
-  .lua-grid{gap:2px}
-  .lua-col{gap:2px}
+  .lua-circular{max-width:220px}
 }
 @media (max-width:400px){
   .container{padding:.65rem .5rem}
@@ -261,7 +306,7 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
   .oraculo-central .selo-icon{width:52px;height:52px}
   .oraculo-side .selo-icon{width:40px;height:40px}
   .onda-L{--cell:38px;gap:3px}
-  .lua-dia{width:19px;height:19px;font-size:.42rem}
+  .lua-circular{max-width:190px}
   .cards{grid-template-columns:1fr}
 }
 @media (max-height:500px) and (orientation:landscape){
@@ -546,8 +591,11 @@ function daysBetween(f, t) {
 
 function dateToKin(dt) {
   if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
+  // Normaliza para meia-noite para evitar bug de comparação de timestamp
+  // (sem normalização, new Date() com hora > 00:00 conta 1 dia a mais)
+  const dtNorm = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
   const base = new Date(1987, 6, 26);
-  const dias = daysBetween(base, dt);
+  const dias = daysBetween(base, dtNorm);
   return ((34 - 1 + dias) % 260 + 260) % 260 + 1;
 }
 
@@ -567,7 +615,64 @@ function getFaseLunar(d) {
 
 
 // FUNÇÃO PRINCIPAL - GERA TODO O HTML DO KIN
-function kinHTML(kinNum) {
+// ── LUA GALÁCTICA CIRCULAR (SVG) ──────────────────────
+// 28 dias divididos em 4 semanas (Vermelha, Branca, Azul, Amarela)
+// Renderiza um anel com 28 segmentos + ponto central
+function gerarLuaCircular(diaAtivo) {
+  const cores = ['red','white','blue','yellow'];
+  const nomesAnel = ['VERMELHA','BRANCA','AZUL','AMARELA'];
+  const cx = 100, cy = 100;
+  const rOut = 92, rIn = 60;     // raios do anel de dias
+  const rLabel = 76;              // raio do número do dia
+  const rRing = 98;               // raio do label da semana
+  let segs = '';
+  let labels = '';
+  let ringLabels = '';
+
+  for (let i = 0; i < 28; i++) {
+    const dia = i + 1;
+    const semana = Math.floor(i / 7);
+    const cor = cores[semana];
+    // ângulo de cada segmento (12,857° = 360/28). Começa do topo (-90°)
+    const a1 = (i * 360/28 - 90) * Math.PI/180;
+    const a2 = ((i+1) * 360/28 - 90) * Math.PI/180;
+    const x1o = cx + rOut * Math.cos(a1), y1o = cy + rOut * Math.sin(a1);
+    const x2o = cx + rOut * Math.cos(a2), y2o = cy + rOut * Math.sin(a2);
+    const x1i = cx + rIn  * Math.cos(a1), y1i = cy + rIn  * Math.sin(a1);
+    const x2i = cx + rIn  * Math.cos(a2), y2i = cy + rIn  * Math.sin(a2);
+    const path = `M ${x1o.toFixed(2)} ${y1o.toFixed(2)}
+                  A ${rOut} ${rOut} 0 0 1 ${x2o.toFixed(2)} ${y2o.toFixed(2)}
+                  L ${x2i.toFixed(2)} ${y2i.toFixed(2)}
+                  A ${rIn} ${rIn} 0 0 0 ${x1i.toFixed(2)} ${y1i.toFixed(2)} Z`;
+    const ativo = dia === diaAtivo ? ' active' : '';
+    segs += `<path d="${path}" class="seg ${cor}${ativo}"></path>`;
+
+    // Label do número do dia (centro do segmento)
+    const aMid = ((i + 0.5) * 360/28 - 90) * Math.PI/180;
+    const lx = cx + rLabel * Math.cos(aMid);
+    const ly = cy + rLabel * Math.sin(aMid);
+    labels += `<text x="${lx.toFixed(2)}" y="${ly.toFixed(2)}" class="seg-label${ativo}">${dia}</text>`;
+  }
+
+  // Labels das 4 semanas (fora do anel, nos 4 quadrantes diagonais)
+  for (let s = 0; s < 4; s++) {
+    const aMid = ((s * 7 + 3.5) * 360/28 - 90) * Math.PI/180;
+    const lx = cx + rRing * Math.cos(aMid);
+    const ly = cy + rRing * Math.sin(aMid);
+    ringLabels += `<text x="${lx.toFixed(2)}" y="${ly.toFixed(2)}" class="ring-label">${nomesAnel[s]}</text>`;
+  }
+
+  return `
+  <svg class="lua-circular" viewBox="-10 -10 220 220" xmlns="http://www.w3.org/2000/svg">
+    ${segs}
+    ${labels}
+    ${ringLabels}
+    <text x="${cx}" y="${cy - 4}" class="center-text center-num">${diaAtivo}</text>
+    <text x="${cx}" y="${cy + 14}" class="center-text center-sub">de 28</text>
+  </svg>`;
+}
+
+
   const kD = DATA.kins[kinNum];
   if (!kD) return '<p>Carregando dados...</p>';
 
@@ -684,26 +789,40 @@ function kinHTML(kinNum) {
 
 <div class="section anim-2">
   <div class="section-title">Oráculo do Destino</div>
-  <div class="oraculo-grid">
-    <div class="oraculo-cell-top oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(guia)}"><img src="${getSeloIconURL(guia)}" alt="${getSeloBase(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome">Guia · ${getSeloBase(guia)}</div>
-    </div>
-    <div class="oraculo-cell-left oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(analogo)}"><img src="${getSeloIconURL(analogo)}" alt="${getSeloBase(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome">Análogo · ${getSeloBase(analogo)}</div>
-    </div>
-    <div class="oraculo-cell-center oraculo-item oraculo-central">
-      <div class="selo-icon selo-${corSelo}" style="width:80px;height:80px;border-radius:10px"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome" style="font-size:0.68rem;color:var(--text2)">${seloBase}</div>
-    </div>
-    <div class="oraculo-cell-right oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome">Oculto · ${getSeloBase(oculto)}</div>
-    </div>
-    <div class="oraculo-cell-bottom oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(antipoda)}"><img src="${getSeloIconURL(antipoda)}" alt="${getSeloBase(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome">Antípoda · ${getSeloBase(antipoda)}</div>
+  <div class="oraculo-svg-wrap">
+    <svg class="oraculo-svg-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <!-- Linhas de conexão entre centro e periféricos -->
+      <line x1="50" y1="50" x2="50" y2="14" class="strong"/>
+      <line x1="50" y1="50" x2="14" y2="50"/>
+      <line x1="50" y1="50" x2="86" y2="50"/>
+      <line x1="50" y1="50" x2="50" y2="86" class="strong"/>
+      <!-- Linhas diagonais entre os pares (Análogo-Antípoda, Guia-Oculto) -->
+      <line x1="14" y1="50" x2="86" y2="50" opacity="0.15"/>
+      <line x1="50" y1="14" x2="50" y2="86" opacity="0.15"/>
+      <!-- Círculo central pulsante (dourado) -->
+      <circle cx="50" cy="50" r="50" class="center-glow"/>
+    </svg>
+    <div class="oraculo-grid">
+      <div class="oraculo-cell-top oraculo-item oraculo-side">
+        <div class="selo-icon selo-${getSeloCor(guia)}"><img src="${getSeloIconURL(guia)}" alt="${getSeloBase(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
+        <div class="oraculo-nome">Guia · ${getSeloBase(guia)}</div>
+      </div>
+      <div class="oraculo-cell-left oraculo-item oraculo-side">
+        <div class="selo-icon selo-${getSeloCor(analogo)}"><img src="${getSeloIconURL(analogo)}" alt="${getSeloBase(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
+        <div class="oraculo-nome">Análogo · ${getSeloBase(analogo)}</div>
+      </div>
+      <div class="oraculo-cell-center oraculo-item oraculo-central">
+        <div class="selo-icon selo-${corSelo}" style="width:80px;height:80px;border-radius:10px"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+        <div class="oraculo-nome" style="font-size:0.68rem;color:var(--text2)">${seloBase}</div>
+      </div>
+      <div class="oraculo-cell-right oraculo-item oraculo-side">
+        <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
+        <div class="oraculo-nome">Oculto · ${getSeloBase(oculto)}</div>
+      </div>
+      <div class="oraculo-cell-bottom oraculo-item oraculo-side">
+        <div class="selo-icon selo-${getSeloCor(antipoda)}"><img src="${getSeloIconURL(antipoda)}" alt="${getSeloBase(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
+        <div class="oraculo-nome">Antípoda · ${getSeloBase(antipoda)}</div>
+      </div>
     </div>
   </div>
 </div>
@@ -727,8 +846,8 @@ function kinHTML(kinNum) {
     </div>
     <div style="margin-bottom:1.2rem">
       <div style="font-family:Cinzel;font-size:0.75rem;color:var(--text2);margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.06em">🌙 ${luaNome}</div>
-      <div class="lua-grid">
-        ${[0,1,2,3].map(sem => `<div class="lua-col">${[1,2,3,4,5,6,7].map(d => {const dn=sem*7+d;return `<div class="lua-dia lua-${['red','white','blue','yellow'][sem]}${dn===diaLua?' active':''}">${dn}</div>`;}).join('')}</div>`).join('')}
+      <div style="display:flex;justify-content:center;margin-top:0.4rem">
+        ${gerarLuaCircular(diaLua)}
       </div>
     </div>
     <div class="grid-3">
@@ -781,6 +900,17 @@ async function loadToday() {
   document.getElementById('res-dia').innerHTML = kinHTML(k);
 }
 
+</script>
+
+<!-- ─── PWA: REGISTRO DO SERVICE WORKER ─── -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(reg => console.log('✓ Service Worker registrado:', reg.scope))
+      .catch(err => console.warn('SW falhou:', err));
+  });
+}
 </script>
 </body>
 </html>
