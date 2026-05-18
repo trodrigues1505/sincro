@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sincronário das 13 Luas</title>
-
-<!-- PWA -->
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#009739">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,206 +11,114 @@
 <meta name="apple-mobile-web-app-title" content="13 Luas">
 <link rel="icon" type="image/png" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════
-   DESIGN SYSTEM — SINCRONÁRIO 13 LUAS
-   Fundo: Verde escuro · Detalhes: Dourado + Marrom
-═══════════════════════════════════ */
-:root {
-  --bg:     #071209;
-  --bg2:    #0a1a0c;
-  --card:   #0d1f0f;
-  --card2:  #112613;
-  --green:  #009739;
-  --green2: #00b544;
-  --green3: #006828;
-  --green4: #004d1e;
-  --gold:   #A57C00;
-  --gold2:  #c9a030;
-  --gold3:  #e8c060;
-  --brown:  #3C2F2F;
-  --brown2: #5a4535;
-  --border:  rgba(0,151,57,0.20);
-  --border2: rgba(0,151,57,0.40);
-  --border-g:rgba(165,124,0,0.28);
-  --text:  #c0dcc4;
-  --text2: #5a8860;
-  --text3: #2e5034;
-  --red:   #8a2018;
-  --white: #a8b890;
-  --blue:  #1a4860;
+:root{
+  --bg:#071209;--bg2:#0a1a0c;--card:#0d1f0f;--card2:#112613;
+  --green:#009739;--green2:#00b544;--green3:#006828;
+  --gold:#A57C00;--gold2:#c9a030;
+  --border:rgba(0,151,57,.20);--border2:rgba(0,151,57,.40);--border-g:rgba(165,124,0,.28);
+  --text:#c0dcc4;--text2:#5a8860;--text3:#2e5034;
+  --red:#8a2018;--white:#a8b890;--blue:#1a4860;
   --radius:8px;
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:16px;line-height:1.65;min-height:100vh}
 
-/* ── ANIMAÇÕES ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
-
-.anim-1{animation:fadeUp .28s .00s both}
-.anim-2{animation:fadeUp .28s .08s both}
-.anim-3{animation:fadeUp .28s .16s both}
-.anim-4{animation:fadeUp .28s .24s both}
+.anim-1{animation:fadeUp .28s .00s both}.anim-2{animation:fadeUp .28s .08s both}
+.anim-3{animation:fadeUp .28s .16s both}.anim-4{animation:fadeUp .28s .24s both}
 .anim-5{animation:fadeUp .28s .32s both}
 
-/* ── SKELETON LOADING ── */
-.skel{
-  background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);
-  background-size:400px 100%;
-  animation:shimmer 1.4s infinite;
-  border-radius:6px;
-}
+.skel{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:400px 100%;animation:shimmer 1.4s infinite;border-radius:6px}
 .skel-title{height:28px;width:65%;margin:0 auto 12px}
-.skel-sub  {height:14px;width:40%;margin:0 auto 20px}
+.skel-sub{height:14px;width:40%;margin:0 auto 20px}
 .skel-frase{height:60px;width:100%;margin-top:16px}
-.skel-card {height:72px;width:100%}
-.skel-row  {height:16px;width:100%;margin-bottom:8px}
+.skel-row{height:16px;width:100%;margin-bottom:8px}
 .skel-row.w70{width:70%}
 
-/* ── LOGIN ── */
 .login-container{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem}
-.login-box{
-  background:var(--card);border:1px solid var(--border2);border-radius:12px;
-  padding:2.8rem 2.4rem;max-width:360px;width:100%;text-align:center;
-  animation:fadeUp .4s both;
-}
-.login-box h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--green2);margin-bottom:0.3rem;letter-spacing:0.06em}
+.login-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:2.8rem 2.4rem;max-width:360px;width:100%;text-align:center;animation:fadeUp .4s both}
+.login-box h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--green2);margin-bottom:.3rem;letter-spacing:.06em}
 .login-divider{width:24px;height:1px;background:var(--gold);margin:.9rem auto;opacity:.5}
 .login-box p{color:var(--text3);margin-bottom:1.7rem;font-size:.83rem}
-.btn-google{
-  background:var(--card2);color:var(--text2);border:1px solid var(--border);
-  border-radius:6px;padding:10px 20px;font-family:'Cinzel',serif;font-size:.76rem;
-  cursor:pointer;display:inline-flex;align-items:center;gap:10px;
-  transition:border-color .2s,color .2s;letter-spacing:.04em;
-}
+.btn-google{background:var(--card2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:10px 20px;font-family:'Cinzel',serif;font-size:.76rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:border-color .2s,color .2s;letter-spacing:.04em}
 .btn-google:hover{border-color:var(--green2);color:var(--text)}
 .error-msg{background:rgba(138,32,24,.12);border:1px solid rgba(138,32,24,.3);color:#b06858;padding:.7rem .9rem;border-radius:6px;margin-top:1rem;font-size:.82rem}
 .loading{color:var(--text3);margin-top:1rem;font-style:italic;font-size:.84rem}
 
-/* ── LAYOUT ── */
 .container{max-width:960px;margin:0 auto;padding:1rem;display:none}
 .container.active{display:block}
 h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--green2);text-align:center;margin-bottom:.2rem;letter-spacing:.06em}
 
-/* ── USER BAR ── */
 .user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.9rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px}
 .user-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--green3)}
-
-/* ── BOTÕES ── */
 .btn-logout,.btn-admin,.btn-export{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:5px 11px;font-family:'Cinzel',serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
 .btn-logout:hover,.btn-export:hover{border-color:var(--green3);color:var(--text2)}
 .btn-admin{border-color:var(--border-g);color:var(--gold)}
 .btn-admin:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
 
-/* ── TABS ── */
 .tabs{display:flex;margin-bottom:.9rem;border-bottom:1px solid var(--border)}
 .tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Cinzel',serif;font-size:.62rem;padding:8px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.09em;transition:color .2s,border-color .2s;margin-bottom:-1px}
 .tab:hover{color:var(--text2)}
 .tab.active{color:var(--green2);border-bottom-color:var(--green)}
-.tab-content{display:none}
-.tab-content.active{display:block}
+.tab-content{display:none}.tab-content.active{display:block}
 
-/* ── SECTIONS ── */
 .section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:.6rem}
 .section-title{font-family:'Cinzel',serif;font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.13em;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* ── KIN HERO ── */
-.kin-hero{
-  text-align:center;padding:2rem 1.3rem 1.6rem;background:var(--card2);
-  border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2);
-  position:relative;overflow:hidden;
-}
-.kin-hero::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--green3),var(--green2),var(--green3),transparent);
-}
-.kin-hero::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.45;
-}
+.kin-hero{text-align:center;padding:2rem 1.3rem 1.6rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2);position:relative;overflow:hidden}
+.kin-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green3),var(--green2),var(--green3),transparent)}
+.kin-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.45}
 .kin-num{font-family:'Cinzel',serif;font-size:.58rem;color:var(--text3);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.7rem}
 .kin-title{font-family:'Cinzel',serif;font-size:1.6rem;margin:.25rem 0 .45rem;letter-spacing:.03em;color:var(--green2);line-height:1.2}
 .kin-subtitle{color:var(--text3);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}
-.kin-frase{
-  color:var(--text2);font-size:.9rem;font-style:italic;
-  margin:1.1rem auto 0;padding:.85rem 1.1rem;
-  background:rgba(0,151,57,.08);border-left:2px solid var(--green3);
-  max-width:640px;line-height:1.9;
-}
+.kin-frase{color:var(--text2);font-size:.9rem;font-style:italic;margin:1.1rem auto 0;padding:.85rem 1.1rem;background:rgba(0,151,57,.08);border-left:2px solid var(--green3);max-width:640px;line-height:1.9}
 
-/* ── CARDS ── */
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px;margin:.8rem 0}
 .card{background:var(--bg2);border-radius:6px;padding:.85rem .95rem;border:1px solid var(--border);transition:border-color .2s}
 .card:hover{border-color:var(--border2)}
 .card-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.11em;margin-bottom:4px}
 .card-val{font-family:'Cinzel',serif;font-size:.84rem;color:var(--text)}
 
-/* ── SELOS ── */
 .selo-icon{border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid;margin:0 auto .5rem;overflow:hidden}
-.selo-red  {background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
+.selo-red{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
 .selo-white{background:rgba(168,184,144,.07);border-color:rgba(168,184,144,.2)}
-.selo-blue {background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
+.selo-blue{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .selo-yellow{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 
-/* ── ORÁCULO — SVG COM LINHAS DE CONEXÃO ── */
-.oraculo-svg-wrap{
-  position:relative;width:100%;max-width:340px;margin:.7rem auto;
-  aspect-ratio:1/1;
-}
-.oraculo-svg-lines{
-  position:absolute;inset:0;width:100%;height:100%;
-  pointer-events:none;z-index:0;
-}
-.oraculo-svg-lines line{
-  stroke:var(--green3);stroke-width:1;opacity:.35;
-  stroke-dasharray:3 4;
-}
+/* ORÁCULO SVG */
+.oraculo-svg-wrap{position:relative;width:100%;max-width:340px;margin:.7rem auto;aspect-ratio:1/1}
+.oraculo-svg-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.oraculo-svg-lines line{stroke:var(--green3);stroke-width:1;opacity:.35;stroke-dasharray:3 4}
 .oraculo-svg-lines line.strong{opacity:.55;stroke-dasharray:none}
-.oraculo-svg-lines circle.center-glow{
-  fill:none;stroke:var(--gold);stroke-width:1;opacity:.25;
-  animation:oraculoPulse 4s ease-in-out infinite;
-}
-@keyframes oraculoPulse{
-  0%,100%{opacity:.15;r:50}
-  50%    {opacity:.4; r:58}
-}
-.oraculo-svg-wrap .oraculo-grid{
-  position:absolute;inset:0;width:100%;height:100%;
-  z-index:1;margin:0;max-width:none;
-  display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:1fr auto 1fr;
-}
-.oraculo-cell-top   {grid-column:2;grid-row:1;align-self:start}
-.oraculo-cell-left  {grid-column:1;grid-row:2;justify-self:start}
+@keyframes oraculoPulse{0%,100%{opacity:.15}50%{opacity:.4}}
+.oraculo-svg-lines circle{fill:none;stroke:var(--gold);stroke-width:1;opacity:.2;animation:oraculoPulse 4s ease-in-out infinite}
+.oraculo-svg-wrap .oraculo-grid{position:absolute;inset:0;width:100%;height:100%;z-index:1;margin:0;max-width:none;display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:1fr auto 1fr}
+.oraculo-cell-top{grid-column:2;grid-row:1;align-self:start;padding-top:4px}
+.oraculo-cell-left{grid-column:1;grid-row:2;justify-self:start;padding-left:4px}
 .oraculo-cell-center{grid-column:2;grid-row:2}
-.oraculo-cell-right {grid-column:3;grid-row:2;justify-self:end}
-.oraculo-cell-bottom{grid-column:2;grid-row:3;align-self:end}
+.oraculo-cell-right{grid-column:3;grid-row:2;justify-self:end;padding-right:4px}
+.oraculo-cell-bottom{grid-column:2;grid-row:3;align-self:end;padding-bottom:4px}
 .oraculo-item{text-align:center}
 .oraculo-central .selo-icon{width:78px;height:78px;border-radius:8px}
-.oraculo-side    .selo-icon{width:56px;height:56px;border-radius:6px}
+.oraculo-side .selo-icon{width:56px;height:56px;border-radius:6px}
 .oraculo-nome{font-size:.54rem;margin-top:.28rem;color:var(--text3);font-family:'Cinzel',serif;letter-spacing:.04em;line-height:1.3}
 
-/* ── ONDA ENCANTADA — GRID COM --cell ESCALÁVEL ── */
+/* ONDA */
 .onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
-.onda-L{
-  display:grid;
-  grid-template-columns:repeat(4,var(--cell));
-  grid-template-rows:repeat(4,var(--cell));
-  --cell:56px;gap:4px;
-}
-.onda-L .onda-kin:nth-child(1) {grid-column:1;grid-row:1}
-.onda-L .onda-kin:nth-child(2) {grid-column:2;grid-row:1}
-.onda-L .onda-kin:nth-child(3) {grid-column:3;grid-row:1}
-.onda-L .onda-kin:nth-child(4) {grid-column:4;grid-row:1}
-.onda-L .onda-kin:nth-child(5) {grid-column:1;grid-row:2}
-.onda-L .onda-kin:nth-child(6) {grid-column:1;grid-row:3}
-.onda-L .onda-kin:nth-child(7) {grid-column:1;grid-row:4}
-.onda-L .onda-kin:nth-child(8) {grid-column:2;grid-row:4}
-.onda-L .onda-kin:nth-child(9) {grid-column:3;grid-row:4}
+.onda-L{display:grid;grid-template-columns:repeat(4,var(--cell));grid-template-rows:repeat(4,var(--cell));--cell:56px;gap:4px}
+.onda-L .onda-kin:nth-child(1){grid-column:1;grid-row:1}
+.onda-L .onda-kin:nth-child(2){grid-column:2;grid-row:1}
+.onda-L .onda-kin:nth-child(3){grid-column:3;grid-row:1}
+.onda-L .onda-kin:nth-child(4){grid-column:4;grid-row:1}
+.onda-L .onda-kin:nth-child(5){grid-column:1;grid-row:2}
+.onda-L .onda-kin:nth-child(6){grid-column:1;grid-row:3}
+.onda-L .onda-kin:nth-child(7){grid-column:1;grid-row:4}
+.onda-L .onda-kin:nth-child(8){grid-column:2;grid-row:4}
+.onda-L .onda-kin:nth-child(9){grid-column:3;grid-row:4}
 .onda-L .onda-kin:nth-child(10){grid-column:4;grid-row:2}
 .onda-L .onda-kin:nth-child(11){grid-column:4;grid-row:3}
 .onda-L .onda-kin:nth-child(12){grid-column:4;grid-row:4}
@@ -220,18 +126,16 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--green2);text-align:ce
 .onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s}
 .onda-kin:hover{transform:scale(1.09)}
 .onda-kin.active{box-shadow:0 0 0 2px var(--green);border-color:var(--green)!important}
-.cor-red  {background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
+.cor-red{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
 .cor-white{background:rgba(168,184,144,.05);border-color:rgba(168,184,144,.18)}
-.cor-blue {background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
+.cor-blue{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .cor-yellow{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 
-/* ── PRÁTICAS ── */
 .praticas-list{list-style:none;padding:0}
 .praticas-list li{padding:.6rem .85rem;margin-bottom:4px;background:var(--bg2);border-radius:5px;border-left:2px solid var(--green3);display:flex;align-items:flex-start;gap:8px;font-size:.86rem;line-height:1.5;transition:border-color .2s}
 .praticas-list li:hover{border-left-color:var(--gold)}
 .praticas-list li::before{content:'·';color:var(--green2);font-size:1.1rem;flex-shrink:0;line-height:1.3}
 
-/* ── MISC ── */
 .hidden{display:none}
 input[type="date"]{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 10px;font-family:inherit;color-scheme:dark;font-size:.87rem;transition:border-color .2s}
 input[type="date"]:focus{outline:none;border-color:var(--green)}
@@ -244,74 +148,47 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .info-text{color:var(--text2);font-size:.82rem;line-height:1.65;margin:.28rem 0}
 .info-box{background:var(--bg2);padding:.75rem .85rem;border-radius:5px;border-left:2px solid var(--green3);margin:.55rem 0}
 
-/* ── LUA GALÁCTICA — CIRCULAR EM SVG ── */
-.lua-circular{
-  width:100%;max-width:260px;margin:0 auto;display:block;
-}
-.lua-circular .seg{
-  fill:var(--bg2);stroke:rgba(0,151,57,0.18);stroke-width:1;
-  transition:fill .2s,stroke .2s;cursor:default;
-}
+/* LUA CIRCULAR SVG */
+.lua-circular{width:100%;max-width:260px;margin:0 auto;display:block}
+.lua-circular .seg{fill:var(--bg2);stroke-width:1;transition:fill .2s,stroke .2s}
 .lua-circular .seg.red   {stroke:rgba(138,32,24,.38)}
 .lua-circular .seg.white {stroke:rgba(168,184,144,.2)}
 .lua-circular .seg.blue  {stroke:rgba(26,72,96,.38)}
 .lua-circular .seg.yellow{stroke:rgba(165,124,0,.32)}
 .lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
-.lua-circular .seg-label{
-  font-family:'Cinzel',serif;font-size:6px;fill:var(--text3);
-  pointer-events:none;text-anchor:middle;dominant-baseline:central;
-}
-.lua-circular .seg.active + .seg-label,
+.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:6px;fill:var(--text3);pointer-events:none;text-anchor:middle;dominant-baseline:central}
 .lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
-.lua-circular .ring-label{
-  font-family:'Cinzel',serif;font-size:5px;fill:var(--text3);
-  text-transform:uppercase;letter-spacing:.15em;text-anchor:middle;
-}
-.lua-circular .center-text{
-  font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle;
-}
+.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:5px;fill:var(--text3);text-transform:uppercase;letter-spacing:.1em;text-anchor:middle;dominant-baseline:central}
+.lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
 .lua-circular .center-num{font-size:18px;dominant-baseline:central}
-.lua-circular .center-sub{font-size:5px;fill:var(--text3);letter-spacing:.1em;text-transform:uppercase;dominant-baseline:central}
+.lua-circular .center-sub{font-size:5px;fill:var(--text3);letter-spacing:.1em;dominant-baseline:central}
 
-/* ── MEDIA QUERIES ── */
 @media (max-width:600px){
-  body{font-size:15px}
-  .container{padding:.75rem .65rem}
-  h1{font-size:1.2rem}
+  body{font-size:15px}.container{padding:.75rem .65rem}h1{font-size:1.2rem}
   .user-bar{padding:.6rem .7rem;flex-direction:column;align-items:flex-start}
   .user-bar>div:last-child{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
   .btn-logout,.btn-admin,.btn-export{width:100%;text-align:center;font-size:.56rem;padding:5px 6px}
-  .section{padding:.85rem}
-  .kin-hero{padding:1.2rem .9rem 1rem}
-  .kin-title{font-size:1.2rem}
+  .section{padding:.85rem}.kin-hero{padding:1.2rem .9rem 1rem}.kin-title{font-size:1.2rem}
   .kin-frase{font-size:.83rem;padding:.75rem .85rem}
-  .oraculo-grid{gap:6px;max-width:288px}
-  .oraculo-central .selo-icon{width:60px;height:60px}
-  .oraculo-side .selo-icon{width:46px;height:46px}
+  .oraculo-svg-wrap{max-width:290px}
+  .oraculo-central .selo-icon{width:62px;height:62px}.oraculo-side .selo-icon{width:48px;height:48px}
   .oraculo-nome{font-size:.5rem}
-  .onda-L{--cell:46px;gap:3px}
+  .onda-L{--cell:48px;gap:3px}
   .cards{grid-template-columns:1fr 1fr;gap:5px}
   .grid-2,.grid-3{grid-template-columns:1fr;gap:.55rem}
-  input[type="date"]{width:100%}
-  .btn-calc{width:100%;margin-top:5px}
+  input[type="date"]{width:100%}.btn-calc{width:100%;margin-top:5px}
   .tab{padding:7px 10px;font-size:.58rem}
   .lua-circular{max-width:220px}
 }
 @media (max-width:400px){
-  .container{padding:.65rem .5rem}
-  h1{font-size:1rem}
-  .kin-title{font-size:1rem}
-  .oraculo-grid{max-width:252px;gap:5px}
-  .oraculo-central .selo-icon{width:52px;height:52px}
-  .oraculo-side .selo-icon{width:40px;height:40px}
-  .onda-L{--cell:38px;gap:3px}
+  .container{padding:.65rem .5rem}h1{font-size:1rem}.kin-title{font-size:1rem}
+  .oraculo-svg-wrap{max-width:256px}
+  .oraculo-central .selo-icon{width:54px;height:54px}.oraculo-side .selo-icon{width:42px;height:42px}
+  .onda-L{--cell:40px;gap:3px}.cards{grid-template-columns:1fr}
   .lua-circular{max-width:190px}
-  .cards{grid-template-columns:1fr}
 }
 @media (max-height:500px) and (orientation:landscape){
-  .kin-hero{padding:.75rem .9rem}
-  .kin-title{font-size:1.05rem}
-  .kin-frase{font-size:.78rem;padding:.6rem}
+  .kin-hero{padding:.75rem .9rem}.kin-title{font-size:1.05rem}.kin-frase{font-size:.78rem;padding:.6rem}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -321,10 +198,9 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 <div id="login-screen" class="login-container">
 <div class="login-box">
 <h1>🌀 Sincronário das 13 Luas</h1>
-<div class="login-divider"></div>
 <p>Faça login com sua conta Google</p>
 <button class="btn-google" id="btn-login">
-<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
+<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
 Entrar com Google
 </button>
 <div id="login-error" class="error-msg hidden"></div>
@@ -334,22 +210,22 @@ Entrar com Google
 
 <div id="app-screen" class="container">
 <div class="user-bar">
-<div style="display:flex;align-items:center;gap:10px">
+<div style="display:flex;align-items:center;gap:12px">
 <img id="user-avatar" class="user-avatar" src="" alt="">
 <div>
-<div id="user-name" style="font-family:Cinzel;color:var(--text);font-size:.88rem"></div>
-<div id="user-role" style="font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em"></div>
+<div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
+<div id="user-role" style="font-size:0.75rem;color:var(--gold);text-transform:uppercase"></div>
 </div>
 </div>
-<div style="display:flex;gap:6px;flex-wrap:wrap">
-<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Admin</button>
-<button class="btn-export" onclick="exportPNG()">Exportar</button>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Painel Admin</button>
+<button class="btn-export" onclick="exportPNG()">📸 Exportar PNG</button>
 <button class="btn-logout" id="btn-logout">Sair</button>
 </div>
 </div>
 
 <h1>🌀 Sincronário das 13 Luas</h1>
-<p style="text-align:center;color:var(--text3);margin-bottom:.9rem;font-style:italic;font-size:.82rem;letter-spacing:.04em">Calculadora Completa · Lei do Tempo</p>
+<p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Calculadora Completa · Lei do Tempo</p>
 
 <div class="tabs">
 <button class="tab active" onclick="switchTab('dia')">Kin do Dia</button>
@@ -358,35 +234,22 @@ Entrar com Google
 
 <div id="export-area">
 <div id="tab-dia" class="tab-content active">
-<div id="res-dia">
-  <!-- SKELETON enquanto carrega -->
-  <div class="section anim-1">
-    <div style="text-align:center;padding:1.5rem 0">
-      <div class="skel skel-title"></div>
-      <div class="skel skel-sub"></div>
-      <div class="skel skel-frase"></div>
-    </div>
-  </div>
-  <div class="section anim-2">
-    <div class="skel skel-row"></div>
-    <div class="skel skel-row w70"></div>
-    <div class="skel skel-row"></div>
-  </div>
-</div>
+<div id="res-dia"></div>
 </div>
 
 <div id="tab-natal" class="tab-content">
 <div class="section">
-<div class="section-title">Kin Natal</div>
-<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-<label style="color:var(--text2);font-style:italic;font-size:.88rem">Data de Nascimento</label>
+<div style="font-family:Cinzel;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem">Kin Natal</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<label style="color:var(--text2);font-style:italic">Data de Nascimento</label>
 <input type="date" id="nasc-inp">
 <button class="btn-calc" onclick="calcNatal()">Calcular</button>
 </div>
-<div id="res-natal" class="hidden" style="margin-top:1.2rem"></div>
+<div id="res-natal" class="hidden" style="margin-top:1.5rem"></div>
 </div>
 </div>
 </div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
@@ -397,13 +260,13 @@ Entrar com Google
 <script>
 // DADOS E CONFIGURAÇÕES
 let DATA = {};
-const DATA_PRONTO = fetch('./sincronario_dados.json')
+fetch('./sincronario_dados.json')
   .then(r => r.json())
   .then(d => {
     DATA = d;
     console.log('✓ Dados carregados:', Object.keys(DATA.kins).length, 'kins');
   })
-  .catch(e => console.warn('⚠️ Erro ao carregar JSON:', e));
+  .catch(e => console.warn('⚠️ Erro:', e));
 
 const EMOJIS = ['🐉', '💨', '🌌', '🌱', '🐍', '☯️', '✋', '⭐', '🌙', '🐕', '🐒', '👤', '🚶', '🧙', '🦅', '⚔️', '🌍', '🪞', '⛈️', '☀️'];
 const CORES_SELO = ['red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow'];
@@ -591,8 +454,6 @@ function daysBetween(f, t) {
 
 function dateToKin(dt) {
   if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
-  // Normaliza para meia-noite para evitar bug de comparação de timestamp
-  // (sem normalização, new Date() com hora > 00:00 conta 1 dia a mais)
   const dtNorm = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
   const base = new Date(1987, 6, 26);
   const dias = daysBetween(base, dtNorm);
@@ -615,64 +476,37 @@ function getFaseLunar(d) {
 
 
 // FUNÇÃO PRINCIPAL - GERA TODO O HTML DO KIN
-// ── LUA GALÁCTICA CIRCULAR (SVG) ──────────────────────
-// 28 dias divididos em 4 semanas (Vermelha, Branca, Azul, Amarela)
-// Renderiza um anel com 28 segmentos + ponto central
+
 function gerarLuaCircular(diaAtivo) {
   const cores = ['red','white','blue','yellow'];
-  const nomesAnel = ['VERMELHA','BRANCA','AZUL','AMARELA'];
-  const cx = 100, cy = 100;
-  const rOut = 92, rIn = 60;     // raios do anel de dias
-  const rLabel = 76;              // raio do número do dia
-  const rRing = 98;               // raio do label da semana
-  let segs = '';
-  let labels = '';
-  let ringLabels = '';
-
+  const nomes = ['VERMELHA','BRANCA','AZUL','AMARELA'];
+  const cx = 100, cy = 100, rOut = 88, rIn = 58, rLbl = 73, rRing = 95;
+  let segs = '', labels = '', ringLabels = '';
   for (let i = 0; i < 28; i++) {
     const dia = i + 1;
-    const semana = Math.floor(i / 7);
-    const cor = cores[semana];
-    // ângulo de cada segmento (12,857° = 360/28). Começa do topo (-90°)
+    const cor = cores[Math.floor(i / 7)];
     const a1 = (i * 360/28 - 90) * Math.PI/180;
     const a2 = ((i+1) * 360/28 - 90) * Math.PI/180;
-    const x1o = cx + rOut * Math.cos(a1), y1o = cy + rOut * Math.sin(a1);
-    const x2o = cx + rOut * Math.cos(a2), y2o = cy + rOut * Math.sin(a2);
-    const x1i = cx + rIn  * Math.cos(a1), y1i = cy + rIn  * Math.sin(a1);
-    const x2i = cx + rIn  * Math.cos(a2), y2i = cy + rIn  * Math.sin(a2);
-    const path = `M ${x1o.toFixed(2)} ${y1o.toFixed(2)}
-                  A ${rOut} ${rOut} 0 0 1 ${x2o.toFixed(2)} ${y2o.toFixed(2)}
-                  L ${x2i.toFixed(2)} ${y2i.toFixed(2)}
-                  A ${rIn} ${rIn} 0 0 0 ${x1i.toFixed(2)} ${y1i.toFixed(2)} Z`;
+    const x1o = cx + rOut*Math.cos(a1), y1o = cy + rOut*Math.sin(a1);
+    const x2o = cx + rOut*Math.cos(a2), y2o = cy + rOut*Math.sin(a2);
+    const x1i = cx + rIn *Math.cos(a1), y1i = cy + rIn *Math.sin(a1);
+    const x2i = cx + rIn *Math.cos(a2), y2i = cy + rIn *Math.sin(a2);
+    const d = `M${x1o.toFixed(1)} ${y1o.toFixed(1)} A${rOut} ${rOut} 0 0 1 ${x2o.toFixed(1)} ${y2o.toFixed(1)} L${x2i.toFixed(1)} ${y2i.toFixed(1)} A${rIn} ${rIn} 0 0 0 ${x1i.toFixed(1)} ${y1i.toFixed(1)}Z`;
     const ativo = dia === diaAtivo ? ' active' : '';
-    segs += `<path d="${path}" class="seg ${cor}${ativo}"></path>`;
-
-    // Label do número do dia (centro do segmento)
-    const aMid = ((i + 0.5) * 360/28 - 90) * Math.PI/180;
-    const lx = cx + rLabel * Math.cos(aMid);
-    const ly = cy + rLabel * Math.sin(aMid);
-    labels += `<text x="${lx.toFixed(2)}" y="${ly.toFixed(2)}" class="seg-label${ativo}">${dia}</text>`;
+    segs += `<path d="${d}" class="seg ${cor}${ativo}"></path>`;
+    const am = ((i+0.5)*360/28 - 90)*Math.PI/180;
+    const lx = cx + rLbl*Math.cos(am), ly = cy + rLbl*Math.sin(am);
+    labels += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="seg-label${ativo}">${dia}</text>`;
   }
-
-  // Labels das 4 semanas (fora do anel, nos 4 quadrantes diagonais)
   for (let s = 0; s < 4; s++) {
-    const aMid = ((s * 7 + 3.5) * 360/28 - 90) * Math.PI/180;
-    const lx = cx + rRing * Math.cos(aMid);
-    const ly = cy + rRing * Math.sin(aMid);
-    ringLabels += `<text x="${lx.toFixed(2)}" y="${ly.toFixed(2)}" class="ring-label">${nomesAnel[s]}</text>`;
+    const am = ((s*7+3.5)*360/28-90)*Math.PI/180;
+    const lx = cx+rRing*Math.cos(am), ly = cy+rRing*Math.sin(am);
+    ringLabels += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="ring-label">${nomes[s]}</text>`;
   }
-
-  return `
-  <svg class="lua-circular" viewBox="-10 -10 220 220" xmlns="http://www.w3.org/2000/svg">
-    ${segs}
-    ${labels}
-    ${ringLabels}
-    <text x="${cx}" y="${cy - 4}" class="center-text center-num">${diaAtivo}</text>
-    <text x="${cx}" y="${cy + 14}" class="center-text center-sub">de 28</text>
-  </svg>`;
+  return `<svg class="lua-circular" viewBox="-12 -12 224 224" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-5}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
 }
 
-
+function kinHTML(kinNum) {
   const kD = DATA.kins[kinNum];
   if (!kD) return '<p>Carregando dados...</p>';
 
@@ -698,10 +532,11 @@ function gerarLuaCircular(diaAtivo) {
   for (let i = 0; i < 13; i++) {
     const k = ondaInicio + i;
     const kData = DATA.kins[k];
+    const em = kData ? getSeloEmoji(kData.selo) : '?';
     const corKin = kData ? getSeloCor(kData.selo) : 'white';
     const ativo = k === kinNum ? 'active' : '';
-    const tooltip = kData ? `Kin ${k} · ${kData.selo} ${kData.tom_nome}` : '';
-    ondaHTML += `<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData ? kData.selo : '')}" style="width:90%;height:90%;object-fit:contain"></div>`;
+    const tooltip = kData ? `Kin ${k} - ${kData.selo} ${kData.tom_nome}` : '';
+    ondaHTML += `<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData.selo)}" style="width:100%;height:100%;object-fit:contain"></div>`;
   }
   ondaHTML += '</div>';
 
@@ -748,18 +583,7 @@ function gerarLuaCircular(diaAtivo) {
   const diaLua = (diasPassados % 28) + 1;
   const luaNome = DATA.luas[luaNum - 1] || '';
   
-  let luaHTML = '<div style="display:flex;gap:6px;margin-top:1rem">';
-  const coresSemana = ['red', 'white', 'blue', 'yellow'];
-  for (let sem = 0; sem < 4; sem++) {
-    luaHTML += '<div style="display:flex;flex-direction:column;gap:4px">';
-    for (let d = 1; d <= 7; d++) {
-      const diaNum = sem * 7 + d;
-      const ativo = diaNum === diaLua ? 'active' : '';
-      luaHTML += `<div class="lua-dia lua-${coresSemana[sem]} ${ativo}">${diaNum}</div>`;
-    }
-    luaHTML += '</div>';
-  }
-  luaHTML += '</div>';
+  const luaHTML = gerarLuaCircular(diaLua);
 
   // Fase Lunar
   const faseLunar = getFaseLunar(hoje);
@@ -779,28 +603,22 @@ function gerarLuaCircular(diaAtivo) {
   return `
 <div class="section anim-1">
   <div class="kin-hero">
-    <div class="kin-num">Kin ${kinNum} · 260</div>
-    <div class="selo-icon selo-${corSelo}" style="width:72px;height:72px;border-radius:9px;margin-bottom:0.8rem"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+    <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
     <div class="kin-title">${nomeCompleto}</div>
-    <div class="kin-subtitle">${seloBase} · ${tomOriginal}</div>
+    <div class="kin-subtitle">Kin ${kinNum} de 260</div>
   </div>
-  ${fraseCurta ? `<div class="kin-frase">${fraseCurta}</div>` : ''}
+  ${fraseCurta ? `<div class="kin-frase">"${fraseCurta}"</div>` : ''}
 </div>
 
 <div class="section anim-2">
   <div class="section-title">Oráculo do Destino</div>
   <div class="oraculo-svg-wrap">
     <svg class="oraculo-svg-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <!-- Linhas de conexão entre centro e periféricos -->
-      <line x1="50" y1="50" x2="50" y2="14" class="strong"/>
-      <line x1="50" y1="50" x2="14" y2="50"/>
-      <line x1="50" y1="50" x2="86" y2="50"/>
-      <line x1="50" y1="50" x2="50" y2="86" class="strong"/>
-      <!-- Linhas diagonais entre os pares (Análogo-Antípoda, Guia-Oculto) -->
-      <line x1="14" y1="50" x2="86" y2="50" opacity="0.15"/>
-      <line x1="50" y1="14" x2="50" y2="86" opacity="0.15"/>
-      <!-- Círculo central pulsante (dourado) -->
-      <circle cx="50" cy="50" r="50" class="center-glow"/>
+      <line x1="50" y1="50" x2="50" y2="10" class="strong"/>
+      <line x1="50" y1="50" x2="10" y2="50"/>
+      <line x1="50" y1="50" x2="90" y2="50"/>
+      <line x1="50" y1="50" x2="50" y2="90" class="strong"/>
+      <circle cx="50" cy="50" r="48"/>
     </svg>
     <div class="oraculo-grid">
       <div class="oraculo-cell-top oraculo-item oraculo-side">
@@ -813,7 +631,7 @@ function gerarLuaCircular(diaAtivo) {
       </div>
       <div class="oraculo-cell-center oraculo-item oraculo-central">
         <div class="selo-icon selo-${corSelo}" style="width:80px;height:80px;border-radius:10px"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
-        <div class="oraculo-nome" style="font-size:0.68rem;color:var(--text2)">${seloBase}</div>
+        <div class="oraculo-nome" style="color:var(--text2)">${seloBase}</div>
       </div>
       <div class="oraculo-cell-right oraculo-item oraculo-side">
         <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
@@ -827,38 +645,35 @@ function gerarLuaCircular(diaAtivo) {
   </div>
 </div>
 
-<div class="section anim-3">
-  <div class="section-title">Onda Encantada ${ondaNum} — Dia ${diaOnda}</div>
-  <p class="info-text" style="margin-bottom:0.8rem">${ondaSelo.acao || ''}</p>
+<div class="section">
+  <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Onda Encantada ${ondaNum} - Dia ${diaOnda}</div>
+  <p class="info-text">Propósito: ${ondaSelo.acao || ''}</p>
   <div class="onda-wrap">${ondaHTML}</div>
   <div class="info-box">
-    <div style="font-family:Cinzel;font-size:0.75rem;color:var(--text);margin-bottom:0.3rem;letter-spacing:0.06em;text-transform:uppercase">${tomOriginal}: ${tomInfo.verbo || ''}</div>
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--text);margin-bottom:0.5rem">${tomOriginal.toUpperCase()}: ${tomInfo.verbo || ''}</div>
     <p class="info-text">${tomInfo.pergunta || ''}</p>
   </div>
 </div>
 
 <div class="grid-2">
-  <div class="section anim-4">
-    <div class="section-title">Informações</div>
-    <div style="margin-bottom:1.2rem">
-      <div style="font-family:Cinzel;font-size:0.75rem;color:var(--text2);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em">${casteloTexto}</div>
+  <div class="section">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Informações</div>
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">${casteloTexto}</div>
       ${casteloOndasHTML}
     </div>
-    <div style="margin-bottom:1.2rem">
-      <div style="font-family:Cinzel;font-size:0.75rem;color:var(--text2);margin-bottom:0.6rem;text-transform:uppercase;letter-spacing:0.06em">🌙 ${luaNome}</div>
-      <div style="display:flex;justify-content:center;margin-top:0.4rem">
-        ${gerarLuaCircular(diaLua)}
-      </div>
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">🌙 ${luaNome}</div>
+      ${luaHTML}
     </div>
-    <div class="grid-3">
+    <div class="grid-3" style="margin-top:1.5rem">
       <div class="card">
-        <div class="card-label">Anel Solar</div>
-        <div style="text-align:center;margin:0.4rem 0"><img src="${anelIconURL}" style="width:48px;height:48px;object-fit:contain;border-radius:6px"></div>
-        <div class="card-val" style="text-align:center;font-size:0.82rem">${anelNome}</div>
-        <div style="font-size:0.68rem;color:var(--text3);text-align:center;margin-top:2px">${anelAcao}</div>
+        <div class="card-label">⭐ Anel Solar</div>
+        <div style="text-align:center;margin:0.5rem 0"><img src="${anelIconURL}" style="width:60px;height:60px;object-fit:contain"></div>
+        <div class="card-val" style="text-align:center">${anelNome}<br><small style="font-size:0.75rem;color:var(--text2)">${anelAcao}</small></div>
       </div>
       <div class="card">
-        <div class="card-label">Plasma</div>
+        <div class="card-label">⚡ Plasma</div>
         <div class="card-val">${plasma}</div>
       </div>
       <div class="card">
@@ -868,13 +683,13 @@ function gerarLuaCircular(diaAtivo) {
     </div>
   </div>
 
-  <div class="section anim-5">
-    <div class="section-title">Prática Diária</div>
+  <div class="section">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Prática Diária</div>
     <ul class="praticas-list">
-      <li>Prece das 7 direções galácticas</li>
-      <li>Meditação do selo</li>
-      <li>Self Design Sounds</li>
-      <li>Leitura da página ${diaOnda} do e-book</li>
+      <li>Ouça a prece das 7 direções galácticas</li>
+      <li>Ouça a meditação do selo</li>
+      <li>Ouça o Self Design Sounds</li>
+      <li>Faça a leitura da página ${diaOnda} do e-book</li>
       <li>${ritual.ritual || ''}</li>
     </ul>
   </div>
@@ -883,8 +698,7 @@ function gerarLuaCircular(diaAtivo) {
 }
 
 
-async function calcNatal() {
-  await DATA_PRONTO;
+function calcNatal() {
   const v = document.getElementById('nasc-inp').value;
   if (!v) return;
   const [y, m, d] = v.split('-').map(Number);
@@ -894,21 +708,18 @@ async function calcNatal() {
   document.getElementById('res-natal').classList.remove('hidden');
 }
 
-async function loadToday() {
-  await DATA_PRONTO;
+function loadToday() {
   const k = dateToKin(new Date());
   document.getElementById('res-dia').innerHTML = kinHTML(k);
 }
 
 </script>
-
-<!-- ─── PWA: REGISTRO DO SERVICE WORKER ─── -->
 <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./service-worker.js')
-      .then(reg => console.log('✓ Service Worker registrado:', reg.scope))
-      .catch(err => console.warn('SW falhou:', err));
+      .then(r=>console.log('✓ SW:',r.scope))
+      .catch(()=>{});
   });
 }
 </script>
