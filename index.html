@@ -91,22 +91,37 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 
 /* ORÁCULO SVG */
-.oraculo-svg-wrap{position:relative;width:100%;max-width:340px;margin:.7rem auto;aspect-ratio:1/1}
-.oraculo-svg-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.oraculo-svg-lines line{stroke:var(--green3);stroke-width:1;opacity:.35;stroke-dasharray:3 4}
-.oraculo-svg-lines line.strong{opacity:.55;stroke-dasharray:none}
-@keyframes oraculoPulse{0%,100%{opacity:.15}50%{opacity:.4}}
-.oraculo-svg-lines circle{fill:none;stroke:var(--gold);stroke-width:1;opacity:.2;animation:oraculoPulse 4s ease-in-out infinite}
-.oraculo-svg-wrap .oraculo-grid{position:absolute;inset:0;width:100%;height:100%;z-index:1;margin:0;max-width:none;display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:1fr auto 1fr}
-.oraculo-cell-top{grid-column:2;grid-row:1;align-self:start;padding-top:4px}
-.oraculo-cell-left{grid-column:1;grid-row:2;justify-self:start;padding-left:4px}
-.oraculo-cell-center{grid-column:2;grid-row:2}
-.oraculo-cell-right{grid-column:3;grid-row:2;justify-self:end;padding-right:4px}
-.oraculo-cell-bottom{grid-column:2;grid-row:3;align-self:end;padding-bottom:4px}
+/* ORÁCULO — grid 3×3 sem position absolute */
+@keyframes oraculoPulse{0%,100%{opacity:.2}50%{opacity:.5}}
+.oraculo-wrap{
+  display:grid;
+  grid-template-columns:1fr 90px 1fr;
+  grid-template-rows:auto auto auto;
+  gap:8px;
+  align-items:center;
+  justify-items:center;
+  max-width:400px;
+  margin:.8rem auto;
+  position:relative;
+}
+/* Linhas decorativas via pseudo-elementos no center */
+.oraculo-wrap::before{
+  content:'';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:280px;height:280px;border-radius:50%;
+  border:1px solid rgba(165,124,0,.22);
+  pointer-events:none;z-index:0;
+  animation:oraculoPulse 4s ease-in-out infinite;
+}
+.oraculo-cell-top   {grid-column:2;grid-row:1;z-index:1}
+.oraculo-cell-left  {grid-column:1;grid-row:2;z-index:1}
+.oraculo-cell-center{grid-column:2;grid-row:2;z-index:1}
+.oraculo-cell-right {grid-column:3;grid-row:2;z-index:1}
+.oraculo-cell-bottom{grid-column:2;grid-row:3;z-index:1}
 .oraculo-item{text-align:center}
-.oraculo-central .selo-icon{width:78px;height:78px;border-radius:8px}
-.oraculo-side .selo-icon{width:56px;height:56px;border-radius:6px}
-.oraculo-nome{font-size:.54rem;margin-top:.28rem;color:var(--text2);font-family:'Cinzel',serif;letter-spacing:.04em;line-height:1.3}
+.oraculo-central .selo-icon{width:82px;height:82px;border-radius:10px}
+.oraculo-side .selo-icon   {width:60px;height:60px;border-radius:7px}
+.oraculo-nome{font-size:.54rem;margin-top:.3rem;color:var(--text2);font-family:'Cinzel',serif;letter-spacing:.04em;line-height:1.3}
 
 /* ONDA */
 .onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
@@ -219,7 +234,9 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
   .btn-logout,.btn-admin,.btn-export{width:100%;text-align:center;font-size:.56rem;padding:5px 6px}
   .section{padding:.85rem}.kin-hero{padding:1.2rem .9rem 1rem}.kin-title{font-size:1.2rem}
   .kin-frase{font-size:.83rem;padding:.75rem .85rem}
-  .oraculo-svg-wrap{max-width:290px}
+  .oraculo-wrap{max-width:340px}
+  .oraculo-central .selo-icon{width:68px;height:68px}
+  .oraculo-side .selo-icon{width:50px;height:50px}
   .oraculo-central .selo-icon{width:62px;height:62px}.oraculo-side .selo-icon{width:48px;height:48px}
   .oraculo-nome{font-size:.5rem}
   .onda-L{--cell:48px;gap:3px}
@@ -231,7 +248,9 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 }
 @media (max-width:400px){
   .container{padding:.65rem .5rem}h1{font-size:1rem}.kin-title{font-size:1rem}
-  .oraculo-svg-wrap{max-width:256px}
+  .oraculo-wrap{max-width:290px}
+  .oraculo-central .selo-icon{width:58px;height:58px}
+  .oraculo-side .selo-icon{width:44px;height:44px}
   .oraculo-central .selo-icon{width:54px;height:54px}.oraculo-side .selo-icon{width:42px;height:42px}
   .onda-L{--cell:40px;gap:3px}.cards{grid-template-columns:1fr}
   .lua-circular{max-width:190px}
@@ -676,6 +695,9 @@ function kinHTML(kinNum) {
   // Plasma
   const diaSemana = (kinNum - 1) % 7;
   const plasma = DATA.plasmas[diaSemana] || '';
+  const plasmaEmojiMap = {'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'};
+  const plasmaChave = plasma.split(' - ')[0];
+  const plasmaEmoji = plasmaEmojiMap[plasmaChave] || '⚡';
 
   // Ritual
   const ritual = DATA.rituais[diaOnda] || {};
@@ -722,35 +744,26 @@ function kinHTML(kinNum) {
 
 <div class="section anim-2">
   <div class="section-title">Oráculo do Destino</div>
-  <div class="oraculo-svg-wrap">
-    <svg class="oraculo-svg-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <line x1="50" y1="50" x2="50" y2="10" class="strong"/>
-      <line x1="50" y1="50" x2="10" y2="50"/>
-      <line x1="50" y1="50" x2="90" y2="50"/>
-      <line x1="50" y1="50" x2="50" y2="90" class="strong"/>
-      <circle cx="50" cy="50" r="48"/>
-    </svg>
-    <div class="oraculo-grid">
-      <div class="oraculo-cell-top oraculo-item oraculo-side">
-        <div class="selo-icon selo-${getSeloCor(guia)}"><img src="${getSeloIconURL(guia)}" alt="${getSeloBase(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
-        <div class="oraculo-nome">Guia · ${getSeloBase(guia)}</div>
-      </div>
-      <div class="oraculo-cell-left oraculo-item oraculo-side">
-        <div class="selo-icon selo-${getSeloCor(analogo)}"><img src="${getSeloIconURL(analogo)}" alt="${getSeloBase(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
-        <div class="oraculo-nome">Análogo · ${getSeloBase(analogo)}</div>
-      </div>
-      <div class="oraculo-cell-center oraculo-item oraculo-central">
-        <div class="selo-icon selo-${corSelo}" style="width:80px;height:80px;border-radius:10px"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
-        <div class="oraculo-nome" style="color:var(--text2)">${seloBase}</div>
-      </div>
-      <div class="oraculo-cell-right oraculo-item oraculo-side">
-        <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
-        <div class="oraculo-nome">Oculto · ${getSeloBase(oculto)}</div>
-      </div>
-      <div class="oraculo-cell-bottom oraculo-item oraculo-side">
-        <div class="selo-icon selo-${getSeloCor(antipoda)}"><img src="${getSeloIconURL(antipoda)}" alt="${getSeloBase(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
-        <div class="oraculo-nome">Antípoda · ${getSeloBase(antipoda)}</div>
-      </div>
+  <div class="oraculo-wrap">
+    <div class="oraculo-cell-top oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(guia)}"><img src="${getSeloIconURL(guia)}" alt="${getSeloBase(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Guia · ${getSeloBase(guia)}</div>
+    </div>
+    <div class="oraculo-cell-left oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(analogo)}"><img src="${getSeloIconURL(analogo)}" alt="${getSeloBase(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Análogo · ${getSeloBase(analogo)}</div>
+    </div>
+    <div class="oraculo-cell-center oraculo-item oraculo-central">
+      <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome" style="color:var(--gold2);font-size:.6rem">${seloBase}</div>
+    </div>
+    <div class="oraculo-cell-right oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Oculto · ${getSeloBase(oculto)}</div>
+    </div>
+    <div class="oraculo-cell-bottom oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(antipoda)}"><img src="${getSeloIconURL(antipoda)}" alt="${getSeloBase(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Antípoda · ${getSeloBase(antipoda)}</div>
     </div>
   </div>
 </div>
@@ -783,8 +796,9 @@ function kinHTML(kinNum) {
         <div class="card-val" style="text-align:center">${anelNome}<br><small style="font-size:0.75rem;color:var(--text2)">${anelAcao}</small></div>
       </div>
       <div class="card">
-        <div class="card-label">⚡ Plasma</div>
-        <div class="card-val">${plasma}</div>
+        <div class="card-label">⚡ Plasma Diário</div>
+        <div style="font-size:1.4rem;text-align:center;margin:.3rem 0">${plasmaEmoji}</div>
+        <div class="card-val" style="text-align:center">${plasma}</div>
       </div>
       <div class="card">
         <div class="card-label">Fase Lunar</div>
@@ -940,13 +954,13 @@ function mostrarKinNatalSalvo(data, kinNum) {
   const dataFmt = dy+'/'+mo+'/'+y;
 
   const nomeKin = kd.selo       || 'Kin '+k;
-  const tomNome = kd.tom_nome   || '';
+  const tomNome = concordar(nomeKin, kd.tom_nome || '');
   const frase   = kd.frase_curta|| '';
   const cor     = getSeloCor(nomeKin);
   const icon    = getSeloIconURL(nomeKin);
   const orac    = kd.oraculo    || {};
   const tomIdx  = kd.tom        || 0;
-  const tomData = (DATA.tons    || {})[String(tomIdx)] || {};
+  const tomData = (DATA.tons    || {})[String(tomIdx)] || (DATA.tons||{})[tomIdx] || {};
 
   // Busca desc do selo pelo nome base (inclui variações como "Enlaçador de Mundos")
   // Buscar pelo nome EXATO no selos (não por includes — evita matches errados)
@@ -971,9 +985,9 @@ function mostrarKinNatalSalvo(data, kinNum) {
     + (frase ? '<div style="font-style:italic;color:var(--text);font-size:.88rem;border-left:2px solid var(--gold3);padding:.65rem .9rem;background:rgba(165,124,0,.06);margin:.5rem 0;line-height:1.8">&ldquo;'+frase+'&rdquo;</div>' : '')
 
     // ── Tom ──
-    + (tomData.verbo ? '<div style="background:var(--bg2);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0;border-left:2px solid var(--green3)">'
+    + (tomNome ? '<div style="background:var(--bg2);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0;border-left:2px solid var(--green3)">'
     +   '<div style="font-family:Cinzel;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Tom '+tomIdx+' · '+tomNome+'</div>'
-    +   '<div style="font-size:.85rem;color:var(--text2)">'+tomData.verbo+'</div>'
+    +   (tomData.verbo ? '<div style="font-size:.85rem;color:var(--text2)">'+tomData.verbo+'</div>' : '')
     +   (tomData.pergunta ? '<div style="font-size:.8rem;color:var(--text3);margin-top:.25rem;font-style:italic">'+tomData.pergunta+'</div>' : '')
     + '</div>' : '')
 
@@ -1113,4 +1127,3 @@ if('serviceWorker' in navigator){
 </script>
 </body>
 </html>
-
