@@ -85,10 +85,10 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .card-val{font-family:'Cinzel',serif;font-size:.84rem;color:var(--gold3)}
 
 .selo-icon{border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid;margin:0 auto .5rem;overflow:hidden}
-.selo-red{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
-.selo-white{background:rgba(168,184,144,.07);border-color:rgba(168,184,144,.2)}
-.selo-blue{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
-.selo-yellow{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
+.selo-red,.selo-vermelho,.selo-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
+.selo-white,.selo-branco,.selo-branca{background:rgba(168,184,144,.07);border-color:rgba(168,184,144,.2)}
+.selo-blue,.selo-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
+.selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 
 /* ORÁCULO SVG */
 .oraculo-svg-wrap{position:relative;width:100%;max-width:340px;margin:.7rem auto;aspect-ratio:1/1}
@@ -127,10 +127,10 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s}
 .onda-kin:hover{transform:scale(1.09)}
 .onda-kin.active{box-shadow:0 0 0 2px var(--green);border-color:var(--green)!important}
-.cor-red{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
-.cor-white{background:rgba(168,184,144,.05);border-color:rgba(168,184,144,.18)}
-.cor-blue{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
-.cor-yellow{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
+.cor-red,.cor-vermelho,.cor-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
+.cor-white,.cor-branco,.cor-branca{background:rgba(168,184,144,.05);border-color:rgba(168,184,144,.18)}
+.cor-blue,.cor-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
+.cor-yellow,.cor-amarelo,.cor-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 
 .praticas-list{list-style:none;padding:0}
 .praticas-list li{padding:.6rem .85rem;margin-bottom:4px;background:var(--bg2);border-radius:5px;border-left:2px solid var(--green);display:flex;align-items:flex-start;gap:8px;font-size:.86rem;line-height:1.5;transition:border-color .2s}
@@ -423,8 +423,9 @@ function getSeloBase(nomeCompleto) {
 }
 
 function getSeloCor(nomeCompleto) {
-  const partes = nomeCompleto.split(' ');
-  return partes[partes.length - 1].toLowerCase();
+  // Retorna a cor em português (ex: 'vermelho', 'branco', 'azul', 'amarelo')
+  // O CSS tem aliases para ambos os formatos (português e inglês)
+  return nomeCompleto.split(' ').pop().toLowerCase();
 }
 
 function concordar(selo, tom) {
@@ -948,7 +949,8 @@ function mostrarKinNatalSalvo(data, kinNum) {
   const tomData = (DATA.tons    || {})[String(tomIdx)] || {};
 
   // Busca desc do selo pelo nome base (inclui variações como "Enlaçador de Mundos")
-  const seloEntry = Object.values(DATA.selos||{}).find(s => nomeKin.includes(getSeloBase(s.nome||''))) || {};
+  // Buscar pelo nome EXATO no selos (não por includes — evita matches errados)
+  const seloEntry = Object.values(DATA.selos||{}).find(s => s.nome === nomeKin) || {};
 
   const html = '<div class="perfil-kin-card">'
 
@@ -1111,3 +1113,4 @@ if('serviceWorker' in navigator){
 </script>
 </body>
 </html>
+
