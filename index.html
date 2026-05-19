@@ -853,27 +853,32 @@ async function renderSelos() {
   await DATA_PRONTO;
   const grid = document.getElementById('selos-grid');
   if (!grid || grid.children.length > 0) return;
-  const CORES = ['red','white','blue','yellow'];
-  // Iterar pelos 20 selos em ordem (índice 1 a 20 do JSON)
-  for (let i = 1; i <= 20; i++) {
-    const seloData = (DATA.selos || {})[String(i)] || {};
-    const nomeCompleto = seloData.nome || `Selo ${i}`;
-    const cor = CORES[(i - 1) % 4];
-    const nomeBase = getSeloBase(nomeCompleto);
-    const acao = seloData.acao || '';
-    const iconURL = getSeloIconURL(nomeCompleto);
+  const selos = DATA.selos || {};
+  const keys = Object.keys(selos).sort((a,b) => Number(a)-Number(b));
+  if (!keys.length) {
+    grid.innerHTML = '<p style="color:var(--text3);font-style:italic;padding:1rem;grid-column:1/-1">Dados não carregados.</p>';
+    return;
+  }
+  keys.forEach(k => {
+    const sd = selos[k];
+    if (!sd || !sd.nome) return;
+    const nomeCompleto = sd.nome;
+    const cor  = getSeloCor(nomeCompleto);
+    const base = getSeloBase(nomeCompleto);
+    const icon = getSeloIconURL(nomeCompleto);
     const card = document.createElement('div');
     card.className = 'selo-card';
     card.innerHTML = `
-      <div class="selo-card-icon selo-${cor}" style="width:48px;height:48px">
-        <img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.textContent='🌀'">
+      <div class="selo-card-icon selo-${cor}" style="width:52px;height:52px">
+        <img src="${icon}" alt="${base}" style="width:100%;height:100%;object-fit:contain"
+          onerror="this.parentElement.textContent='${getSeloEmoji(nomeCompleto)}'">
       </div>
-      <div class="selo-card-nome">${nomeBase}</div>
-      <div class="selo-card-acao">${acao}</div>
+      <div class="selo-card-nome">${base}</div>
+      <div class="selo-card-acao">${sd.acao||''}</div>
     `;
-    card.onclick = () => abrirModalSelo(nomeCompleto, cor, iconURL, seloData);
+    card.onclick = () => abrirModalSelo(nomeCompleto, cor, icon, sd);
     grid.appendChild(card);
-  }
+  });
 }
 
 function abrirModalSelo(nome, cor, iconURL, dados) {
@@ -931,26 +936,54 @@ async function carregarPerfil(user) {
 function mostrarKinNatalSalvo(data, kinNum) {
   const dt = new Date(data + 'T12:00:00');
   const k = kinNum || dateToKin(dt);
-  const kData = DATA.kins ? DATA.kins[k] : null;
-  const nome = kData ? kData.selo : `Kin ${k}`;
-  const tom = kData ? kData.tom_nome : '';
-  const cor = kData ? getSeloCor(kData.selo) : 'yellow';
-  const iconURL = kData ? getSeloIconURL(kData.selo) : '';
-  const [y, m, d] = data.split('-');
+  const kd = (DATA.kins || {})[String(k)] || {};
+  const [y,m,d] = data.split('-');
   const dataFmt = `${d}/${m}/${y}`;
+
+  const nomeKin = kd.selo || `Kin ${k}`;
+  const tomNome = kd.tom_nome || '';
+  const frase   = kd.frase_curta || '';
+  const cor     = getSeloCor(nomeKin);
+  const base    = getSeloBase(nomeKin);
+  const icon    = getSeloIconURL(nomeKin);
+  const orac    = kd.oraculo || {};
+  const tomIdx  = kd.tom || 0;
+  const tomData = (DATA.tons || {})[String(tomIdx)] || {};
+  const siKey   = Object.keys(DATA.selos||{}).find(x=>(DATA.selos[x].nome||'').includes(base));
+  const siData  = siKey ? DATA.selos[siKey] : {};
 
   document.getElementById('perfil-kin-salvo').innerHTML = `
     <div class="perfil-kin-card">
       <div class="perfil-kin-label">Kin ${k} de 260 · ${dataFmt}</div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:.8rem;margin:.5rem 0">
-        <div class="selo-icon selo-${cor}" style="width:52px;height:52px;border-radius:7px">
-          <img src="${iconURL}" style="width:100%;height:100%;object-fit:contain">
+      <div style="display:flex;align-items:center;gap:.9rem;margin:.8rem 0 .6rem;text-align:left">
+        <div class="selo-icon selo-${cor}" style="width:64px;height:64px;border-radius:8px;flex-shrink:0">
+          <img src="${icon}" style="width:100%;height:100%;object-fit:contain">
         </div>
         <div>
-          <div class="perfil-kin-nome">${nome}</div>
-          <div class="perfil-kin-sub">${tom}</div>
+          <div class="perfil-kin-nome">${nomeKin}</div>
+          <div class="perfil-kin-sub">${tomNome}${siData.maya?' · '+siData.maya:''}</div>
+          ${siData.acao?`<div style="font-size:.62rem;color:var(--green2);text-transform:uppercase;letter-spacing:.07em;margin-top:.2rem">${siData.acao}</div>`:''}
         </div>
       </div>
+      ${frase?`<div style="font-style:italic;color:var(--text);font-size:.85rem;border-left:2px solid var(--gold3);padding:.6rem .8rem;background:rgba(165,124,0,.06);margin:.6rem 0;line-height:1.7">"${frase}"</div>`:''}
+      ${tomData.verbo?`
+      <div style="background:var(--bg2);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0;border-left:2px solid var(--green3)">
+        <div style="font-family:Cinzel;font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.3rem">Tom ${tomIdx} · ${tomNome}</div>
+        <div style="font-size:.83rem;color:var(--text2)">${tomData.verbo}</div>
+        ${tomData.pergunta?`<div style="font-size:.78rem;color:var(--text3);margin-top:.2rem">${tomData.pergunta}</div>`:''}
+      </div>`:''}
+      ${orac.guia?`
+      <div style="margin:.6rem 0">
+        <div style="font-family:Cinzel;font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Oráculo do Destino</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;font-size:.75rem">
+          ${[['Guia',orac.guia],['Análogo',orac.analogo||''],['Antípoda',orac.antipoda||''],['Oculto',orac.oculto||'']].map(([label,val])=>`
+          <div style="background:var(--bg2);border-radius:5px;padding:.5rem .7rem">
+            <span style="color:var(--text3);font-size:.58rem;text-transform:uppercase">${label}</span><br>
+            <span style="color:var(--text)">${val}</span>
+          </div>`).join('')}
+        </div>
+      </div>`:''}
+      ${siData.desc?`<div style="font-size:.82rem;color:var(--text2);line-height:1.75;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border)">${siData.desc}</div>`:''}
     </div>
     <button class="btn-limpar-natal" onclick="limparKinNatal()">Remover</button>
   `;
