@@ -448,25 +448,22 @@ function getSeloCor(nomeCompleto) {
 }
 
 function concordar(selo, tom) {
-  for (let p of FEMININOS) {
-    if (selo.includes(p)) {
-      return tom
-        .replace('Magnético', 'Magnética')
-        .replace('Lunar', 'Lunar')
-        .replace('Elétrico', 'Elétrica')
-        .replace('Autoexistente', 'Autoexistente')
-        .replace('Overtone', 'Overtone')
-        .replace('Rítmico', 'Rítmica')
-        .replace('Ressonante', 'Ressonante')
-        .replace('Galáctico', 'Galáctica')
-        .replace('Solar', 'Solar')
-        .replace('Planetário', 'Planetária')
-        .replace('Espectral', 'Espectral')
-        .replace('Cristal', 'Cristal')
-        .replace('Cósmico', 'Cósmica');
-    }
+  const ehFeminino = FEMININOS && [...FEMININOS].some(p => selo.includes(p));
+  if (ehFeminino) {
+    // Converter para feminino
+    return tom
+      .replace('Magnético','Magnética').replace('Elétrico','Elétrica')
+      .replace('Galáctico','Galáctica').replace('Planetário','Planetária')
+      .replace('Cósmico','Cósmica').replace('Harmônico','Harmônica')
+      .replace('Rítmico','Rítmica');
+  } else {
+    // Converter para masculino
+    return tom
+      .replace('Magnética','Magnético').replace('Elétrica','Elétrico')
+      .replace('Galáctica','Galáctico').replace('Planetária','Planetário')
+      .replace('Cósmica','Cósmico').replace('Harmônica','Harmônico')
+      .replace('Rítmica','Rítmico');
   }
-  return tom;
 }
 
 // FIREBASE
@@ -558,7 +555,8 @@ function switchTab(t) {
   document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
   event.target.classList.add('active');
-  document.getElementById(`tab-${t}`).classList.add('active');
+  document.getElementById('tab-' + t).classList.add('active');
+  if (t === 'selos') renderSelos();
 }
 
 // CÁLCULOS DE DATA
@@ -876,19 +874,42 @@ async function renderSelos() {
     const sd = selos[k];
     if (!sd || !sd.nome) return;
     const nomeCompleto = sd.nome;
-    const cor  = getSeloCor(nomeCompleto);
-    const base = getSeloBase(nomeCompleto);
-    const icon = getSeloIconURL(nomeCompleto);
+    const cor   = getSeloCor(nomeCompleto);
+    const base  = getSeloBase(nomeCompleto);
+    const icon  = getSeloIconURL(nomeCompleto);
+    const emoji = getSeloEmoji(nomeCompleto);
+
     const card = document.createElement('div');
     card.className = 'selo-card';
-    card.innerHTML = `
-      <div class="selo-card-icon selo-${cor}" style="width:52px;height:52px">
-        <img src="${icon}" alt="${base}" style="width:100%;height:100%;object-fit:contain"
-          onerror="this.parentElement.textContent='${getSeloEmoji(nomeCompleto)}'">
-      </div>
-      <div class="selo-card-nome">${base}</div>
-      <div class="selo-card-acao">${sd.acao||''}</div>
-    `;
+
+    // Ícone: tenta imagem, se falhar mostra emoji
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'selo-card-icon selo-' + cor;
+    iconDiv.style.cssText = 'width:52px;height:52px';
+    const img = document.createElement('img');
+    img.src = icon;
+    img.alt = base;
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+    img.onerror = function() {
+      iconDiv.textContent = emoji;
+      iconDiv.style.fontSize = '1.8rem';
+      iconDiv.style.display = 'flex';
+      iconDiv.style.alignItems = 'center';
+      iconDiv.style.justifyContent = 'center';
+    };
+    iconDiv.appendChild(img);
+
+    const nomeDiv = document.createElement('div');
+    nomeDiv.className = 'selo-card-nome';
+    nomeDiv.textContent = base;
+
+    const acaoDiv = document.createElement('div');
+    acaoDiv.className = 'selo-card-acao';
+    acaoDiv.textContent = sd.acao || '';
+
+    card.appendChild(iconDiv);
+    card.appendChild(nomeDiv);
+    card.appendChild(acaoDiv);
     card.onclick = () => abrirModalSelo(nomeCompleto, cor, icon, sd);
     grid.appendChild(card);
   });
