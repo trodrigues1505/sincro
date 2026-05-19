@@ -1,3700 +1,1192 @@
-{
-  "kins": {
-    "1": {
-      "kin": 1,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Sou um imã. Atraio conhecimento e consigo apoio divino.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "2": {
-      "kin": 2,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Vento Branco",
-      "frase_curta": "Transmuto meus desafios e estabilizo minha comunicação.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "3": {
-      "kin": 3,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Noite Azul",
-      "frase_curta": "Hoje danço na abundância e me direciono à humanidade.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "4": {
-      "kin": 4,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Semente Amarela",
-      "frase_curta": "Definindo-me sem tensões, a semeadura mágica florescerá.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "5": {
-      "kin": 5,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Comando com paixão minha evolução terrena; amo a vida.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "6": {
-      "kin": 6,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Quando tua intenção é clara, tu te equilibras e organizas com mais acerto.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "7": {
-      "kin": 7,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Mão Azul",
-      "frase_curta": "Presta atenção em tuas mãos, o portal da cura, e cria a magia de tuas mudanças.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "8": {
-      "kin": 8,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Posso tecer a arte dos meus pensamentos para explorar livremente.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "9": {
-      "kin": 9,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Sou um farol no rio do esquecimento e comando minha emoção.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "10": {
-      "kin": 10,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Cachorro Branco",
-      "frase_curta": "O guardião do meu coração me pede para brincar com ordem e perfeição.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "11": {
-      "kin": 11,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Macaco Azul",
-      "frase_curta": "Inocente e espontâneo, dissolvo minhas estruturas e consigo liberar-me.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "12": {
-      "kin": 12,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Despojo-me de minhas inquitações e coopero como um corpo de luz, com sabedoria e amor.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "13": {
-      "kin": 13,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Exploro meus espaços, viajo através da minha mente e sou mensageiro da arte de amar.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "14": {
-      "kin": 14,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Mago Branco",
-      "frase_curta": "Começa no aqui e agora, a magia do conhecimento e da cura.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "15": {
-      "kin": 15,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Águia Azul",
-      "frase_curta": "Crendo em si próprio, você estabiliza a mente, vence os desafios e comunica-se espiritualmente.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "16": {
-      "kin": 16,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "A abundância da inteligência comanda a nossa verdade com fé, esperança e caridade.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "17": {
-      "kin": 17,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Vigilante do planeta, define a semeadura perfeita: que queres nesta existência?",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "18": {
-      "kin": 18,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Espelho Branco",
-      "frase_curta": "Sem pensamentos negativos, comando a abundância de meus conhecimentos para nutrir com generosidade.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "19": {
-      "kin": 19,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Tormenta Azul",
-      "frase_curta": "No ritmo deste dia, equilibro a energia se ilumino minhas palavras, com amor e sem ordens.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "20": {
-      "kin": 20,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Ó coroa de iluminação, que atravessas minhas portas com pureza, sabedoria e com a essência do amor.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "21": {
-      "kin": 21,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Nutro-me quando ordeno meus pensamentos e divirto-me com minha força vital.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "22": {
-      "kin": 22,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Vento Branco",
-      "frase_curta": "Comunico-me, disciplino-me e realizo minhas melhores intenções.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "23": {
-      "kin": 23,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Noite Azul",
-      "frase_curta": "Viajo ao meu interior, ordeno-me, alcanço a abundância e semeio.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "24": {
-      "kin": 24,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Semente Amarela",
-      "frase_curta": "Dissolvo amarras, evoluo e posso florescer.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "25": {
-      "kin": 25,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Hoje mudo minha pele passado, torno-me livre e posso cooperar.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "26": {
-      "kin": 26,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Na quietude de minha mente, encontro a oportunidade de cruzar o portal do perdão.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "27": {
-      "kin": 27,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Mão Azul",
-      "frase_curta": "Inicio minha cura, realizando meus propósitos de auto-aceitação.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "28": {
-      "kin": 28,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Harmonizo-me; sou energia; venço os desafios e alcanço a compreensão.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "29": {
-      "kin": 29,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Aceito purificar minhas emoções e meu serviço é abundância.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "30": {
-      "kin": 30,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Cachorro Branco",
-      "frase_curta": "Como guardião da lealdade, defino minha maneira de amar.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "31": {
-      "kin": 31,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Macaco Azul",
-      "frase_curta": "Abandono as crenças que não me servem e divirto-me comandando.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "32": {
-      "kin": 32,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Receptivo, sem ansiedade, recebes os dons do equilíbrio e do livre-arbítrio.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "33": {
-      "kin": 33,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Exploro o espaço, presto atenção e abro minhas portas para a canalização.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "34": {
-      "kin": 34,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Mago Branco",
-      "frase_curta": "Sem apegos no aqui e agora sou um Mago da Luz.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "35": {
-      "kin": 35,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Águia Azul",
-      "frase_curta": "Posso criar, ver e realizar o meu despertar.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "36": {
-      "kin": 36,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Ó viajante, ó questionador, a perfeição está em ti; semeia com amor.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "37": {
-      "kin": 37,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Busca a alegria e a energia da Terra te dará a libertação.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "38": {
-      "kin": 38,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Espelho Branco",
-      "frase_curta": "Coopero como fim de refletir minha abundância espiritual.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "39": {
-      "kin": 39,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Permitindo o surgimento de novas aberturas, poderás explorar teu mundo interior.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "40": {
-      "kin": 40,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Inicia tua ascensão com o conhecimento e a iluminação.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "41": {
-      "kin": 41,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Divirto-me na fonte do conhecimento e encontro o êxtase da liberdade.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "42": {
-      "kin": 42,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Vento Branco",
-      "frase_curta": "Comunico a abundante transformação da minha liberação.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "43": {
-      "kin": 43,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Noite Azul",
-      "frase_curta": "O real ou o imaginário, sonhos ou ideias hoje se definem de forma natural.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "44": {
-      "kin": 44,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Semente Amarela",
-      "frase_curta": "Sem tensões, livre e com sabedoria, comando a sementeira de minha realização.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "45": {
-      "kin": 45,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Equilibro e harmonizo o que penso de meu corpo e de minha sexualidade.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "46": {
-      "kin": 46,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Quietude e entrega, nada sob controle e as portas se abrem para a visão.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "47": {
-      "kin": 47,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Mão Azul",
-      "frase_curta": "Artesão da vida, a magia para tuas mudanças está dentro de ti.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "48": {
-      "kin": 48,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Estrela Amarela",
-      "frase_curta": "A elegância de meus pensamentos embelezam a vida.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "49": {
-      "kin": 49,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Purifico minhas emoções, trabalhando em grupo com disciplina e amor.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "50": {
-      "kin": 50,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Cachorro Branco",
-      "frase_curta": "O dom de mais este dia é a mágica abundância de minha liberação.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "51": {
-      "kin": 51,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Macaco Azul",
-      "frase_curta": "Minha comunicação precisa estar plena de paciência e humor.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "52": {
-      "kin": 52,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Hoje examina como influencias para cooperar com tuas crenças.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "53": {
-      "kin": 53,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Inicia-te na arte de explorar, pois espera-te uma viagem misteriosa no tempo e no espaço.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "54": {
-      "kin": 54,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Mago Branco",
-      "frase_curta": "Que o raio de poder canalizar me comunique com a magia da mudança.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "55": {
-      "kin": 55,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Águia Azul",
-      "frase_curta": "Agora é o tempo de despertar e de ver com a visão da águia.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "56": {
-      "kin": 56,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "No caminho do coração, a Inteligência Divina define nossa auto-existência.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "57": {
-      "kin": 57,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Comando meu egoísmo e realizo um céu na Terra.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "58": {
-      "kin": 58,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Espelho Branco",
-      "frase_curta": "A ordem, o conhecimento e harmonia equilibram a abundância da vida.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "59": {
-      "kin": 59,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Purificado, ilumino, semeio minha energia e comunico a verdade.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "60": {
-      "kin": 60,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Harmonia da luz e do serviço, amemos ser filhos do Sol.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "61": {
-      "kin": 61,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Aplico o conhecimento para comandar a ordem e a mestria.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "62": {
-      "kin": 62,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Vento Branco",
-      "frase_curta": "Aperfeiçôo minha comunicação para estabilizar meu coração.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "63": {
-      "kin": 63,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Noite Azul",
-      "frase_curta": "Saio das estruturas e entro na abundância da liberação.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "64": {
-      "kin": 64,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Semente Amarela",
-      "frase_curta": "Comunico a cooperação para semear a Terra com liberdade.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "65": {
-      "kin": 65,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Animo-me e atuo, pois o conhecimento, a visão e a magia de ser estão em mim.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "66": {
-      "kin": 66,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Inicia-se minha organização; deixo de querer controlar todas as coisas que me rodeiam",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "67": {
-      "kin": 67,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Mão Azul",
-      "frase_curta": "O desafio de minha cura é minha dedicação para transformar-me.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "68": {
-      "kin": 68,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Revisa como vês a ti mesmo, com tuas crenças, ideais e sonhos.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "69": {
-      "kin": 69,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Presta atenção ao que te atrai e ao que rejeitas, e estabiliza tua força e teu talento.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "70": {
-      "kin": 70,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Cachorro Branco",
-      "frase_curta": "A verdadeira amizade comanda a lealdade do coração, no centro de meu ser.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "71": {
-      "kin": 71,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Macaco Azul",
-      "frase_curta": "Afasto as preocupações, atuo com espontaneidade e equilibro minha criatividade.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "72": {
-      "kin": 72,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Avalia tudo o que podes ser e abre-te para esta oportunidade.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "73": {
-      "kin": 73,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Cria um equilíbrio entre o céu e a Terra em teu dia a dia.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "74": {
-      "kin": 74,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Mago Branco",
-      "frase_curta": "Através do coração, portas mágicas se abrem para minha realização.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "75": {
-      "kin": 75,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Águia Azul",
-      "frase_curta": "Entrego o que me limita ao céu e deixo minha abundância na Terra.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "76": {
-      "kin": 76,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Aonde tudo é possível, liberte-se das ataduras e dos velhos padrões.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "77": {
-      "kin": 77,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Examino meus conflitos para encaminhar minhas emoções na Terra.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "78": {
-      "kin": 78,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Espelho Branco",
-      "frase_curta": "Se me é oferecido um caminho de saída dentro de uma ordem harmoniosa, vivo com autenticidade.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "79": {
-      "kin": 79,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Inicia-se minha expansão; atravesso as muralhas para minha autogeração.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "80": {
-      "kin": 80,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Sou humanitário e estabilizo a energia, iluminando a vida.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "81": {
-      "kin": 81,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Solta-te, liberta-te e o conhecimento te nutrirá.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "82": {
-      "kin": 82,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Vento Branco",
-      "frase_curta": "Aperfeiçôo minha forma de expressar-me e defino minha comunicação.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "83": {
-      "kin": 83,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Noite Azul",
-      "frase_curta": "Vigio meus pensamentos e realizo a magia de meus sonhos.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "84": {
-      "kin": 84,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Semente Amarela",
-      "frase_curta": "Semeando sem tensões, o egoísmo que me desequilibra, desaparecerá.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "85": {
-      "kin": 85,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Saio dos enroscos sobre o que dirão, e não me deixo pisotear.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "86": {
-      "kin": 86,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Hoje é minha oportunidade de enlaçar com harmonia meu serviço e minha autoridade.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "87": {
-      "kin": 87,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Mão Azul",
-      "frase_curta": "A cura para minha realização é viver no tempo presente.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "88": {
-      "kin": 88,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Pensar com arte e elegância aperfeiçoa o poder de minha inteligência.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "89": {
-      "kin": 89,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Devo purificar e liberar o que está estruturado em mim.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "90": {
-      "kin": 90,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Cachorro Branco",
-      "frase_curta": "Dedico-me de coração, quando exercito a cooperação.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "91": {
-      "kin": 91,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Macaco Azul",
-      "frase_curta": "O amor é o círculo infinito de brincar com a magia da vida.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "92": {
-      "kin": 92,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Inicia-se meu propósito de comunicar-me e cooperar com livre-arbítrio.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "93": {
-      "kin": 93,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "O desafio de nossos caminhos é fazer respeitar nossos espaços.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "94": {
-      "kin": 94,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Mago Branco",
-      "frase_curta": "Abro minhas portas internas e externas e magicamente presto serviço à humanidade.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "95": {
-      "kin": 95,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Águia Azul",
-      "frase_curta": "Defino minha existência, semeando de forma simples e criativa.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "96": {
-      "kin": 96,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Ordenar e questionar sem impor é o poder de minha realização.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "97": {
-      "kin": 97,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Comunico-me sem apegos e descubro a harmonia de evoluir na Terra.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "98": {
-      "kin": 98,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Espelho Branco",
-      "frase_curta": "Meu corpo é o reflexo de minha mente e o conhecimento é a abundância para minha cura.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "99": {
-      "kin": 99,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Tormenta Azul",
-      "frase_curta": "No caminho, os relâmpagos permitem minha transformação.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "100": {
-      "kin": 100,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Iluminas a matéria quando aplicas tuas melhores intenções.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "101": {
-      "kin": 101,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Trabalharemos em grupo para adquirirmos conhecimentos e definir nossas emoções.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "102": {
-      "kin": 102,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Vento Branco",
-      "frase_curta": "Expresso minhas ideias e atravesso as muralhas de minhas resistências.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "103": {
-      "kin": 103,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Noite Azul",
-      "frase_curta": "Ofereço-me para cooperar com amor a fim de compartilhar a abundância de meu coração.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "104": {
-      "kin": 104,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Semente Amarela",
-      "frase_curta": "Como semente do universo, no aqui e agora, semeio com os braços abertos.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "105": {
-      "kin": 105,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Começo a vibrar com a inteligência de meu corpo par mudar minha casca do passado.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "106": {
-      "kin": 106,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Sem reprovações, meus obstáculos deixam de ser um desafio.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "107": {
-      "kin": 107,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Mão Azul",
-      "frase_curta": "Quando a ignorância termina, alcanço e descubro a magia de minha cura.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "108": {
-      "kin": 108,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Hoje, educo com arte meus pensamentos para definir o florescimento de minha existência.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "109": {
-      "kin": 109,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Comando meu mundo emocional e sou capaz de pedir o que quero com o poder do amor.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "110": {
-      "kin": 110,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Cachorro Branco",
-      "frase_curta": "Decido equilibrar meus afetos e confio no processo da vida.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "111": {
-      "kin": 111,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Macaco Azul",
-      "frase_curta": "Declaro a paz e a harmonia em meu interior e de meu corpo sai o de que não mais necessito.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "112": {
-      "kin": 112,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Perdôo toda experiência anterior. Sou livre e alcanço o poder da sabedoria que vive em mim.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "113": {
-      "kin": 113,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "A base de todo pensamento é explorar-nos por dentro e encontrar a abundância, sem ego.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "114": {
-      "kin": 114,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Mago Branco",
-      "frase_curta": "A magia de encantar está em edificar seu templo com a semeadura espiritual.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "115": {
-      "kin": 115,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Águia Azul",
-      "frase_curta": "Dissolvo meus bloqueios, desprendo-me do passado e estou livre para avançar.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "116": {
-      "kin": 116,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Escolho pensamentos harmoniosos e coopero comunicando o melhor de mim.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "117": {
-      "kin": 117,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Visualizo minha vida guiada pelo conhecimento e transcendo, criando um céu na Terra.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "118": {
-      "kin": 118,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Espelho Branco",
-      "frase_curta": "Começo a refletir a ordem. Hoje é um novo dia de harmonia, conhecimento e abundância espiritual.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "119": {
-      "kin": 119,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Com bom humor, estabilizo os desafios de minha comunicação com os que me rodeiam.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "120": {
-      "kin": 120,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Estou pleno de alegria e entusiasmo pela vida; deixo fluir e me libero no serviço.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "121": {
-      "kin": 121,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Aceito organizar-me e meus sonhos se tornam realidade. Estou em paz.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "122": {
-      "kin": 122,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Vento Branco",
-      "frase_curta": "Através de mim se expressam ideias calcadas no poder do coração.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "123": {
-      "kin": 123,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Noite Azul",
-      "frase_curta": "Aceito organizar-me e meus sonhos se tornam realidade. Estou em paz.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "124": {
-      "kin": 124,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Semente Amarela",
-      "frase_curta": "O prazer da força criadora é viver o aqui e agora.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "125": {
-      "kin": 125,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Equilibro-me ao viver o presente e bendigo minha força vital.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "126": {
-      "kin": 126,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Desligar-se da atadura dos desejos é a oportunidade da tua realização.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "127": {
-      "kin": 127,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Mão Azul",
-      "frase_curta": "Renuncio à necessidade de ter razão e trabalho em grupo com amor.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "128": {
-      "kin": 128,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Hoje tenho a faculdade de sentir que a vida está a serviço de minha libertação.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "129": {
-      "kin": 129,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Sinto que me fortaleço quando me nutro de conhecimento.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "130": {
-      "kin": 130,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Cachorro Branco",
-      "frase_curta": "A gratidão é a memória do coração, com a magia da iluminação.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "131": {
-      "kin": 131,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Macaco Azul",
-      "frase_curta": "Começo a brincar com a minha teimosia e a processar a magia da mudança.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "132": {
-      "kin": 132,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Hoje tenho um sorriso e minhas mãos para compartilhar os desafios.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "133": {
-      "kin": 133,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "O caminho para chegar ao conhecimento da verdade é atravessar o horizonte do temor, servindo.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "134": {
-      "kin": 134,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Mago Branco",
-      "frase_curta": "Hoje, aproveito a ocasião para fazer que outros conheçam a verdade, em uma forma sábia e discreta, como um mago.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "135": {
-      "kin": 135,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Águia Azul",
-      "frase_curta": "Faço tudo o que posso para limpar a mente de intenções enganosas e, assim, poder comandar.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "136": {
-      "kin": 136,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Na medida em que renuncio ao passado, equilibro-me com ritmo e deixo fluir vitalidade.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "137": {
-      "kin": 137,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Para evoluir e sincronizar-me, devo pensar, sentir e decidir por mim.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "138": {
-      "kin": 138,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Espelho Branco",
-      "frase_curta": "Se hoje nos concentrarmos em olhar mais o dia do que a noite, poderemos refletir Deus.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "139": {
-      "kin": 139,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Arrisco-me sem medo, atravesso as muralhas e poderei escolher minha própria realização.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "140": {
-      "kin": 140,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Aperfeiçôo minha iluminação, harmonizando meus pensamentos com amor, para poder definir-me.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "141": {
-      "kin": 141,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Ponho em ordem minha liberação, através do conhecimento e da magia de brincar com a vida, sem ofender-me.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "142": {
-      "kin": 142,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Vento Branco",
-      "frase_curta": "Ainda que seja um desafio, mudo minha forma de pensar e, no aqui e agora, me dedico e coopero.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "143": {
-      "kin": 143,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Noite Azul",
-      "frase_curta": "Hoje estou vivendo com a imagem da abundância e as portas da realização estão sendo abertas.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "144": {
-      "kin": 144,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Semente Amarela",
-      "frase_curta": "Começo a prestar atenção e, sem tensões, abro meus braços e entrego o melhor de mim.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "145": {
-      "kin": 145,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Examino os sentidos de meu corpo para estabilizar meus desafios.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "146": {
-      "kin": 146,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Sinto necessidade de perdoar para alcançar a libertação.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "147": {
-      "kin": 147,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Mão Azul",
-      "frase_curta": "Sou como a água: com fluidez atravesso o portão que se abre para mim.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "148": {
-      "kin": 148,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Brilharei sem questionar e sem acreditar que sou uma autoridade.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "149": {
-      "kin": 149,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Hoje busco meu equilibrio, organizo-me e purifico meu estado emocional.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "150": {
-      "kin": 150,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Cachorro Branco",
-      "frase_curta": "Companheirismo e lealdade curarão meus afetos e poderei canalizar.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "151": {
-      "kin": 151,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Macaco Azul",
-      "frase_curta": "Rompo as estruturas mentais e poderei embelezar meus pensamentos.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "152": {
-      "kin": 152,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Hoje controlo o que comunico e me realizo abrindo uma nova porta de sabedoria.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "153": {
-      "kin": 153,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Não me envolvo; deixo de querer controlar e posso culti em mim um novo nascimento.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "154": {
-      "kin": 154,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Mago Branco",
-      "frase_curta": "No aqui e agora consigo a libertação, se eu atuar sem teimosia.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "155": {
-      "kin": 155,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Águia Azul",
-      "frase_curta": "Vejo-me no cristal de minha janela e aprendo a enxergar mais além.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "156": {
-      "kin": 156,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Concentro e questiono meus pensamentos para avançar com intrepidez.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "157": {
-      "kin": 157,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Começo a receber os dons da Terra e a permitir minha evolução.",
-      "oraculo": {
-        "guia": "Terra Vermelha",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "158": {
-      "kin": 158,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Espelho Branco",
-      "frase_curta": "Observo-me no espelho da vida, embora seja um desafio sair da obscuridade.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "159": {
-      "kin": 159,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Tomo consciência de tudo que há de tempestuoso em mim e procuro comunicar-me espiritualmente.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "160": {
-      "kin": 160,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Ilumina como um sol, para semear e colher em tua própria auto-existência.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "161": {
-      "kin": 161,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "O fato de eu sentir-me eterno, me induz a iluminar-me com o conhecimento.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "162": {
-      "kin": 162,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Vento Branco",
-      "frase_curta": "Respondo com equilibrio na maneira de dizer minha verdade.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "163": {
-      "kin": 163,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Noite Azul",
-      "frase_curta": "A abundância de meu mundo interior abre o cofre oculto de minha visão.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "164": {
-      "kin": 164,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Semente Amarela",
-      "frase_curta": "Interiorizo-me na energia da semente e floreço na arte de viver.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "165": {
-      "kin": 165,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Sem preconceitos, sem rotina, danço criando a magia de minhas mudanças.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "166": {
-      "kin": 166,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Mudo velhos esquemas e aperfeiçôo o desapego.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "167": {
-      "kin": 167,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Mão Azul",
-      "frase_curta": "Abro-me para receber a liberação e curo qualquer bloqueio com amor.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "168": {
-      "kin": 168,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Sou a arte da criação. Participo, brinco, simplifico, ordeno e ilumino cordialmente.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "169": {
-      "kin": 169,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Dons me são oferecidos; eu sou a ferramenta de minha própria purificação.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "170": {
-      "kin": 170,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Cachorro Branco",
-      "frase_curta": "Sinto o chamado do coração e examino o propósito e os ensinamentos que ele está trazendo.",
-      "oraculo": {
-        "guia": "Cachorro Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "171": {
-      "kin": 171,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Macaco Azul",
-      "frase_curta": "Rompo as estruturas, imagens e crenças que já não me servem.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "172": {
-      "kin": 172,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Não me envolvo, deixo de controlar, consigo abundância e aprendo a viver em liberdade.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "173": {
-      "kin": 173,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Exploro e semeio trabalhando em grupo, e defino meus conhecimentos.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "174": {
-      "kin": 174,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Mago Branco",
-      "frase_curta": "Dedico-me e coopero comigo mesmo. Sou receptivo e posso mudar.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "175": {
-      "kin": 175,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Águia Azul",
-      "frase_curta": "Equilibro-me com paciência e organizo tudo o que a minha mente descobre.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "176": {
-      "kin": 176,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Comunico-me com minha voz interior e peço-lhe que guie meus passos com base na perfeição que trago em mim.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "177": {
-      "kin": 177,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Projeto raízes aonde me encontro agora e faço somente o que me dá alegria a fim de poder evoluir.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "178": {
-      "kin": 178,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Espelho Branco",
-      "frase_curta": "Esta é a oportunidade para ver a verdade. Olho-me no espelho e contemplo partes não muito claras em mim.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "179": {
-      "kin": 179,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Poderosa energia ajuda-me a limpar os recantos de velhos esquemas.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "180": {
-      "kin": 180,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Elevas a humanidade com o simples fato de representares a libertação da luz.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "181": {
-      "kin": 181,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Vou em busca da fonte abundante da vida e nutro-me para dedicar-me e cooperar.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "182": {
-      "kin": 182,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Vento Branco",
-      "frase_curta": "Cheguei ao limite do que é conhecido em mim. Agora devo abrir meu espírito para receber ensinamento e inspiração.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "183": {
-      "kin": 183,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Noite Azul",
-      "frase_curta": "Em minha quietude interior começa a abundância e dons potentes vão se formando.",
-      "oraculo": {
-        "guia": "Noite Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "184": {
-      "kin": 184,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Semente Amarela",
-      "frase_curta": "Planto agora a semente de alguma intenção, projeto ou sonho.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "185": {
-      "kin": 185,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Libero o que penso do meu corpo e de minha sexualidade.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "186": {
-      "kin": 186,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Sinto necessidade de perdoar para definir-me e alcançar minha libertação com amor.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "187": {
-      "kin": 187,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Mão Azul",
-      "frase_curta": "À medida que comando meu crescimento, ponho de lado meu esquema familiar, criando novas possibilidades.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "188": {
-      "kin": 188,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Sigo o caminho que meu coração indica e abandono as situações que limitam minha harmonia.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "189": {
-      "kin": 189,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Olho ao redor de mim e presto atenção no que me atrai e no que rejeito fortemente.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "190": {
-      "kin": 190,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Cachorro Branco",
-      "frase_curta": "Este selo energético anuncia uma abertura em minha vida, novos começos, percepções, aliados e amigos.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "191": {
-      "kin": 191,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Macaco Azul",
-      "frase_curta": "A realização não tem que ser difícil, pode ser algo muito delicioso.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "192": {
-      "kin": 192,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Preparo-me para receber, para dar e para ser aperfeiçoado pelo poder da verdade.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "193": {
-      "kin": 193,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Equilibro-me, desapego-me e a abundância cresce em mim liberando um caminho para o céu.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "194": {
-      "kin": 194,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Mago Branco",
-      "frase_curta": "Meu desafio de hoje é pegar a varinha mágica da sabedoria, dedicar-me e cooperar com boa vontade.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "195": {
-      "kin": 195,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Águia Azul",
-      "frase_curta": "Tenho a energia e o poder de atravessar a terra para recordar e despertar tudo o que sou.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "196": {
-      "kin": 196,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Começa minha devoção ao divino, unindo meus questionamentos entre o coração e a mente.",
-      "oraculo": {
-        "guia": "Guerreiro Amarelo",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "197": {
-      "kin": 197,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Uso meu tempo para escutar a informação que recebo através da energia da Terra.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "198": {
-      "kin": 198,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Espelho Branco",
-      "frase_curta": "Ofereço serviço que reflete meu equilíbrio e comunico como o céu e a Terra são minha liberação.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "199": {
-      "kin": 199,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Sou o poder de limpeza e cura para a estabilidade do planeta.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "200": {
-      "kin": 200,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Amo incondicionalmente e dirijo minha vida com a tocha do amor.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "201": {
-      "kin": 201,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Sinta-se sempre nos braços do divino, sejam quais forem as circunstâncias ou situações.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "202": {
-      "kin": 202,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Vento Branco",
-      "frase_curta": "Dentro do que parece complexo, solto-me, respiro, simplifico e canalizo.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "203": {
-      "kin": 203,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Noite Azul",
-      "frase_curta": "Libero-me para que possa obser plenamente minha situação atual, a partir de um ângulo subjetivo.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "204": {
-      "kin": 204,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Semente Amarela",
-      "frase_curta": "A energia da semente me pede receptividade, pois germina melhor em um campo de entrega.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "205": {
-      "kin": 205,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Se estou aborrecido com minha vida, examino minhas rotinas e defino meus comportamentos.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "206": {
-      "kin": 206,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "A transformação que este selo me oferece, está na entrega, na liberação e no perdão.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "207": {
-      "kin": 207,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Mão Azul",
-      "frase_curta": "Minhas mãos se associam com a abertura, a fim de receber ferramentas espirituais.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "208": {
-      "kin": 208,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Lanço-me a uma maneira diferente de ver as coisas, de escutá-las e de ser.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "209": {
-      "kin": 209,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Inicia-se minha purificação para recordar quem sou, porque estou aqui e qual é a minha tarefa.",
-      "oraculo": {
-        "guia": "Lua Vermelha",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "210": {
-      "kin": 210,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Cachorro Branco",
-      "frase_curta": "Salto e solto o apego à ideia de separatividade, para vencer meus desafios.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "211": {
-      "kin": 211,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Macaco Azul",
-      "frase_curta": "Sorrio, não estou tão sério; creio na magia do momento e me libero.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "212": {
-      "kin": 212,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Determino o que quero, sinto-me livre, aplico minha sabedoria e conquisto afeições.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "213": {
-      "kin": 213,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Adquiro coragem, atravesso as barreiras que me limitam e dirijo minha vida.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "214": {
-      "kin": 214,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Mago Branco",
-      "frase_curta": "Despojo-me de minhas capas pesadas do passado e consigo equilíbrio para minha cura.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "215": {
-      "kin": 215,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Águia Azul",
-      "frase_curta": "Meu compromisso de servidor planetário inspira minha mente, amplia minha visão e faz-me dançar com alegria.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "216": {
-      "kin": 216,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "A graça de ser uno com a inteligência não requer esforço e sim amor.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "217": {
-      "kin": 217,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Realizo o retrato de minha vida, dou-lhe novas pinceladas e o retoque permite minha evolução.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "218": {
-      "kin": 218,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Espelho Branco",
-      "frase_curta": "Atraio os elementos dentro do espaço-tempo para refletir a ordem da criação.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "219": {
-      "kin": 219,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Estou no meio de uma revolução pessoal; despojo - me de velhos esquemas e experiências passadas.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "220": {
-      "kin": 220,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Como guardião da luz, trago para minha vida o poder curador do amor incondicional.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "221": {
-      "kin": 221,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "A partir do conhecimento transfiro-me da aparente separação para a reunião.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "222": {
-      "kin": 222,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Vento Branco",
-      "frase_curta": "Inicia-se minha comunicação para cumprir minha tarefa como mensageiro da orientação divina.",
-      "oraculo": {
-        "guia": "Vento Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "223": {
-      "kin": 223,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Noite Azul",
-      "frase_curta": "Aprendo e presto atenção aos sonhos a fim de estabilizar minhas intuições.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "224": {
-      "kin": 224,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Semente Amarela",
-      "frase_curta": "A Terra será minha libertação, se eu semear meu serviço com harmonia e atenção.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "225": {
-      "kin": 225,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Escuto o que diz meu corpo e semeio somente o que o meu coração deseja.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "226": {
-      "kin": 226,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Disponho-me a soltar as ataduras dos preconceitos e a comandar minha realização.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "227": {
-      "kin": 227,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Mão Azul",
-      "frase_curta": "Examino o que existe em minha vida que necessita completar-se e equilibro minha cura.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "228": {
-      "kin": 228,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Deixo ir as situações que limitam minha serenidade e sou o amor, sou luminoso, sou a harmonia.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "229": {
-      "kin": 229,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Lua Vermelha",
-      "frase_curta": "Tenho ciência de que recebo e transmito a comunicação cósmica.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "230": {
-      "kin": 230,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Cachorro Branco",
-      "frase_curta": "Sou leal porque, ao morrer simbolicamente, entrego minhas crenças limitadoras e posso realizar-me.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "231": {
-      "kin": 231,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Macaco Azul",
-      "frase_curta": "Recordo-me que há perfeição em tudo e que é perfeito tudo o que me acontece.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "232": {
-      "kin": 232,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Diminuo meu ritmo, não fico ansioso e alcanço, com sabedoria, a libertação.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "233": {
-      "kin": 233,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Velhos pontos de referência estão mudando; acolho novas aberturas e oportunidades.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "234": {
-      "kin": 234,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Mago Branco",
-      "frase_curta": "Assumo meu próprio poder. Ninguém fora de mim pode dar-me verdadeiro poder.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "235": {
-      "kin": 235,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Águia Azul",
-      "frase_curta": "Sinto a energia de poder crer e criar, em mim mesmo, meus sonhos e visões.",
-      "oraculo": {
-        "guia": "Águia Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "236": {
-      "kin": 236,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Pergunto-me o que eu verdadeiramente quero neste momento e crio harmonia em meus pensamentos.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "237": {
-      "kin": 237,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Devo abrir as portas da sabedoria interior para liberar meus questionamentos na Terra.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "238": {
-      "kin": 238,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Espelho Branco",
-      "frase_curta": "Deixo-me guiar pela magia de ver-me refletido e contemplo partes que estão na sombra, impedindo-me de ver a luz.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "239": {
-      "kin": 239,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Comando minha energia e entro no jogo que muda cada nível de meu ser.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "240": {
-      "kin": 240,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Sinto como o fogo universal me abraça e fico em paz e harmonizado.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    },
-    "241": {
-      "kin": 241,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Dragão Vermelho",
-      "frase_curta": "Devo ficar atento quanto a maneira de relacionar-me e ver o mundo a fim de nascer novamente.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Espelho Branco",
-        "antipoda": "Macaco Azul",
-        "oculto": "Sol Amarelo"
-      }
-    },
-    "242": {
-      "kin": 242,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Vento Branco",
-      "frase_curta": "Permito que os outros dêem a opinião deles e consigo a integridade do diálogo equilibrado.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Terra Vermelha",
-        "antipoda": "Humano Amarelo",
-        "oculto": "Tormenta Azul"
-      }
-    },
-    "243": {
-      "kin": 243,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Noite Azul",
-      "frase_curta": "A transformação de minha realização está baseada numa ordem de abundância permanente.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Guerreiro Amarelo",
-        "antipoda": "Caminhante do Céu Vermelho",
-        "oculto": "Espelho Branco"
-      }
-    },
-    "244": {
-      "kin": 244,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Semente Amarela",
-      "frase_curta": "Não espere condições perfeitas para plantar a semente. Agora é o momento correto.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Águia Azul",
-        "antipoda": "Mago Branco",
-        "oculto": "Terra Vermelha"
-      }
-    },
-    "245": {
-      "kin": 245,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Serpente Vermelha",
-      "frase_curta": "Escuto o que meu corpo me diz e libero-me da atadura de velhos padrões.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Mago Branco",
-        "antipoda": "Águia Azul",
-        "oculto": "Guerreiro Amarelo"
-      }
-    },
-    "246": {
-      "kin": 246,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Enlaçador de Mundos Branco",
-      "frase_curta": "Coloco ordem nas coisas e nunca abandono minha tarefa, pois sempre há alguém em algum lugar que pode ajudar-me.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Caminhante do Céu Vermelho",
-        "antipoda": "Guerreiro Amarelo",
-        "oculto": "Águia Azul"
-      }
-    },
-    "247": {
-      "kin": 247,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Mão Azul",
-      "frase_curta": "Estou na encruzilhada do caminho e a mão me oferece um portão para minha cura; magicamente atravesso-o.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Humano Amarelo",
-        "antipoda": "Terra Vermelha",
-        "oculto": "Mago Branco"
-      }
-    },
-    "248": {
-      "kin": 248,
-      "tom": 1,
-      "tom_nome": "Magnético",
-      "selo": "Estrela Amarela",
-      "frase_curta": "Inicia a prática constante da harmonia diária para sincronizar-me com meus talentos.",
-      "oraculo": {
-        "guia": "Estrela Amarela",
-        "analogo": "Macaco Azul",
-        "antipoda": "Espelho Branco",
-        "oculto": "Caminhante do Céu Vermelho"
-      }
-    },
-    "249": {
-      "kin": 249,
-      "tom": 2,
-      "tom_nome": "Lunar",
-      "selo": "Lua Vermelha",
-      "frase_curta": "A partir de minha liberdade interior, me inicio com a lua deixando mensagens de purificação.",
-      "oraculo": {
-        "guia": "Dragão Vermelho",
-        "analogo": "Cachorro Branco",
-        "antipoda": "Tormenta Azul",
-        "oculto": "Humano Amarelo"
-      }
-    },
-    "250": {
-      "kin": 250,
-      "tom": 3,
-      "tom_nome": "Elétrica",
-      "selo": "Cachorro Branco",
-      "frase_curta": "Sinto-me liberado ao ver minha vida em determinadas posições e sinto a magia de meu próprio valor.",
-      "oraculo": {
-        "guia": "Mago Branco",
-        "analogo": "Lua Vermelha",
-        "antipoda": "Sol Amarelo",
-        "oculto": "Macaco Azul"
-      }
-    },
-    "251": {
-      "kin": 251,
-      "tom": 4,
-      "tom_nome": "Autoexistente",
-      "selo": "Macaco Azul",
-      "frase_curta": "Entre o céu e a Terra está a magia da vida; por isso abro minhas portas para semear com amor.",
-      "oraculo": {
-        "guia": "Mão Azul",
-        "analogo": "Estrela Amarela",
-        "antipoda": "Dragão Vermelho",
-        "oculto": "Cachorro Branco"
-      }
-    },
-    "252": {
-      "kin": 252,
-      "tom": 5,
-      "tom_nome": "Harmônica",
-      "selo": "Humano Amarelo",
-      "frase_curta": "Assumo o meu próprio poder e nada fora de mim pode interferir em minha realização.",
-      "oraculo": {
-        "guia": "Sol Amarelo",
-        "analogo": "Mão Azul",
-        "antipoda": "Vento Branco",
-        "oculto": "Lua Vermelha"
-      }
-    },
-    "253": {
-      "kin": 253,
-      "tom": 6,
-      "tom_nome": "Rítmico",
-      "selo": "Caminhante do Céu Vermelho",
-      "frase_curta": "Examino-me e parto em busca do equilíbrio para cruzar o horizonte com harmonia.",
-      "oraculo": {
-        "guia": "Caminhante do Céu Vermelho",
-        "analogo": "Enlaçador de Mundos Branco",
-        "antipoda": "Noite Azul",
-        "oculto": "Estrela Amarela"
-      }
-    },
-    "254": {
-      "kin": 254,
-      "tom": 7,
-      "tom_nome": "Ressonante",
-      "selo": "Mago Branco",
-      "frase_curta": "Hoje abro meu coração e vivo no aqui e agora para canalizar minha cura.",
-      "oraculo": {
-        "guia": "Enlaçador de Mundos Branco",
-        "analogo": "Serpente Vermelha",
-        "antipoda": "Semente Amarela",
-        "oculto": "Mão Azul"
-      }
-    },
-    "255": {
-      "kin": 255,
-      "tom": 8,
-      "tom_nome": "Galáctica",
-      "selo": "Águia Azul",
-      "frase_curta": "Harmonizo meus pensamentos para criar com a visão.",
-      "oraculo": {
-        "guia": "Tormenta Azul",
-        "analogo": "Semente Amarela",
-        "antipoda": "Serpente Vermelha",
-        "oculto": "Enlaçador de Mundos Branco"
-      }
-    },
-    "256": {
-      "kin": 256,
-      "tom": 9,
-      "tom_nome": "Solar",
-      "selo": "Guerreiro Amarelo",
-      "frase_curta": "Tua ferramenta para te realizares emocionalmente, é a inteligência.",
-      "oraculo": {
-        "guia": "Humano Amarelo",
-        "analogo": "Noite Azul",
-        "antipoda": "Enlaçador de Mundos Branco",
-        "oculto": "Serpente Vermelha"
-      }
-    },
-    "257": {
-      "kin": 257,
-      "tom": 10,
-      "tom_nome": "Planetário",
-      "selo": "Terra Vermelha",
-      "frase_curta": "Aplicar o conhecimento adquirido significa minha evolução na Terra.",
-      "oraculo": {
-        "guia": "Serpente Vermelha",
-        "analogo": "Vento Branco",
-        "antipoda": "Mão Azul",
-        "oculto": "Semente Amarela"
-      }
-    },
-    "258": {
-      "kin": 258,
-      "tom": 11,
-      "tom_nome": "Espectral",
-      "selo": "Espelho Branco",
-      "frase_curta": "Hoje, direciono-me, reorganizo-me e alcanço minha libertação.",
-      "oraculo": {
-        "guia": "Espelho Branco",
-        "analogo": "Dragão Vermelho",
-        "antipoda": "Estrela Amarela",
-        "oculto": "Noite Azul"
-      }
-    },
-    "259": {
-      "kin": 259,
-      "tom": 12,
-      "tom_nome": "Cristal",
-      "selo": "Tormenta Azul",
-      "frase_curta": "Atravesso a tormenta e sinto o êxtase da libertação.",
-      "oraculo": {
-        "guia": "Macaco Azul",
-        "analogo": "Sol Amarelo",
-        "antipoda": "Lua Vermelha",
-        "oculto": "Vento Branco"
-      }
-    },
-    "260": {
-      "kin": 260,
-      "tom": 13,
-      "tom_nome": "Cósmico",
-      "selo": "Sol Amarelo",
-      "frase_curta": "Cruzo o horizonte de minhas limitações e sigo em busca da iluminação.",
-      "oraculo": {
-        "guia": "Semente Amarela",
-        "analogo": "Tormenta Azul",
-        "antipoda": "Cachorro Branco",
-        "oculto": "Dragão Vermelho"
-      }
-    }
-  },
-  "tons": {
-    "1": {
-      "nome": "Magnético",
-      "verbo": "Qual o meu propósito?",
-      "pergunta": "Qual meu desafio?"
-    },
-    "2": {
-      "nome": "Lunar",
-      "verbo": "Qual meu desafio?",
-      "pergunta": "Como posso melhor servir?"
-    },
-    "3": {
-      "nome": "Elétrica",
-      "verbo": "Como posso melhor servir?",
-      "pergunta": "Qual forma de agir?"
-    },
-    "4": {
-      "nome": "Autoexistente",
-      "verbo": "Qual forma de agir?",
-      "pergunta": "Como potencializar-me?"
-    },
-    "5": {
-      "nome": "Harmônica",
-      "verbo": "Como potencializar-me?",
-      "pergunta": "Como igualar?"
-    },
-    "6": {
-      "nome": "Rítmico",
-      "verbo": "Como igualar?",
-      "pergunta": "Como sintonizar o serviço aos outros?"
-    },
-    "7": {
-      "nome": "Ressonante",
-      "verbo": "Como sintonizar o serviço aos outros?",
-      "pergunta": "Vivo o que acredito?"
-    },
-    "8": {
-      "nome": "Galáctica",
-      "verbo": "Vivo o que acredito?",
-      "pergunta": "Como intenciono o propósito?"
-    },
-    "9": {
-      "nome": "Solar",
-      "verbo": "Como intenciono o propósito?",
-      "pergunta": "Como manifestar e aperfeiçoar a ação?"
-    },
-    "10": {
-      "nome": "Planetário",
-      "verbo": "Como manifestar e aperfeiçoar a ação?",
-      "pergunta": "Como deixar ir?"
-    },
-    "11": {
-      "nome": "Espectral",
-      "verbo": "Como deixar ir?",
-      "pergunta": "Como cooperar com a vida?"
-    },
-    "12": {
-      "nome": "Cristal",
-      "verbo": "Como cooperar com a vida?",
-      "pergunta": "Como transcender?"
-    },
-    "13": {
-      "nome": "Cósmico",
-      "verbo": "Como transcender?",
-      "pergunta": "Qual o meu propósito?"
-    }
-  },
-  "selos": {
-    "1": {
-      "nome": "Vento Branco",
-      "maya": "Imix",
-      "acao": "nutrir, nascimento, ser",
-      "desc": "O vento branco traz a essência do alento, o poder do espírito e a ação de comunicar. Representa vida, Quetzalcoatl, deus do vento, princípio vital, sistema respiratório. Com ele aprendemos a abrir a comunicação, ser guiada e inspirada pelo invisível e perante os desafios diminuir a velocidade, respirar, relaxar e simplificar. Observe se suas escolhas têm origem no Espírito ou no ego, ele convida a receber e expressar o poder do espírito e da comunicação para que o alento do espírito guie sua verdade."
-    },
-    "2": {
-      "nome": "Noite Azul",
-      "maya": "Ik",
-      "acao": "comunicar, espírito, alento",
-      "desc": "a noite azul traz a essência da intuição, o poder da abundância e a ação de sonhar. Representa o interior, o desconhecido, estimula a sonhar com abundância, despertar a intuição, atrair elementos para criar a realidade e aperfeiçoar o ser. Ela convida a focalizar a entrada no santuário do seu Eu – a escuridão interior – o lugar do mistério dentro de você. Una-se com sua quietude e intuição."
-    },
-    "3": {
-      "nome": "Semente Amarela",
-      "maya": "Akbal",
-      "acao": "sonhar, abundância, intuição",
-      "desc": "a semente amarela traz a essência da percepção, o poder do florescimento, a ação focalizar. Representa a potência criadora, o florescimento da sabedoria, o amadurecimento pessoal. Ela lembra que toda semente se auto-germina, e que a realização de qualquer sonho começa com uma intenção. Não se apegue ao processo inteiro da manifestação, concentre-se no desejo sincero do coração e seja terra fértil para florescer. Ela convida a focalizar o poder de suas intenções e seus desejos, para expandir a consciência sobre seu próprio poder."
-    },
-    "4": {
-      "nome": "Serpente Vermelha",
-      "maya": "Kan",
-      "acao": "focalizar, florescimento, percepção",
-      "desc": "a serpente vermelha traz a essência do instinto, o poder da força vital e a ação de sobreviver, representa a serpente celestial, e o corpo como templo de sabedoria a criar uma relação que libera amarras de velhos padrões. A transformação instintiva está disponível use sua paixão para exprimir tangivelmente sua criatividade. Sintonize todo seu ser com seu fogo sagrado. Ela convida a receber e expressar os poderes da força vital e do instinto, honre a perfeição de seu templo físico, dissolva as mentalidades fixas negativas sobre a vitalidade e a sensualidade."
-    },
-    "5": {
-      "nome": "Enlaçador de Mundos Branco",
-      "maya": "Chicchan",
-      "acao": "sobreviver, força vital instinto",
-      "desc": "o Enlaçador de Mundos Branco que traz a essência da oportunidade, o poder morte, e a ação de igualar, representa a porta dimensional na qual se unem dois aspectos da existência: vida e morte. Consciência do aqui e do além, ponte entre dois mundos, no qual a morte mística simboliza o desapego do mundo. Vive no reino da razão e da atividade mental. Ele convida a receber e expressar a rendição e a entrega, renuncie a necessidade do ego de controlar e relaxe na graça do plano maior."
-    },
-    "6": {
-      "nome": "Mão Azul",
-      "maya": "Cimi",
-      "acao": "igualar, morte, oportunidade",
-      "desc": "a mão azul traz a essência da cura, o poder de realizar, e a ação de conhecer, representa a Terra, a perfeição do eu superior e a superação das distorções do ego; conhece a realização. Atua no mundo da razão e no mental. Ela convida a receber e expressar os poderes da realização da cura, invoque conscientemente o que deseja que aconteça. Persista no que lhe permita mover-se para o nível mais elevado do ser."
-    },
-    "7": {
-      "nome": "Estrela Amarela",
-      "maya": "Manik",
-      "acao": "conhecer, realizar, curar",
-      "desc": "a estrela amarela traz a essência da arte, o poder da elegância e a ação de embelezar, representa a transformação do auto-amor em profundo amor pela humanidade e pelo planeta. Eleva a percepção sobre a vida e mostra como harmonizar as distintas energias, pessoas, pensamentos e idéias. Ela convida a receber e expressar os poderes da beleza e elegância.. Deixe ir o auto julgamento sua vida é uma obra de arte e você é a artista de si mesma."
-    },
-    "8": {
-      "nome": "Lua Vermelha",
-      "maya": "Lamat",
-      "acao": "embelezar, elegância, arte",
-      "desc": "a lua vermelha traz a essência do fluxo, o poder das águas universais e a ação de purificar. Representa a purificação do espírito. Vive pela razão. Gera, formula e transmite o impulso criativo. Recordar é reconhecer sua conexão a um esquema maior da divindade e acessar a sua própria presença expandida. Ela convida a receber e expressar os poderes da purificação e do fluxo para sustentar seu mundo ancorando a vibração da totalidade."
-    },
-    "9": {
-      "nome": "Cachorro Branco",
-      "maya": "Muluc",
-      "acao": "purificar, águas emocionais, fluxo",
-      "desc": "o cachorro branco traz a essência da lealdade, o poder do coração e a ação de amar, aprimora as informações do espírito e torna-as acessíveis a outras pessoas. Estimula a focalizar a lealdade ao amor incodicional para superar a ideia de amor condicionado e dependente, que escraviza e aprisiona, representa transcendência de padrões emocionais limitantes e o apego ao drama. Ele convida a receber e expressar o chamado da essência e a lealdade ao divino."
-    },
-    "10": {
-      "nome": "Macaco Azul",
-      "maya": "Oc",
-      "acao": "amar, coração, lealdade",
-      "desc": "o macaco azul traz a essência da ilusão, o poder da magia e a ação de brincar. A realização não tem que ser algo difícil; pode ser prazerosa. Ele atrai, formula e transmite informações a partir dos mundos emocional e psíquico. Ele convida a receber e expressar os poderes da magia e da brincadeira. Focalize a celebração de sua criança interior divina por meio da espontaneidade, inocência e brincadeira, ria de si mesma, e dissolva toda seriedade, anime-se. Aplique o humor e torne-se invencível."
-    },
-    "11": {
-      "nome": "Humano Amarelo",
-      "maya": "Chuen",
-      "acao": "brincar, magia, ilusão",
-      "desc": "o humano Amarelo que traz a essência da sabedoria, o poder do livre arbítrio e a ação de influenciar, Representa o Humano como recipiente para receber a sabedoria divina,uma fonte aberta para receber a ressonância ilimitada do ser expandido. Vive pelo corpo emocional e opera a partir do mundo psíquico. Ele convida a receber e expressar os poderes do livre arbítrio e da influência, desperte as habilidades de sua forma humana guiando seu livre-arbítrio com auto amor."
-    },
-    "12": {
-      "nome": "Caminhante do Céu Vermelho",
-      "maya": "Eb",
-      "acao": "influenciar -livre arbítrio - sabedoria",
-      "desc": "o caminhante do céu traz a essência da vigilância, o poder do espaço e a ação de explorar. Estimula a ter coragem de assumir os riscos e predispor-se ao desconhecido. Assume desafios, mas é sempre desafiado a domar sua natureza obstinada. Ele convida a receber e expressar mensagens sagradas para unir o céu e a terra e participar ativamente da criação do novo futuro."
-    },
-    "13": {
-      "nome": "Mago Branco",
-      "maya": "Ben",
-      "acao": "explorar, espaço, vigilância",
-      "desc": "O mogo branco traz a essência da receptividade, o poder da intemporalidade e a ação de encantar. Representa o momento presente, o aqui e agora, pode curar a si mesmo e aos outros. Ele recorda que as respostas estão sempre dentro e pela integridade examina as ações e motivações.Ele convida a receber e expressar os poderes da intemporalidade e do encantamento. Use o coração para receber a harmonização divina, seja receptivo a frequência do tempo natural."
-    },
-    "14": {
-      "nome": "Águia Azul",
-      "maya": "Ix",
-      "acao": "encantar, intemporalidade, receptividade",
-      "desc": "a águia traz a essência da mente, o poder da visão e a ação de criar. Opera a partir dos mundos emocional e psíquico. Expressa as informações que recebe, tem a capacidade de realizar sonhos, pois tem visão aguçada que os outros não veem. Ela convida a receber e expressar os poderes da visão e da mente. Veja de cima, o plano maior como um águia de olhos aguçados e visão clara. Use o poder da mente para criar inspirado pelo compromisso com sua visão. Acredite em sua conexão com a mente planetária."
-    },
-    "15": {
-      "nome": "Guerreiro Amarelo",
-      "maya": "Men",
-      "acao": "criar, visão, mente",
-      "desc": "o guerreiro amarelo traz a essência da intrepidez, o poder da inteligência e a ação de questionar. Deus do fogo e da longa vida estimula a ter confiança na orientação no espírito. Corajoso e questionador, age a partir do coração universal e com sua inteligência, é capaz de harmonizar as massas. Ele convida a receber e expressar os poderes do destemor e da inteligência. Focalize sua voz interior ao trilhar o caminho, avance em direção a seus medos. Seja a guerreira da Graça."
-    },
-    "16": {
-      "nome": "Terra Vermelha",
-      "maya": "Cib",
-      "acao": "questionar, inteligência, intrepidez",
-      "desc": "a terra vermelha traz a essência da sincronicidade, o poder da navegação e a ação de evoluir. Representa movimento e vive no reino espiritual. Inicia e gera a ideia e se auto governa. Estimula a centralizar a percepção na essência do templo interior, onde nascem possibilidades e sincronicidades mágicas, apoia a se conectar com os recursos planetários disponíveis no momento presente e assim acessar a sabedoria que une as dualidades. Ela convida a sincronizar com seu caminho mais elevado e navegar na realidade tempo/espaço para abrir portais para evolução, o planeta é recíproco a seu amor."
-    },
-    "17": {
-      "nome": "Espelho Branco",
-      "maya": "Kaban",
-      "acao": "evoluir, navegar, sincronicidade",
-      "desc": "o espelho branco traz a essência da ordem, o poder do infinito e a ação de refletir. Representa o auto-sacrifício do ego, para produzir luz e consciência verdadeira de si, valor e renúncia para enfrentar a vida com estratégia e temperança. Ele oferece a oportunidade de visitar a sala dos espelhos na qual todas as máscaras são articuladas, lá existe a verdade da essência e as partes não claras e ilusórias ficam em evidência e podem ser dissolvidas, liberando a autenticidade.. Ele convida a receber e expressar os poderes do reflexo e da continuidade infinita. Aprenda com o espelho fornecido por outras pessoas ou situações em sua rotina."
-    },
-    "18": {
-      "nome": "Tormenta Azul",
-      "maya": "Etznab",
-      "acao": "refletir, infinito, ordem",
-      "desc": "a tormenta azul que traz a essência da energia, o poder da autogeração e a ação de catalisar. Anuncia um momento no qual se chegou ao limite do que era conhecido. Promove uma revolução pessoal que dissolve velhos esquemas, experiências passadas, julgamentos, lembranças e expectativas. Opera a partir do mundo espiritual e do coração universal. Ela convida a receber e expressar os poderes da autogeração e da energia. Desperte seu trovão interior de o passo na direção do desconhecido, é momento do passo de fé."
-    },
-    "19": {
-      "nome": "Sol Amarelo",
-      "maya": "Cauac",
-      "acao": "catalisar, auto geração, energia",
-      "desc": "o sol amarelo que traz a essência da vida, o poder do fogo universal, e ação de iluminar. Vive pelo espírito e age a partir do coração universal e promove a união mística com a Fonte. Estimula ir com alegria para tudo que traga bem-aventurança, Incentiva o perdão e amor incondicional. Ele convida a receber e expressar os poderes da ascensão e da iluminação. Deixe que os raios de seu sol interior iluminem e tragam poder a sua vida. Aqueça-se com o poder de sua liberdade e de sua totalidade."
-    },
-    "20": {
-      "nome": "Dragão Vermelho",
-      "maya": "Ahau",
-      "acao": "iluminar, fogo universal, vida",
-      "desc": "o Dragão vermelho que traz a essência do ser, o poder do nascimento e a ação de nutrir. Vive pelo instinto no nível físico e tende a ser intenso.Ele pede interiorização na profundeza primordial para se conectar a fonte abundante de nutrição, ele conta que o movimento está em ser receptivo e doar confiança em si mesma. Ele convida a receber e expressar a confiança em seu próprio renascimento, focalizar a nutrição do universo para si mesma, abrir seu ser para receber o sustento para a vida."
-    }
-  },
-  "rituais": {
-    "1": {
-      "ritual": "Propósito"
-    },
-    "2": {
-      "ritual": "Desafio"
-    },
-    "3": {
-      "ritual": "Vínculo do Serviço"
-    },
-    "4": {
-      "ritual": "Forma de Agir"
-    },
-    "5": {
-      "ritual": "Irradiação"
-    },
-    "6": {
-      "ritual": "Sincronização Rítmica"
-    },
-    "7": {
-      "ritual": "Harmonização Masc e Fem"
-    },
-    "8": {
-      "ritual": "Integridade"
-    },
-    "9": {
-      "ritual": "Lealdade à Intenção"
-    },
-    "10": {
-      "ritual": "Manifestação do Desafio"
-    },
-    "11": {
-      "ritual": "Queimar e Deixar Ir"
-    },
-    "12": {
-      "ritual": "Integrar Aprendizagem"
-    },
-    "13": {
-      "ritual": "Celebração"
-    }
-  },
-  "plasmas": [
-    "Dali - Coroa",
-    "Seli - Raiz",
-    "Gama - Terceiro Olho",
-    "Kali - Sexual",
-    "Alfa - Laríngeo",
-    "Limi - Plexo Solar",
-    "Silio - Cardíaco"
-  ],
-  "luas": [
-    "Magnética (Morcego)",
-    "Lunar (Escorpião)",
-    "Elétrica (Veado)",
-    "Autoexistente (Coruja)",
-    "Overtone (Pavão)",
-    "Rítmica (Lagarto)",
-    "Ressonante (Macaco)",
-    "Galáctica (Falcão)",
-    "Solar (Jaguar)",
-    "Planetária (Cão)",
-    "Espectral (Serpente)",
-    "Cristal (Coelho)",
-    "Cósmica (Tartaruga)"
-  ],
-  "castelos": [
-    {
-      "num": 1,
-      "nome": "Vermelho",
-      "dir": "Leste",
-      "proposito": "Corte do Nascimento",
-      "ondas": [
-        "Dragão",
-        "Mago",
-        "Mão",
-        "Sol"
-      ]
-    },
-    {
-      "num": 2,
-      "nome": "Branco",
-      "dir": "Norte",
-      "proposito": "Corte do Cruzamento",
-      "ondas": [
-        "Vento",
-        "Águia",
-        "Estrela",
-        "Caminhante do Céu"
-      ]
-    },
-    {
-      "num": 3,
-      "nome": "Azul",
-      "dir": "Oeste",
-      "proposito": "Corte do Queimar",
-      "ondas": [
-        "Noite",
-        "Serpente",
-        "Espelho",
-        "Macaco"
-      ]
-    },
-    {
-      "num": 4,
-      "nome": "Amarelo",
-      "dir": "Sul",
-      "proposito": "Corte do Dar",
-      "ondas": [
-        "Semente",
-        "Enlaçador de Mundos",
-        "Humano",
-        "Guerreiro"
-      ]
-    },
-    {
-      "num": 5,
-      "nome": "Verde",
-      "dir": "Centro",
-      "proposito": "Corte da Matriz",
-      "ondas": [
-        "Lua",
-        "Cão",
-        "Águia",
-        "Terra"
-      ]
-    }
-  ]
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sincronário das 13 Luas</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#009739">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="13 Luas">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#071209;--bg2:#0a1a0c;--card:#0d1f0f;--card2:#112613;
+  --green:#009739;--green2:#00b544;--green3:#006828;
+  --gold:#A57C00;--gold2:#c9a030;--gold3:#e0c070;
+  --border:rgba(0,151,57,.20);--border2:rgba(0,151,57,.40);--border-g:rgba(165,124,0,.28);
+  --text:#c0dcc4;--text2:#5a8860;--text3:#2e5034;
+  --red:#8a2018;--white:#a8b890;--blue:#1a4860;
+  --radius:8px;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:16px;line-height:1.65;min-height:100vh}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.anim-1{animation:fadeUp .28s .00s both}.anim-2{animation:fadeUp .28s .08s both}
+.anim-3{animation:fadeUp .28s .16s both}.anim-4{animation:fadeUp .28s .24s both}
+.anim-5{animation:fadeUp .28s .32s both}
+
+.skel{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:400px 100%;animation:shimmer 1.4s infinite;border-radius:6px}
+.skel-title{height:28px;width:65%;margin:0 auto 12px}
+.skel-sub{height:14px;width:40%;margin:0 auto 20px}
+.skel-frase{height:60px;width:100%;margin-top:16px}
+.skel-row{height:16px;width:100%;margin-bottom:8px}
+.skel-row.w70{width:70%}
+
+.login-container{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:max(1.5rem,env(safe-area-inset-top,0px)) 1.5rem 1.5rem;gap:1.8rem}
+.login-logo{width:96px;height:96px;border-radius:20px;animation:fadeUp .35s both;opacity:.95;box-shadow:0 0 40px rgba(0,151,57,.18)}
+.login-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:2rem 2.4rem 2.4rem;max-width:360px;width:100%;text-align:center;animation:fadeUp .4s .08s both}
+.login-box h1{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold2);margin-bottom:.3rem;letter-spacing:.06em}
+.login-divider{width:24px;height:1px;background:var(--gold);margin:.9rem auto;opacity:.5}
+.login-box p{color:var(--text3);margin-bottom:1.7rem;font-size:.83rem}
+.btn-google{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:10px 20px;font-family:'Cinzel',serif;font-size:.76rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:border-color .2s,color .2s;letter-spacing:.04em}
+.btn-google:hover{border-color:var(--green2);color:var(--text)}
+.error-msg{background:rgba(138,32,24,.12);border:1px solid rgba(138,32,24,.3);color:#b06858;padding:.7rem .9rem;border-radius:6px;margin-top:1rem;font-size:.82rem}
+.loading{color:var(--text3);margin-top:1rem;font-style:italic;font-size:.84rem}
+
+.container{max-width:960px;margin:0 auto;padding:max(1rem,env(safe-area-inset-top,0px)) 1rem 1rem;display:none}
+.container.active{display:block}
+h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:center;margin-bottom:.2rem;letter-spacing:.06em}
+
+.user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.9rem;margin-top:env(safe-area-inset-top,0px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px}
+.user-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--green3)}
+.btn-logout,.btn-admin,.btn-export{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text2);padding:5px 11px;font-family:'Cinzel',serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
+.btn-logout:hover,.btn-export:hover{border-color:var(--green3);color:var(--text2)}
+.btn-admin{border-color:var(--border-g);color:var(--gold)}
+.btn-admin:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
+
+.tabs{display:flex;margin-bottom:.9rem;border-bottom:1px solid var(--border)}
+.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-family:'Cinzel',serif;font-size:.62rem;padding:8px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.09em;transition:color .2s,border-color .2s;margin-bottom:-1px}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--gold2);border-bottom-color:var(--gold)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:.6rem}
+.section-title{font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.13em;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border-g)}
+
+.kin-hero{text-align:center;padding:1.4rem 1.3rem 1.2rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2);position:relative;overflow:hidden}
+.kin-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green3),var(--green2),var(--green3),transparent)}
+.kin-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.45}
+.kin-num{font-family:'Cinzel',serif;font-size:.58rem;color:rgba(165,124,0,.7);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.5rem}
+.kin-title{font-family:'Cinzel',serif;font-size:1.4rem;margin:.25rem 0 .35rem;letter-spacing:.03em;color:var(--gold2);line-height:1.2}
+.kin-subtitle{color:rgba(165,124,0,.65);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em}
+.kin-frase{color:var(--text);font-size:.9rem;font-style:italic;margin:.9rem auto 0;padding:.85rem 1.1rem;background:rgba(0,151,57,.08);border-left:2px solid var(--gold3);max-width:640px;line-height:1.9}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px;margin:.8rem 0}
+.card{background:var(--bg2);border-radius:6px;padding:.85rem .95rem;border:1px solid var(--border);transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.card-label{font-size:.58rem;color:var(--text2);text-transform:uppercase;letter-spacing:.11em;margin-bottom:4px}
+.card-val{font-family:'Cinzel',serif;font-size:.84rem;color:var(--gold3)}
+
+.selo-icon{border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid;margin:0 auto .5rem;overflow:hidden}
+.selo-red,.selo-vermelho,.selo-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
+.selo-white,.selo-branco,.selo-branca{background:rgba(168,184,144,.07);border-color:rgba(168,184,144,.2)}
+.selo-blue,.selo-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
+.selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
+
+/* ORÁCULO SVG */
+/* ORÁCULO — grid 3×3 sem position absolute */
+@keyframes oraculoPulse{0%,100%{opacity:.2}50%{opacity:.5}}
+.oraculo-wrap{
+  display:grid;
+  grid-template-columns:1fr 90px 1fr;
+  grid-template-rows:auto auto auto;
+  gap:8px;
+  align-items:center;
+  justify-items:center;
+  max-width:400px;
+  margin:.8rem auto;
+  position:relative;
+}
+/* Linhas decorativas via pseudo-elementos no center */
+.oraculo-wrap::before{
+  content:'';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:280px;height:280px;border-radius:50%;
+  border:1px solid rgba(165,124,0,.22);
+  pointer-events:none;z-index:0;
+  animation:oraculoPulse 4s ease-in-out infinite;
+}
+.oraculo-cell-top   {grid-column:2;grid-row:1;z-index:1}
+.oraculo-cell-left  {grid-column:1;grid-row:2;z-index:1}
+.oraculo-cell-center{grid-column:2;grid-row:2;z-index:1}
+.oraculo-cell-right {grid-column:3;grid-row:2;z-index:1}
+.oraculo-cell-bottom{grid-column:2;grid-row:3;z-index:1}
+.oraculo-item{text-align:center}
+.oraculo-central .selo-icon{width:82px;height:82px;border-radius:10px}
+.oraculo-side .selo-icon   {width:60px;height:60px;border-radius:7px}
+.oraculo-nome{font-size:.54rem;margin-top:.3rem;color:var(--text2);font-family:'Cinzel',serif;letter-spacing:.04em;line-height:1.3}
+
+/* ONDA */
+.onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
+.onda-L{display:grid;grid-template-columns:repeat(4,var(--cell));grid-template-rows:repeat(4,var(--cell));--cell:56px;gap:4px}
+.onda-L .onda-kin:nth-child(1){grid-column:1;grid-row:1}
+.onda-L .onda-kin:nth-child(2){grid-column:2;grid-row:1}
+.onda-L .onda-kin:nth-child(3){grid-column:3;grid-row:1}
+.onda-L .onda-kin:nth-child(4){grid-column:4;grid-row:1}
+.onda-L .onda-kin:nth-child(5){grid-column:1;grid-row:2}
+.onda-L .onda-kin:nth-child(6){grid-column:1;grid-row:3}
+.onda-L .onda-kin:nth-child(7){grid-column:1;grid-row:4}
+.onda-L .onda-kin:nth-child(8){grid-column:2;grid-row:4}
+.onda-L .onda-kin:nth-child(9){grid-column:3;grid-row:4}
+.onda-L .onda-kin:nth-child(10){grid-column:4;grid-row:2}
+.onda-L .onda-kin:nth-child(11){grid-column:4;grid-row:3}
+.onda-L .onda-kin:nth-child(12){grid-column:4;grid-row:4}
+.onda-L .onda-kin:nth-child(13){grid-column:2/4;grid-row:2/4;width:auto;height:auto}
+.onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s}
+.onda-kin:hover{transform:scale(1.09)}
+.onda-kin.active{box-shadow:0 0 0 2px var(--green);border-color:var(--green)!important}
+.cor-red,.cor-vermelho,.cor-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
+.cor-white,.cor-branco,.cor-branca{background:rgba(168,184,144,.05);border-color:rgba(168,184,144,.18)}
+.cor-blue,.cor-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
+.cor-yellow,.cor-amarelo,.cor-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
+
+.praticas-list{list-style:none;padding:0}
+.praticas-list li{padding:.6rem .85rem;margin-bottom:4px;background:var(--bg2);border-radius:5px;border-left:2px solid var(--green);display:flex;align-items:flex-start;gap:8px;font-size:.86rem;line-height:1.5;transition:border-color .2s}
+.praticas-list li:hover{border-left-color:var(--gold)}
+.praticas-list li::before{content:'·';color:var(--green2);font-size:1.1rem;flex-shrink:0;line-height:1.3}
+
+.hidden{display:none}
+input[type="date"]{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 10px;font-family:inherit;color-scheme:dark;font-size:.87rem;transition:border-color .2s}
+input[type="date"]:focus{outline:none;border-color:var(--green)}
+.btn-calc{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold2);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
+.btn-calc:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:.6rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.55rem}
+.tooltip{position:relative;cursor:help}
+.tooltip:hover::after{content:attr(data-tooltip);position:absolute;bottom:calc(100%+5px);left:50%;transform:translateX(-50%);background:var(--card2);color:var(--text2);padding:.3rem .7rem;border-radius:4px;border:1px solid var(--border);white-space:nowrap;z-index:1000;font-size:.63rem}
+.info-text{color:var(--text);font-size:.82rem;line-height:1.65;margin:.28rem 0}
+.info-box{background:var(--bg2);padding:.75rem .85rem;border-radius:5px;border-left:2px solid var(--gold);margin:.55rem 0}
+
+/* LUA CIRCULAR SVG */
+.lua-circular{width:100%;max-width:260px;margin:0 auto;display:block}
+.lua-circular .seg{fill:var(--bg2);stroke-width:1;transition:fill .2s,stroke .2s}
+.lua-circular .seg.red   {stroke:rgba(138,32,24,.38)}
+.lua-circular .seg.white {stroke:rgba(168,184,144,.2)}
+.lua-circular .seg.blue  {stroke:rgba(26,72,96,.38)}
+.lua-circular .seg.yellow{stroke:rgba(165,124,0,.32)}
+.lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
+.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:6px;fill:var(--text3);pointer-events:none;text-anchor:middle;dominant-baseline:central}
+.lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
+.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:5px;fill:var(--text3);text-transform:uppercase;letter-spacing:.1em;text-anchor:middle;dominant-baseline:central}
+.lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
+.lua-circular .center-num{font-size:18px;dominant-baseline:central}
+.lua-circular .center-sub{font-size:5px;fill:var(--text3);letter-spacing:.1em;dominant-baseline:central}
+
+
+/* ── PERFIL ── */
+.perfil-hero{text-align:center;padding:1.5rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2)}
+.perfil-avatar{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);margin:0 auto .7rem;display:block}
+.perfil-nome{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold2);margin-bottom:.2rem}
+.perfil-email{font-size:.72rem;color:var(--text3);margin-bottom:1rem}
+.perfil-kin-card{background:var(--bg2);border:1px solid var(--border-g);border-radius:8px;padding:1rem;text-align:center;margin-bottom:.6rem}
+.perfil-kin-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.perfil-kin-nome{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:.2rem}
+.perfil-kin-sub{font-size:.72rem;color:var(--text2)}
+.perfil-sem-kin{color:var(--text3);font-style:italic;font-size:.88rem;padding:1.2rem 0}
+.btn-salvar-natal{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold2);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;margin-top:.6rem}
+.btn-salvar-natal:hover{background:rgba(165,124,0,.15);border-color:var(--gold2)}
+.btn-limpar-natal{background:transparent;border:1px solid rgba(138,32,24,.35);border-radius:5px;color:rgba(138,32,24,.8);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;margin-top:.4rem}
+.btn-limpar-natal:hover{background:rgba(138,32,24,.12)}
+.notif-banner{background:var(--card2);border:1px solid var(--border-g);border-radius:8px;padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-bottom:.6rem}
+.notif-banner p{color:var(--text2);font-size:.82rem;flex:1}
+.btn-notif{background:var(--green);border:none;border-radius:5px;color:#fff;font-family:'Cinzel',serif;font-size:.63rem;padding:7px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .2s;white-space:nowrap}
+.btn-notif:hover{background:var(--green2)}
+.btn-notif.ativo{background:transparent;border:1px solid var(--green3);color:var(--green2)}
+
+/* ── SELOS ── */
+.selos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-top:.3rem}
+.selo-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.9rem .8rem;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s}
+.selo-card:hover{border-color:var(--border-g);transform:translateY(-2px)}
+.selo-card-icon{width:48px;height:48px;border-radius:7px;margin:0 auto .5rem;overflow:hidden;border:1px solid}
+.selo-card-nome{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold2);margin-bottom:.2rem}
+.selo-card-acao{font-size:.62rem;color:var(--text3);font-style:italic}
+
+/* ── MODAL SELO ── */
+.modal-selo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.modal-selo.active{display:flex}
+.modal-selo-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:1.5rem;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;animation:fadeUp .25s both}
+.modal-selo-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.modal-selo-icon{width:64px;height:64px;border-radius:9px;overflow:hidden;border:1px solid;flex-shrink:0}
+.modal-selo-titulo{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:.2rem}
+.modal-selo-acao{font-size:.72rem;color:var(--green2);text-transform:uppercase;letter-spacing:.08em}
+.modal-selo-maya{font-size:.68rem;color:var(--text3);margin-top:.15rem}
+.modal-selo-desc{color:var(--text);font-size:.88rem;line-height:1.75}
+.modal-selo-close{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
+.modal-selo-close:hover{border-color:var(--text2);color:var(--text2)}
+.modal-selo-box{position:relative}
+
+/* ── SHARE ── */
+.btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
+.export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
+
+@media (max-width:600px){
+  body{font-size:15px}.container{padding:.75rem .65rem}h1{font-size:1.2rem}
+  .user-bar{padding:.6rem .7rem;flex-direction:column;align-items:flex-start}
+  .user-bar>div:last-child{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+  .btn-logout,.btn-admin,.btn-export{width:100%;text-align:center;font-size:.56rem;padding:5px 6px}
+  .section{padding:.85rem}.kin-hero{padding:1.2rem .9rem 1rem}.kin-title{font-size:1.2rem}
+  .kin-frase{font-size:.83rem;padding:.75rem .85rem}
+  .oraculo-wrap{max-width:340px}
+  .oraculo-central .selo-icon{width:68px;height:68px}
+  .oraculo-side .selo-icon{width:50px;height:50px}
+  .oraculo-central .selo-icon{width:62px;height:62px}.oraculo-side .selo-icon{width:48px;height:48px}
+  .oraculo-nome{font-size:.5rem}
+  .onda-L{--cell:48px;gap:3px}
+  .cards{grid-template-columns:1fr 1fr;gap:5px}
+  .grid-2,.grid-3{grid-template-columns:1fr;gap:.55rem}
+  input[type="date"]{width:100%}.btn-calc{width:100%;margin-top:5px}
+  .tab{padding:7px 10px;font-size:.58rem}
+  .lua-circular{max-width:220px}
+}
+@media (max-width:400px){
+  .container{padding:.65rem .5rem}h1{font-size:1rem}.kin-title{font-size:1rem}
+  .oraculo-wrap{max-width:290px}
+  .oraculo-central .selo-icon{width:58px;height:58px}
+  .oraculo-side .selo-icon{width:44px;height:44px}
+  .oraculo-central .selo-icon{width:54px;height:54px}.oraculo-side .selo-icon{width:42px;height:42px}
+  .onda-L{--cell:40px;gap:3px}.cards{grid-template-columns:1fr}
+  .lua-circular{max-width:190px}
+}
+@media (max-height:500px) and (orientation:landscape){
+  .kin-hero{padding:.75rem .9rem}.kin-title{font-size:1.05rem}.kin-frase{font-size:.78rem;padding:.6rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="login-screen" class="login-container">
+<img src="./icon-192.png" alt="Sincronário" class="login-logo">
+<div class="login-box">
+<h1>Sincronário das 13 Luas</h1>
+<p>Faça login com sua conta Google</p>
+<button class="btn-google" id="btn-login">
+<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
+Entrar com Google
+</button>
+<div id="login-error" class="error-msg hidden"></div>
+<div id="login-loading" class="loading hidden">Entrando...</div>
+</div>
+</div>
+
+<div id="app-screen" class="container">
+<div class="user-bar">
+<div style="display:flex;align-items:center;gap:12px">
+<img id="user-avatar" class="user-avatar" src="" alt="">
+<div>
+<div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
+<div id="user-role" style="font-size:0.75rem;color:var(--gold);text-transform:uppercase"></div>
+</div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Painel Admin</button>
+<button class="btn-export" onclick="exportPNG()">📸 Exportar PNG</button>
+<button class="btn-logout" id="btn-logout">Sair</button>
+</div>
+</div>
+
+<h1>🌀 Sincronário das 13 Luas</h1>
+<p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Calculadora Completa · Lei do Tempo</p>
+
+<div class="tabs">
+<button class="tab active" onclick="switchTab('dia')">Kin do Dia</button>
+<button class="tab" onclick="switchTab('natal')">Kin Natal</button>
+<button class="tab" onclick="switchTab('selos')">Selos</button>
+<button class="tab" onclick="switchTab('perfil')">Perfil</button>
+</div>
+
+<div id="export-area">
+<div id="tab-dia" class="tab-content active">
+<div id="res-dia"></div>
+</div>
+
+<div id="tab-natal" class="tab-content">
+<div class="section">
+<div style="font-family:Cinzel;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem">Kin Natal</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<label style="color:var(--text2);font-style:italic">Data de Nascimento</label>
+<input type="date" id="nasc-inp">
+<button class="btn-calc" onclick="calcNatal()">Calcular</button>
+</div>
+<div id="res-natal" class="hidden" style="margin-top:1.5rem"></div>
+</div>
+</div>
+</div>
+
+<!-- ABA SELOS -->
+<div id="tab-selos" class="tab-content">
+<div class="section">
+  <div class="section-title">Os 20 Selos Solares</div>
+  <div class="selos-grid" id="selos-grid"></div>
+</div>
+</div>
+
+<!-- ABA PERFIL -->
+<div id="tab-perfil" class="tab-content">
+  <div class="section perfil-hero">
+    <img id="perfil-avatar" class="perfil-avatar" src="" alt="">
+    <div class="perfil-nome" id="perfil-nome"></div>
+    <div class="perfil-email" id="perfil-email"></div>
+  </div>
+
+  <!-- NOTIFICAÇÕES -->
+  <div class="section">
+    <div class="section-title">Notificação Diária</div>
+    <div class="notif-banner">
+      <p>Receba o Kin do dia todo manhã no seu celular.</p>
+      <button class="btn-notif" id="btn-notif" onclick="toggleNotificacao()">Ativar</button>
+    </div>
+  </div>
+
+  <!-- KIN NATAL SALVO -->
+  <div class="section">
+    <div class="section-title">Meu Kin Natal</div>
+    <div id="perfil-kin-salvo"></div>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.8rem">
+      <label style="color:var(--text2);font-size:.85rem;font-style:italic">Data de Nascimento</label>
+      <input type="date" id="perfil-nasc-inp">
+      <button class="btn-salvar-natal" onclick="salvarKinNatal()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- MODAL DETALHES DO SELO -->
+<div class="modal-selo" id="modal-selo">
+  <div class="modal-selo-box">
+    <button class="modal-selo-close" onclick="fecharModalSelo()">✕ Fechar</button>
+    <div class="modal-selo-header">
+      <div class="modal-selo-icon" id="modal-selo-icon"></div>
+      <div>
+        <div class="modal-selo-titulo" id="modal-selo-titulo"></div>
+        <div class="modal-selo-acao" id="modal-selo-acao"></div>
+        <div class="modal-selo-maya" id="modal-selo-maya"></div>
+      </div>
+    </div>
+    <div class="modal-selo-desc" id="modal-selo-desc"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+// DADOS E CONFIGURAÇÕES
+let DATA = {};
+const DATA_PRONTO = fetch('./sincronario_dados.json')
+  .then(r => r.json())
+  .then(d => {
+    DATA = d;
+    console.log('✓ Dados carregados:', Object.keys(DATA.kins).length, 'kins');
+  })
+  .catch(e => console.warn('⚠️ Erro:', e));
+
+const EMOJIS = ['🐉', '💨', '🌌', '🌱', '🐍', '☯️', '✋', '⭐', '🌙', '🐕', '🐒', '👤', '🚶', '🧙', '🦅', '⚔️', '🌍', '🪞', '⛈️', '☀️'];
+const CORES_SELO = ['red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow'];
+const CORES_ONDA = ['red', 'red', 'red', 'red', 'white', 'white', 'white', 'white', 'blue', 'blue', 'blue', 'blue', 'yellow'];
+const FEMININOS = new Set(['Noite', 'Serpente', 'Mão', 'Estrela', 'Lua', 'Águia', 'Terra', 'Semente', 'Tormenta']);
+
+function getSeloEmoji(nome) {
+  const nomes = ['Dragão', 'Vento', 'Noite', 'Semente', 'Serpente', 'Enlaçador', 'Mão', 'Estrela', 'Lua', 'Cão', 'Macaco', 'Humano', 'Caminhante', 'Mago', 'Águia', 'Guerreiro', 'Terra', 'Espelho', 'Tormenta', 'Sol'];
+  const idx = nomes.findIndex(s => nome.includes(s));
+  return idx >= 0 ? EMOJIS[idx] : '🌀';
+}
+
+
+function getSeloIconURL(nomeCompleto) {
+  // Mapeia pelo primeiro trecho do nome (ignora cor e variações)
+  const mapa = [
+    ['Dragão',        './assets/icons/dragao.png'],
+    ['Vento',         './assets/icons/vento.png'],
+    ['Noite',         './assets/icons/noite.png'],
+    ['Semente',       './assets/icons/semente.png'],
+    ['Serpente',      './assets/icons/serpente.png'],
+    ['Enlaçador',     './assets/icons/enlacador.png'],
+    ['Mão',           './assets/icons/mao.png'],
+    ['Estrela',       './assets/icons/estrela.png'],
+    ['Lua',           './assets/icons/lua.png'],
+    ['Cão',           './assets/icons/cao.png'],
+    ['Cachorro',      './assets/icons/cao.png'],
+    ['Macaco',        './assets/icons/macaco.png'],
+    ['Humano',        './assets/icons/humano.png'],
+    ['Caminhante',    './assets/icons/caminhante.png'],
+    ['Mago',          './assets/icons/mago.png'],
+    ['Feiticeiro',    './assets/icons/mago.png'],
+    ['Águia',         './assets/icons/aguia.png'],
+    ['Guerreiro',     './assets/icons/guerreiro.png'],
+    ['Terra',         './assets/icons/terra.png'],
+    ['Espelho',       './assets/icons/espelho.png'],
+    ['Tormenta',      './assets/icons/tormenta.png'],
+    ['Sol',           './assets/icons/sol.png'],
+  ];
+  const entrada = mapa.find(([chave]) => nomeCompleto.includes(chave));
+  return entrada ? entrada[1] : './assets/icons/default.png';
+}
+
+
+function getSeloBase(nomeCompleto) {
+  const partes = nomeCompleto.split(' ');
+  return partes.slice(0, -1).join(' ');
+}
+
+function getSeloCor(nomeCompleto) {
+  // Retorna a cor em português (ex: 'vermelho', 'branco', 'azul', 'amarelo')
+  // O CSS tem aliases para ambos os formatos (português e inglês)
+  return nomeCompleto.split(' ').pop().toLowerCase();
+}
+
+function concordar(selo, tom) {
+  const ehFeminino = FEMININOS && [...FEMININOS].some(p => selo.includes(p));
+  if (ehFeminino) {
+    // Converter para feminino
+    return tom
+      .replace('Magnético','Magnética').replace('Elétrico','Elétrica')
+      .replace('Galáctico','Galáctica').replace('Planetário','Planetária')
+      .replace('Cósmico','Cósmica').replace('Harmônico','Harmônica')
+      .replace('Rítmico','Rítmica');
+  } else {
+    // Converter para masculino
+    return tom
+      .replace('Magnética','Magnético').replace('Elétrica','Elétrico')
+      .replace('Galáctica','Galáctico').replace('Planetária','Planetário')
+      .replace('Cósmica','Cósmico').replace('Harmônica','Harmônico')
+      .replace('Rítmica','Rítmico');
+  }
+}
+
+// FIREBASE
+const fc = {
+  apiKey: "AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",
+  authDomain: "sincro13luas.firebaseapp.com",
+  projectId: "sincro13luas",
+  storageBucket: "sincro13luas.firebasestorage.app",
+  messagingSenderId: "886057704979",
+  appId: "1:886057704979:web:31b8348110ff8649c369e6"
+};
+
+firebase.initializeApp(fc);
+const auth = firebase.auth();
+const db = firebase.firestore();
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+document.getElementById('btn-login').onclick = () => {
+  document.getElementById('login-loading').classList.remove('hidden');
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('profile');
+  provider.addScope('email');
+  auth.signInWithPopup(provider).catch(e => {
+    document.getElementById('login-error').textContent = e.code === 'auth/popup-blocked' ? '⚠️ Popup bloqueado!' : '❌ ' + e.message;
+    document.getElementById('login-error').classList.remove('hidden');
+    document.getElementById('login-loading').classList.add('hidden');
+  });
+};
+
+auth.onAuthStateChanged(async u => {
+  if (u) {
+    try {
+      const uR = db.collection('users').doc(u.uid);
+      const uD = await uR.get();
+      if (uD.exists) {
+        const d = uD.data();
+        if (d.authorized === true) {
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('app-screen').classList.add('active');
+          document.getElementById('user-avatar').src = u.photoURL || '';
+          document.getElementById('user-name').textContent = u.displayName;
+          document.getElementById('user-role').textContent = d.role || 'usuário';
+          if (d.role === 'admin') document.getElementById('btn-admin').classList.remove('hidden');
+          loadToday();
+          carregarPerfil(u);
+        } else {
+          document.getElementById('login-error').textContent = '⏳ Aguarde autorização.';
+          document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
+          document.getElementById('login-error').classList.remove('hidden');
+          setTimeout(() => auth.signOut(), 4000);
+        }
+      } else {
+        await uR.set({
+          authorized: false,
+          displayName: u.displayName || 'Usuário',
+          email: u.email,
+          photoURL: u.photoURL || '',
+          role: 'usuário',
+          createdAt: new Date()
+        });
+        document.getElementById('login-error').textContent = '⏳ Conta criada! Aguarde autorização.';
+        document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
+        document.getElementById('login-error').classList.remove('hidden');
+        setTimeout(() => auth.signOut(), 4000);
+      }
+    } catch (e) {
+      document.getElementById('login-error').textContent = '❌ ' + e.message;
+      document.getElementById('login-error').classList.remove('hidden');
+    }
+    document.getElementById('login-loading').classList.add('hidden');
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app-screen').classList.remove('active');
+  }
+});
+
+document.getElementById('btn-logout').onclick = () => auth.signOut();
+
+async function exportPNG() {
+  const area = document.getElementById('export-area');
+  const canvas = await html2canvas(area, { backgroundColor: '#0a0c14', scale: 2 });
+  const link = document.createElement('a');
+  link.download = `sincronario-${new Date().toISOString().split('T')[0]}.png`;
+  link.href = canvas.toDataURL();
+  link.click();
+}
+
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + t).classList.add('active');
+  if (t === 'selos') renderSelos();
+}
+
+// CÁLCULOS DE DATA
+function isLeapDay(d) {
+  return d.getMonth() === 1 && d.getDate() === 29;
+}
+
+function daysBetween(f, t) {
+  if (f > t) return -daysBetween(t, f);
+  let c = 0;
+  const d = new Date(f.getTime());
+  while (d < t) {
+    d.setDate(d.getDate() + 1);
+    if (!isLeapDay(d)) c++;
+  }
+  return c;
+}
+
+function dateToKin(dt) {
+  if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
+  const dtNorm = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+  const base = new Date(1987, 6, 26);
+  const dias = daysBetween(base, dtNorm);
+  return ((34 - 1 + dias) % 260 + 260) % 260 + 1;
+}
+
+function getFaseLunar(d) {
+  const lc = 29.53;
+  const nk = new Date(2000, 0, 6, 18, 14);
+  const df = (d - nk) / (1000 * 60 * 60 * 24);
+  const ph = (df % lc) / lc;
+  if (ph < 0.03 || ph > 0.97) return '🌑 Nova';
+  if (ph < 0.28) return '🌒 Crescente';
+  if (ph < 0.53) return '🌕 Cheia';
+  if (ph < 0.78) return '🌘 Minguante';
+  return '🌑 Nova';
+}
+
+// PARTE 3 CONTINUA NA PRÓXIMA MENSAGEM (função kinHTML)
+
+
+// FUNÇÃO PRINCIPAL - GERA TODO O HTML DO KIN
+
+function gerarLuaCircular(diaAtivo) {
+  const cores = ['red','white','blue','yellow'];
+  const nomes = ['VERMELHA','BRANCA','AZUL','AMARELA'];
+  const cx = 100, cy = 100, rOut = 88, rIn = 58, rLbl = 73, rRing = 95;
+  let segs = '', labels = '', ringLabels = '';
+  for (let i = 0; i < 28; i++) {
+    const dia = i + 1;
+    const cor = cores[Math.floor(i / 7)];
+    const a1 = (i * 360/28 - 90) * Math.PI/180;
+    const a2 = ((i+1) * 360/28 - 90) * Math.PI/180;
+    const x1o = cx + rOut*Math.cos(a1), y1o = cy + rOut*Math.sin(a1);
+    const x2o = cx + rOut*Math.cos(a2), y2o = cy + rOut*Math.sin(a2);
+    const x1i = cx + rIn *Math.cos(a1), y1i = cy + rIn *Math.sin(a1);
+    const x2i = cx + rIn *Math.cos(a2), y2i = cy + rIn *Math.sin(a2);
+    const d = `M${x1o.toFixed(1)} ${y1o.toFixed(1)} A${rOut} ${rOut} 0 0 1 ${x2o.toFixed(1)} ${y2o.toFixed(1)} L${x2i.toFixed(1)} ${y2i.toFixed(1)} A${rIn} ${rIn} 0 0 0 ${x1i.toFixed(1)} ${y1i.toFixed(1)}Z`;
+    const ativo = dia === diaAtivo ? ' active' : '';
+    segs += `<path d="${d}" class="seg ${cor}${ativo}"></path>`;
+    const am = ((i+0.5)*360/28 - 90)*Math.PI/180;
+    const lx = cx + rLbl*Math.cos(am), ly = cy + rLbl*Math.sin(am);
+    labels += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="seg-label${ativo}">${dia}</text>`;
+  }
+  for (let s = 0; s < 4; s++) {
+    const am = ((s*7+3.5)*360/28-90)*Math.PI/180;
+    const lx = cx+rRing*Math.cos(am), ly = cy+rRing*Math.sin(am);
+    ringLabels += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="ring-label">${nomes[s]}</text>`;
+  }
+  return `<svg class="lua-circular" viewBox="-12 -12 224 224" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-5}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
+}
+
+function kinHTML(kinNum) {
+  const kD = DATA.kins[kinNum];
+  if (!kD) return '<p>Carregando dados...</p>';
+
+  const seloCompleto = kD.selo;
+  const partes = seloCompleto.split(' ');
+  const cor = partes[partes.length - 1];
+  const seloBase = partes.slice(0, -1).join(' ');
+  const tomOriginal = kD.tom_nome;
+  const tomConcordado = concordar(seloCompleto, tomOriginal);
+  const nomeCompleto = `${seloBase} ${tomConcordado} ${cor}`;
+  const emoji = getSeloEmoji(seloCompleto);
+  const fraseCurta = kD.frase_curta || '';
+  const corSelo = getSeloCor(seloCompleto);
+
+  const { guia, analogo, antipoda, oculto } = kD.oraculo;
+  const tomNum = kD.tom;
+  const tomInfo = DATA.tons[tomNum] || {};
+
+  // Onda Encantada com CORES INDIVIDUAIS
+  const ondaInicio = Math.floor((kinNum - 1) / 13) * 13 + 1;
+  const diaOnda = ((kinNum - 1) % 13) + 1;
+  let ondaHTML = '<div class="onda-L">';
+  for (let i = 0; i < 13; i++) {
+    const k = ondaInicio + i;
+    const kData = DATA.kins[k];
+    const em = kData ? getSeloEmoji(kData.selo) : '?';
+    const corKin = kData ? getSeloCor(kData.selo) : 'white';
+    const ativo = k === kinNum ? 'active' : '';
+    const tooltip = kData ? `Kin ${k} - ${kData.selo} ${kData.tom_nome}` : '';
+    ondaHTML += `<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData.selo)}" style="width:100%;height:100%;object-fit:contain"></div>`;
+  }
+  ondaHTML += '</div>';
+
+  // Castelo COMPLETO
+  const casteloNum = Math.floor((kinNum - 1) / 52);
+  const castelo = DATA.castelos[casteloNum] || {};
+  const casteloTexto = `🏰 Castelo ${castelo.nome} ${castelo.dir} do ${castelo.proposito}`;
+  const casteloOndas = castelo.ondas || [];
+  let casteloOndasHTML = '<div style="display:flex;gap:8px;justify-content:center;margin-top:0.5rem">';
+  for (let ondaNome of casteloOndas) {
+    // Pegar o selo completo da onda para ter a cor
+    const ondaIdx = casteloOndas.indexOf(ondaNome);
+    const ondaKinInicio = casteloNum * 52 + ondaIdx * 13 + 1;
+    const ondaKinData = DATA.kins && DATA.kins[ondaKinInicio] ? DATA.kins[ondaKinInicio] : null;
+    
+    let ondaSeloCompleto, ondaIconURL;
+    if (ondaKinData && ondaKinData.selo) {
+      ondaSeloCompleto = ondaKinData.selo;
+      ondaIconURL = getSeloIconURL(ondaSeloCompleto);
+    } else {
+      // Fallback: usar o nome da onda + cor padrão baseado no índice
+      const cores = ['Vermelho', 'Branco', 'Azul', 'Amarelo'];
+      ondaSeloCompleto = ondaNome + ' ' + cores[ondaIdx % 4];
+      ondaIconURL = getSeloIconURL(ondaSeloCompleto);
+    }
+    
+    casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="width:50px;height:50px"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='${getSeloEmoji(ondaNome)}'"></div>`;
+  }
+  casteloOndasHTML += '</div>';
+
+  // Plasma
+  const diaSemana = (kinNum - 1) % 7;
+  const plasma = DATA.plasmas[diaSemana] || '';
+  const plasmaEmojiMap = {'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'};
+  const plasmaChave = plasma.split(' - ')[0];
+  const plasmaEmoji = plasmaEmojiMap[plasmaChave] || '⚡';
+
+  // Ritual
+  const ritual = DATA.rituais[diaOnda] || {};
+
+  // Lua Galáctica com SEMANAS COLORIDAS
+  const hoje = new Date();
+  const anoGal = hoje >= new Date(hoje.getFullYear(), 6, 26) ? hoje.getFullYear() : hoje.getFullYear() - 1;
+  const inicioAno = new Date(anoGal, 6, 26);
+  const diasPassados = daysBetween(inicioAno, hoje);
+  const luaNum = Math.floor(diasPassados / 28) + 1;
+  const diaLua = (diasPassados % 28) + 1;
+  const luaNome = DATA.luas[luaNum - 1] || '';
+  
+  const luaHTML = gerarLuaCircular(diaLua);
+
+  // Fase Lunar
+  const faseLunar = getFaseLunar(hoje);
+
+  // Anel Solar com ÍCONE
+  const anelKin = ((kinNum - 1) % 20) + 1;
+  const anelSelo = DATA.selos[anelKin] || {};
+  const anelNomeCompleto = anelSelo.nome || '';
+  const anelIconURL = getSeloIconURL(anelNomeCompleto);
+  const anelNome = anelSelo.nome || '';
+  const anelAcao = anelSelo.acao || '';
+
+  // Onda propósito
+  const ondaNum = Math.floor((kinNum - 1) / 13) + 1;
+  const ondaSelo = DATA.selos[((ondaNum - 1) % 20) + 1] || {};
+
+  return `
+<div class="section anim-1">
+  <div class="kin-hero">
+    <div class="selo-icon selo-${corSelo}" style="width:64px;height:64px;border-radius:8px;margin:0 auto .6rem"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+    <div class="kin-title">${nomeCompleto}</div>
+    <div class="kin-num">Kin ${kinNum} · 260</div>
+  </div>
+  ${fraseCurta ? `<div class="kin-frase">"${fraseCurta}"</div>` : ''}
+  <div class="export-btns">
+    <button class="btn-share" onclick="compartilharKin()">⬆ Compartilhar</button>
+    <button class="btn-share" onclick="exportPNG()" style="border-color:var(--border);color:var(--text2)">↓ Baixar PNG</button>
+  </div>
+</div>
+
+<div class="section anim-2">
+  <div class="section-title">Oráculo do Destino</div>
+  <div class="oraculo-wrap">
+    <div class="oraculo-cell-top oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(guia)}"><img src="${getSeloIconURL(guia)}" alt="${getSeloBase(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Guia · ${getSeloBase(guia)}</div>
+    </div>
+    <div class="oraculo-cell-left oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(analogo)}"><img src="${getSeloIconURL(analogo)}" alt="${getSeloBase(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Análogo · ${getSeloBase(analogo)}</div>
+    </div>
+    <div class="oraculo-cell-center oraculo-item oraculo-central">
+      <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome" style="color:var(--gold2);font-size:.6rem">${seloBase}</div>
+    </div>
+    <div class="oraculo-cell-right oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Oculto · ${getSeloBase(oculto)}</div>
+    </div>
+    <div class="oraculo-cell-bottom oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(antipoda)}"><img src="${getSeloIconURL(antipoda)}" alt="${getSeloBase(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Antípoda · ${getSeloBase(antipoda)}</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Onda Encantada ${ondaNum} - Dia ${diaOnda}</div>
+  <p class="info-text">Propósito: ${ondaSelo.acao || ''}</p>
+  <div class="onda-wrap">${ondaHTML}</div>
+  <div class="info-box">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--text);margin-bottom:0.5rem">${tomOriginal.toUpperCase()}: ${tomInfo.verbo || ''}</div>
+    <p class="info-text">${tomInfo.pergunta || ''}</p>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="section">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Informações</div>
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">${casteloTexto}</div>
+      ${casteloOndasHTML}
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">🌙 ${luaNome}</div>
+      ${luaHTML}
+    </div>
+    <div class="grid-3" style="margin-top:1.5rem">
+      <div class="card">
+        <div class="card-label">⭐ Anel Solar</div>
+        <div style="text-align:center;margin:0.5rem 0"><img src="${anelIconURL}" style="width:60px;height:60px;object-fit:contain"></div>
+        <div class="card-val" style="text-align:center">${anelNome}<br><small style="font-size:0.75rem;color:var(--text2)">${anelAcao}</small></div>
+      </div>
+      <div class="card">
+        <div class="card-label">⚡ Plasma Diário</div>
+        <div style="font-size:1.4rem;text-align:center;margin:.3rem 0">${plasmaEmoji}</div>
+        <div class="card-val" style="text-align:center">${plasma}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Fase Lunar</div>
+        <div class="card-val">${faseLunar}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Prática Diária</div>
+    <ul class="praticas-list">
+      <li>Ouça a prece das 7 direções galácticas</li>
+      <li>Ouça a meditação do selo</li>
+      <li>Ouça o Self Design Sounds</li>
+      <li>Faça a leitura da página ${diaOnda} do e-book</li>
+      <li>${ritual.ritual || ''}</li>
+    </ul>
+  </div>
+</div>
+  `;
+}
+
+
+async function calcNatal() {
+  await DATA_PRONTO;
+  const v = document.getElementById('nasc-inp').value;
+  if (!v) return;
+  const [y, m, d] = v.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  const k = dateToKin(dt);
+  document.getElementById('res-natal').innerHTML = kinHTML(k);
+  document.getElementById('res-natal').classList.remove('hidden');
+}
+
+
+
+// ══════════════════════════════════════════════════
+// COMPARTILHAR KIN
+// ══════════════════════════════════════════════════
+async function compartilharKin() {
+  const area = document.getElementById('export-area');
+  const canvas = await html2canvas(area, { backgroundColor: '#071209', scale: 2 });
+  canvas.toBlob(async (blob) => {
+    const file = new File([blob], 'meu-kin.png', { type: 'image/png' });
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: 'Sincronário das 13 Luas',
+        text: 'Meu Kin do dia 🌀',
+        files: [file]
+      });
+    } else {
+      // fallback: download
+      const link = document.createElement('a');
+      link.download = `kin-${new Date().toISOString().split('T')[0]}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════
+// PÁGINA DE SELOS
+// ══════════════════════════════════════════════════
+async function renderSelos() {
+  await DATA_PRONTO;
+  const grid = document.getElementById('selos-grid');
+  if (!grid || grid.children.length > 0) return;
+  const selos = DATA.selos || {};
+  const keys = Object.keys(selos).sort((a,b) => Number(a)-Number(b));
+  if (!keys.length) {
+    grid.innerHTML = '<p style="color:var(--text3);font-style:italic;padding:1rem;grid-column:1/-1">Dados não carregados.</p>';
+    return;
+  }
+  keys.forEach(k => {
+    const sd = selos[k];
+    if (!sd || !sd.nome) return;
+    const nomeCompleto = sd.nome;
+    const cor   = getSeloCor(nomeCompleto);
+    const base  = getSeloBase(nomeCompleto);
+    const icon  = getSeloIconURL(nomeCompleto);
+    const emoji = getSeloEmoji(nomeCompleto);
+
+    const card = document.createElement('div');
+    card.className = 'selo-card';
+
+    // Ícone: tenta imagem, se falhar mostra emoji
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'selo-card-icon selo-' + cor;
+    iconDiv.style.cssText = 'width:52px;height:52px';
+    const img = document.createElement('img');
+    img.src = icon;
+    img.alt = base;
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+    img.onerror = function() {
+      iconDiv.textContent = emoji;
+      iconDiv.style.fontSize = '1.8rem';
+      iconDiv.style.display = 'flex';
+      iconDiv.style.alignItems = 'center';
+      iconDiv.style.justifyContent = 'center';
+    };
+    iconDiv.appendChild(img);
+
+    const nomeDiv = document.createElement('div');
+    nomeDiv.className = 'selo-card-nome';
+    nomeDiv.textContent = base;
+
+    const acaoDiv = document.createElement('div');
+    acaoDiv.className = 'selo-card-acao';
+    acaoDiv.textContent = sd.acao || '';
+
+    card.appendChild(iconDiv);
+    card.appendChild(nomeDiv);
+    card.appendChild(acaoDiv);
+    card.onclick = () => abrirModalSelo(nomeCompleto, cor, icon, sd);
+    grid.appendChild(card);
+  });
+}
+
+function abrirModalSelo(nome, cor, iconURL, dados) {
+  const modal = document.getElementById('modal-selo');
+  document.getElementById('modal-selo-icon').className = `modal-selo-icon selo-${cor}`;
+  document.getElementById('modal-selo-icon').innerHTML = `<img src="${iconURL}" style="width:100%;height:100%;object-fit:contain">`;
+  document.getElementById('modal-selo-titulo').textContent = dados.nome || nome;
+  document.getElementById('modal-selo-acao').textContent = dados.acao || '';
+  document.getElementById('modal-selo-maya').textContent = dados.maya ? `Glifo Maia: ${dados.maya}` : '';
+  document.getElementById('modal-selo-desc').textContent = dados.desc || '';
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModalSelo() {
+  document.getElementById('modal-selo').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Fechar modal clicando fora
+document.getElementById('modal-selo').addEventListener('click', function(e) {
+  if (e.target === this) fecharModalSelo();
+});
+
+// ══════════════════════════════════════════════════
+// PERFIL — KIN NATAL SALVO NO FIRESTORE
+// ══════════════════════════════════════════════════
+let currentUserUID = null;
+
+async function carregarPerfil(user) {
+  currentUserUID = user.uid;
+  document.getElementById('perfil-avatar').src = user.photoURL || '';
+  document.getElementById('perfil-nome').textContent = user.displayName || '';
+  document.getElementById('perfil-email').textContent = user.email || '';
+
+  // Carregar kin natal salvo
+  try {
+    const doc = await db.collection('users').doc(user.uid).get();
+    const data = doc.data() || {};
+    if (data.kinNatalData) {
+      document.getElementById('perfil-nasc-inp').value = data.kinNatalData;
+      mostrarKinNatalSalvo(data.kinNatalData, data.kinNatalNum);
+    } else {
+      document.getElementById('perfil-kin-salvo').innerHTML =
+        '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
+    }
+  } catch(e) {
+    console.warn('Erro ao carregar perfil:', e);
+  }
+
+  // Estado da notificação
+  atualizarBotaoNotif();
+}
+
+function mostrarKinNatalSalvo(data, kinNum) {
+  const dt = new Date(data + 'T12:00:00');
+  const k  = kinNum || dateToKin(dt);
+  const kd = (DATA.kins || {})[String(k)] || {};
+  const [y,mo,dy] = data.split('-');
+  const dataFmt = dy+'/'+mo+'/'+y;
+
+  const nomeKin = kd.selo       || 'Kin '+k;
+  const tomNome = concordar(nomeKin, kd.tom_nome || '');
+  const frase   = kd.frase_curta|| '';
+  const cor     = getSeloCor(nomeKin);
+  const icon    = getSeloIconURL(nomeKin);
+  const orac    = kd.oraculo    || {};
+  const tomIdx  = kd.tom        || 0;
+  const tomData = (DATA.tons    || {})[String(tomIdx)] || (DATA.tons||{})[tomIdx] || {};
+
+  // Busca desc do selo pelo nome base (inclui variações como "Enlaçador de Mundos")
+  // Buscar pelo nome EXATO no selos (não por includes — evita matches errados)
+  const seloEntry = Object.values(DATA.selos||{}).find(s => s.nome === nomeKin) || {};
+
+  const html = '<div class="perfil-kin-card">'
+
+    // ── Cabeçalho ──
+    + '<div class="perfil-kin-label">Kin '+k+' de 260 · '+dataFmt+'</div>'
+
+    // ── Ícone centrado + nome ──
+    + '<div style="text-align:center;padding:.8rem 0 .4rem">'
+    +   '<div class="selo-icon selo-'+cor+'" style="width:72px;height:72px;border-radius:10px;margin:0 auto .7rem">'
+    +     '<img src="'+icon+'" style="width:100%;height:100%;object-fit:contain">'
+    +   '</div>'
+    +   '<div class="perfil-kin-nome">'+nomeKin+'</div>'
+    +   '<div class="perfil-kin-sub" style="margin-top:.2rem">'+tomNome+(seloEntry.maya?' · '+seloEntry.maya:'')+'</div>'
+    +   (seloEntry.acao ? '<div style="font-size:.62rem;color:var(--green2);text-transform:uppercase;letter-spacing:.07em;margin-top:.25rem">'+seloEntry.acao+'</div>' : '')
+    + '</div>'
+
+    // ── Frase ──
+    + (frase ? '<div style="font-style:italic;color:var(--text);font-size:.88rem;border-left:2px solid var(--gold3);padding:.65rem .9rem;background:rgba(165,124,0,.06);margin:.5rem 0;line-height:1.8">&ldquo;'+frase+'&rdquo;</div>' : '')
+
+    // ── Tom ──
+    + (tomNome ? '<div style="background:var(--bg2);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0;border-left:2px solid var(--green3)">'
+    +   '<div style="font-family:Cinzel;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Tom '+tomIdx+' · '+tomNome+'</div>'
+    +   (tomData.verbo ? '<div style="font-size:.85rem;color:var(--text2)">'+tomData.verbo+'</div>' : '')
+    +   (tomData.pergunta ? '<div style="font-size:.8rem;color:var(--text3);margin-top:.25rem;font-style:italic">'+tomData.pergunta+'</div>' : '')
+    + '</div>' : '')
+
+    // ── Oráculo ──
+    + (orac.guia ? '<div style="margin:.6rem 0" id="perfil-oraculo-grid">'
+    +   '<div style="font-family:Cinzel;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem">Oráculo do Destino</div>'
+    +   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem" id="perfil-oraculo-cells">'
+    +   [['Guia',orac.guia],['Análogo',orac.analogo||''],['Antípoda',orac.antipoda||''],['Oculto',orac.oculto||'']].map(function(pair){
+          return '<div class="perfil-orac-cell" data-nome="'+pair[1]+'" style="background:var(--bg2);border-radius:7px;padding:.6rem .7rem;display:flex;align-items:center;gap:.6rem">'
+            +'<div class="perfil-orac-icon" style="width:40px;height:40px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem"></div>'
+            +'<div>'
+            +'<div style="font-size:.54rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">'+pair[0]+'</div>'
+            +'<div style="font-size:.78rem;color:var(--text);font-family:Cinzel,serif">'+getSeloBase(pair[1])+'</div>'
+            +'</div>'
+            +'</div>';
+        }).join('')
+    +   '</div>'
+    + '</div>' : '')
+
+    + '<button class="btn-limpar-natal" onclick="limparKinNatal()">Remover</button>';
+
+  document.getElementById('perfil-kin-salvo').innerHTML = html;
+
+  // Popular ícone principal do kin natal
+  (function() {
+    var mainIcon = document.getElementById('perfil-kin-main-icon');
+    if (!mainIcon) return;
+    var img = document.createElement('img');
+    img.src = icon;
+    img.alt = nomeKin;
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+    img.onerror = function() {
+      mainIcon.textContent = getSeloEmoji(nomeKin);
+      mainIcon.style.fontSize = '2rem';
+      mainIcon.style.display = 'flex';
+      mainIcon.style.alignItems = 'center';
+      mainIcon.style.justifyContent = 'center';
+    };
+    mainIcon.appendChild(img);
+  })();
+
+  // Popular ícones do oráculo via createElement (evita onerror em atributo)
+  document.querySelectorAll('.perfil-orac-cell').forEach(function(cell) {
+    var nome  = cell.getAttribute('data-nome');
+    if (!nome) return;
+    var cor   = getSeloCor(nome);
+    var icon  = getSeloIconURL(nome);
+    var emoji = getSeloEmoji(nome);
+    var wrap  = cell.querySelector('.perfil-orac-icon');
+    if (!wrap) return;
+    wrap.className = 'perfil-orac-icon selo-' + cor;
+    wrap.style.cssText = 'width:40px;height:40px;border-radius:6px;flex-shrink:0';
+    var img = document.createElement('img');
+    img.src = icon;
+    img.alt = nome;
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+    img.onerror = function() {
+      wrap.textContent = emoji;
+      wrap.style.fontSize = '1.3rem';
+      wrap.style.display = 'flex';
+      wrap.style.alignItems = 'center';
+      wrap.style.justifyContent = 'center';
+    };
+    wrap.appendChild(img);
+  });
+}
+
+async function salvarKinNatal() {
+  if (!currentUserUID) return;
+  const v = document.getElementById('perfil-nasc-inp').value;
+  if (!v) return;
+  const dt = new Date(v + 'T12:00:00');
+  const k = dateToKin(dt);
+  try {
+    await db.collection('users').doc(currentUserUID).update({
+      kinNatalData: v,
+      kinNatalNum: k
+    });
+    mostrarKinNatalSalvo(v, k);
+    // Também atualizar a aba Kin Natal
+    document.getElementById('nasc-inp').value = v;
+    await calcNatal();
+  } catch(e) {
+    alert('Erro ao salvar: ' + e.message);
+  }
+}
+
+async function limparKinNatal() {
+  if (!currentUserUID) return;
+  await db.collection('users').doc(currentUserUID).update({
+    kinNatalData: firebase.firestore.FieldValue.delete(),
+    kinNatalNum: firebase.firestore.FieldValue.delete()
+  });
+  document.getElementById('perfil-kin-salvo').innerHTML =
+    '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
+  document.getElementById('perfil-nasc-inp').value = '';
+}
+
+// ══════════════════════════════════════════════════
+// NOTIFICAÇÕES PUSH (PWA)
+// ══════════════════════════════════════════════════
+function atualizarBotaoNotif() {
+  const btn = document.getElementById('btn-notif');
+  if (!btn) return;
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+    btn.textContent = 'Não disponível';
+    btn.disabled = true;
+    btn.classList.add('ativo');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    btn.textContent = '✓ Ativado';
+    btn.classList.add('ativo');
+  } else if (Notification.permission === 'denied') {
+    btn.textContent = 'Bloqueado';
+    btn.disabled = true;
+    btn.classList.add('ativo');
+  } else {
+    btn.textContent = 'Ativar';
+    btn.classList.remove('ativo');
+  }
+}
+
+async function toggleNotificacao() {
+  if (!('Notification' in window)) {
+    alert('Seu navegador não suporta notificações.');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    alert('Notificações já estão ativas! Para desativar, acesse as configurações do seu navegador.');
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    await agendarNotificacaoDiaria();
+    atualizarBotaoNotif();
+    // Mostrar notificação de teste
+    new Notification('🌀 Sincronário das 13 Luas', {
+      body: 'Notificações ativadas! Você receberá o Kin do dia toda manhã.',
+      icon: './icon-192.png',
+      badge: './icon-192.png'
+    });
+  }
+  atualizarBotaoNotif();
+}
+
+async function agendarNotificacaoDiaria() {
+  // Verifica suporte a Background Sync / periodic sync
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    // Periodic Background Sync (Chrome Android)
+    if ('periodicSync' in reg) {
+      const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
+      if (status.state === 'granted') {
+        await reg.periodicSync.register('kin-diario', { minInterval: 24 * 60 * 60 * 1000 });
+      }
+    }
+  } catch(e) {
+    console.log('Periodic sync não disponível:', e);
+  }
+}
+
+async function loadToday() {
+  await DATA_PRONTO;
+  const k = dateToKin(new Date());
+  document.getElementById('res-dia').innerHTML = kinHTML(k);
+}
+
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(r=>console.log('✓ SW:',r.scope))
+      .catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
