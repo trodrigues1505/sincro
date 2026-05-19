@@ -849,35 +849,31 @@ async function compartilharKin() {
 // ══════════════════════════════════════════════════
 // PÁGINA DE SELOS
 // ══════════════════════════════════════════════════
-function renderSelos() {
+async function renderSelos() {
+  await DATA_PRONTO;
   const grid = document.getElementById('selos-grid');
   if (!grid || grid.children.length > 0) return;
-  const SELOS_ORDEM = [
-    'Dragão','Vento','Noite','Semente','Serpente',
-    'Enlaçador','Mão','Estrela','Lua','Cão',
-    'Macaco','Humano','Caminhante','Mago','Águia',
-    'Guerreiro','Terra','Espelho','Tormenta','Sol'
-  ];
   const CORES = ['red','white','blue','yellow'];
-  SELOS_ORDEM.forEach((nome, i) => {
-    const cor = CORES[i % 4];
-    // Buscar dados do JSON
-    const seloData = Object.values(DATA.selos || {}).find(s => s.nome && s.nome.includes(nome)) || {};
-    const nomeCompleto = seloData.nome || nome;
+  // Iterar pelos 20 selos em ordem (índice 1 a 20 do JSON)
+  for (let i = 1; i <= 20; i++) {
+    const seloData = (DATA.selos || {})[String(i)] || {};
+    const nomeCompleto = seloData.nome || `Selo ${i}`;
+    const cor = CORES[(i - 1) % 4];
+    const nomeBase = getSeloBase(nomeCompleto);
     const acao = seloData.acao || '';
-    const iconURL = getSeloIconURL(nomeCompleto + ' ' + (cor === 'red' ? 'Vermelho' : cor === 'white' ? 'Branco' : cor === 'blue' ? 'Azul' : 'Amarelo'));
+    const iconURL = getSeloIconURL(nomeCompleto);
     const card = document.createElement('div');
     card.className = 'selo-card';
     card.innerHTML = `
       <div class="selo-card-icon selo-${cor}" style="width:48px;height:48px">
-        <img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.style.display='none'">
+        <img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.textContent='🌀'">
       </div>
-      <div class="selo-card-nome">${nome}</div>
+      <div class="selo-card-nome">${nomeBase}</div>
       <div class="selo-card-acao">${acao}</div>
     `;
     card.onclick = () => abrirModalSelo(nomeCompleto, cor, iconURL, seloData);
     grid.appendChild(card);
-  });
+  }
 }
 
 function abrirModalSelo(nome, cor, iconURL, dados) {
