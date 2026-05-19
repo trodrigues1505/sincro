@@ -387,35 +387,33 @@ function getSeloEmoji(nome) {
 
 
 function getSeloIconURL(nomeCompleto) {
-  const partes = nomeCompleto.split(' ');
-  const nomeBase = partes.slice(0, -1).join(' ');
-  const mapa = {
-    'Dragão': './assets/icons/dragao.png',
-    'Vento': './assets/icons/vento.png',
-    'Noite': './assets/icons/noite.png',
-    'Semente': './assets/icons/semente.png',
-    'Serpente': './assets/icons/serpente.png',
-    'Enlaçador': './assets/icons/enlacador.png',
-    'Enlaçador de Mundos': './assets/icons/enlacador.png',
-    'Mão': './assets/icons/mao.png',
-    'Estrela': './assets/icons/estrela.png',
-    'Lua': './assets/icons/lua.png',
-    'Cão': './assets/icons/cao.png',
-    'Cachorro': './assets/icons/cao.png',
-    'Macaco': './assets/icons/macaco.png',
-    'Humano': './assets/icons/humano.png',
-    'Caminhante': './assets/icons/caminhante.png',
-    'Caminhante do Céu': './assets/icons/caminhante.png',
-    'Mago': './assets/icons/mago.png',
-    'Feiticeiro': './assets/icons/mago.png',
-    'Águia': './assets/icons/aguia.png',
-    'Guerreiro': './assets/icons/guerreiro.png',
-    'Terra': './assets/icons/terra.png',
-    'Espelho': './assets/icons/espelho.png',
-    'Tormenta': './assets/icons/tormenta.png',
-    'Sol': './assets/icons/sol.png'
-  };
-  return mapa[nomeBase] || './assets/icons/default.png';
+  // Mapeia pelo primeiro trecho do nome (ignora cor e variações)
+  const mapa = [
+    ['Dragão',        './assets/icons/dragao.png'],
+    ['Vento',         './assets/icons/vento.png'],
+    ['Noite',         './assets/icons/noite.png'],
+    ['Semente',       './assets/icons/semente.png'],
+    ['Serpente',      './assets/icons/serpente.png'],
+    ['Enlaçador',     './assets/icons/enlacador.png'],
+    ['Mão',           './assets/icons/mao.png'],
+    ['Estrela',       './assets/icons/estrela.png'],
+    ['Lua',           './assets/icons/lua.png'],
+    ['Cão',           './assets/icons/cao.png'],
+    ['Cachorro',      './assets/icons/cao.png'],
+    ['Macaco',        './assets/icons/macaco.png'],
+    ['Humano',        './assets/icons/humano.png'],
+    ['Caminhante',    './assets/icons/caminhante.png'],
+    ['Mago',          './assets/icons/mago.png'],
+    ['Feiticeiro',    './assets/icons/mago.png'],
+    ['Águia',         './assets/icons/aguia.png'],
+    ['Guerreiro',     './assets/icons/guerreiro.png'],
+    ['Terra',         './assets/icons/terra.png'],
+    ['Espelho',       './assets/icons/espelho.png'],
+    ['Tormenta',      './assets/icons/tormenta.png'],
+    ['Sol',           './assets/icons/sol.png'],
+  ];
+  const entrada = mapa.find(([chave]) => nomeCompleto.includes(chave));
+  return entrada ? entrada[1] : './assets/icons/default.png';
 }
 
 
@@ -935,58 +933,68 @@ async function carregarPerfil(user) {
 
 function mostrarKinNatalSalvo(data, kinNum) {
   const dt = new Date(data + 'T12:00:00');
-  const k = kinNum || dateToKin(dt);
+  const k  = kinNum || dateToKin(dt);
   const kd = (DATA.kins || {})[String(k)] || {};
-  const [y,m,d] = data.split('-');
-  const dataFmt = `${d}/${m}/${y}`;
+  const [y,mo,dy] = data.split('-');
+  const dataFmt = dy+'/'+mo+'/'+y;
 
-  const nomeKin = kd.selo || `Kin ${k}`;
-  const tomNome = kd.tom_nome || '';
-  const frase   = kd.frase_curta || '';
+  const nomeKin = kd.selo       || 'Kin '+k;
+  const tomNome = kd.tom_nome   || '';
+  const frase   = kd.frase_curta|| '';
   const cor     = getSeloCor(nomeKin);
-  const base    = getSeloBase(nomeKin);
   const icon    = getSeloIconURL(nomeKin);
-  const orac    = kd.oraculo || {};
-  const tomIdx  = kd.tom || 0;
-  const tomData = (DATA.tons || {})[String(tomIdx)] || {};
-  const siKey   = Object.keys(DATA.selos||{}).find(x=>(DATA.selos[x].nome||'').includes(base));
-  const siData  = siKey ? DATA.selos[siKey] : {};
+  const orac    = kd.oraculo    || {};
+  const tomIdx  = kd.tom        || 0;
+  const tomData = (DATA.tons    || {})[String(tomIdx)] || {};
 
-  document.getElementById('perfil-kin-salvo').innerHTML = `
-    <div class="perfil-kin-card">
-      <div class="perfil-kin-label">Kin ${k} de 260 · ${dataFmt}</div>
-      <div style="display:flex;align-items:center;gap:.9rem;margin:.8rem 0 .6rem;text-align:left">
-        <div class="selo-icon selo-${cor}" style="width:64px;height:64px;border-radius:8px;flex-shrink:0">
-          <img src="${icon}" style="width:100%;height:100%;object-fit:contain">
-        </div>
-        <div>
-          <div class="perfil-kin-nome">${nomeKin}</div>
-          <div class="perfil-kin-sub">${tomNome}${siData.maya?' · '+siData.maya:''}</div>
-          ${siData.acao?`<div style="font-size:.62rem;color:var(--green2);text-transform:uppercase;letter-spacing:.07em;margin-top:.2rem">${siData.acao}</div>`:''}
-        </div>
-      </div>
-      ${frase?`<div style="font-style:italic;color:var(--text);font-size:.85rem;border-left:2px solid var(--gold3);padding:.6rem .8rem;background:rgba(165,124,0,.06);margin:.6rem 0;line-height:1.7">"${frase}"</div>`:''}
-      ${tomData.verbo?`
-      <div style="background:var(--bg2);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0;border-left:2px solid var(--green3)">
-        <div style="font-family:Cinzel;font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.3rem">Tom ${tomIdx} · ${tomNome}</div>
-        <div style="font-size:.83rem;color:var(--text2)">${tomData.verbo}</div>
-        ${tomData.pergunta?`<div style="font-size:.78rem;color:var(--text3);margin-top:.2rem">${tomData.pergunta}</div>`:''}
-      </div>`:''}
-      ${orac.guia?`
-      <div style="margin:.6rem 0">
-        <div style="font-family:Cinzel;font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Oráculo do Destino</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem;font-size:.75rem">
-          ${[['Guia',orac.guia],['Análogo',orac.analogo||''],['Antípoda',orac.antipoda||''],['Oculto',orac.oculto||'']].map(([label,val])=>`
-          <div style="background:var(--bg2);border-radius:5px;padding:.5rem .7rem">
-            <span style="color:var(--text3);font-size:.58rem;text-transform:uppercase">${label}</span><br>
-            <span style="color:var(--text)">${val}</span>
-          </div>`).join('')}
-        </div>
-      </div>`:''}
-      ${siData.desc?`<div style="font-size:.82rem;color:var(--text2);line-height:1.75;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border)">${siData.desc}</div>`:''}
-    </div>
-    <button class="btn-limpar-natal" onclick="limparKinNatal()">Remover</button>
-  `;
+  // Busca desc do selo pelo nome base (inclui variações como "Enlaçador de Mundos")
+  const seloEntry = Object.values(DATA.selos||{}).find(s => nomeKin.includes(getSeloBase(s.nome||''))) || {};
+
+  const html = '<div class="perfil-kin-card">'
+
+    // ── Cabeçalho ──
+    + '<div class="perfil-kin-label">Kin '+k+' de 260 · '+dataFmt+'</div>'
+
+    // ── Ícone centrado + nome ──
+    + '<div style="text-align:center;padding:.8rem 0 .4rem">'
+    +   '<div class="selo-icon selo-'+cor+'" style="width:72px;height:72px;border-radius:10px;margin:0 auto .7rem">'
+    +     '<img src="'+icon+'" style="width:100%;height:100%;object-fit:contain">'
+    +   '</div>'
+    +   '<div class="perfil-kin-nome">'+nomeKin+'</div>'
+    +   '<div class="perfil-kin-sub" style="margin-top:.2rem">'+tomNome+(seloEntry.maya?' · '+seloEntry.maya:'')+'</div>'
+    +   (seloEntry.acao ? '<div style="font-size:.62rem;color:var(--green2);text-transform:uppercase;letter-spacing:.07em;margin-top:.25rem">'+seloEntry.acao+'</div>' : '')
+    + '</div>'
+
+    // ── Frase ──
+    + (frase ? '<div style="font-style:italic;color:var(--text);font-size:.88rem;border-left:2px solid var(--gold3);padding:.65rem .9rem;background:rgba(165,124,0,.06);margin:.5rem 0;line-height:1.8">&ldquo;'+frase+'&rdquo;</div>' : '')
+
+    // ── Tom ──
+    + (tomData.verbo ? '<div style="background:var(--bg2);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0;border-left:2px solid var(--green3)">'
+    +   '<div style="font-family:Cinzel;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Tom '+tomIdx+' · '+tomNome+'</div>'
+    +   '<div style="font-size:.85rem;color:var(--text2)">'+tomData.verbo+'</div>'
+    +   (tomData.pergunta ? '<div style="font-size:.8rem;color:var(--text3);margin-top:.25rem;font-style:italic">'+tomData.pergunta+'</div>' : '')
+    + '</div>' : '')
+
+    // ── Oráculo ──
+    + (orac.guia ? '<div style="margin:.6rem 0">'
+    +   '<div style="font-family:Cinzel;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Oráculo do Destino</div>'
+    +   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.4rem">'
+    +   [['Guia',orac.guia],['Análogo',orac.analogo||''],['Antípoda',orac.antipoda||''],['Oculto',orac.oculto||'']].map(function(pair){
+          return '<div style="background:var(--bg2);border-radius:5px;padding:.5rem .7rem">'
+            +'<div style="font-size:.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">'+pair[0]+'</div>'
+            +'<div style="font-size:.82rem;color:var(--text)">'+pair[1]+'</div>'
+            +'</div>';
+        }).join('')
+    +   '</div>'
+    + '</div>' : '')
+
+    // ── Descrição do selo ──
+    + (seloEntry.desc ? '<div style="font-size:.83rem;color:var(--text2);line-height:1.8;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border)">'+seloEntry.desc+'</div>' : '')
+
+    + '</div>'
+    + '<button class="btn-limpar-natal" onclick="limparKinNatal()">Remover</button>';
+
+  document.getElementById('perfil-kin-salvo').innerHTML = html;
 }
 
 async function salvarKinNatal() {
