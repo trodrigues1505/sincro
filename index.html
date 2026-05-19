@@ -164,6 +164,54 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .lua-circular .center-num{font-size:18px;dominant-baseline:central}
 .lua-circular .center-sub{font-size:5px;fill:var(--text3);letter-spacing:.1em;dominant-baseline:central}
 
+
+/* ── PERFIL ── */
+.perfil-hero{text-align:center;padding:1.5rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2)}
+.perfil-avatar{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);margin:0 auto .7rem;display:block}
+.perfil-nome{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold2);margin-bottom:.2rem}
+.perfil-email{font-size:.72rem;color:var(--text3);margin-bottom:1rem}
+.perfil-kin-card{background:var(--bg2);border:1px solid var(--border-g);border-radius:8px;padding:1rem;text-align:center;margin-bottom:.6rem}
+.perfil-kin-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.perfil-kin-nome{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:.2rem}
+.perfil-kin-sub{font-size:.72rem;color:var(--text2)}
+.perfil-sem-kin{color:var(--text3);font-style:italic;font-size:.88rem;padding:1.2rem 0}
+.btn-salvar-natal{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold2);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;margin-top:.6rem}
+.btn-salvar-natal:hover{background:rgba(165,124,0,.15);border-color:var(--gold2)}
+.btn-limpar-natal{background:transparent;border:1px solid rgba(138,32,24,.35);border-radius:5px;color:rgba(138,32,24,.8);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;margin-top:.4rem}
+.btn-limpar-natal:hover{background:rgba(138,32,24,.12)}
+.notif-banner{background:var(--card2);border:1px solid var(--border-g);border-radius:8px;padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-bottom:.6rem}
+.notif-banner p{color:var(--text2);font-size:.82rem;flex:1}
+.btn-notif{background:var(--green);border:none;border-radius:5px;color:#fff;font-family:'Cinzel',serif;font-size:.63rem;padding:7px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .2s;white-space:nowrap}
+.btn-notif:hover{background:var(--green2)}
+.btn-notif.ativo{background:transparent;border:1px solid var(--green3);color:var(--green2)}
+
+/* ── SELOS ── */
+.selos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-top:.3rem}
+.selo-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.9rem .8rem;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s}
+.selo-card:hover{border-color:var(--border-g);transform:translateY(-2px)}
+.selo-card-icon{width:48px;height:48px;border-radius:7px;margin:0 auto .5rem;overflow:hidden;border:1px solid}
+.selo-card-nome{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold2);margin-bottom:.2rem}
+.selo-card-acao{font-size:.62rem;color:var(--text3);font-style:italic}
+
+/* ── MODAL SELO ── */
+.modal-selo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.modal-selo.active{display:flex}
+.modal-selo-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:1.5rem;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;animation:fadeUp .25s both}
+.modal-selo-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.modal-selo-icon{width:64px;height:64px;border-radius:9px;overflow:hidden;border:1px solid;flex-shrink:0}
+.modal-selo-titulo{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:.2rem}
+.modal-selo-acao{font-size:.72rem;color:var(--green2);text-transform:uppercase;letter-spacing:.08em}
+.modal-selo-maya{font-size:.68rem;color:var(--text3);margin-top:.15rem}
+.modal-selo-desc{color:var(--text);font-size:.88rem;line-height:1.75}
+.modal-selo-close{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
+.modal-selo-close:hover{border-color:var(--text2);color:var(--text2)}
+.modal-selo-box{position:relative}
+
+/* ── SHARE ── */
+.btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
+.export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
+
 @media (max-width:600px){
   body{font-size:15px}.container{padding:.75rem .65rem}h1{font-size:1.2rem}
   .user-bar{padding:.6rem .7rem;flex-direction:column;align-items:flex-start}
@@ -232,6 +280,8 @@ Entrar com Google
 <div class="tabs">
 <button class="tab active" onclick="switchTab('dia')">Kin do Dia</button>
 <button class="tab" onclick="switchTab('natal')">Kin Natal</button>
+<button class="tab" onclick="switchTab('selos')">Selos</button>
+<button class="tab" onclick="switchTab('perfil')">Perfil</button>
 </div>
 
 <div id="export-area">
@@ -252,6 +302,60 @@ Entrar com Google
 </div>
 </div>
 
+<!-- ABA SELOS -->
+<div id="tab-selos" class="tab-content">
+<div class="section">
+  <div class="section-title">Os 20 Selos Solares</div>
+  <div class="selos-grid" id="selos-grid"></div>
+</div>
+</div>
+
+<!-- ABA PERFIL -->
+<div id="tab-perfil" class="tab-content">
+  <div class="section perfil-hero">
+    <img id="perfil-avatar" class="perfil-avatar" src="" alt="">
+    <div class="perfil-nome" id="perfil-nome"></div>
+    <div class="perfil-email" id="perfil-email"></div>
+  </div>
+
+  <!-- NOTIFICAÇÕES -->
+  <div class="section">
+    <div class="section-title">Notificação Diária</div>
+    <div class="notif-banner">
+      <p>Receba o Kin do dia todo manhã no seu celular.</p>
+      <button class="btn-notif" id="btn-notif" onclick="toggleNotificacao()">Ativar</button>
+    </div>
+  </div>
+
+  <!-- KIN NATAL SALVO -->
+  <div class="section">
+    <div class="section-title">Meu Kin Natal</div>
+    <div id="perfil-kin-salvo"></div>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.8rem">
+      <label style="color:var(--text2);font-size:.85rem;font-style:italic">Data de Nascimento</label>
+      <input type="date" id="perfil-nasc-inp">
+      <button class="btn-salvar-natal" onclick="salvarKinNatal()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- MODAL DETALHES DO SELO -->
+<div class="modal-selo" id="modal-selo">
+  <div class="modal-selo-box">
+    <button class="modal-selo-close" onclick="fecharModalSelo()">✕ Fechar</button>
+    <div class="modal-selo-header">
+      <div class="modal-selo-icon" id="modal-selo-icon"></div>
+      <div>
+        <div class="modal-selo-titulo" id="modal-selo-titulo"></div>
+        <div class="modal-selo-acao" id="modal-selo-acao"></div>
+        <div class="modal-selo-maya" id="modal-selo-maya"></div>
+      </div>
+    </div>
+    <div class="modal-selo-desc" id="modal-selo-desc"></div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
@@ -389,6 +493,7 @@ auth.onAuthStateChanged(async u => {
           document.getElementById('user-role').textContent = d.role || 'usuário';
           if (d.role === 'admin') document.getElementById('btn-admin').classList.remove('hidden');
           loadToday();
+          carregarPerfil(u);
         } else {
           document.getElementById('login-error').textContent = '⏳ Aguarde autorização.';
           document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
@@ -610,6 +715,10 @@ function kinHTML(kinNum) {
     <div class="kin-num">Kin ${kinNum} · 260</div>
   </div>
   ${fraseCurta ? `<div class="kin-frase">"${fraseCurta}"</div>` : ''}
+  <div class="export-btns">
+    <button class="btn-share" onclick="compartilharKin()">⬆ Compartilhar</button>
+    <button class="btn-share" onclick="exportPNG()" style="border-color:var(--border);color:var(--text2)">↓ Baixar PNG</button>
+  </div>
 </div>
 
 <div class="section anim-2">
@@ -709,6 +818,242 @@ async function calcNatal() {
   const k = dateToKin(dt);
   document.getElementById('res-natal').innerHTML = kinHTML(k);
   document.getElementById('res-natal').classList.remove('hidden');
+}
+
+
+
+// ══════════════════════════════════════════════════
+// COMPARTILHAR KIN
+// ══════════════════════════════════════════════════
+async function compartilharKin() {
+  const area = document.getElementById('export-area');
+  const canvas = await html2canvas(area, { backgroundColor: '#071209', scale: 2 });
+  canvas.toBlob(async (blob) => {
+    const file = new File([blob], 'meu-kin.png', { type: 'image/png' });
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: 'Sincronário das 13 Luas',
+        text: 'Meu Kin do dia 🌀',
+        files: [file]
+      });
+    } else {
+      // fallback: download
+      const link = document.createElement('a');
+      link.download = `kin-${new Date().toISOString().split('T')[0]}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════
+// PÁGINA DE SELOS
+// ══════════════════════════════════════════════════
+function renderSelos() {
+  const grid = document.getElementById('selos-grid');
+  if (!grid || grid.children.length > 0) return;
+  const SELOS_ORDEM = [
+    'Dragão','Vento','Noite','Semente','Serpente',
+    'Enlaçador','Mão','Estrela','Lua','Cão',
+    'Macaco','Humano','Caminhante','Mago','Águia',
+    'Guerreiro','Terra','Espelho','Tormenta','Sol'
+  ];
+  const CORES = ['red','white','blue','yellow'];
+  SELOS_ORDEM.forEach((nome, i) => {
+    const cor = CORES[i % 4];
+    // Buscar dados do JSON
+    const seloData = Object.values(DATA.selos || {}).find(s => s.nome && s.nome.includes(nome)) || {};
+    const nomeCompleto = seloData.nome || nome;
+    const acao = seloData.acao || '';
+    const iconURL = getSeloIconURL(nomeCompleto + ' ' + (cor === 'red' ? 'Vermelho' : cor === 'white' ? 'Branco' : cor === 'blue' ? 'Azul' : 'Amarelo'));
+    const card = document.createElement('div');
+    card.className = 'selo-card';
+    card.innerHTML = `
+      <div class="selo-card-icon selo-${cor}" style="width:48px;height:48px">
+        <img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.style.display='none'">
+      </div>
+      <div class="selo-card-nome">${nome}</div>
+      <div class="selo-card-acao">${acao}</div>
+    `;
+    card.onclick = () => abrirModalSelo(nomeCompleto, cor, iconURL, seloData);
+    grid.appendChild(card);
+  });
+}
+
+function abrirModalSelo(nome, cor, iconURL, dados) {
+  const modal = document.getElementById('modal-selo');
+  document.getElementById('modal-selo-icon').className = `modal-selo-icon selo-${cor}`;
+  document.getElementById('modal-selo-icon').innerHTML = `<img src="${iconURL}" style="width:100%;height:100%;object-fit:contain">`;
+  document.getElementById('modal-selo-titulo').textContent = dados.nome || nome;
+  document.getElementById('modal-selo-acao').textContent = dados.acao || '';
+  document.getElementById('modal-selo-maya').textContent = dados.maya ? `Glifo Maia: ${dados.maya}` : '';
+  document.getElementById('modal-selo-desc').textContent = dados.desc || '';
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModalSelo() {
+  document.getElementById('modal-selo').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Fechar modal clicando fora
+document.getElementById('modal-selo').addEventListener('click', function(e) {
+  if (e.target === this) fecharModalSelo();
+});
+
+// ══════════════════════════════════════════════════
+// PERFIL — KIN NATAL SALVO NO FIRESTORE
+// ══════════════════════════════════════════════════
+let currentUserUID = null;
+
+async function carregarPerfil(user) {
+  currentUserUID = user.uid;
+  document.getElementById('perfil-avatar').src = user.photoURL || '';
+  document.getElementById('perfil-nome').textContent = user.displayName || '';
+  document.getElementById('perfil-email').textContent = user.email || '';
+
+  // Carregar kin natal salvo
+  try {
+    const doc = await db.collection('users').doc(user.uid).get();
+    const data = doc.data() || {};
+    if (data.kinNatalData) {
+      document.getElementById('perfil-nasc-inp').value = data.kinNatalData;
+      mostrarKinNatalSalvo(data.kinNatalData, data.kinNatalNum);
+    } else {
+      document.getElementById('perfil-kin-salvo').innerHTML =
+        '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
+    }
+  } catch(e) {
+    console.warn('Erro ao carregar perfil:', e);
+  }
+
+  // Estado da notificação
+  atualizarBotaoNotif();
+}
+
+function mostrarKinNatalSalvo(data, kinNum) {
+  const dt = new Date(data + 'T12:00:00');
+  const k = kinNum || dateToKin(dt);
+  const kData = DATA.kins ? DATA.kins[k] : null;
+  const nome = kData ? kData.selo : `Kin ${k}`;
+  const tom = kData ? kData.tom_nome : '';
+  const cor = kData ? getSeloCor(kData.selo) : 'yellow';
+  const iconURL = kData ? getSeloIconURL(kData.selo) : '';
+  const [y, m, d] = data.split('-');
+  const dataFmt = `${d}/${m}/${y}`;
+
+  document.getElementById('perfil-kin-salvo').innerHTML = `
+    <div class="perfil-kin-card">
+      <div class="perfil-kin-label">Kin ${k} de 260 · ${dataFmt}</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:.8rem;margin:.5rem 0">
+        <div class="selo-icon selo-${cor}" style="width:52px;height:52px;border-radius:7px">
+          <img src="${iconURL}" style="width:100%;height:100%;object-fit:contain">
+        </div>
+        <div>
+          <div class="perfil-kin-nome">${nome}</div>
+          <div class="perfil-kin-sub">${tom}</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-limpar-natal" onclick="limparKinNatal()">Remover</button>
+  `;
+}
+
+async function salvarKinNatal() {
+  if (!currentUserUID) return;
+  const v = document.getElementById('perfil-nasc-inp').value;
+  if (!v) return;
+  const dt = new Date(v + 'T12:00:00');
+  const k = dateToKin(dt);
+  try {
+    await db.collection('users').doc(currentUserUID).update({
+      kinNatalData: v,
+      kinNatalNum: k
+    });
+    mostrarKinNatalSalvo(v, k);
+    // Também atualizar a aba Kin Natal
+    document.getElementById('nasc-inp').value = v;
+    await calcNatal();
+  } catch(e) {
+    alert('Erro ao salvar: ' + e.message);
+  }
+}
+
+async function limparKinNatal() {
+  if (!currentUserUID) return;
+  await db.collection('users').doc(currentUserUID).update({
+    kinNatalData: firebase.firestore.FieldValue.delete(),
+    kinNatalNum: firebase.firestore.FieldValue.delete()
+  });
+  document.getElementById('perfil-kin-salvo').innerHTML =
+    '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
+  document.getElementById('perfil-nasc-inp').value = '';
+}
+
+// ══════════════════════════════════════════════════
+// NOTIFICAÇÕES PUSH (PWA)
+// ══════════════════════════════════════════════════
+function atualizarBotaoNotif() {
+  const btn = document.getElementById('btn-notif');
+  if (!btn) return;
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+    btn.textContent = 'Não disponível';
+    btn.disabled = true;
+    btn.classList.add('ativo');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    btn.textContent = '✓ Ativado';
+    btn.classList.add('ativo');
+  } else if (Notification.permission === 'denied') {
+    btn.textContent = 'Bloqueado';
+    btn.disabled = true;
+    btn.classList.add('ativo');
+  } else {
+    btn.textContent = 'Ativar';
+    btn.classList.remove('ativo');
+  }
+}
+
+async function toggleNotificacao() {
+  if (!('Notification' in window)) {
+    alert('Seu navegador não suporta notificações.');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    alert('Notificações já estão ativas! Para desativar, acesse as configurações do seu navegador.');
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    await agendarNotificacaoDiaria();
+    atualizarBotaoNotif();
+    // Mostrar notificação de teste
+    new Notification('🌀 Sincronário das 13 Luas', {
+      body: 'Notificações ativadas! Você receberá o Kin do dia toda manhã.',
+      icon: './icon-192.png',
+      badge: './icon-192.png'
+    });
+  }
+  atualizarBotaoNotif();
+}
+
+async function agendarNotificacaoDiaria() {
+  // Verifica suporte a Background Sync / periodic sync
+  if (!('serviceWorker' in navigator)) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    // Periodic Background Sync (Chrome Android)
+    if ('periodicSync' in reg) {
+      const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
+      if (status.state === 'granted') {
+        await reg.periodicSync.register('kin-diario', { minInterval: 24 * 60 * 60 * 1000 });
+      }
+    }
+  } catch(e) {
+    console.log('Periodic sync não disponível:', e);
+  }
 }
 
 async function loadToday() {
