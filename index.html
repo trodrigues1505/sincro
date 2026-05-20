@@ -2,10 +2,10 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Sincronário das 13 Luas</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#009739">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="13 Luas">
@@ -19,125 +19,75 @@
   --gold:#A57C00;--gold2:#c9a030;--gold3:#e0c070;
   --border:rgba(0,151,57,.20);--border2:rgba(0,151,57,.40);--border-g:rgba(165,124,0,.28);
   --text:#c0dcc4;--text2:#5a8860;--text3:#2e5034;
-  --red:#8a2018;--white:#a8b890;--blue:#1a4860;
-  --radius:8px;
+  --red:#8a2018;--white:#a8b890;--blue:#1a4860;--radius:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:16px;line-height:1.65;min-height:100vh}
-
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
 .anim-1{animation:fadeUp .28s .00s both}.anim-2{animation:fadeUp .28s .08s both}
 .anim-3{animation:fadeUp .28s .16s both}.anim-4{animation:fadeUp .28s .24s both}
-.anim-5{animation:fadeUp .28s .32s both}
-
-.skel{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:400px 100%;animation:shimmer 1.4s infinite;border-radius:6px}
-.skel-title{height:28px;width:65%;margin:0 auto 12px}
-.skel-sub{height:14px;width:40%;margin:0 auto 20px}
-.skel-frase{height:60px;width:100%;margin-top:16px}
-.skel-row{height:16px;width:100%;margin-bottom:8px}
-.skel-row.w70{width:70%}
-
 .login-container{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:max(1.5rem,env(safe-area-inset-top,0px)) 1.5rem 1.5rem;gap:1.8rem}
-.login-logo{width:96px;height:96px;border-radius:20px;animation:fadeUp .35s both;opacity:.95;box-shadow:0 0 40px rgba(0,151,57,.18)}
+.login-logo{width:88px;height:88px;border-radius:18px;animation:fadeUp .35s both;box-shadow:0 0 40px rgba(0,151,57,.18)}
 .login-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:2rem 2.4rem 2.4rem;max-width:360px;width:100%;text-align:center;animation:fadeUp .4s .08s both}
 .login-box h1{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold2);margin-bottom:.3rem;letter-spacing:.06em}
 .login-divider{width:24px;height:1px;background:var(--gold);margin:.9rem auto;opacity:.5}
 .login-box p{color:var(--text3);margin-bottom:1.7rem;font-size:.83rem}
-.btn-google{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:10px 20px;font-family:'Cinzel',serif;font-size:.76rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:border-color .2s,color .2s;letter-spacing:.04em}
-.btn-google:hover{border-color:var(--green2);color:var(--text)}
+.btn-google{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:10px 20px;font-family:'Cinzel',serif;font-size:.76rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:border-color .2s;letter-spacing:.04em}
+.btn-google:hover{border-color:var(--green2)}
 .error-msg{background:rgba(138,32,24,.12);border:1px solid rgba(138,32,24,.3);color:#b06858;padding:.7rem .9rem;border-radius:6px;margin-top:1rem;font-size:.82rem}
 .loading{color:var(--text3);margin-top:1rem;font-style:italic;font-size:.84rem}
-
 .container{max-width:960px;margin:0 auto;padding:max(1rem,env(safe-area-inset-top,0px)) 1rem 1rem;display:none}
 .container.active{display:block}
 h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:center;margin-bottom:.2rem;letter-spacing:.06em}
-
-.user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.9rem;margin-top:env(safe-area-inset-top,0px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px}
+.user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.9rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px}
 .user-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--green3)}
 .btn-logout,.btn-admin,.btn-export{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text2);padding:5px 11px;font-family:'Cinzel',serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
 .btn-logout:hover,.btn-export:hover{border-color:var(--green3);color:var(--text2)}
 .btn-admin{border-color:var(--border-g);color:var(--gold)}
 .btn-admin:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
-
 .tabs{display:flex;margin-bottom:.9rem;border-bottom:1px solid var(--border)}
 .tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-family:'Cinzel',serif;font-size:.62rem;padding:8px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.09em;transition:color .2s,border-color .2s;margin-bottom:-1px}
-.tab:hover{color:var(--text2)}
+.tab:hover{color:var(--text)}
 .tab.active{color:var(--gold2);border-bottom-color:var(--gold)}
 .tab-content{display:none}.tab-content.active{display:block}
-
 .section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:.6rem}
 .section-title{font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.13em;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border-g)}
-
-.kin-hero{text-align:center;padding:1.4rem 1.3rem 1.2rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2);position:relative;overflow:hidden}
+.kin-hero{text-align:center;padding:1.8rem 1.3rem 1.4rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2);position:relative;overflow:hidden}
 .kin-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green3),var(--green2),var(--green3),transparent)}
 .kin-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.45}
 .kin-num{font-family:'Cinzel',serif;font-size:.58rem;color:rgba(165,124,0,.7);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.5rem}
-.kin-title{font-family:'Cinzel',serif;font-size:1.4rem;margin:.25rem 0 .35rem;letter-spacing:.03em;color:var(--gold2);line-height:1.2}
+.kin-title{font-family:'Cinzel',serif;font-size:1.6rem;margin:.25rem 0 .45rem;letter-spacing:.03em;color:var(--gold2);line-height:1.2}
 .kin-subtitle{color:rgba(165,124,0,.65);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em}
 .kin-frase{color:var(--text);font-size:.9rem;font-style:italic;margin:.9rem auto 0;padding:.85rem 1.1rem;background:rgba(0,151,57,.08);border-left:2px solid var(--gold3);max-width:640px;line-height:1.9}
-
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px;margin:.8rem 0}
 .card{background:var(--bg2);border-radius:6px;padding:.85rem .95rem;border:1px solid var(--border);transition:border-color .2s}
 .card:hover{border-color:var(--border2)}
 .card-label{font-size:.58rem;color:var(--text2);text-transform:uppercase;letter-spacing:.11em;margin-bottom:4px}
 .card-val{font-family:'Cinzel',serif;font-size:.84rem;color:var(--gold3)}
-
 .selo-icon{border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid;margin:0 auto .5rem;overflow:hidden}
 .selo-red,.selo-vermelho,.selo-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
 .selo-white,.selo-branco,.selo-branca{background:rgba(168,184,144,.07);border-color:rgba(168,184,144,.2)}
 .selo-blue,.selo-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
-
-/* ORÁCULO SVG */
-/* ORÁCULO — grid 3×3 sem position absolute */
-@keyframes oraculoPulse{0%,100%{opacity:.2}50%{opacity:.5}}
-.oraculo-wrap{
-  display:grid;
-  grid-template-columns:1fr 90px 1fr;
-  grid-template-rows:auto auto auto;
-  gap:8px;
-  align-items:center;
-  justify-items:center;
-  max-width:400px;
-  margin:.8rem auto;
-  position:relative;
-}
-/* Linhas decorativas via pseudo-elementos no center */
-.oraculo-wrap::before{
-  content:'';position:absolute;
-  top:50%;left:50%;transform:translate(-50%,-50%);
-  width:280px;height:280px;border-radius:50%;
-  border:1px solid rgba(165,124,0,.22);
-  pointer-events:none;z-index:0;
-  animation:oraculoPulse 4s ease-in-out infinite;
-}
-.oraculo-cell-top   {grid-column:2;grid-row:1;z-index:1}
-.oraculo-cell-left  {grid-column:1;grid-row:2;z-index:1}
-.oraculo-cell-center{grid-column:2;grid-row:2;z-index:1}
-.oraculo-cell-right {grid-column:3;grid-row:2;z-index:1}
-.oraculo-cell-bottom{grid-column:2;grid-row:3;z-index:1}
+.oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
+.oraculo-wrap::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:270px;height:270px;border-radius:50%;border:1px solid rgba(165,124,0,.2);pointer-events:none}
+.oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
+.oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
+.oraculo-cell-bottom{grid-column:2;grid-row:3}
 .oraculo-item{text-align:center}
 .oraculo-central .selo-icon{width:82px;height:82px;border-radius:10px}
-.oraculo-side .selo-icon   {width:60px;height:60px;border-radius:7px}
+.oraculo-side .selo-icon{width:60px;height:60px;border-radius:7px}
 .oraculo-nome{font-size:.54rem;margin-top:.3rem;color:var(--text2);font-family:'Cinzel',serif;letter-spacing:.04em;line-height:1.3}
-
-/* ONDA */
 .onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
-.onda-L{display:grid;grid-template-columns:repeat(4,var(--cell));grid-template-rows:repeat(4,var(--cell));--cell:56px;gap:4px}
-.onda-L .onda-kin:nth-child(1){grid-column:1;grid-row:1}
-.onda-L .onda-kin:nth-child(2){grid-column:2;grid-row:1}
-.onda-L .onda-kin:nth-child(3){grid-column:3;grid-row:1}
-.onda-L .onda-kin:nth-child(4){grid-column:4;grid-row:1}
-.onda-L .onda-kin:nth-child(5){grid-column:1;grid-row:2}
-.onda-L .onda-kin:nth-child(6){grid-column:1;grid-row:3}
-.onda-L .onda-kin:nth-child(7){grid-column:1;grid-row:4}
-.onda-L .onda-kin:nth-child(8){grid-column:2;grid-row:4}
-.onda-L .onda-kin:nth-child(9){grid-column:3;grid-row:4}
-.onda-L .onda-kin:nth-child(10){grid-column:4;grid-row:2}
-.onda-L .onda-kin:nth-child(11){grid-column:4;grid-row:3}
-.onda-L .onda-kin:nth-child(12){grid-column:4;grid-row:4}
+.onda-L{display:grid;grid-template-columns:repeat(4,var(--cell));grid-template-rows:repeat(4,var(--cell));--cell:58px;gap:4px}
+.onda-L .onda-kin:nth-child(1){grid-column:1;grid-row:1}.onda-L .onda-kin:nth-child(2){grid-column:2;grid-row:1}
+.onda-L .onda-kin:nth-child(3){grid-column:3;grid-row:1}.onda-L .onda-kin:nth-child(4){grid-column:4;grid-row:1}
+.onda-L .onda-kin:nth-child(5){grid-column:1;grid-row:2}.onda-L .onda-kin:nth-child(6){grid-column:1;grid-row:3}
+.onda-L .onda-kin:nth-child(7){grid-column:1;grid-row:4}.onda-L .onda-kin:nth-child(8){grid-column:2;grid-row:4}
+.onda-L .onda-kin:nth-child(9){grid-column:3;grid-row:4}.onda-L .onda-kin:nth-child(10){grid-column:4;grid-row:2}
+.onda-L .onda-kin:nth-child(11){grid-column:4;grid-row:3}.onda-L .onda-kin:nth-child(12){grid-column:4;grid-row:4}
 .onda-L .onda-kin:nth-child(13){grid-column:2/4;grid-row:2/4;width:auto;height:auto}
 .onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s}
 .onda-kin:hover{transform:scale(1.09)}
@@ -146,12 +96,10 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .cor-white,.cor-branco,.cor-branca{background:rgba(168,184,144,.05);border-color:rgba(168,184,144,.18)}
 .cor-blue,.cor-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .cor-yellow,.cor-amarelo,.cor-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
-
 .praticas-list{list-style:none;padding:0}
 .praticas-list li{padding:.6rem .85rem;margin-bottom:4px;background:var(--bg2);border-radius:5px;border-left:2px solid var(--green);display:flex;align-items:flex-start;gap:8px;font-size:.86rem;line-height:1.5;transition:border-color .2s}
 .praticas-list li:hover{border-left-color:var(--gold)}
 .praticas-list li::before{content:'·';color:var(--green2);font-size:1.1rem;flex-shrink:0;line-height:1.3}
-
 .hidden{display:none}
 input[type="date"]{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 10px;font-family:inherit;color-scheme:dark;font-size:.87rem;transition:border-color .2s}
 input[type="date"]:focus{outline:none;border-color:var(--green)}
@@ -159,28 +107,42 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .btn-calc:hover{background:var(--green);color:#fff;border-color:var(--green)}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:.6rem}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.55rem}
-.tooltip{position:relative;cursor:help}
-.tooltip:hover::after{content:attr(data-tooltip);position:absolute;bottom:calc(100%+5px);left:50%;transform:translateX(-50%);background:var(--card2);color:var(--text2);padding:.3rem .7rem;border-radius:4px;border:1px solid var(--border);white-space:nowrap;z-index:1000;font-size:.63rem}
 .info-text{color:var(--text);font-size:.82rem;line-height:1.65;margin:.28rem 0}
 .info-box{background:var(--bg2);padding:.75rem .85rem;border-radius:5px;border-left:2px solid var(--gold);margin:.55rem 0}
-
-/* LUA CIRCULAR SVG */
 .lua-circular{width:100%;max-width:260px;margin:0 auto;display:block}
-.lua-circular .seg{fill:var(--bg2);stroke-width:1;transition:fill .2s,stroke .2s}
-.lua-circular .seg.red   {stroke:rgba(138,32,24,.38)}
-.lua-circular .seg.white {stroke:rgba(168,184,144,.2)}
-.lua-circular .seg.blue  {stroke:rgba(26,72,96,.38)}
-.lua-circular .seg.yellow{stroke:rgba(165,124,0,.32)}
+.lua-circular .seg{fill:var(--bg2);stroke-width:1;transition:fill .2s}
+.lua-circular .seg.red,.lua-circular .seg.vermelho{stroke:rgba(138,32,24,.38)}
+.lua-circular .seg.white,.lua-circular .seg.branco{stroke:rgba(168,184,144,.2)}
+.lua-circular .seg.blue,.lua-circular .seg.azul{stroke:rgba(26,72,96,.38)}
+.lua-circular .seg.yellow,.lua-circular .seg.amarelo{stroke:rgba(165,124,0,.32)}
 .lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
-.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:6px;fill:var(--text3);pointer-events:none;text-anchor:middle;dominant-baseline:central}
+.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:6px;fill:var(--text3);text-anchor:middle;dominant-baseline:central}
 .lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
-.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:5px;fill:var(--text3);text-transform:uppercase;letter-spacing:.1em;text-anchor:middle;dominant-baseline:central}
+.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:5px;fill:var(--text3);text-transform:uppercase;text-anchor:middle;dominant-baseline:central}
 .lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
 .lua-circular .center-num{font-size:18px;dominant-baseline:central}
 .lua-circular .center-sub{font-size:5px;fill:var(--text3);letter-spacing:.1em;dominant-baseline:central}
-
-
-/* ── PERFIL ── */
+.btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
+.btn-cal{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-cal:hover{border-color:var(--green);color:var(--green)}
+.export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
+.selos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem;margin-top:.3rem}
+.selo-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.9rem .8rem;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s}
+.selo-card:hover{border-color:var(--border-g);transform:translateY(-2px)}
+.selo-card-nome{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold2);margin-bottom:.2rem;margin-top:.4rem}
+.selo-card-acao{font-size:.62rem;color:var(--text3);font-style:italic}
+.modal-selo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.modal-selo.active{display:flex}
+.modal-selo-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:1.5rem;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;animation:fadeUp .25s both;position:relative}
+.modal-selo-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.modal-selo-icon{width:64px;height:64px;border-radius:9px;overflow:hidden;border:1px solid;flex-shrink:0}
+.modal-selo-titulo{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:.2rem}
+.modal-selo-acao{font-size:.72rem;color:var(--green2);text-transform:uppercase;letter-spacing:.08em}
+.modal-selo-maya{font-size:.68rem;color:var(--text3);margin-top:.15rem}
+.modal-selo-desc{color:var(--text);font-size:.88rem;line-height:1.75}
+.modal-selo-close{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
+.modal-selo-close:hover{border-color:var(--text2);color:var(--text2)}
 .perfil-hero{text-align:center;padding:1.5rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2)}
 .perfil-avatar{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);margin:0 auto .7rem;display:block}
 .perfil-nome{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold2);margin-bottom:.2rem}
@@ -199,139 +161,75 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .btn-notif{background:var(--green);border:none;border-radius:5px;color:#fff;font-family:'Cinzel',serif;font-size:.63rem;padding:7px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .2s;white-space:nowrap}
 .btn-notif:hover{background:var(--green2)}
 .btn-notif.ativo{background:transparent;border:1px solid var(--green3);color:var(--green2)}
-
-/* ── SELOS ── */
-.selos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-top:.3rem}
-.selo-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.9rem .8rem;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s}
-.selo-card:hover{border-color:var(--border-g);transform:translateY(-2px)}
-.selo-card-icon{width:48px;height:48px;border-radius:7px;margin:0 auto .5rem;overflow:hidden;border:1px solid}
-.selo-card-nome{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold2);margin-bottom:.2rem}
-.selo-card-acao{font-size:.62rem;color:var(--text3);font-style:italic}
-
-/* ── MODAL SELO ── */
-.modal-selo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;align-items:center;justify-content:center;padding:1rem}
-.modal-selo.active{display:flex}
-.modal-selo-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:1.5rem;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;animation:fadeUp .25s both}
-.modal-selo-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
-.modal-selo-icon{width:64px;height:64px;border-radius:9px;overflow:hidden;border:1px solid;flex-shrink:0}
-.modal-selo-titulo{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:.2rem}
-.modal-selo-acao{font-size:.72rem;color:var(--green2);text-transform:uppercase;letter-spacing:.08em}
-.modal-selo-maya{font-size:.68rem;color:var(--text3);margin-top:.15rem}
-.modal-selo-desc{color:var(--text);font-size:.88rem;line-height:1.75}
-.modal-selo-close{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
-.modal-selo-close:hover{border-color:var(--text2);color:var(--text2)}
-.modal-selo-box{position:relative}
-
-/* ── SHARE ── */
-.btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
-.btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
-.export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
-
-
-/* ── ONBOARDING ── */
 .onboarding{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .onboarding.active{display:flex}
-.onboarding-box{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:2.4rem 2rem;max-width:420px;width:100%;text-align:center;animation:fadeUp .3s both;position:relative}
+.onboarding-box{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:2.4rem 2rem;max-width:420px;width:100%;text-align:center;animation:fadeUp .3s both}
 .onboarding-step{display:none}.onboarding-step.active{display:block}
 .onboarding-emoji{font-size:2.8rem;margin-bottom:1rem;display:block}
-.onboarding-titulo{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.04em}
+.onboarding-titulo{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:.7rem}
 .onboarding-texto{color:var(--text2);font-size:.9rem;line-height:1.75;margin-bottom:1.5rem}
 .onboarding-dots{display:flex;justify-content:center;gap:6px;margin-bottom:1.2rem}
 .onboarding-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:background .2s}
 .onboarding-dot.active{background:var(--green)}
 .onboarding-btns{display:flex;gap:.6rem;justify-content:center}
-.btn-onboard-next{background:var(--green);border:none;border-radius:6px;color:#fff;font-family:'Cinzel',serif;font-size:.72rem;padding:9px 20px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:background .2s}
+.btn-onboard-next{background:var(--green);border:none;border-radius:6px;color:#fff;font-family:'Cinzel',serif;font-size:.72rem;padding:9px 20px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}
 .btn-onboard-next:hover{background:var(--green2)}
-.btn-onboard-skip{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text3);font-family:'Cinzel',serif;font-size:.68rem;padding:9px 16px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .2s}
+.btn-onboard-skip{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text3);font-family:'Cinzel',serif;font-size:.68rem;padding:9px 16px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}
 .btn-onboard-skip:hover{border-color:var(--text2);color:var(--text2)}
-
-/* ── AVISO BANNER ── */
 .aviso-banner{background:var(--card2);border:1px solid var(--border-g);border-radius:8px;padding:.85rem 1rem;margin-bottom:.7rem;display:flex;align-items:flex-start;gap:.8rem;animation:fadeUp .3s both}
 .aviso-banner-icon{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
 .aviso-banner-texto{color:var(--text);font-size:.88rem;line-height:1.6;flex:1}
-.aviso-banner-close{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;padding:0;line-height:1;flex-shrink:0;transition:color .2s}
+.aviso-banner-close{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;padding:0;flex-shrink:0}
 .aviso-banner-close:hover{color:var(--text2)}
-
-/* ── CALENDÁRIO ── */
-.btn-cal{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
-.btn-cal:hover{border-color:var(--green);color:var(--green)}
-@media (max-width:600px){
+@media(max-width:600px){
   body{font-size:15px}.container{padding:.75rem .65rem}h1{font-size:1.2rem}
   .user-bar{padding:.6rem .7rem;flex-direction:column;align-items:flex-start}
   .user-bar>div:last-child{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
   .btn-logout,.btn-admin,.btn-export{width:100%;text-align:center;font-size:.56rem;padding:5px 6px}
   .section{padding:.85rem}.kin-hero{padding:1.2rem .9rem 1rem}.kin-title{font-size:1.2rem}
   .kin-frase{font-size:.83rem;padding:.75rem .85rem}
-  .oraculo-wrap{max-width:340px}
-  .oraculo-central .selo-icon{width:68px;height:68px}
-  .oraculo-side .selo-icon{width:50px;height:50px}
-  .oraculo-central .selo-icon{width:62px;height:62px}.oraculo-side .selo-icon{width:48px;height:48px}
-  .oraculo-nome{font-size:.5rem}
-  .onda-L{--cell:48px;gap:3px}
-  .cards{grid-template-columns:1fr 1fr;gap:5px}
+  .oraculo-wrap{max-width:290px}.oraculo-central .selo-icon{width:62px;height:62px}
+  .oraculo-side .selo-icon{width:48px;height:48px}.oraculo-nome{font-size:.5rem}
+  .onda-L{--cell:48px;gap:3px}.cards{grid-template-columns:1fr 1fr;gap:5px}
   .grid-2,.grid-3{grid-template-columns:1fr;gap:.55rem}
   input[type="date"]{width:100%}.btn-calc{width:100%;margin-top:5px}
-  .tab{padding:7px 10px;font-size:.58rem}
-  .lua-circular{max-width:220px}
+  .tab{padding:7px 10px;font-size:.58rem}.lua-circular{max-width:220px}
 }
-@media (max-width:400px){
+@media(max-width:400px){
   .container{padding:.65rem .5rem}h1{font-size:1rem}.kin-title{font-size:1rem}
-  .oraculo-wrap{max-width:290px}
-  .oraculo-central .selo-icon{width:58px;height:58px}
-  .oraculo-side .selo-icon{width:44px;height:44px}
-  .oraculo-central .selo-icon{width:54px;height:54px}.oraculo-side .selo-icon{width:42px;height:42px}
-  .onda-L{--cell:40px;gap:3px}.cards{grid-template-columns:1fr}
-  .lua-circular{max-width:190px}
+  .oraculo-wrap{max-width:256px}.oraculo-central .selo-icon{width:54px;height:54px}
+  .oraculo-side .selo-icon{width:42px;height:42px}.onda-L{--cell:40px;gap:3px}
+  .cards{grid-template-columns:1fr}.lua-circular{max-width:190px}
 }
-@media (max-height:500px) and (orientation:landscape){
-  .kin-hero{padding:.75rem .9rem}.kin-title{font-size:1.05rem}.kin-frase{font-size:.78rem;padding:.6rem}
-}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
 
-<!-- ── ONBOARDING ── -->
+<!-- ONBOARDING -->
 <div class="onboarding" id="onboarding">
   <div class="onboarding-box">
     <div class="onboarding-dots">
-      <div class="onboarding-dot active"></div>
-      <div class="onboarding-dot"></div>
-      <div class="onboarding-dot"></div>
-      <div class="onboarding-dot"></div>
+      <div class="onboarding-dot active"></div><div class="onboarding-dot"></div>
+      <div class="onboarding-dot"></div><div class="onboarding-dot"></div>
       <div class="onboarding-dot"></div>
     </div>
-
-    <div class="onboarding-step active" data-step="0">
-      <span class="onboarding-emoji">🌀</span>
+    <div class="onboarding-step active"><span class="onboarding-emoji">🌀</span>
       <div class="onboarding-titulo">Bem-vindo ao Sincronário das 13 Luas</div>
-      <p class="onboarding-texto">O Sincronário é uma ferramenta viva da Lei do Tempo. Ele revela o padrão galáctico do seu dia — e do dia em que você nasceu.</p>
-    </div>
-
-    <div class="onboarding-step" data-step="1">
-      <span class="onboarding-emoji">☀️</span>
+      <p class="onboarding-texto">Uma ferramenta viva da Lei do Tempo. Revela o padrão galáctico do seu dia e do dia em que você nasceu.</p></div>
+    <div class="onboarding-step"><span class="onboarding-emoji">☀️</span>
       <div class="onboarding-titulo">O Kin do Dia</div>
-      <p class="onboarding-texto">Cada dia tem um <strong style="color:var(--gold2)">Kin</strong> — a combinação de um Selo Solar com um Tom Galáctico. São 260 combinações únicas que se repetem em ciclos. O Kin de hoje é o seu guia para este dia.</p>
-    </div>
-
-    <div class="onboarding-step" data-step="2">
-      <span class="onboarding-emoji">🔮</span>
+      <p class="onboarding-texto">Cada dia tem um <strong style="color:var(--gold2)">Kin</strong> — combinação de um Selo Solar com um Tom Galáctico. São 260 combinações que se repetem em ciclo de 260 dias.</p></div>
+    <div class="onboarding-step"><span class="onboarding-emoji">🔮</span>
       <div class="onboarding-titulo">O Oráculo do Destino</div>
-      <p class="onboarding-texto">Cada Kin tem 5 posições no Oráculo: o <strong style="color:var(--gold2)">Ser Central</strong>, o <strong style="color:var(--gold2)">Guia</strong> (que ilumina), o <strong style="color:var(--gold2)">Análogo</strong> (que apoia), o <strong style="color:var(--gold2)">Antípoda</strong> (que desafia) e o <strong style="color:var(--gold2)">Oculto</strong> (o poder escondido).</p>
-    </div>
-
-    <div class="onboarding-step" data-step="3">
-      <span class="onboarding-emoji">🌊</span>
+      <p class="onboarding-texto">Cada Kin tem 5 posições: <strong style="color:var(--gold2)">Ser Central, Guia, Análogo, Antípoda e Oculto</strong>. Juntos revelam as forças que atuam no dia.</p></div>
+    <div class="onboarding-step"><span class="onboarding-emoji">🌊</span>
       <div class="onboarding-titulo">Onda Encantada</div>
-      <p class="onboarding-texto">Os 13 dias a partir do seu Kin formam uma <strong style="color:var(--gold2)">Onda Encantada</strong>. O 1º dia define o propósito da onda. O Kin em destaque é o dia de hoje dentro dessa jornada.</p>
-    </div>
-
-    <div class="onboarding-step" data-step="4">
-      <span class="onboarding-emoji">🎯</span>
+      <p class="onboarding-texto">Os 13 dias a partir do seu Kin formam uma <strong style="color:var(--gold2)">Onda Encantada</strong>. O primeiro dia define o propósito de toda a jornada.</p></div>
+    <div class="onboarding-step"><span class="onboarding-emoji">🎯</span>
       <div class="onboarding-titulo">Seu Kin Natal</div>
-      <p class="onboarding-texto">Vá à aba <strong style="color:var(--gold2)">Perfil</strong> e salve sua data de nascimento. Seu Kin Natal revela sua essência, missão e oráculo pessoal permanente.</p>
-    </div>
-
+      <p class="onboarding-texto">Vá à aba <strong style="color:var(--gold2)">Perfil</strong> e salve sua data de nascimento. Seu Kin Natal revela sua essência e missão permanente.</p></div>
     <div class="onboarding-btns">
       <button class="btn-onboard-skip" onclick="fecharOnboarding()">Pular</button>
       <button class="btn-onboard-next" id="btn-onboard-next" onclick="proximoOnboarding()">Próximo →</button>
@@ -339,7 +237,7 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
   </div>
 </div>
 
-<!-- ── AVISO CONTAINER (aparece no topo do app) ── -->
+<!-- AVISO CONTAINER -->
 <div id="aviso-container"></div>
 
 <div id="login-screen" class="login-container">
@@ -415,17 +313,13 @@ Entrar com Google
     <div class="perfil-nome" id="perfil-nome"></div>
     <div class="perfil-email" id="perfil-email"></div>
   </div>
-
-  <!-- NOTIFICAÇÕES -->
   <div class="section">
     <div class="section-title">Notificação Diária</div>
     <div class="notif-banner">
-      <p>Receba o Kin do dia todo manhã no seu celular.</p>
+      <p>Receba o Kin do dia toda manhã no seu celular.</p>
       <button class="btn-notif" id="btn-notif" onclick="toggleNotificacao()">Ativar</button>
     </div>
   </div>
-
-  <!-- KIN NATAL SALVO -->
   <div class="section">
     <div class="section-title">Meu Kin Natal</div>
     <div id="perfil-kin-salvo"></div>
@@ -440,7 +334,7 @@ Entrar com Google
 </div>
 </div>
 
-<!-- MODAL DETALHES DO SELO -->
+<!-- MODAL SELOS -->
 <div class="modal-selo" id="modal-selo">
   <div class="modal-selo-box">
     <button class="modal-selo-close" onclick="fecharModalSelo()">✕ Fechar</button>
@@ -456,8 +350,9 @@ Entrar com Google
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -486,33 +381,35 @@ function getSeloEmoji(nome) {
 
 
 function getSeloIconURL(nomeCompleto) {
-  // Mapeia pelo primeiro trecho do nome (ignora cor e variações)
-  const mapa = [
-    ['Dragão',        './assets/icons/dragao.png'],
-    ['Vento',         './assets/icons/vento.png'],
-    ['Noite',         './assets/icons/noite.png'],
-    ['Semente',       './assets/icons/semente.png'],
-    ['Serpente',      './assets/icons/serpente.png'],
-    ['Enlaçador',     './assets/icons/enlacador.png'],
-    ['Mão',           './assets/icons/mao.png'],
-    ['Estrela',       './assets/icons/estrela.png'],
-    ['Lua',           './assets/icons/lua.png'],
-    ['Cão',           './assets/icons/cao.png'],
-    ['Cachorro',      './assets/icons/cao.png'],
-    ['Macaco',        './assets/icons/macaco.png'],
-    ['Humano',        './assets/icons/humano.png'],
-    ['Caminhante',    './assets/icons/caminhante.png'],
-    ['Mago',          './assets/icons/mago.png'],
-    ['Feiticeiro',    './assets/icons/mago.png'],
-    ['Águia',         './assets/icons/aguia.png'],
-    ['Guerreiro',     './assets/icons/guerreiro.png'],
-    ['Terra',         './assets/icons/terra.png'],
-    ['Espelho',       './assets/icons/espelho.png'],
-    ['Tormenta',      './assets/icons/tormenta.png'],
-    ['Sol',           './assets/icons/sol.png'],
-  ];
-  const entrada = mapa.find(([chave]) => nomeCompleto.includes(chave));
-  return entrada ? entrada[1] : './assets/icons/default.png';
+  const partes = nomeCompleto.split(' ');
+  const nomeBase = partes.slice(0, -1).join(' ');
+  const mapa = {
+    'Dragão': './assets/icons/dragao.png',
+    'Vento': './assets/icons/vento.png',
+    'Noite': './assets/icons/noite.png',
+    'Semente': './assets/icons/semente.png',
+    'Serpente': './assets/icons/serpente.png',
+    'Enlaçador': './assets/icons/enlacador.png',
+    'Enlaçador de Mundos': './assets/icons/enlacador.png',
+    'Mão': './assets/icons/mao.png',
+    'Estrela': './assets/icons/estrela.png',
+    'Lua': './assets/icons/lua.png',
+    'Cão': './assets/icons/cao.png',
+    'Cachorro': './assets/icons/cao.png',
+    'Macaco': './assets/icons/macaco.png',
+    'Humano': './assets/icons/humano.png',
+    'Caminhante': './assets/icons/caminhante.png',
+    'Caminhante do Céu': './assets/icons/caminhante.png',
+    'Mago': './assets/icons/mago.png',
+    'Feiticeiro': './assets/icons/mago.png',
+    'Águia': './assets/icons/aguia.png',
+    'Guerreiro': './assets/icons/guerreiro.png',
+    'Terra': './assets/icons/terra.png',
+    'Espelho': './assets/icons/espelho.png',
+    'Tormenta': './assets/icons/tormenta.png',
+    'Sol': './assets/icons/sol.png'
+  };
+  return mapa[nomeBase] || './assets/icons/default.png';
 }
 
 
@@ -522,28 +419,30 @@ function getSeloBase(nomeCompleto) {
 }
 
 function getSeloCor(nomeCompleto) {
-  // Retorna a cor em português (ex: 'vermelho', 'branco', 'azul', 'amarelo')
-  // O CSS tem aliases para ambos os formatos (português e inglês)
-  return nomeCompleto.split(' ').pop().toLowerCase();
+  const partes = nomeCompleto.split(' ');
+  return partes[partes.length - 1].toLowerCase();
 }
 
 function concordar(selo, tom) {
-  const ehFeminino = FEMININOS && [...FEMININOS].some(p => selo.includes(p));
-  if (ehFeminino) {
-    // Converter para feminino
-    return tom
-      .replace('Magnético','Magnética').replace('Elétrico','Elétrica')
-      .replace('Galáctico','Galáctica').replace('Planetário','Planetária')
-      .replace('Cósmico','Cósmica').replace('Harmônico','Harmônica')
-      .replace('Rítmico','Rítmica');
-  } else {
-    // Converter para masculino
-    return tom
-      .replace('Magnética','Magnético').replace('Elétrica','Elétrico')
-      .replace('Galáctica','Galáctico').replace('Planetária','Planetário')
-      .replace('Cósmica','Cósmico').replace('Harmônica','Harmônico')
-      .replace('Rítmica','Rítmico');
+  for (let p of FEMININOS) {
+    if (selo.includes(p)) {
+      return tom
+        .replace('Magnético', 'Magnética')
+        .replace('Lunar', 'Lunar')
+        .replace('Elétrico', 'Elétrica')
+        .replace('Autoexistente', 'Autoexistente')
+        .replace('Overtone', 'Overtone')
+        .replace('Rítmico', 'Rítmica')
+        .replace('Ressonante', 'Ressonante')
+        .replace('Galáctico', 'Galáctica')
+        .replace('Solar', 'Solar')
+        .replace('Planetário', 'Planetária')
+        .replace('Espectral', 'Espectral')
+        .replace('Cristal', 'Cristal')
+        .replace('Cósmico', 'Cósmica');
+    }
   }
+  return tom;
 }
 
 // FIREBASE
@@ -587,10 +486,9 @@ auth.onAuthStateChanged(async u => {
           document.getElementById('user-name').textContent = u.displayName;
           document.getElementById('user-role').textContent = d.role || 'usuário';
           if (d.role === 'admin') document.getElementById('btn-admin').classList.remove('hidden');
-          // Registrar último acesso para métricas do dashboard
           db.collection('users').doc(u.uid).update({
             ultimoAcesso: firebase.firestore.FieldValue.serverTimestamp()
-          }).catch(() => {});
+          }).catch(()=>{});
           loadToday();
           carregarPerfil(u);
           carregarAviso();
@@ -663,8 +561,8 @@ function daysBetween(f, t) {
 function dateToKin(dt) {
   if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
   const dtNorm = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-  const base = new Date(1987, 6, 26);
-  const dias = daysBetween(base, dtNorm);
+  const base   = new Date(1987, 6, 26);
+  const dias   = daysBetween(base, dtNorm);
   return ((34 - 1 + dias) % 260 + 260) % 260 + 1;
 }
 
@@ -684,6 +582,218 @@ function getFaseLunar(d) {
 
 
 // FUNÇÃO PRINCIPAL - GERA TODO O HTML DO KIN
+function kinHTML(kinNum) {
+  const kD = DATA.kins[kinNum];
+  if (!kD) return '<p>Carregando dados...</p>';
+
+  const seloCompleto = kD.selo;
+  const partes = seloCompleto.split(' ');
+  const cor = partes[partes.length - 1];
+  const seloBase = partes.slice(0, -1).join(' ');
+  const tomOriginal = kD.tom_nome;
+  const tomConcordado = concordar(seloCompleto, tomOriginal);
+  const nomeCompleto = `${seloBase} ${tomConcordado} ${cor}`;
+  const emoji = getSeloEmoji(seloCompleto);
+  const fraseCurta = kD.frase_curta || '';
+  const corSelo = getSeloCor(seloCompleto);
+
+  const { guia, analogo, antipoda, oculto } = kD.oraculo;
+  const tomNum = kD.tom;
+  const tomInfo = DATA.tons[tomNum] || {};
+
+  // Onda Encantada com CORES INDIVIDUAIS
+  const ondaInicio = Math.floor((kinNum - 1) / 13) * 13 + 1;
+  const diaOnda = ((kinNum - 1) % 13) + 1;
+  let ondaHTML = '<div class="onda-L">';
+  for (let i = 0; i < 13; i++) {
+    const k = ondaInicio + i;
+    const kData = DATA.kins[k];
+    const em = kData ? getSeloEmoji(kData.selo) : '?';
+    const corKin = kData ? getSeloCor(kData.selo) : 'white';
+    const ativo = k === kinNum ? 'active' : '';
+    const tooltip = kData ? `Kin ${k} - ${kData.selo} ${kData.tom_nome}` : '';
+    ondaHTML += `<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData.selo)}" style="width:100%;height:100%;object-fit:contain"></div>`;
+  }
+  ondaHTML += '</div>';
+
+  // Castelo COMPLETO
+  const casteloNum = Math.floor((kinNum - 1) / 52);
+  const castelo = DATA.castelos[casteloNum] || {};
+  const casteloTexto = `🏰 Castelo ${castelo.nome} ${castelo.dir} do ${castelo.proposito}`;
+  const casteloOndas = castelo.ondas || [];
+  let casteloOndasHTML = '<div style="display:flex;gap:8px;justify-content:center;margin-top:0.5rem">';
+  for (let ondaNome of casteloOndas) {
+    // Pegar o selo completo da onda para ter a cor
+    const ondaIdx = casteloOndas.indexOf(ondaNome);
+    const ondaKinInicio = casteloNum * 52 + ondaIdx * 13 + 1;
+    const ondaKinData = DATA.kins && DATA.kins[ondaKinInicio] ? DATA.kins[ondaKinInicio] : null;
+    
+    let ondaSeloCompleto, ondaIconURL;
+    if (ondaKinData && ondaKinData.selo) {
+      ondaSeloCompleto = ondaKinData.selo;
+      ondaIconURL = getSeloIconURL(ondaSeloCompleto);
+    } else {
+      // Fallback: usar o nome da onda + cor padrão baseado no índice
+      const cores = ['Vermelho', 'Branco', 'Azul', 'Amarelo'];
+      ondaSeloCompleto = ondaNome + ' ' + cores[ondaIdx % 4];
+      ondaIconURL = getSeloIconURL(ondaSeloCompleto);
+    }
+    
+    casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="width:50px;height:50px"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='${getSeloEmoji(ondaNome)}'"></div>`;
+  }
+  casteloOndasHTML += '</div>';
+
+  // Plasma
+  const diaSemana = (kinNum - 1) % 7;
+  const plasma = DATA.plasmas[diaSemana] || '';
+
+  // Ritual
+  const ritual = DATA.rituais[diaOnda] || {};
+
+  // Lua Galáctica com SEMANAS COLORIDAS
+  const hoje = new Date();
+  const anoGal = hoje >= new Date(hoje.getFullYear(), 6, 26) ? hoje.getFullYear() : hoje.getFullYear() - 1;
+  const inicioAno = new Date(anoGal, 6, 26);
+  const diasPassados = daysBetween(inicioAno, hoje);
+  const luaNum = Math.floor(diasPassados / 28) + 1;
+  const diaLua = (diasPassados % 28) + 1;
+  const luaNome = DATA.luas[luaNum - 1] || '';
+  
+  let luaHTML = '<div style="display:flex;gap:6px;margin-top:1rem">';
+  const coresSemana = ['red', 'white', 'blue', 'yellow'];
+  for (let sem = 0; sem < 4; sem++) {
+    luaHTML += '<div style="display:flex;flex-direction:column;gap:4px">';
+    for (let d = 1; d <= 7; d++) {
+      const diaNum = sem * 7 + d;
+      const ativo = diaNum === diaLua ? 'active' : '';
+      luaHTML += `<div class="lua-dia lua-${coresSemana[sem]} ${ativo}">${diaNum}</div>`;
+    }
+    luaHTML += '</div>';
+  }
+  luaHTML += '</div>';
+
+  // Fase Lunar
+  const faseLunar = getFaseLunar(hoje);
+
+  // Anel Solar com ÍCONE
+  const anelKin = ((kinNum - 1) % 20) + 1;
+  const anelSelo = DATA.selos[anelKin] || {};
+  const anelNomeCompleto = anelSelo.nome || '';
+  const anelIconURL = getSeloIconURL(anelNomeCompleto);
+  const anelNome = anelSelo.nome || '';
+  const anelAcao = anelSelo.acao || '';
+
+  // Onda propósito
+  const ondaNum = Math.floor((kinNum - 1) / 13) + 1;
+  const ondaSelo = DATA.selos[((ondaNum - 1) % 20) + 1] || {};
+
+  return `
+<div class="section">
+  <div class="kin-hero">
+    <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+    <div class="kin-title">${nomeCompleto}</div>
+    <div class="kin-subtitle">Kin ${kinNum} de 260</div>
+  </div>
+  ${fraseCurta ? `<div class="kin-frase">"${fraseCurta}"</div>` : ''}
+</div>
+
+<div class="section">
+  <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1.5rem;text-transform:uppercase;text-align:center">Oráculo do Destino</div>
+  <div class="oraculo-wrap">
+    <div class="oraculo-cell-center oraculo-item oraculo-central">
+      <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">${seloBase}</div>
+    </div>
+    <div class="oraculo-cell-top oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(guia)}"><img src="${getSeloIconURL(guia)}" alt="${getSeloBase(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Guia<br>${getSeloBase(guia)}</div>
+    </div>
+    <div class="oraculo-cell-left oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(analogo)}"><img src="${getSeloIconURL(analogo)}" alt="${getSeloBase(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Análogo<br>${getSeloBase(analogo)}</div>
+    </div>
+    <div class="oraculo-cell-bottom oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(antipoda)}"><img src="${getSeloIconURL(antipoda)}" alt="${getSeloBase(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Antípoda<br>${getSeloBase(antipoda)}</div>
+    </div>
+    <div class="oraculo-cell-right oraculo-item oraculo-side">
+      <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome">Oculto<br>${getSeloBase(oculto)}</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Onda Encantada ${ondaNum} - Dia ${diaOnda}</div>
+  <p class="info-text">Propósito: ${ondaSelo.acao || ''}</p>
+  <div class="onda-wrap">${ondaHTML}</div>
+  <div class="info-box">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--text);margin-bottom:0.5rem">${tomOriginal.toUpperCase()}: ${tomInfo.verbo || ''}</div>
+    <p class="info-text">${tomInfo.pergunta || ''}</p>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="section">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Informações</div>
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">${casteloTexto}</div>
+      ${casteloOndasHTML}
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">🌙 ${luaNome}</div>
+      ${luaHTML}
+    </div>
+    <div class="grid-3" style="margin-top:1.5rem">
+      <div class="card">
+        <div class="card-label">⭐ Anel Solar</div>
+        <div style="text-align:center;margin:0.5rem 0"><img src="${anelIconURL}" style="width:60px;height:60px;object-fit:contain"></div>
+        <div class="card-val" style="text-align:center">${anelNome}<br><small style="font-size:0.75rem;color:var(--text2)">${anelAcao}</small></div>
+      </div>
+      <div class="card">
+        <div class="card-label">⚡ Plasma</div>
+        <div class="card-val">${plasma}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Fase Lunar</div>
+        <div class="card-val">${faseLunar}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Prática Diária</div>
+    <ul class="praticas-list">
+      <li>Ouça a prece das 7 direções galácticas</li>
+      <li>Ouça a meditação do selo</li>
+      <li>Ouça o Self Design Sounds</li>
+      <li>Faça a leitura da página ${diaOnda} do e-book</li>
+      <li>${ritual.ritual || ''}</li>
+    </ul>
+  </div>
+</div>
+  `;
+}
+
+
+async function calcNatal() {
+  await DATA_PRONTO;
+  const v = document.getElementById('nasc-inp').value;
+  if (!v) return;
+  const [y, m, d] = v.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  const k = dateToKin(dt);
+  document.getElementById('res-natal').innerHTML = kinHTML(k);
+  document.getElementById('res-natal').classList.remove('hidden');
+}
+
+async function loadToday() {
+  await DATA_PRONTO;
+  const k = dateToKin(new Date());
+  document.getElementById('res-dia').innerHTML = kinHTML(k);
+}
+
+
 
 function gerarLuaCircular(diaAtivo) {
   const cores = ['red','white','blue','yellow'];
@@ -1563,15 +1673,10 @@ async function loadToday() {
   document.getElementById('res-dia').innerHTML = kinHTML(k);
 }
 
+
 </script>
 <script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(r=>console.log('✓ SW:',r.scope))
-      .catch(()=>{});
-  });
-}
+if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
 </script>
 </body>
 </html>
