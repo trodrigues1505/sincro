@@ -6,6 +6,7 @@
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#009739">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="13 Luas">
@@ -1438,10 +1439,19 @@ async function carregarAviso() {
     if (!container) return;
     const div = document.createElement('div');
     div.className = 'aviso-banner';
-    div.innerHTML =
-      '<span class="aviso-banner-icon">' + (data.emoji || '📢') + '</span>' +
-      '<div class="aviso-banner-texto">' + data.texto + '</div>' +
-      '<button class="aviso-banner-close" onclick="fecharAviso(this,'' + chave + '')">✕</button>';
+    const iconEl = document.createElement('span');
+    iconEl.className = 'aviso-banner-icon';
+    iconEl.textContent = data.emoji || '📢';
+    const txtEl = document.createElement('div');
+    txtEl.className = 'aviso-banner-texto';
+    txtEl.textContent = data.texto;
+    const closeEl = document.createElement('button');
+    closeEl.className = 'aviso-banner-close';
+    closeEl.textContent = '✕';
+    closeEl.onclick = function() { fecharAviso(closeEl, chave); };
+    div.appendChild(iconEl);
+    div.appendChild(txtEl);
+    div.appendChild(closeEl);
     container.appendChild(div);
   } catch(e) {}
 }
