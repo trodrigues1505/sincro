@@ -460,15 +460,27 @@ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 document.getElementById('btn-login').onclick = () => {
   document.getElementById('login-loading').classList.remove('hidden');
+  document.getElementById('login-loading').textContent = 'Redirecionando...';
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.addScope('profile');
   provider.addScope('email');
-  auth.signInWithPopup(provider).catch(e => {
-    document.getElementById('login-error').textContent = e.code === 'auth/popup-blocked' ? '⚠️ Popup bloqueado!' : '❌ ' + e.message;
+  auth.signInWithRedirect(provider).catch(e => {
+    document.getElementById('login-error').textContent = '❌ ' + e.message;
     document.getElementById('login-error').classList.remove('hidden');
     document.getElementById('login-loading').classList.add('hidden');
   });
 };
+
+// Capturar resultado do redirect ao voltar
+auth.getRedirectResult().then(result => {
+  document.getElementById('login-loading').classList.add('hidden');
+}).catch(e => {
+  if (e.code && e.code !== 'auth/no-auth-event') {
+    document.getElementById('login-error').textContent = '❌ ' + e.message;
+    document.getElementById('login-error').classList.remove('hidden');
+  }
+  document.getElementById('login-loading').classList.add('hidden');
+});
 
 auth.onAuthStateChanged(async u => {
   if (u) {
