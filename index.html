@@ -5,9 +5,8 @@
 <title>Sincronário das 13 Luas</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#009739">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="13 Luas">
 <link rel="icon" type="image/png" href="./icon-192.png">
@@ -1489,16 +1488,14 @@ async function exportarCalendario28() {
     linhas.push('DTSTART;VALUE=DATE:' + dtStr);
     linhas.push('DTEND;VALUE=DATE:' + dtStr);
     linhas.push('SUMMARY:🌀 Kin ' + kin + ' · ' + nome);
-    if (frase) linhas.push('DESCRIPTION:' + frase.replace(/,/g,'\,').replace(/
-/g,'\n'));
+    if (frase) linhas.push('DESCRIPTION:' + frase.replace(/,/g,'\\,'));
     linhas.push('CATEGORIES:Sincronário');
     linhas.push('END:VEVENT');
   }
 
   linhas.push('END:VCALENDAR');
 
-  const blob = new Blob([linhas.join('
-')], { type: 'text/calendar;charset=utf-8' });
+  const blob = new Blob([linhas.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
