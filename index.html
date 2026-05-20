@@ -227,6 +227,34 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
 .export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
 
+
+/* ── ONBOARDING ── */
+.onboarding{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.onboarding.active{display:flex}
+.onboarding-box{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:2.4rem 2rem;max-width:420px;width:100%;text-align:center;animation:fadeUp .3s both;position:relative}
+.onboarding-step{display:none}.onboarding-step.active{display:block}
+.onboarding-emoji{font-size:2.8rem;margin-bottom:1rem;display:block}
+.onboarding-titulo{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.04em}
+.onboarding-texto{color:var(--text2);font-size:.9rem;line-height:1.75;margin-bottom:1.5rem}
+.onboarding-dots{display:flex;justify-content:center;gap:6px;margin-bottom:1.2rem}
+.onboarding-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:background .2s}
+.onboarding-dot.active{background:var(--green)}
+.onboarding-btns{display:flex;gap:.6rem;justify-content:center}
+.btn-onboard-next{background:var(--green);border:none;border-radius:6px;color:#fff;font-family:'Cinzel',serif;font-size:.72rem;padding:9px 20px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:background .2s}
+.btn-onboard-next:hover{background:var(--green2)}
+.btn-onboard-skip{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text3);font-family:'Cinzel',serif;font-size:.68rem;padding:9px 16px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .2s}
+.btn-onboard-skip:hover{border-color:var(--text2);color:var(--text2)}
+
+/* ── AVISO BANNER ── */
+.aviso-banner{background:var(--card2);border:1px solid var(--border-g);border-radius:8px;padding:.85rem 1rem;margin-bottom:.7rem;display:flex;align-items:flex-start;gap:.8rem;animation:fadeUp .3s both}
+.aviso-banner-icon{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
+.aviso-banner-texto{color:var(--text);font-size:.88rem;line-height:1.6;flex:1}
+.aviso-banner-close{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;padding:0;line-height:1;flex-shrink:0;transition:color .2s}
+.aviso-banner-close:hover{color:var(--text2)}
+
+/* ── CALENDÁRIO ── */
+.btn-cal{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-cal:hover{border-color:var(--green);color:var(--green)}
 @media (max-width:600px){
   body{font-size:15px}.container{padding:.75rem .65rem}h1{font-size:1.2rem}
   .user-bar{padding:.6rem .7rem;flex-direction:column;align-items:flex-start}
@@ -262,6 +290,57 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 </style>
 </head>
 <body>
+
+<!-- ── ONBOARDING ── -->
+<div class="onboarding" id="onboarding">
+  <div class="onboarding-box">
+    <div class="onboarding-dots">
+      <div class="onboarding-dot active"></div>
+      <div class="onboarding-dot"></div>
+      <div class="onboarding-dot"></div>
+      <div class="onboarding-dot"></div>
+      <div class="onboarding-dot"></div>
+    </div>
+
+    <div class="onboarding-step active" data-step="0">
+      <span class="onboarding-emoji">🌀</span>
+      <div class="onboarding-titulo">Bem-vindo ao Sincronário das 13 Luas</div>
+      <p class="onboarding-texto">O Sincronário é uma ferramenta viva da Lei do Tempo. Ele revela o padrão galáctico do seu dia — e do dia em que você nasceu.</p>
+    </div>
+
+    <div class="onboarding-step" data-step="1">
+      <span class="onboarding-emoji">☀️</span>
+      <div class="onboarding-titulo">O Kin do Dia</div>
+      <p class="onboarding-texto">Cada dia tem um <strong style="color:var(--gold2)">Kin</strong> — a combinação de um Selo Solar com um Tom Galáctico. São 260 combinações únicas que se repetem em ciclos. O Kin de hoje é o seu guia para este dia.</p>
+    </div>
+
+    <div class="onboarding-step" data-step="2">
+      <span class="onboarding-emoji">🔮</span>
+      <div class="onboarding-titulo">O Oráculo do Destino</div>
+      <p class="onboarding-texto">Cada Kin tem 5 posições no Oráculo: o <strong style="color:var(--gold2)">Ser Central</strong>, o <strong style="color:var(--gold2)">Guia</strong> (que ilumina), o <strong style="color:var(--gold2)">Análogo</strong> (que apoia), o <strong style="color:var(--gold2)">Antípoda</strong> (que desafia) e o <strong style="color:var(--gold2)">Oculto</strong> (o poder escondido).</p>
+    </div>
+
+    <div class="onboarding-step" data-step="3">
+      <span class="onboarding-emoji">🌊</span>
+      <div class="onboarding-titulo">Onda Encantada</div>
+      <p class="onboarding-texto">Os 13 dias a partir do seu Kin formam uma <strong style="color:var(--gold2)">Onda Encantada</strong>. O 1º dia define o propósito da onda. O Kin em destaque é o dia de hoje dentro dessa jornada.</p>
+    </div>
+
+    <div class="onboarding-step" data-step="4">
+      <span class="onboarding-emoji">🎯</span>
+      <div class="onboarding-titulo">Seu Kin Natal</div>
+      <p class="onboarding-texto">Vá à aba <strong style="color:var(--gold2)">Perfil</strong> e salve sua data de nascimento. Seu Kin Natal revela sua essência, missão e oráculo pessoal permanente.</p>
+    </div>
+
+    <div class="onboarding-btns">
+      <button class="btn-onboard-skip" onclick="fecharOnboarding()">Pular</button>
+      <button class="btn-onboard-next" id="btn-onboard-next" onclick="proximoOnboarding()">Próximo →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── AVISO CONTAINER (aparece no topo do app) ── -->
+<div id="aviso-container"></div>
 
 <div id="login-screen" class="login-container">
 <img src="./icon-192.png" alt="Sincronário" class="login-logo">
@@ -378,6 +457,7 @@ Entrar com Google
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -507,8 +587,13 @@ auth.onAuthStateChanged(async u => {
           document.getElementById('user-name').textContent = u.displayName;
           document.getElementById('user-role').textContent = d.role || 'usuário';
           if (d.role === 'admin') document.getElementById('btn-admin').classList.remove('hidden');
+          // Registrar último acesso para métricas do dashboard
+          db.collection('users').doc(u.uid).update({
+            ultimoAcesso: firebase.firestore.FieldValue.serverTimestamp()
+          }).catch(() => {});
           loadToday();
           carregarPerfil(u);
+          carregarAviso();
         } else {
           document.getElementById('login-error').textContent = '⏳ Aguarde autorização.';
           document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
@@ -737,6 +822,8 @@ function kinHTML(kinNum) {
   <div class="export-btns">
     <button class="btn-share" onclick="compartilharKin()">⬆ Compartilhar</button>
     <button class="btn-share" onclick="exportPNG()" style="border-color:var(--border);color:var(--text2)">↓ Baixar PNG</button>
+    <button class="btn-cal" onclick="exportarCalendario28()">📅 Próximos 28 dias</button>
+    <button class="btn-cal" onclick="exportarPDFKin()">📄 Relatório PDF</button>
   </div>
 </div>
 
@@ -952,6 +1039,8 @@ async function carregarPerfil(user) {
   try {
     const doc = await db.collection('users').doc(user.uid).get();
     const data = doc.data() || {};
+    // Onboarding — mostrar se for primeiro acesso
+    if (!data.onboardingCompleto) mostrarOnboarding();
     if (data.kinNatalData) {
       document.getElementById('perfil-nasc-inp').value = data.kinNatalData;
       mostrarKinNatalSalvo(data.kinNatalData, data.kinNatalNum);
@@ -1170,6 +1259,302 @@ async function agendarNotificacaoDiaria() {
   } catch(e) {
     console.log('Periodic sync não disponível:', e);
   }
+}
+
+
+// ════════════════════════════════════════════════════════
+// ONBOARDING
+// ════════════════════════════════════════════════════════
+let onboardStep = 0;
+const ONBOARD_STEPS = 5;
+
+function mostrarOnboarding() {
+  document.getElementById('onboarding').classList.add('active');
+  onboardStep = 0;
+  atualizarOnboarding();
+}
+
+function atualizarOnboarding() {
+  document.querySelectorAll('.onboarding-step').forEach((el, i) => {
+    el.classList.toggle('active', i === onboardStep);
+  });
+  document.querySelectorAll('.onboarding-dot').forEach((el, i) => {
+    el.classList.toggle('active', i === onboardStep);
+  });
+  const btn = document.getElementById('btn-onboard-next');
+  if (btn) btn.textContent = onboardStep === ONBOARD_STEPS - 1 ? 'Começar ✓' : 'Próximo →';
+}
+
+function proximoOnboarding() {
+  onboardStep++;
+  if (onboardStep >= ONBOARD_STEPS) {
+    fecharOnboarding();
+  } else {
+    atualizarOnboarding();
+  }
+}
+
+function fecharOnboarding() {
+  document.getElementById('onboarding').classList.remove('active');
+  if (currentUserUID) {
+    db.collection('users').doc(currentUserUID)
+      .update({ onboardingCompleto: true }).catch(() => {});
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// AVISO PARA TODOS (lido do Firestore — admin escreve, usuário lê)
+// ════════════════════════════════════════════════════════
+async function carregarAviso() {
+  try {
+    const doc = await db.collection('config').doc('aviso').get();
+    if (!doc.exists) return;
+    const data = doc.data();
+    if (!data.texto || !data.ativo) return;
+    // Verificar se usuário já fechou este aviso
+    const chave = 'aviso_' + (data.id || 'geral');
+    if (localStorage.getItem(chave)) return;
+    const container = document.getElementById('aviso-container');
+    if (!container) return;
+    const div = document.createElement('div');
+    div.className = 'aviso-banner';
+    div.innerHTML =
+      '<span class="aviso-banner-icon">' + (data.emoji || '📢') + '</span>' +
+      '<div class="aviso-banner-texto">' + data.texto + '</div>' +
+      '<button class="aviso-banner-close" onclick="fecharAviso(this,'' + chave + '')">✕</button>';
+    container.appendChild(div);
+  } catch(e) {}
+}
+
+function fecharAviso(btn, chave) {
+  localStorage.setItem(chave, '1');
+  btn.closest('.aviso-banner').remove();
+}
+
+// ════════════════════════════════════════════════════════
+// EXPORTAR CALENDÁRIO — .ics com os próximos 28 dias
+// ════════════════════════════════════════════════════════
+async function exportarCalendario28() {
+  await DATA_PRONTO;
+  const linhas = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Sincronario 13 Luas//PT',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:Sincronário das 13 Luas',
+    'X-WR-TIMEZONE:America/Sao_Paulo',
+  ];
+
+  for (let i = 0; i < 28; i++) {
+    const dt = new Date();
+    dt.setDate(dt.getDate() + i);
+    const kin = dateToKin(dt);
+    const kd  = (DATA.kins || {})[String(kin)] || {};
+    const nome = kd.selo ? concordar(kd.selo, kd.tom_nome || '') + ' ' + kd.selo.split(' ').pop() : 'Kin ' + kin;
+    const frase = kd.frase_curta || '';
+    const dtStr = dt.toISOString().split('T')[0].replace(/-/g,'');
+
+    linhas.push('BEGIN:VEVENT');
+    linhas.push('DTSTART;VALUE=DATE:' + dtStr);
+    linhas.push('DTEND;VALUE=DATE:' + dtStr);
+    linhas.push('SUMMARY:🌀 Kin ' + kin + ' · ' + nome);
+    if (frase) linhas.push('DESCRIPTION:' + frase.replace(/,/g,'\,').replace(/
+/g,'\n'));
+    linhas.push('CATEGORIES:Sincronário');
+    linhas.push('END:VEVENT');
+  }
+
+  linhas.push('END:VCALENDAR');
+
+  const blob = new Blob([linhas.join('
+')], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'sincronario-28dias.ics';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+
+// ════════════════════════════════════════════════════════
+// RELATÓRIO PDF DO KIN — via jsPDF (gratuito, roda no browser)
+// ════════════════════════════════════════════════════════
+async function exportarPDFKin() {
+  await DATA_PRONTO;
+  if (typeof window.jspdf === 'undefined') {
+    alert('Aguarde o carregamento da biblioteca PDF...');
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+
+  const hoje = new Date();
+  const kin  = dateToKin(hoje);
+  const kd   = (DATA.kins || {})[String(kin)] || {};
+  const nome = kd.selo || 'Kin ' + kin;
+  const tom  = kd.tom_nome || '';
+  const tomConcordado = concordar(nome, tom);
+  const nomeCompleto = kd.selo ? getSeloBase(kd.selo) + ' ' + tomConcordado + ' ' + kd.selo.split(' ').pop() : nome;
+  const frase = kd.frase_curta || '';
+  const orac  = kd.oraculo || {};
+  const tomData = (DATA.tons || {})[String(kd.tom || 0)] || {};
+
+  // Cores
+  const VERDE  = [0, 70, 30];
+  const VERDE2 = [0, 151, 57];
+  const OURO   = [165, 124, 0];
+  const TEXTO  = [20, 40, 20];
+  const CINZA  = [100, 120, 100];
+
+  // Fundo
+  doc.setFillColor(...VERDE);
+  doc.rect(0, 0, 210, 297, 'F');
+
+  // Linha decorativa topo
+  doc.setDrawColor(...VERDE2);
+  doc.setLineWidth(0.5);
+  doc.line(15, 18, 195, 18);
+
+  // Título
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(...OURO);
+  doc.text('SINCRONÁRIO DAS 13 LUAS', 105, 14, { align: 'center' });
+
+  // Data
+  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const dataFmt = hoje.getDate() + ' de ' + meses[hoje.getMonth()] + ' de ' + hoje.getFullYear();
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(...CINZA);
+  doc.text(dataFmt, 105, 22, { align: 'center' });
+
+  // KIN principal
+  doc.setFontSize(28);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(...VERDE2);
+  doc.text(nomeCompleto.toUpperCase(), 105, 45, { align: 'center' });
+
+  doc.setFontSize(11);
+  doc.setTextColor(...OURO);
+  doc.text('Kin ' + kin + ' de 260', 105, 54, { align: 'center' });
+
+  // Linha
+  doc.setDrawColor(...OURO);
+  doc.setLineWidth(0.3);
+  doc.line(40, 58, 170, 58);
+
+  // Frase
+  if (frase) {
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(200, 230, 200);
+    const linhasFrase = doc.splitTextToSize('"' + frase + '"', 150);
+    doc.text(linhasFrase, 105, 68, { align: 'center' });
+  }
+
+  let y = frase ? 68 + (frase.length > 80 ? 16 : 10) : 68;
+
+  // Tom
+  doc.setDrawColor(0, 100, 40);
+  doc.setFillColor(0, 40, 15);
+  doc.roundedRect(15, y, 180, tomData.pergunta ? 28 : 20, 2, 2, 'FD');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7);
+  doc.setTextColor(...OURO);
+  doc.text('TOM ' + (kd.tom||'') + ' · ' + tomConcordado.toUpperCase(), 20, y+6);
+  if (tomData.verbo) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(200, 230, 200);
+    doc.text(tomData.verbo, 20, y+13);
+  }
+  if (tomData.pergunta) {
+    doc.setFontSize(9);
+    doc.setTextColor(...CINZA);
+    doc.text(tomData.pergunta, 20, y+20);
+  }
+  y += tomData.pergunta ? 35 : 27;
+
+  // Oráculo
+  if (orac.guia) {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(...OURO);
+    doc.text('ORÁCULO DO DESTINO', 20, y+6);
+    y += 10;
+
+    const posicoes = [
+      ['GUIA',     orac.guia],
+      ['ANÁLOGO',  orac.analogo  || ''],
+      ['ANTÍPODA', orac.antipoda || ''],
+      ['OCULTO',   orac.oculto   || ''],
+    ];
+    posicoes.forEach(([label, val], i) => {
+      const col = i % 2;
+      const row = Math.floor(i / 2);
+      const bx = 15 + col * 92;
+      const by = y + row * 18;
+      doc.setFillColor(0, 40, 15);
+      doc.setDrawColor(0, 80, 30);
+      doc.roundedRect(bx, by, 88, 14, 2, 2, 'FD');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(6);
+      doc.setTextColor(...OURO);
+      doc.text(label, bx + 4, by + 5);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(200, 230, 200);
+      doc.text(val, bx + 4, by + 11);
+    });
+    y += 40;
+  }
+
+  // Descrição do selo
+  const seloEntry = Object.values(DATA.selos || {}).find(s => s.nome === kd.selo) || {};
+  if (seloEntry.desc) {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(...OURO);
+    doc.text('ESSÊNCIA DO SELO', 20, y+4);
+    y += 10;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(180, 210, 180);
+    const linhasDesc = doc.splitTextToSize(seloEntry.desc, 170);
+    doc.text(linhasDesc, 20, y);
+    y += linhasDesc.length * 5 + 8;
+  }
+
+  // Onda Encantada
+  const ondaNum  = Math.floor((kin - 1) / 13) + 1;
+  const diaOnda  = ((kin - 1) % 13) + 1;
+  const ondaSelo = (DATA.selos || {})[String(((ondaNum - 1) % 20) + 1)] || {};
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7);
+  doc.setTextColor(...OURO);
+  doc.text('ONDA ENCANTADA ' + ondaNum + ' · DIA ' + diaOnda, 20, y + 4);
+  if (ondaSelo.acao) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(...CINZA);
+    doc.text(ondaSelo.acao, 20, y + 10);
+  }
+
+  // Linha rodapé
+  doc.setDrawColor(...VERDE2);
+  doc.setLineWidth(0.3);
+  doc.line(15, 285, 195, 285);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(...CINZA);
+  doc.text('Sincronário das 13 Luas · Lei do Tempo', 105, 290, { align: 'center' });
+
+  // Salvar
+  const nomeArq = 'kin-' + kin + '-' + hoje.toISOString().split('T')[0] + '.pdf';
+  doc.save(nomeArq);
 }
 
 async function loadToday() {
