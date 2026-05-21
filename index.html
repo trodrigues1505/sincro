@@ -459,56 +459,124 @@ const db = firebase.firestore();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 document.getElementById('btn-login').onclick = () => {
+  console.log('[Login] Iniciando login com Google...');
+  
+  document.getElementById('login-error').classList.add('hidden');
+  document.getElementById('login-loading').textContent = 'Entrando...';
   document.getElementById('login-loading').classList.remove('hidden');
-  document.getElementById('login-loading').textContent = 'Redirecionando...';
+  
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.addScope('profile');
   provider.addScope('email');
-  auth.signInWithRedirect(provider).catch(e => {
-    document.getElementById('login-error').textContent = '❌ ' + e.message;
+  
+  auth.signInWithPopup(provider).catch(e => {
+    console.error('[Login] ❌ Erro no popup:', e.code, e.message);
+    
+    let mensagem = e.message;
+    if (e.code === 'auth/popup-blocked') {
+      mensagem = '⚠️ Popup bloqueado! Verifique as configurações do navegador.';
+    } else if (e.code === 'auth/cancelled-popup-request') {
+      mensagem = '⚠️ Login cancelado.';
+    }
+    
+    document.getElementById('login-error').textContent = mensagem;
     document.getElementById('login-error').classList.remove('hidden');
     document.getElementById('login-loading').classList.add('hidden');
   });
 };
 
-// Capturar resultado do redirect ao voltar
-auth.getRedirectResult().then(result => {
-  document.getElementById('login-loading').classList.add('hidden');
-}).catch(e => {
-  if (e.code && e.code !== 'auth/no-auth-event') {
-    document.getElementById('login-error').textContent = '❌ ' + e.message;
-    document.getElementById('login-error').classList.remove('hidden');
-  }
-  document.getElementById('login-loading').classList.add('hidden');
-});
+// ══════════════════════════════════════════════════════════════════════
+// AUTENTICAÇÃO FIREBASE - VERSÃO CORRIGIDA COM POLLING
+// ══════════════════════════════════════════════════════════════════════
+
+let isProcessingAuth = false;
+let authCheckInterval = null;
 
 auth.onAuthStateChanged(async u => {
+  if (isProcessingAuth) {
+    console.log('[Auth] Já está processando autenticação, ignorando...');
+    return;
+  }
+  
   if (u) {
+    isProcessingAuth = true;
+    console.log('[Auth] Usuário detectado:', u.email);
+    
     try {
       const uR = db.collection('users').doc(u.uid);
       const uD = await uR.get();
+      
       if (uD.exists) {
         const d = uD.data();
+        console.log('[Auth] Documento existe:', { email: d.email, authorized: d.authorized });
+        
         if (d.authorized === true) {
+          // ✅ USUÁRIO AUTORIZADO - MOSTRA APP
+          console.log('[Auth] ✅ Usuário autorizado');
+          
           document.getElementById('login-screen').style.display = 'none';
           document.getElementById('app-screen').classList.add('active');
           document.getElementById('user-avatar').src = u.photoURL || '';
           document.getElementById('user-name').textContent = u.displayName;
           document.getElementById('user-role').textContent = d.role || 'usuário';
-          if (d.role === 'admin') document.getElementById('btn-admin').classList.remove('hidden');
+          
+          if (d.role === 'admin') {
+            document.getElementById('btn-admin').classList.remove('hidden');
+          }
+          
+          // Atualiza timestamp de último acesso
           db.collection('users').doc(u.uid).update({
             ultimoAcesso: firebase.firestore.FieldValue.serverTimestamp()
-          }).catch(()=>{});
+          }).catch(err => console.warn('Erro ao atualizar acesso:', err));
+          
           loadToday();
           carregarPerfil(u);
           carregarAviso();
+          
+          // Limpa intervalo de verificação se estava em espera
+          if (authCheckInterval) {
+            clearInterval(authCheckInterval);
+            authCheckInterval = null;
+          }
+          
         } else {
-          document.getElementById('login-error').textContent = '⏳ Aguarde autorização.';
-          document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
-          document.getElementById('login-error').classList.remove('hidden');
-          setTimeout(() => auth.signOut(), 4000);
+          // ⏳ PENDENTE DE AUTORIZAÇÃO
+          console.log('[Auth] ⏳ Usuário aguardando autorização');
+          mostrarTelaAguardoAprovacao(u.uid);
+          
+          // Inicia verificação periódica (a cada 10 segundos)
+          if (!authCheckInterval) {
+            authCheckInterval = setInterval(async () => {
+              try {
+                console.log('[Auth] Verificando status de autorização...');
+                const updatedDoc = await uR.get();
+                
+                if (updatedDoc.exists && updatedDoc.data().authorized === true) {
+                  console.log('[Auth] ✅ Usuário foi autorizado! Atualizando...');
+                  clearInterval(authCheckInterval);
+                  authCheckInterval = null;
+                  window.location.reload();
+                }
+              } catch (err) {
+                console.warn('[Auth] Erro ao verificar autorização:', err);
+              }
+            }, 10000);
+          }
+          
+          // Timeout de segurança: logout após 30 minutos de espera
+          setTimeout(() => {
+            if (authCheckInterval) {
+              console.log('[Auth] Tempo de espera excedido (30min), desconectando...');
+              clearInterval(authCheckInterval);
+              authCheckInterval = null;
+              auth.signOut();
+            }
+          }, 1800000);
         }
       } else {
+        // 📝 NOVO USUÁRIO - CRIAR DOCUMENTO
+        console.log('[Auth] Novo usuário, criando documento...');
+        
         await uR.set({
           authorized: false,
           displayName: u.displayName || 'Usuário',
@@ -517,21 +585,134 @@ auth.onAuthStateChanged(async u => {
           role: 'usuário',
           createdAt: new Date()
         });
-        document.getElementById('login-error').textContent = '⏳ Conta criada! Aguarde autorização.';
-        document.getElementById('login-error').style.background = 'rgba(245,200,66,0.1)';
-        document.getElementById('login-error').classList.remove('hidden');
-        setTimeout(() => auth.signOut(), 4000);
+        
+        console.log('[Auth] ⏳ Documento criado, aguardando autorização...');
+        mostrarTelaAguardoAprovacao(u.uid);
+        
+        // Inicia verificação periódica (a cada 10 segundos)
+        if (!authCheckInterval) {
+          authCheckInterval = setInterval(async () => {
+            try {
+              const updatedDoc = await uR.get();
+              if (updatedDoc.exists && updatedDoc.data().authorized === true) {
+                console.log('[Auth] ✅ Novo usuário foi autorizado!');
+                clearInterval(authCheckInterval);
+                authCheckInterval = null;
+                window.location.reload();
+              }
+            } catch (err) {
+              console.warn('[Auth] Erro ao verificar novo usuário:', err);
+            }
+          }, 10000);
+        }
+        
+        // Timeout de 30 minutos
+        setTimeout(() => {
+          if (authCheckInterval) {
+            console.log('[Auth] Novo usuário timeout (30min)');
+            clearInterval(authCheckInterval);
+            authCheckInterval = null;
+            auth.signOut();
+          }
+        }, 1800000);
       }
     } catch (e) {
-      document.getElementById('login-error').textContent = '❌ ' + e.message;
+      console.error('[Auth] ❌ Erro na autenticação:', e);
+      
+      document.getElementById('login-error').innerHTML = `
+        <div style="text-align: center;">
+          <div style="margin-bottom: 0.5rem">❌ Erro na Autenticação</div>
+          <p style="font-size: 0.85rem; color: var(--text2); margin: 0; word-break: break-word;">
+            ${e.message || 'Erro desconhecido'}
+          </p>
+          <button onclick="location.reload()" style="
+            margin-top: 0.8rem;
+            padding: 6px 12px;
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+          ">Tentar Novamente</button>
+        </div>
+      `;
+      document.getElementById('login-error').style.background = 'rgba(138,32,24,.12)';
+      document.getElementById('login-error').style.borderColor = 'rgba(138,32,24,.3)';
       document.getElementById('login-error').classList.remove('hidden');
     }
-    document.getElementById('login-loading').classList.add('hidden');
+    
+    isProcessingAuth = false;
   } else {
+    // 🚪 DESCONECTADO
+    console.log('[Auth] Usuário desconectado');
+    
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app-screen').classList.remove('active');
+    document.getElementById('login-loading').classList.add('hidden');
+    
+    // Limpa intervalo se houver
+    if (authCheckInterval) {
+      clearInterval(authCheckInterval);
+      authCheckInterval = null;
+    }
+    
+    isProcessingAuth = false;
   }
 });
+
+// ══════════════════════════════════════════════════════════════════════
+// FUNÇÃO: Mostrar tela melhorada de espera por aprovação
+// ══════════════════════════════════════════════════════════════════════
+
+function mostrarTelaAguardoAprovacao(uid) {
+  document.getElementById('login-loading').style.display = 'block';
+  document.getElementById('login-loading').innerHTML = `
+    <div style="text-align: center; animation: fadeUp 0.4s both;">
+      <div style="font-size: 2rem; margin-bottom: 0.8rem; animation: spin 2s linear infinite">⏳</div>
+      <div style="font-family: Cinzel; font-size: 1rem; color: var(--gold2); margin-bottom: 0.4rem;">
+        Aguardando Aprovação
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text); margin: 0.3rem 0; line-height: 1.5;">
+        Sua conta foi criada com sucesso!<br>
+        Aguarde a aprovação do administrador.
+      </p>
+    </div>
+  `;
+  
+  document.getElementById('login-loading').classList.remove('hidden');
+  
+  document.getElementById('login-error').innerHTML = `
+    <div style="text-align: center;">
+      <p style="margin: 0 0 0.8rem 0; color: var(--text); font-size: 0.9rem;">
+        ✓ Verificamos sua conta: <strong>${uid.substring(0, 8)}...</strong>
+      </p>
+      <p style="font-size: 0.82rem; color: var(--text3); margin: 0.3rem 0; line-height: 1.5;">
+        Assim que aprovado, você terá acesso imediato ao Sincronário.<br>
+        Esta página será atualizada automaticamente.
+      </p>
+      <button onclick="auth.signOut()" style="
+        margin-top: 1rem;
+        padding: 7px 14px;
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text2);
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: Cinzel;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        transition: all 0.2s;
+      " onmouseover="this.style.borderColor='var(--green3)'" onmouseout="this.style.borderColor='var(--border)'">
+        Voltar ao Login
+      </button>
+    </div>
+  `;
+  document.getElementById('login-error').style.background = 'rgba(245,200,66,0.08)';
+  document.getElementById('login-error').style.borderColor = 'rgba(245,200,66,0.25)';
+  document.getElementById('login-error').classList.remove('hidden');
+}
 
 document.getElementById('btn-logout').onclick = () => auth.signOut();
 
