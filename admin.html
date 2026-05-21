@@ -233,26 +233,310 @@ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 let currentUser = null;
 let currentAction = null;
 
-auth.onAuthStateChanged(async (user) => {
-  if (user) {
-    // Verificar se é admin
-    const userDoc = await db.collection('users').doc(user.uid).get();
-    if (!userDoc.exists || userDoc.data().role !== 'admin') {
-      alert('❌ Acesso negado! Você não é admin.');
-      window.location.href = 'index.html';
-      return;
-    }
 
-    currentUser = user;
-    document.getElementById('user-avatar').src = user.photoURL || '';
-    document.getElementById('user-name').textContent = user.displayName;
-    loadUsers();
-    carregarDashboard();
-    carregarAvisoAtual();
+// ══════════════════════════════════════════════════════════════════════
+// AUTENTICAÇÃO ADMIN - VERSÃO CORRIGIDA
+// ══════════════════════════════════════════════════════════════════════
+
+let currentUser = null;
+let currentAction = null;
+let authInitialized = false; // Flag para saber se já passou pelo onAuthStateChanged
+
+// Constantes de configuração
+const AUTH_CONFIG = {
+  RETRY_ATTEMPTS: 5,      // Número de tentativas
+  RETRY_DELAY: 500,        // Delay entre tentativas (ms)
+  RETRY_TIMEOUT: 5000,     // Timeout total (ms)
+  LOG_PREFIX: '[AdminAuth]'
+};
+
+auth.onAuthStateChanged(async (user) => {
+  console.log(AUTH_CONFIG.LOG_PREFIX, 'onAuthStateChanged disparado');
+  
+  if (user) {
+    console.log(AUTH_CONFIG.LOG_PREFIX, 'Usuário autenticado:', user.email);
+    
+    try {
+      // Tenta obter documento com retry automático
+      const userDoc = await obterDocUserComRetry(user.uid);
+      
+      if (!userDoc) {
+        console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Documento não encontrado após retry');
+        mostrarErroAdminNaTela(
+          'Documento de usuário não encontrado',
+          'Seu perfil não foi encontrado no sistema.'
+        );
+        return;
+      }
+      
+      const userData = userDoc.data();
+      console.log(AUTH_CONFIG.LOG_PREFIX, 'Documento obtido:', {
+        email: userData.email,
+        role: userData.role,
+        authorized: userData.authorized
+      });
+      
+      // Verifica se é admin
+      if (userData.role !== 'admin') {
+        console.warn(AUTH_CONFIG.LOG_PREFIX, '❌ Usuário não é admin. Role:', userData.role);
+        mostrarErroAdminNaTela(
+          'Acesso Negado',
+          'Você não possui permissão de administrador.'
+        );
+        return;
+      }
+      
+      // ✅ É ADMIN - MOSTRA PAINEL
+      console.log(AUTH_CONFIG.LOG_PREFIX, '✅ Usuário é admin, carregando painel...');
+      
+      currentUser = user;
+      authInitialized = true;
+      
+      // Mostra conteúdo do painel
+      document.querySelector('.container').style.display = 'block';
+      
+      // Carrega dados do usuário
+      document.getElementById('user-avatar').src = user.photoURL || '';
+      document.getElementById('user-name').textContent = user.displayName || 'Admin';
+      
+      // Carrega dados do painel
+      loadUsers();
+      carregarDashboard();
+      carregarAvisoAtual();
+      
+      console.log(AUTH_CONFIG.LOG_PREFIX, '✅ Painel carregado com sucesso');
+      
+    } catch (err) {
+      console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Erro:', err.message);
+      
+      mostrarErroAdminNaTela(
+        'Erro de Autenticação',
+        err.message || 'Não foi possível verificar suas permissões.'
+      );
+    }
+    
   } else {
-    window.location.href = 'index.html';
+    // 🚪 DESCONECTADO
+    console.log(AUTH_CONFIG.LOG_PREFIX, 'Usuário desconectado');
+    
+    // Se já foi inicializado e agora está vazio, é logout
+    if (authInitialized) {
+      console.log(AUTH_CONFIG.LOG_PREFIX, 'Redirecionando para login (logout)...');
+      window.location.href = 'index.html';
+    } else {
+      // Primeira vez que carrega - redireciona para login
+      console.log(AUTH_CONFIG.LOG_PREFIX, 'Sem autenticação, redirecionando...');
+      window.location.href = 'index.html';
+    }
   }
 });
+
+// ══════════════════════════════════════════════════════════════════════
+// FUNÇÃO: Obter documento do usuário com retry automático
+// ══════════════════════════════════════════════════════════════════════
+
+async function obterDocUserComRetry(uid) {
+  const startTime = Date.now();
+  let tentativa = 0;
+  
+  while (
+    Date.now() - startTime < AUTH_CONFIG.RETRY_TIMEOUT && 
+    tentativa < AUTH_CONFIG.RETRY_ATTEMPTS
+  ) {
+    try {
+      console.log(
+        AUTH_CONFIG.LOG_PREFIX,
+        `Tentativa ${tentativa + 1}/${AUTH_CONFIG.RETRY_ATTEMPTS} de obter documento...`
+      );
+      
+      const doc = await db.collection('users').doc(uid).get();
+      
+      if (doc.exists) {
+        console.log(AUTH_CONFIG.LOG_PREFIX, '✅ Documento obtido com sucesso');
+        return doc;
+      } else {
+        console.warn(AUTH_CONFIG.LOG_PREFIX, '⚠️ Documento não existe ainda');
+      }
+      
+    } catch (error) {
+      console.warn(
+        AUTH_CONFIG.LOG_PREFIX,
+        `Erro na tentativa ${tentativa + 1}:`,
+        error.code,
+        error.message
+      );
+    }
+    
+    // Aguarda antes da próxima tentativa
+    tentativa++;
+    if (tentativa < AUTH_CONFIG.RETRY_ATTEMPTS) {
+      console.log(
+        AUTH_CONFIG.LOG_PREFIX,
+        `Aguardando ${AUTH_CONFIG.RETRY_DELAY}ms antes da próxima tentativa...`
+      );
+      await new Promise(resolve => setTimeout(resolve, AUTH_CONFIG.RETRY_DELAY));
+    }
+  }
+  
+  console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Esgotadas as tentativas de obter documento');
+  return null;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// FUNÇÃO: Mostrar erro na tela (sem redirecionar imediatamente)
+// ══════════════════════════════════════════════════════════════════════
+
+function mostrarErroAdminNaTela(titulo, mensagem) {
+  console.log(AUTH_CONFIG.LOG_PREFIX, 'Mostrando erro:', titulo);
+  
+  // Esconde o painel
+  const container = document.querySelector('.container');
+  if (container) {
+    container.style.display = 'none';
+  }
+  
+  // Cria overlay com erro
+  let overlay = document.getElementById('admin-error-overlay');
+  if (overlay) {
+    overlay.remove();
+  }
+  
+  overlay = document.createElement('div');
+  overlay.id = 'admin-error-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(7,18,9,0.95), rgba(10,26,12,0.95));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeUp 0.3s both;
+  `;
+  
+  const box = document.createElement('div');
+  box.style.cssText = `
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    max-width: 380px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  `;
+  
+  box.innerHTML = `
+    <div style="
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.4s 0.1s both;
+    ">🔐</div>
+    
+    <div style="
+      font-family: Cinzel;
+      font-size: 1.1rem;
+      color: var(--gold2);
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.05em;
+      animation: fadeUp 0.4s 0.2s both;
+    ">${titulo}</div>
+    
+    <p style="
+      color: var(--text);
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      animation: fadeUp 0.4s 0.3s both;
+    ">${mensagem}</p>
+    
+    <div style="
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.4s 0.4s both;
+    ">
+      <button onclick="window.location.href='index.html'" style="
+        padding: 9px 18px;
+        background: var(--green);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: Cinzel;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.2s;
+      " onmouseover="this.style.background='var(--green2)'" onmouseout="this.style.background='var(--green)'">
+        ← Voltar
+      </button>
+      
+      <button onclick="location.reload()" style="
+        padding: 9px 18px;
+        background: transparent;
+        color: var(--text2);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: Cinzel;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.2s;
+      " onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--border)'">
+        🔄 Tentar novamente
+      </button>
+    </div>
+  `;
+  
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  
+  // Redireciona após 5 segundos (timeout de segurança)
+  const timeoutId = setTimeout(() => {
+    console.log(AUTH_CONFIG.LOG_PREFIX, 'Redirecionando após timeout (5s)');
+    window.location.href = 'index.html';
+  }, 5000);
+  
+  // Limpa timeout se usuário clicar em "Voltar"
+  const btnVoltar = box.querySelector('button:first-child');
+  if (btnVoltar) {
+    btnVoltar.onclick = () => {
+      clearTimeout(timeoutId);
+      window.location.href = 'index.html';
+    };
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// Botão de logout
+// ══════════════════════════════════════════════════════════════════════
+
+document.getElementById('btn-logout').onclick = () => {
+  console.log(AUTH_CONFIG.LOG_PREFIX, 'Desconectando...');
+  auth.signOut().catch(err => {
+    console.error(AUTH_CONFIG.LOG_PREFIX, 'Erro no logout:', err);
+  });
+};
+
+// ══════════════════════════════════════════════════════════════════════
+// Verificações no carregamento
+// ══════════════════════════════════════════════════════════════════════
+
+console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Scripts de autenticação carregados');
+console.log(AUTH_CONFIG.LOG_PREFIX, 'Configuração:', {
+  retries: AUTH_CONFIG.RETRY_ATTEMPTS,
+  delay: AUTH_CONFIG.RETRY_DELAY + 'ms',
+  timeout: AUTH_CONFIG.RETRY_TIMEOUT + 'ms'
+});
+
 
 document.getElementById('btn-logout').onclick = () => auth.signOut();
 
