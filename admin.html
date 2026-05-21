@@ -321,34 +321,33 @@ auth.onAuthStateChanged(async (user) => {
       console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Dados do usuário atualizados');
       
       // Carregar dados do painel (com tratamento de erro)
+      console.log(AUTH_CONFIG.LOG_PREFIX, 'Iniciando carregamento de dados...');
+      
       try {
-        if (typeof loadUsers === 'function') {
-          await loadUsers();
-          console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Usuários carregados');
-        }
+        console.log(AUTH_CONFIG.LOG_PREFIX, 'Chamando loadUsers()...');
+        await loadUsers();
+        console.log(AUTH_CONFIG.LOG_PREFIX, '✓ loadUsers completado');
       } catch (e) {
-        console.warn(AUTH_CONFIG.LOG_PREFIX, '⚠️ Erro ao carregar usuários:', e);
+        console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Erro em loadUsers:', e.message || e);
       }
       
       try {
-        if (typeof carregarDashboard === 'function') {
-          await carregarDashboard();
-          console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Dashboard carregado');
-        }
+        console.log(AUTH_CONFIG.LOG_PREFIX, 'Chamando carregarDashboard()...');
+        await carregarDashboard();
+        console.log(AUTH_CONFIG.LOG_PREFIX, '✓ carregarDashboard completado');
       } catch (e) {
-        console.warn(AUTH_CONFIG.LOG_PREFIX, '⚠️ Erro ao carregar dashboard:', e);
+        console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Erro em carregarDashboard:', e.message || e);
       }
       
       try {
-        if (typeof carregarAvisoAtual === 'function') {
-          await carregarAvisoAtual();
-          console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Aviso carregado');
-        }
+        console.log(AUTH_CONFIG.LOG_PREFIX, 'Chamando carregarAvisoAtual()...');
+        await carregarAvisoAtual();
+        console.log(AUTH_CONFIG.LOG_PREFIX, '✓ carregarAvisoAtual completado');
       } catch (e) {
-        console.warn(AUTH_CONFIG.LOG_PREFIX, '⚠️ Erro ao carregar aviso:', e);
+        console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Erro em carregarAvisoAtual:', e.message || e);
       }
       
-      console.log(AUTH_CONFIG.LOG_PREFIX, '✅ Painel carregado com sucesso');
+      console.log(AUTH_CONFIG.LOG_PREFIX, '✅ PAINEL COMPLETAMENTE CARREGADO');
       
     } catch (err) {
       console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Erro:', err.message);
@@ -390,12 +389,7 @@ async function obterDocUserComRetry(uid) {
         `Tentativa ${tentativa + 1}/${AUTH_CONFIG.RETRY_ATTEMPTS} de obter documento...`
       );
       
-      const doc = await Promise.race([
-        db.collection('users').doc(uid).get(),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout na busca')), 3000)
-        )
-      ]);
+      const doc = await db.collection('users').doc(uid).get();
       
       if (doc.exists) {
         console.log(AUTH_CONFIG.LOG_PREFIX, '✅ Documento obtido com sucesso');
@@ -408,7 +402,8 @@ async function obterDocUserComRetry(uid) {
       console.warn(
         AUTH_CONFIG.LOG_PREFIX,
         `Erro na tentativa ${tentativa + 1}:`,
-        error.code || error.message
+        error.code,
+        error.message
       );
     }
     
