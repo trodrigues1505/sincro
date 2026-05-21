@@ -250,6 +250,18 @@ const AUTH_CONFIG = {
   LOG_PREFIX: '[AdminAuth]'
 };
 
+let currentUser = null;
+let currentAction = null;
+let authInitialized = false;
+
+// Constantes de configuração
+const AUTH_CONFIG = {
+  RETRY_ATTEMPTS: 5,
+  RETRY_DELAY: 500,
+  RETRY_TIMEOUT: 5000,
+  LOG_PREFIX: '[AdminAuth]'
+};
+
 auth.onAuthStateChanged(async (user) => {
   console.log(AUTH_CONFIG.LOG_PREFIX, 'onAuthStateChanged disparado');
   
@@ -292,14 +304,10 @@ auth.onAuthStateChanged(async (user) => {
       currentUser = user;
       authInitialized = true;
       
-      // Mostra conteúdo do painel
       document.querySelector('.container').style.display = 'block';
-      
-      // Carrega dados do usuário
       document.getElementById('user-avatar').src = user.photoURL || '';
       document.getElementById('user-name').textContent = user.displayName || 'Admin';
       
-      // Carrega dados do painel
       loadUsers();
       carregarDashboard();
       carregarAvisoAtual();
@@ -316,24 +324,21 @@ auth.onAuthStateChanged(async (user) => {
     }
     
   } else {
-    // 🚪 DESCONECTADO
     console.log(AUTH_CONFIG.LOG_PREFIX, 'Usuário desconectado');
     
-    // Se já foi inicializado e agora está vazio, é logout
     if (authInitialized) {
       console.log(AUTH_CONFIG.LOG_PREFIX, 'Redirecionando para login (logout)...');
       window.location.href = 'index.html';
     } else {
-      // Primeira vez que carrega - redireciona para login
       console.log(AUTH_CONFIG.LOG_PREFIX, 'Sem autenticação, redirecionando...');
       window.location.href = 'index.html';
     }
   }
 });
 
-// ══════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════
 // FUNÇÃO: Obter documento do usuário com retry automático
-// ══════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════
 
 async function obterDocUserComRetry(uid) {
   const startTime = Date.now();
@@ -367,7 +372,6 @@ async function obterDocUserComRetry(uid) {
       );
     }
     
-    // Aguarda antes da próxima tentativa
     tentativa++;
     if (tentativa < AUTH_CONFIG.RETRY_ATTEMPTS) {
       console.log(
@@ -382,20 +386,18 @@ async function obterDocUserComRetry(uid) {
   return null;
 }
 
-// ══════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════
 // FUNÇÃO: Mostrar erro na tela (sem redirecionar imediatamente)
-// ══════════════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════════
 
 function mostrarErroAdminNaTela(titulo, mensagem) {
   console.log(AUTH_CONFIG.LOG_PREFIX, 'Mostrando erro:', titulo);
   
-  // Esconde o painel
   const container = document.querySelector('.container');
   if (container) {
     container.style.display = 'none';
   }
   
-  // Cria overlay com erro
   let overlay = document.getElementById('admin-error-overlay');
   if (overlay) {
     overlay.remove();
@@ -499,13 +501,11 @@ function mostrarErroAdminNaTela(titulo, mensagem) {
   overlay.appendChild(box);
   document.body.appendChild(overlay);
   
-  // Redireciona após 5 segundos (timeout de segurança)
   const timeoutId = setTimeout(() => {
     console.log(AUTH_CONFIG.LOG_PREFIX, 'Redirecionando após timeout (5s)');
     window.location.href = 'index.html';
   }, 5000);
   
-  // Limpa timeout se usuário clicar em "Voltar"
   const btnVoltar = box.querySelector('button:first-child');
   if (btnVoltar) {
     btnVoltar.onclick = () => {
@@ -515,10 +515,6 @@ function mostrarErroAdminNaTela(titulo, mensagem) {
   }
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// Botão de logout
-// ══════════════════════════════════════════════════════════════════════
-
 document.getElementById('btn-logout').onclick = () => {
   console.log(AUTH_CONFIG.LOG_PREFIX, 'Desconectando...');
   auth.signOut().catch(err => {
@@ -526,19 +522,7 @@ document.getElementById('btn-logout').onclick = () => {
   });
 };
 
-// ══════════════════════════════════════════════════════════════════════
-// Verificações no carregamento
-// ══════════════════════════════════════════════════════════════════════
-
 console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Scripts de autenticação carregados');
-console.log(AUTH_CONFIG.LOG_PREFIX, 'Configuração:', {
-  retries: AUTH_CONFIG.RETRY_ATTEMPTS,
-  delay: AUTH_CONFIG.RETRY_DELAY + 'ms',
-  timeout: AUTH_CONFIG.RETRY_TIMEOUT + 'ms'
-});
-
-
-document.getElementById('btn-logout').onclick = () => auth.signOut();
 
 async function loadUsers() {
   try {
