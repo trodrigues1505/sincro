@@ -232,27 +232,11 @@ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 let currentUser = null;
 let currentAction = null;
-
+let authInitialized = false;
 
 // ══════════════════════════════════════════════════════════════════════
 // AUTENTICAÇÃO ADMIN - VERSÃO CORRIGIDA
 // ══════════════════════════════════════════════════════════════════════
-
-let currentUser = null;
-let currentAction = null;
-let authInitialized = false; // Flag para saber se já passou pelo onAuthStateChanged
-
-// Constantes de configuração
-const AUTH_CONFIG = {
-  RETRY_ATTEMPTS: 5,      // Número de tentativas
-  RETRY_DELAY: 500,        // Delay entre tentativas (ms)
-  RETRY_TIMEOUT: 5000,     // Timeout total (ms)
-  LOG_PREFIX: '[AdminAuth]'
-};
-
-let currentUser = null;
-let currentAction = null;
-let authInitialized = false;
 
 // Constantes de configuração
 const AUTH_CONFIG = {
