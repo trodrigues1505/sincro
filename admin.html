@@ -304,13 +304,49 @@ auth.onAuthStateChanged(async (user) => {
       currentUser = user;
       authInitialized = true;
       
-      document.querySelector('.container').style.display = 'block';
-      document.getElementById('user-avatar').src = user.photoURL || '';
-      document.getElementById('user-name').textContent = user.displayName || 'Admin';
+      // Mostrar painel
+      const container = document.querySelector('.container');
+      if (container) {
+        container.style.display = 'block';
+        console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Container visível');
+      }
       
-      loadUsers();
-      carregarDashboard();
-      carregarAvisoAtual();
+      // Atualizar dados do usuário
+      const avatar = document.getElementById('user-avatar');
+      const nameEl = document.getElementById('user-name');
+      
+      if (avatar) avatar.src = user.photoURL || '';
+      if (nameEl) nameEl.textContent = user.displayName || 'Admin';
+      
+      console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Dados do usuário atualizados');
+      
+      // Carregar dados do painel (com tratamento de erro)
+      try {
+        if (typeof loadUsers === 'function') {
+          await loadUsers();
+          console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Usuários carregados');
+        }
+      } catch (e) {
+        console.warn(AUTH_CONFIG.LOG_PREFIX, '⚠️ Erro ao carregar usuários:', e);
+      }
+      
+      try {
+        if (typeof carregarDashboard === 'function') {
+          await carregarDashboard();
+          console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Dashboard carregado');
+        }
+      } catch (e) {
+        console.warn(AUTH_CONFIG.LOG_PREFIX, '⚠️ Erro ao carregar dashboard:', e);
+      }
+      
+      try {
+        if (typeof carregarAvisoAtual === 'function') {
+          await carregarAvisoAtual();
+          console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Aviso carregado');
+        }
+      } catch (e) {
+        console.warn(AUTH_CONFIG.LOG_PREFIX, '⚠️ Erro ao carregar aviso:', e);
+      }
       
       console.log(AUTH_CONFIG.LOG_PREFIX, '✅ Painel carregado com sucesso');
       
@@ -354,7 +390,12 @@ async function obterDocUserComRetry(uid) {
         `Tentativa ${tentativa + 1}/${AUTH_CONFIG.RETRY_ATTEMPTS} de obter documento...`
       );
       
-      const doc = await db.collection('users').doc(uid).get();
+      const doc = await Promise.race([
+        db.collection('users').doc(uid).get(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout na busca')), 3000)
+        )
+      ]);
       
       if (doc.exists) {
         console.log(AUTH_CONFIG.LOG_PREFIX, '✅ Documento obtido com sucesso');
@@ -367,8 +408,7 @@ async function obterDocUserComRetry(uid) {
       console.warn(
         AUTH_CONFIG.LOG_PREFIX,
         `Erro na tentativa ${tentativa + 1}:`,
-        error.code,
-        error.message
+        error.code || error.message
       );
     }
     
