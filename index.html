@@ -72,7 +72,7 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .selo-blue,.selo-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 .oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
-.oraculo-wrap::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:270px;height:270px;border-radius:50%;border:1px solid rgba(165,124,0,.2);pointer-events:none}
+
 .oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
@@ -116,12 +116,12 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .lua-circular .seg.blue,.lua-circular .seg.azul{stroke:rgba(26,72,96,.38)}
 .lua-circular .seg.yellow,.lua-circular .seg.amarelo{stroke:rgba(165,124,0,.32)}
 .lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
-.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:6px;fill:var(--text3);text-anchor:middle;dominant-baseline:central}
+.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:8px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
 .lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
-.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:5px;fill:var(--text3);text-transform:uppercase;text-anchor:middle;dominant-baseline:central}
+.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:7px;fill:var(--gold);text-transform:uppercase;text-anchor:middle;dominant-baseline:central;letter-spacing:.05em}
 .lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
 .lua-circular .center-num{font-size:18px;dominant-baseline:central}
-.lua-circular .center-sub{font-size:5px;fill:var(--text3);letter-spacing:.1em;dominant-baseline:central}
+.lua-circular .center-sub{font-size:7px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
 .btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
 .btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
 .btn-cal{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
@@ -143,14 +143,6 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .modal-selo-desc{color:var(--text);font-size:.88rem;line-height:1.75}
 .modal-selo-close{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
 .modal-selo-close:hover{border-color:var(--text2);color:var(--text2)}
-.modal-video{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
-.modal-video.active{display:flex}
-.modal-video-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;width:100%;max-width:560px;overflow:hidden;animation:fadeUp .25s both;position:relative}
-.modal-video-header{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1rem;border-bottom:1px solid var(--border)}
-.modal-video-titulo{font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold2);letter-spacing:.05em}
-.modal-video-close{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
-.modal-video-close:hover{border-color:var(--text2);color:var(--text2)}
-.modal-video iframe{width:100%;aspect-ratio:16/9;display:block;border:none}
 .perfil-hero{text-align:center;padding:1.5rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2)}
 .perfil-avatar{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);margin:0 auto .7rem;display:block}
 .perfil-nome{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold2);margin-bottom:.2rem}
@@ -209,6 +201,15 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
   .oraculo-side .selo-icon{width:42px;height:42px}.onda-L{--cell:40px;gap:3px}
   .cards{grid-template-columns:1fr}.lua-circular{max-width:190px}
 }
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.modal-video{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-video.active{display:flex}
+.modal-video-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;width:100%;max-width:600px;overflow:hidden;animation:fadeUp .2s both;position:relative}
+.modal-video-header{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;border-bottom:1px solid var(--border)}
+.modal-video-titulo{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold2);letter-spacing:.05em}
+.modal-video-close{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:3px 8px;cursor:pointer;font-size:.68rem;transition:all .2s;font-family:'Cinzel',serif}
+.modal-video-close:hover{border-color:var(--text2);color:var(--text)}
+.modal-video iframe{width:100%;aspect-ratio:16/9;display:block;border:none}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 </style>
@@ -343,7 +344,7 @@ Entrar com Google
 </div>
 
 <!-- MODAL SELOS -->
-<!-- MODAL MEDITAÇÃO (YouTube embed) -->
+<!-- MODAL MEDITAÇÃO -->
 <div class="modal-video" id="modal-video" onclick="if(event.target===this)fecharModalVideo()">
   <div class="modal-video-box">
     <div class="modal-video-header">
@@ -377,6 +378,7 @@ Entrar com Google
 <script>
 // DADOS E CONFIGURAÇÕES
 let DATA = {};
+const MEDITACOES = {"1":"https://youtu.be/9nisqbS4SJ8","2":"https://youtu.be/K5EF62Xe8d8","3":"https://youtu.be/UV3BaCJRrWQ","4":"https://youtu.be/2mGZSbgjYeA","5":"https://youtu.be/1U3lksU0cas","6":"https://youtu.be/sAG4HQeFyZk","7":"https://youtu.be/niT-GgQ33qw","8":"https://youtu.be/GjO5jASFDoY","9":"https://youtu.be/H8geSLOq1X0","10":"https://youtu.be/L1h57Wud_U0","11":"https://youtu.be/5CDzGT94u1U","12":"https://youtu.be/PMTE6lcz4So","13":"https://youtu.be/NvSvZBQxssU","14":"https://youtu.be/THFoC7MqBWw","15":"https://youtu.be/NDHELzsH-iU","16":"https://youtu.be/jyTPQEvE6lw","17":"https://youtu.be/bSNU94GJEzA","18":"https://youtu.be/8ITZekt7KIE","19":"https://youtu.be/Dtv0d6pZ9qI","20":"https://youtu.be/nmLnIQHrsmI"};
 const MEDITACOES = {
   "1": "https://youtu.be/9nisqbS4SJ8",
   "2": "https://youtu.be/K5EF62Xe8d8",
@@ -909,6 +911,15 @@ function kinHTML(kinNum) {
 
   // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
+  
+  // Função auxiliar para executar após renderizar
+  setTimeout(() => {
+    const btnMed = document.getElementById('btn-meditacao');
+    if (btnMed && MEDITACOES[String(anelKin)]) {
+      btnMed.href = MEDITACOES[String(anelKin)];
+      btnMed.style.cursor = 'pointer';
+    }
+  }, 100);
   const anelSelo = DATA.selos[anelKin] || {};
   const anelNomeCompleto = anelSelo.nome || '';
   const anelIconURL = getSeloIconURL(anelNomeCompleto);
@@ -999,7 +1010,7 @@ function kinHTML(kinNum) {
       <li>Ouça a prece das 7 direções galácticas</li>
       <li style="display:flex;align-items:center;justify-content:space-between">
         <span>Ouça a meditação do selo</span>
-        <button onclick="abrirModalVideo(MEDITACOES[String(anelKin)], nomeCompleto)" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:4px 10px;font-size:0.65rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;letter-spacing:0.05em;transition:all .2s" onmouseover="this.style.borderColor='var(--green2)';this.style.color='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)';this.style.color='var(--green2)'">▶ Ouvir</button>
+        <a href="" id="btn-meditacao" style="background:var(--green);color:white;border:none;border-radius:4px;padding:6px 12px;font-size:0.7rem;text-decoration:none;margin-left:8px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.05em;font-family:Cinzel;font-weight:bold;cursor:pointer" onmouseover="this.style.background='var(--green2)'" onmouseout="this.style.background='var(--green)'" target="_blank">▶ Ouvir</a>
       </li>
       <li>Ouça o Self Design Sounds</li>
       <li>Faça a leitura da página ${diaOnda} do e-book</li>
@@ -1146,6 +1157,15 @@ function kinHTML(kinNum) {
 
   // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
+  
+  // Função auxiliar para executar após renderizar
+  setTimeout(() => {
+    const btnMed = document.getElementById('btn-meditacao');
+    if (btnMed && MEDITACOES[String(anelKin)]) {
+      btnMed.href = MEDITACOES[String(anelKin)];
+      btnMed.style.cursor = 'pointer';
+    }
+  }, 100);
   const anelSelo = DATA.selos[anelKin] || {};
   const anelNomeCompleto = anelSelo.nome || '';
   const anelIconURL = getSeloIconURL(anelNomeCompleto);
@@ -1156,19 +1176,24 @@ function kinHTML(kinNum) {
   const ondaNum = Math.floor((kinNum - 1) / 13) + 1;
   const ondaSelo = DATA.selos[((ondaNum - 1) % 20) + 1] || {};
 
+  // Direção real do castelo: Leste, Norte, Oeste, Sul
+  const DIRS_CASTELO = ['Leste','Norte','Oeste','Sul','Leste'];
+  const casteloDir = DIRS_CASTELO[casteloNum] || '';
+  const casteloLabel = `🏰 Castelo ${castelo.nome || ''} · ${casteloDir} · ${castelo.proposito || ''}`;
+
   return `
 <div class="section anim-1">
   <div class="kin-hero">
-    <div class="selo-icon selo-${corSelo}" style="width:64px;height:64px;border-radius:8px;margin:0 auto .6rem"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+    <div class="selo-icon selo-${corSelo}" style="width:60px;height:60px;border-radius:8px;margin:0 auto .8rem"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
     <div class="kin-title">${nomeCompleto}</div>
     <div class="kin-num">Kin ${kinNum} · 260</div>
   </div>
   ${fraseCurta ? `<div class="kin-frase">"${fraseCurta}"</div>` : ''}
   <div class="export-btns">
     <button class="btn-share" onclick="compartilharKin()">⬆ Compartilhar</button>
-    <button class="btn-share" onclick="exportPNG()" style="border-color:var(--border);color:var(--text2)">↓ Baixar PNG</button>
-    <button class="btn-cal" onclick="exportarCalendario28()">📅 Próximos 28 dias</button>
-    <button class="btn-cal" onclick="exportarPDFKin()">📄 Relatório PDF</button>
+    <button class="btn-share" onclick="exportPNG()" style="border-color:var(--border);color:var(--text2)">↓ PNG</button>
+    <button class="btn-cal" onclick="exportarCalendario28()">📅 28 dias</button>
+    <button class="btn-cal" onclick="exportarPDFKin()">📄 PDF</button>
   </div>
 </div>
 
@@ -1176,77 +1201,82 @@ function kinHTML(kinNum) {
   <div class="section-title">Oráculo do Destino</div>
   <div class="oraculo-wrap">
     <div class="oraculo-cell-top oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(guia)}"><img src="${getSeloIconURL(guia)}" alt="${getSeloBase(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome">Guia · ${getSeloBase(guia)}</div>
+      <div class="selo-icon selo-${getSeloCor(guia)}" style="width:52px;height:52px"><img src="${getSeloIconURL(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome"><span style="color:var(--text3);font-size:.48rem;display:block;margin-bottom:2px">Guia</span>${getSeloBase(guia)}</div>
     </div>
     <div class="oraculo-cell-left oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(analogo)}"><img src="${getSeloIconURL(analogo)}" alt="${getSeloBase(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome">Análogo · ${getSeloBase(analogo)}</div>
+      <div class="selo-icon selo-${getSeloCor(analogo)}" style="width:52px;height:52px"><img src="${getSeloIconURL(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome"><span style="color:var(--text3);font-size:.48rem;display:block;margin-bottom:2px">Análogo</span>${getSeloBase(analogo)}</div>
     </div>
     <div class="oraculo-cell-center oraculo-item oraculo-central">
-      <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome" style="color:var(--gold2);font-size:.6rem">${seloBase}</div>
+      <div class="selo-icon selo-${corSelo}" style="width:72px;height:72px;border-radius:10px"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome" style="color:var(--gold2);font-size:.58rem;margin-top:.5rem">${seloBase}</div>
     </div>
     <div class="oraculo-cell-right oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(oculto)}"><img src="${getSeloIconURL(oculto)}" alt="${getSeloBase(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome">Oculto · ${getSeloBase(oculto)}</div>
+      <div class="selo-icon selo-${getSeloCor(oculto)}" style="width:52px;height:52px"><img src="${getSeloIconURL(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome"><span style="color:var(--text3);font-size:.48rem;display:block;margin-bottom:2px">Oculto</span>${getSeloBase(oculto)}</div>
     </div>
     <div class="oraculo-cell-bottom oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(antipoda)}"><img src="${getSeloIconURL(antipoda)}" alt="${getSeloBase(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome">Antípoda · ${getSeloBase(antipoda)}</div>
+      <div class="selo-icon selo-${getSeloCor(antipoda)}" style="width:52px;height:52px"><img src="${getSeloIconURL(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome"><span style="color:var(--text3);font-size:.48rem;display:block;margin-bottom:2px">Antípoda</span>${getSeloBase(antipoda)}</div>
     </div>
   </div>
 </div>
 
 <div class="section">
-  <div style="font-family:Cinzel;font-size:0.9rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Onda Encantada ${ondaNum} - Dia ${diaOnda}</div>
-  <p class="info-text">Propósito: ${ondaSelo.acao || ''}</p>
+  <div class="section-title">Onda Encantada ${ondaNum} · Dia ${diaOnda}</div>
+  <p style="font-size:.78rem;color:var(--text3);font-style:italic;margin-bottom:.9rem;padding-left:.1rem">Propósito: ${ondaSelo.acao || ''}</p>
   <div class="onda-wrap">${ondaHTML}</div>
-  <div class="info-box">
-    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--text);margin-bottom:0.5rem">${tomOriginal.toUpperCase()}: ${tomInfo.verbo || ''}</div>
-    <p class="info-text">${tomInfo.pergunta || ''}</p>
+  <div class="info-box" style="margin-top:.9rem">
+    <div style="font-family:Cinzel;font-size:.7rem;color:var(--gold2);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.07em">${tomOriginal} · ${tomInfo.verbo || ''}</div>
+    <p style="font-size:.82rem;color:var(--text3);font-style:italic;line-height:1.65">${tomInfo.pergunta || ''}</p>
   </div>
 </div>
 
 <div class="grid-2">
   <div class="section">
-    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Informações</div>
-    <div style="margin-bottom:1.5rem">
-      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">${casteloTexto}</div>
+    <div class="section-title">Informações</div>
+
+    <div style="margin-bottom:1.1rem">
+      <div style="font-size:.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem">Castelo</div>
+      <div style="font-family:Cinzel;font-size:.76rem;color:var(--text);line-height:1.6">${casteloLabel}</div>
       ${casteloOndasHTML}
     </div>
-    <div style="margin-bottom:1.5rem">
-      <div style="font-family:Cinzel;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem">🌙 ${luaNome}</div>
+
+    <div style="margin-bottom:1.1rem">
+      <div style="font-size:.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Lua Galáctica ${luaNum} · ${luaNome} · Dia ${diaLua}</div>
       ${luaHTML}
     </div>
-    <div class="grid-3" style="margin-top:1.5rem">
+
+    <div class="grid-3">
       <div class="card">
-        <div class="card-label">⭐ Anel Solar</div>
-        <div style="text-align:center;margin:0.5rem 0"><img src="${anelIconURL}" style="width:60px;height:60px;object-fit:contain"></div>
-        <div class="card-val" style="text-align:center">${anelNome}<br><small style="font-size:0.75rem;color:var(--text2)">${anelAcao}</small></div>
+        <div class="card-label">Anel Solar</div>
+        <div style="text-align:center;margin:.5rem 0"><img src="${anelIconURL}" style="width:44px;height:44px;object-fit:contain"></div>
+        <div style="font-family:Cinzel;font-size:.68rem;color:var(--gold3);text-align:center">${anelNome}</div>
+        <div style="font-size:.58rem;color:var(--text3);text-align:center;margin-top:.15rem">${anelAcao}</div>
       </div>
       <div class="card">
-        <div class="card-label">⚡ Plasma Diário</div>
-        <div style="font-size:1.4rem;text-align:center;margin:.3rem 0">${plasmaEmoji}</div>
-        <div class="card-val" style="text-align:center">${plasma}</div>
+        <div class="card-label">Plasma</div>
+        <div style="font-size:1.5rem;text-align:center;margin:.5rem 0">${plasmaEmoji}</div>
+        <div style="font-family:Cinzel;font-size:.68rem;color:var(--gold3);text-align:center">${plasma}</div>
       </div>
       <div class="card">
         <div class="card-label">Fase Lunar</div>
-        <div class="card-val">${faseLunar}</div>
+        <div style="font-family:Cinzel;font-size:.75rem;color:var(--text);margin-top:.6rem">${faseLunar}</div>
       </div>
     </div>
   </div>
 
   <div class="section">
-    <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Prática Diária</div>
+    <div class="section-title">Prática Diária</div>
     <ul class="praticas-list">
       <li>Ouça a prece das 7 direções galácticas</li>
-      <li style="display:flex;align-items:center;justify-content:space-between">
-        <span>Ouça a meditação do selo</span>
-        <button onclick="abrirModalVideo(MEDITACOES[String(anelKin)], nomeCompleto)" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:4px 10px;font-size:0.65rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;letter-spacing:0.05em;transition:all .2s" onmouseover="this.style.borderColor='var(--green2)';this.style.color='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)';this.style.color='var(--green2)'">▶ Ouvir</button>
+      <li style="justify-content:space-between;align-items:center">
+        <span>Meditação do selo</span>
+        <button onclick="abrirModalVideo(MEDITACOES[String(anelKin)], '${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
       </li>
       <li>Ouça o Self Design Sounds</li>
-      <li>Faça a leitura da página ${diaOnda} do e-book</li>
+      <li>Leitura da página ${diaOnda} do e-book</li>
       <li>${ritual.ritual || ''}</li>
     </ul>
   </div>
@@ -1368,32 +1398,6 @@ function fecharModalSelo() {
 }
 
 // Fechar modal clicando fora
-function abrirModalVideo(youtubeUrl, nomeSeloVideo) {
-  // Converter URL youtu.be/ID ou youtube.com/watch?v=ID para embed
-  let videoId = '';
-  const matchShort = youtubeUrl.match(/youtu\.be\/([\w-]+)/);
-  const matchLong  = youtubeUrl.match(/[?&]v=([\w-]+)/);
-  if (matchShort) videoId = matchShort[1];
-  else if (matchLong) videoId = matchLong[1];
-  
-  if (!videoId) return;
-  
-  const iframe = document.getElementById('modal-video-iframe');
-  const titulo = document.getElementById('modal-video-titulo');
-  
-  iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
-  if (titulo && nomeSeloVideo) titulo.textContent = '🎧 ' + nomeSeloVideo;
-  
-  document.getElementById('modal-video').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function fecharModalVideo() {
-  document.getElementById('modal-video').classList.remove('active');
-  document.getElementById('modal-video-iframe').src = ''; // para o vídeo
-  document.body.style.overflow = '';
-}
-
 document.getElementById('modal-selo').addEventListener('click', function(e) {
   if (e.target === this) fecharModalSelo();
 });
@@ -1949,6 +1953,21 @@ async function loadToday() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
+function abrirModalVideo(url, nomeSeloVideo) {
+  if (!url) return;
+  const m = url.match(/youtu\.be\/([\w-]+)/) || url.match(/[?&]v=([\w-]+)/);
+  if (!m) return;
+  document.getElementById('modal-video-iframe').src = 'https://www.youtube.com/embed/' + m[1] + '?autoplay=1&rel=0';
+  const t = document.getElementById('modal-video-titulo');
+  if (t) t.textContent = '🎧 ' + (nomeSeloVideo || 'Meditação do Selo');
+  document.getElementById('modal-video').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function fecharModalVideo() {
+  document.getElementById('modal-video').classList.remove('active');
+  document.getElementById('modal-video-iframe').src = '';
+  document.body.style.overflow = '';
+}
 if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
 </script>
 </body>
