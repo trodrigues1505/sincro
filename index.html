@@ -948,10 +948,7 @@ function kinHTML(kinNum) {
   const ondaNum = Math.floor((kinNum - 1) / 13) + 1;
   const ondaSelo = DATA.selos[((ondaNum - 1) % 20) + 1] || {};
 
-  // Direção real do castelo: Leste, Norte, Oeste, Sul
-  const casteloTextoFmt = '🏰 Castelo ' + (castelo.nome||'') + ' · ' + (['Leste','Norte','Oeste','Sul','Leste'][casteloNum]||castelo.dir||'') + ' · ' + (castelo.proposito||'');
-
-  // Direção real do castelo
+  // Castelo com direção cardinal
   const casteloTextoFmt = '🏰 Castelo ' + (castelo.nome||'') + ' · ' + (['Leste','Norte','Oeste','Sul','Leste'][casteloNum]||castelo.dir||'') + ' · ' + (castelo.proposito||'');
 
   return `
