@@ -88,10 +88,10 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .onda-L .onda-kin:nth-child(7){grid-column:1;grid-row:4}.onda-L .onda-kin:nth-child(8){grid-column:2;grid-row:4}
 .onda-L .onda-kin:nth-child(9){grid-column:3;grid-row:4}.onda-L .onda-kin:nth-child(10){grid-column:4;grid-row:2}
 .onda-L .onda-kin:nth-child(11){grid-column:4;grid-row:3}.onda-L .onda-kin:nth-child(12){grid-column:4;grid-row:4}
-.onda-L .onda-kin:nth-child(13){grid-column:2/4;grid-row:2/4;width:auto;height:auto}
-.onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s}
-.onda-kin:hover{transform:scale(1.09)}
-.onda-kin.active{box-shadow:0 0 0 2px var(--green);border-color:var(--green)!important}
+.onda-L .onda-kin:nth-child(13){grid-column:2/4;grid-row:2/4;width:auto;height:auto;border-width:2px}
+.onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s;position:relative}
+.onda-kin:hover{transform:scale(1.06)}
+.onda-kin.active{box-shadow:0 0 0 3px var(--green2);border-color:var(--green2)!important;border-width:2px}
 .cor-red,.cor-vermelho,.cor-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
 .cor-white,.cor-branco,.cor-branca{background:rgba(168,184,144,.05);border-color:rgba(168,184,144,.18)}
 .cor-blue,.cor-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
@@ -861,18 +861,29 @@ function kinHTML(kinNum) {
   const tomNum = kD.tom;
   const tomInfo = DATA.tons[tomNum] || {};
 
-  // Onda Encantada com CORES INDIVIDUAIS
+  // Onda Encantada — kin ativo sempre no centro (posição 13 = 2x2)
   const ondaInicio = Math.floor((kinNum - 1) / 13) * 13 + 1;
   const diaOnda = ((kinNum - 1) % 13) + 1;
+
+  // Montar lista de 13 kins reordenada: ativo vai para posição 13 (centro)
+  const ondaKins = [];
+  for (let i = 0; i < 13; i++) ondaKins.push(ondaInicio + i);
+  // Remover o kin ativo da posição atual e colocar no final (pos 13)
+  const idxAtivo = diaOnda - 1;
+  const kinAtivo = ondaKins.splice(idxAtivo, 1)[0];
+  ondaKins.push(kinAtivo); // agora ondaKins[12] = kin ativo (pos 13 no DOM)
+
   let ondaHTML = '<div class="onda-L">';
   for (let i = 0; i < 13; i++) {
-    const k = ondaInicio + i;
+    const k = ondaKins[i];
     const kData = DATA.kins[k];
-    const em = kData ? getSeloEmoji(kData.selo) : '?';
     const corKin = kData ? getSeloCor(kData.selo) : 'white';
     const ativo = k === kinNum ? 'active' : '';
-    const tooltip = kData ? `Kin ${k} - ${kData.selo} ${kData.tom_nome}` : '';
-    ondaHTML += `<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData.selo)}" style="width:100%;height:100%;object-fit:contain"></div>`;
+    const tooltip = kData ? `Kin ${k} · ${kData.selo} ${kData.tom_nome}` : '';
+    const numLabel = k === kinNum
+      ? `<span style="position:absolute;bottom:3px;right:5px;font-size:.55rem;font-family:Cinzel;color:rgba(255,255,255,.7)">${diaOnda}</span>`
+      : '';
+    ondaHTML += `<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}" style="position:relative"><img src="${getSeloIconURL(kData ? kData.selo : '')}" style="width:100%;height:100%;object-fit:contain">${numLabel}</div>`;
   }
   ondaHTML += '</div>';
 
