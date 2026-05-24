@@ -143,6 +143,14 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .modal-selo-desc{color:var(--text);font-size:.88rem;line-height:1.75}
 .modal-selo-close{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
 .modal-selo-close:hover{border-color:var(--text2);color:var(--text2)}
+.modal-video{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-video.active{display:flex}
+.modal-video-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;width:100%;max-width:560px;overflow:hidden;animation:fadeUp .25s both;position:relative}
+.modal-video-header{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1rem;border-bottom:1px solid var(--border)}
+.modal-video-titulo{font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold2);letter-spacing:.05em}
+.modal-video-close{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
+.modal-video-close:hover{border-color:var(--text2);color:var(--text2)}
+.modal-video iframe{width:100%;aspect-ratio:16/9;display:block;border:none}
 .perfil-hero{text-align:center;padding:1.5rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2)}
 .perfil-avatar{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);margin:0 auto .7rem;display:block}
 .perfil-nome{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold2);margin-bottom:.2rem}
@@ -335,6 +343,17 @@ Entrar com Google
 </div>
 
 <!-- MODAL SELOS -->
+<!-- MODAL MEDITAÇÃO (YouTube embed) -->
+<div class="modal-video" id="modal-video" onclick="if(event.target===this)fecharModalVideo()">
+  <div class="modal-video-box">
+    <div class="modal-video-header">
+      <span class="modal-video-titulo" id="modal-video-titulo">🎧 Meditação do Selo</span>
+      <button class="modal-video-close" onclick="fecharModalVideo()">✕ Fechar</button>
+    </div>
+    <iframe id="modal-video-iframe" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+  </div>
+</div>
+
 <div class="modal-selo" id="modal-selo">
   <div class="modal-selo-box">
     <button class="modal-selo-close" onclick="fecharModalSelo()">✕ Fechar</button>
@@ -890,15 +909,6 @@ function kinHTML(kinNum) {
 
   // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
-  
-  // Função auxiliar para executar após renderizar
-  setTimeout(() => {
-    const btnMed = document.getElementById('btn-meditacao');
-    if (btnMed && MEDITACOES[String(anelKin)]) {
-      btnMed.href = MEDITACOES[String(anelKin)];
-      btnMed.style.cursor = 'pointer';
-    }
-  }, 100);
   const anelSelo = DATA.selos[anelKin] || {};
   const anelNomeCompleto = anelSelo.nome || '';
   const anelIconURL = getSeloIconURL(anelNomeCompleto);
@@ -989,7 +999,7 @@ function kinHTML(kinNum) {
       <li>Ouça a prece das 7 direções galácticas</li>
       <li style="display:flex;align-items:center;justify-content:space-between">
         <span>Ouça a meditação do selo</span>
-        <a href="" id="btn-meditacao" style="background:var(--green);color:white;border:none;border-radius:4px;padding:6px 12px;font-size:0.7rem;text-decoration:none;margin-left:8px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.05em;font-family:Cinzel;font-weight:bold;cursor:pointer" onmouseover="this.style.background='var(--green2)'" onmouseout="this.style.background='var(--green)'" target="_blank">▶ Ouvir</a>
+        <button onclick="abrirModalVideo(MEDITACOES[String(anelKin)], nomeCompleto)" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:4px 10px;font-size:0.65rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;letter-spacing:0.05em;transition:all .2s" onmouseover="this.style.borderColor='var(--green2)';this.style.color='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)';this.style.color='var(--green2)'">▶ Ouvir</button>
       </li>
       <li>Ouça o Self Design Sounds</li>
       <li>Faça a leitura da página ${diaOnda} do e-book</li>
@@ -1136,15 +1146,6 @@ function kinHTML(kinNum) {
 
   // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
-  
-  // Função auxiliar para executar após renderizar
-  setTimeout(() => {
-    const btnMed = document.getElementById('btn-meditacao');
-    if (btnMed && MEDITACOES[String(anelKin)]) {
-      btnMed.href = MEDITACOES[String(anelKin)];
-      btnMed.style.cursor = 'pointer';
-    }
-  }, 100);
   const anelSelo = DATA.selos[anelKin] || {};
   const anelNomeCompleto = anelSelo.nome || '';
   const anelIconURL = getSeloIconURL(anelNomeCompleto);
@@ -1242,7 +1243,7 @@ function kinHTML(kinNum) {
       <li>Ouça a prece das 7 direções galácticas</li>
       <li style="display:flex;align-items:center;justify-content:space-between">
         <span>Ouça a meditação do selo</span>
-        <a href="" id="btn-meditacao" style="background:var(--green);color:white;border:none;border-radius:4px;padding:6px 12px;font-size:0.7rem;text-decoration:none;margin-left:8px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.05em;font-family:Cinzel;font-weight:bold;cursor:pointer" onmouseover="this.style.background='var(--green2)'" onmouseout="this.style.background='var(--green)'" target="_blank">▶ Ouvir</a>
+        <button onclick="abrirModalVideo(MEDITACOES[String(anelKin)], nomeCompleto)" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:4px 10px;font-size:0.65rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;letter-spacing:0.05em;transition:all .2s" onmouseover="this.style.borderColor='var(--green2)';this.style.color='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)';this.style.color='var(--green2)'">▶ Ouvir</button>
       </li>
       <li>Ouça o Self Design Sounds</li>
       <li>Faça a leitura da página ${diaOnda} do e-book</li>
@@ -1367,6 +1368,32 @@ function fecharModalSelo() {
 }
 
 // Fechar modal clicando fora
+function abrirModalVideo(youtubeUrl, nomeSeloVideo) {
+  // Converter URL youtu.be/ID ou youtube.com/watch?v=ID para embed
+  let videoId = '';
+  const matchShort = youtubeUrl.match(/youtu\.be\/([\w-]+)/);
+  const matchLong  = youtubeUrl.match(/[?&]v=([\w-]+)/);
+  if (matchShort) videoId = matchShort[1];
+  else if (matchLong) videoId = matchLong[1];
+  
+  if (!videoId) return;
+  
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  
+  iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+  if (titulo && nomeSeloVideo) titulo.textContent = '🎧 ' + nomeSeloVideo;
+  
+  document.getElementById('modal-video').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModalVideo() {
+  document.getElementById('modal-video').classList.remove('active');
+  document.getElementById('modal-video-iframe').src = ''; // para o vídeo
+  document.body.style.overflow = '';
+}
+
 document.getElementById('modal-selo').addEventListener('click', function(e) {
   if (e.target === this) fecharModalSelo();
 });
