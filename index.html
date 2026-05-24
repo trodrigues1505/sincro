@@ -82,13 +82,19 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .oraculo-nome{font-size:.63rem;margin-top:.4rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.04em;line-height:1.4}
 .onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
 .onda-L{display:grid;grid-template-columns:repeat(4,var(--cell));grid-template-rows:repeat(4,var(--cell));--cell:58px;gap:4px}
-.onda-L .onda-kin:nth-child(1){grid-column:1;grid-row:1}.onda-L .onda-kin:nth-child(2){grid-column:2;grid-row:1}
-.onda-L .onda-kin:nth-child(3){grid-column:3;grid-row:1}.onda-L .onda-kin:nth-child(4){grid-column:4;grid-row:1}
-.onda-L .onda-kin:nth-child(5){grid-column:1;grid-row:2}.onda-L .onda-kin:nth-child(6){grid-column:1;grid-row:3}
-.onda-L .onda-kin:nth-child(7){grid-column:1;grid-row:4}.onda-L .onda-kin:nth-child(8){grid-column:2;grid-row:4}
-.onda-L .onda-kin:nth-child(9){grid-column:3;grid-row:4}.onda-L .onda-kin:nth-child(10){grid-column:4;grid-row:2}
-.onda-L .onda-kin:nth-child(11){grid-column:4;grid-row:3}.onda-L .onda-kin:nth-child(12){grid-column:4;grid-row:4}
-.onda-L .onda-kin:nth-child(13){grid-column:2/4;grid-row:2/4;width:auto;height:auto;border-width:2px}
+.onda-L .onda-kin:nth-child(1){grid-column:1;grid-row:1}
+.onda-L .onda-kin:nth-child(2){grid-column:2;grid-row:1}
+.onda-L .onda-kin:nth-child(3){grid-column:3;grid-row:1}
+.onda-L .onda-kin:nth-child(4){grid-column:4;grid-row:1}
+.onda-L .onda-kin:nth-child(5){grid-column:4;grid-row:2}
+.onda-L .onda-kin:nth-child(6){grid-column:4;grid-row:3}
+.onda-L .onda-kin:nth-child(7){grid-column:4;grid-row:4}
+.onda-L .onda-kin:nth-child(8){grid-column:3;grid-row:4}
+.onda-L .onda-kin:nth-child(9){grid-column:2;grid-row:4}
+.onda-L .onda-kin:nth-child(10){grid-column:1;grid-row:4}
+.onda-L .onda-kin:nth-child(11){grid-column:1;grid-row:3}
+.onda-L .onda-kin:nth-child(12){grid-column:1;grid-row:2}
+.onda-L .onda-kin:nth-child(13){grid-column:2;grid-row:2}
 .onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s;position:relative}
 .onda-kin:hover{transform:scale(1.06)}
 .onda-kin.active{box-shadow:0 0 0 3px var(--green2);border-color:var(--green2)!important;border-width:2px}
@@ -861,29 +867,18 @@ function kinHTML(kinNum) {
   const tomNum = kD.tom;
   const tomInfo = DATA.tons[tomNum] || {};
 
-  // Onda Encantada — kin ativo sempre no centro (posição 13 = 2x2)
+  // Onda Encantada — 13 kins em sequência no grid quadro 4x4
   const ondaInicio = Math.floor((kinNum - 1) / 13) * 13 + 1;
   const diaOnda = ((kinNum - 1) % 13) + 1;
 
-  // Montar lista de 13 kins reordenada: ativo vai para posição 13 (centro)
-  const ondaKins = [];
-  for (let i = 0; i < 13; i++) ondaKins.push(ondaInicio + i);
-  // Remover o kin ativo da posição atual e colocar no final (pos 13)
-  const idxAtivo = diaOnda - 1;
-  const kinAtivo = ondaKins.splice(idxAtivo, 1)[0];
-  ondaKins.push(kinAtivo); // agora ondaKins[12] = kin ativo (pos 13 no DOM)
-
   let ondaHTML = '<div class="onda-L">';
   for (let i = 0; i < 13; i++) {
-    const k = ondaKins[i];
+    const k = ondaInicio + i;
     const kData = DATA.kins[k];
     const corKin = kData ? getSeloCor(kData.selo) : 'white';
     const ativo = k === kinNum ? 'active' : '';
     const tooltip = kData ? `Kin ${k} · ${kData.selo} ${kData.tom_nome}` : '';
-    const numLabel = k === kinNum
-      ? `<span style="position:absolute;bottom:3px;right:5px;font-size:.55rem;font-family:Cinzel;color:rgba(255,255,255,.7)">${diaOnda}</span>`
-      : '';
-    ondaHTML += `<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}" style="position:relative"><img src="${getSeloIconURL(kData ? kData.selo : '')}" style="width:100%;height:100%;object-fit:contain">${numLabel}</div>`;
+    ondaHTML += `<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData ? kData.selo : '')}" style="width:100%;height:100%;object-fit:contain"></div>`;
   }
   ondaHTML += '</div>';
 
