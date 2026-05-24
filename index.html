@@ -358,6 +358,28 @@ Entrar com Google
 <script>
 // DADOS E CONFIGURAÇÕES
 let DATA = {};
+const MEDITACOES = {
+  "1": "https://youtu.be/9nisqbS4SJ8",
+  "2": "https://youtu.be/K5EF62Xe8d8",
+  "3": "https://youtu.be/UV3BaCJRrWQ",
+  "4": "https://youtu.be/2mGZSbgjYeA",
+  "5": "https://youtu.be/1U3lksU0cas",
+  "6": "https://youtu.be/sAG4HQeFyZk",
+  "7": "https://youtu.be/niT-GgQ33qw",
+  "8": "https://youtu.be/GjO5jASFDoY",
+  "9": "https://youtu.be/H8geSLOq1X0",
+  "10": "https://youtu.be/L1h57Wud_U0",
+  "11": "https://youtu.be/5CDzGT94u1U",
+  "12": "https://youtu.be/PMTE6lcz4So",
+  "13": "https://youtu.be/NvSvZBQxssU",
+  "14": "https://youtu.be/THFoC7MqBWw",
+  "15": "https://youtu.be/NDHELzsH-iU",
+  "16": "https://youtu.be/jyTPQEvE6lw",
+  "17": "https://youtu.be/bSNU94GJEzA",
+  "18": "https://youtu.be/8ITZekt7KIE",
+  "19": "https://youtu.be/Dtv0d6pZ9qI",
+  "20": "https://youtu.be/nmLnIQHrsmI"
+};
 const DATA_PRONTO = fetch('./sincronario_dados.json')
   .then(r => r.json())
   .then(d => {
@@ -868,6 +890,15 @@ function kinHTML(kinNum) {
 
   // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
+  
+  // Função auxiliar para executar após renderizar
+  setTimeout(() => {
+    const btnMed = document.getElementById('btn-meditacao');
+    if (btnMed && MEDITACOES[String(anelKin)]) {
+      btnMed.href = MEDITACOES[String(anelKin)];
+      btnMed.style.cursor = 'pointer';
+    }
+  }, 100);
   const anelSelo = DATA.selos[anelKin] || {};
   const anelNomeCompleto = anelSelo.nome || '';
   const anelIconURL = getSeloIconURL(anelNomeCompleto);
@@ -956,7 +987,10 @@ function kinHTML(kinNum) {
     <div style="font-family:Cinzel;font-size:0.85rem;color:var(--gold);margin-bottom:1rem;text-transform:uppercase">Prática Diária</div>
     <ul class="praticas-list">
       <li>Ouça a prece das 7 direções galácticas</li>
-      <li>Ouça a meditação do selo</li>
+      <li style="display:flex;align-items:center;justify-content:space-between">
+        <span>Ouça a meditação do selo</span>
+        <a href="" id="btn-meditacao" style="background:var(--green);color:white;border:none;border-radius:4px;padding:6px 12px;font-size:0.7rem;text-decoration:none;margin-left:8px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.05em;font-family:Cinzel;font-weight:bold;cursor:pointer" onmouseover="this.style.background='var(--green2)'" onmouseout="this.style.background='var(--green)'" target="_blank">▶ Ouvir</a>
+      </li>
       <li>Ouça o Self Design Sounds</li>
       <li>Faça a leitura da página ${diaOnda} do e-book</li>
       <li>${ritual.ritual || ''}</li>
@@ -1102,6 +1136,15 @@ function kinHTML(kinNum) {
 
   // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
+  
+  // Função auxiliar para executar após renderizar
+  setTimeout(() => {
+    const btnMed = document.getElementById('btn-meditacao');
+    if (btnMed && MEDITACOES[String(anelKin)]) {
+      btnMed.href = MEDITACOES[String(anelKin)];
+      btnMed.style.cursor = 'pointer';
+    }
+  }, 100);
   const anelSelo = DATA.selos[anelKin] || {};
   const anelNomeCompleto = anelSelo.nome || '';
   const anelIconURL = getSeloIconURL(anelNomeCompleto);
