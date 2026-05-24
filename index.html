@@ -1014,8 +1014,8 @@ function kinHTML(kinNum) {
 
 <div class="section">
   <div class="section-title">Onda Encantada ${ondaNum} · Dia ${diaOnda}</div>
-  <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold3);margin-bottom:.5rem;letter-spacing:.03em">Onda Encantada d${ondaSeloNome ? (()=>{const a=ondaSeloNome.split(' ');const last=a[a.length-1].toLowerCase();return ['a','e','i','o','u'].includes(last[0])?'a ':'o '})() : 'a '}${ondaSeloNome}</div>
-  <p style="font-size:.78rem;color:var(--text2);margin-bottom:.9rem"><span style="color:var(--text3)">Propósito:</span> ${ondaSelo.acao || ''}</p>
+  <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold3);margin-bottom:.5rem;letter-spacing:.03em">Onda Encantada ${ondaSeloNome ? (()=>{const palavras=ondaSeloNome.split(' ');const nomeBase=palavras.slice(0,-1).join(' ');const femininos=['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta'];const ehFem=femininos.some(f=>nomeBase.includes(f));return ehFem?'da ':'do ';})() : 'da '}${ondaSeloNome ? ondaSeloNome.split(' ').slice(0,-1).join(' ') : ''}</div>
+  <p style="font-size:.78rem;color:var(--text2);margin-bottom:.9rem"><span style="color:var(--text3)">Propósito:</span> ${ondaSelo.desc || ondaSelo.proposito || ondaSelo.acao || ''}</p>
   <div class="onda-wrap">${ondaHTML}</div>
 </div>
 
@@ -1024,8 +1024,11 @@ function kinHTML(kinNum) {
     <div class="section-title">Informações</div>
 
     <div style="margin-bottom:1.1rem">
-      <div style="font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem">Castelo</div>
-      <div style="font-family:Cinzel;font-size:.74rem;color:var(--text);line-height:1.6">${casteloTextoFmt}</div>
+      <div style="font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Castelo · 52 dias</div>
+      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem">
+        <img src="./assets/icons/castelo-${(['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde')}.png" alt="Castelo" style="width:54px;height:54px;object-fit:contain;flex-shrink:0">
+        <div style="font-family:Cinzel;font-size:.74rem;color:var(--text);line-height:1.6">${casteloTextoFmt}</div>
+      </div>
       ${casteloOndasHTML}
     </div>
 
