@@ -379,28 +379,6 @@ Entrar com Google
 // DADOS E CONFIGURAÇÕES
 let DATA = {};
 const MEDITACOES = {"1":"https://youtu.be/9nisqbS4SJ8","2":"https://youtu.be/K5EF62Xe8d8","3":"https://youtu.be/UV3BaCJRrWQ","4":"https://youtu.be/2mGZSbgjYeA","5":"https://youtu.be/1U3lksU0cas","6":"https://youtu.be/sAG4HQeFyZk","7":"https://youtu.be/niT-GgQ33qw","8":"https://youtu.be/GjO5jASFDoY","9":"https://youtu.be/H8geSLOq1X0","10":"https://youtu.be/L1h57Wud_U0","11":"https://youtu.be/5CDzGT94u1U","12":"https://youtu.be/PMTE6lcz4So","13":"https://youtu.be/NvSvZBQxssU","14":"https://youtu.be/THFoC7MqBWw","15":"https://youtu.be/NDHELzsH-iU","16":"https://youtu.be/jyTPQEvE6lw","17":"https://youtu.be/bSNU94GJEzA","18":"https://youtu.be/8ITZekt7KIE","19":"https://youtu.be/Dtv0d6pZ9qI","20":"https://youtu.be/nmLnIQHrsmI"};
-const MEDITACOES = {
-  "1": "https://youtu.be/9nisqbS4SJ8",
-  "2": "https://youtu.be/K5EF62Xe8d8",
-  "3": "https://youtu.be/UV3BaCJRrWQ",
-  "4": "https://youtu.be/2mGZSbgjYeA",
-  "5": "https://youtu.be/1U3lksU0cas",
-  "6": "https://youtu.be/sAG4HQeFyZk",
-  "7": "https://youtu.be/niT-GgQ33qw",
-  "8": "https://youtu.be/GjO5jASFDoY",
-  "9": "https://youtu.be/H8geSLOq1X0",
-  "10": "https://youtu.be/L1h57Wud_U0",
-  "11": "https://youtu.be/5CDzGT94u1U",
-  "12": "https://youtu.be/PMTE6lcz4So",
-  "13": "https://youtu.be/NvSvZBQxssU",
-  "14": "https://youtu.be/THFoC7MqBWw",
-  "15": "https://youtu.be/NDHELzsH-iU",
-  "16": "https://youtu.be/jyTPQEvE6lw",
-  "17": "https://youtu.be/bSNU94GJEzA",
-  "18": "https://youtu.be/8ITZekt7KIE",
-  "19": "https://youtu.be/Dtv0d6pZ9qI",
-  "20": "https://youtu.be/nmLnIQHrsmI"
-};
 const DATA_PRONTO = fetch('./sincronario_dados.json')
   .then(r => r.json())
   .then(d => {
@@ -1181,6 +1159,11 @@ function kinHTML(kinNum) {
   const casteloDir = DIRS_CASTELO[casteloNum] || '';
   const casteloLabel = `🏰 Castelo ${castelo.nome || ''} · ${casteloDir} · ${castelo.proposito || ''}`;
 
+  // Direção real do castelo
+  const DIRS_CASTELO = ['Leste','Norte','Oeste','Sul','Leste'];
+  const casteloDir = DIRS_CASTELO[casteloNum] || castelo.dir || '';
+  const casteloLabel = `🏰 Castelo ${castelo.nome || ''} · ${casteloDir} · ${castelo.proposito || ''}`;
+
   return `
 <div class="section anim-1">
   <div class="kin-hero">
@@ -1225,7 +1208,7 @@ function kinHTML(kinNum) {
 
 <div class="section">
   <div class="section-title">Onda Encantada ${ondaNum} · Dia ${diaOnda}</div>
-  <p style="font-size:.78rem;color:var(--text3);font-style:italic;margin-bottom:.9rem;padding-left:.1rem">Propósito: ${ondaSelo.acao || ''}</p>
+  <p style="font-size:.78rem;color:var(--text3);font-style:italic;margin-bottom:.9rem">Propósito: ${ondaSelo.acao || ''}</p>
   <div class="onda-wrap">${ondaHTML}</div>
   <div class="info-box" style="margin-top:.9rem">
     <div style="font-family:Cinzel;font-size:.7rem;color:var(--gold2);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.07em">${tomOriginal} · ${tomInfo.verbo || ''}</div>
@@ -1236,18 +1219,15 @@ function kinHTML(kinNum) {
 <div class="grid-2">
   <div class="section">
     <div class="section-title">Informações</div>
-
     <div style="margin-bottom:1.1rem">
       <div style="font-size:.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem">Castelo</div>
       <div style="font-family:Cinzel;font-size:.76rem;color:var(--text);line-height:1.6">${casteloLabel}</div>
       ${casteloOndasHTML}
     </div>
-
     <div style="margin-bottom:1.1rem">
       <div style="font-size:.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Lua Galáctica ${luaNum} · ${luaNome} · Dia ${diaLua}</div>
       ${luaHTML}
     </div>
-
     <div class="grid-3">
       <div class="card">
         <div class="card-label">Anel Solar</div>
