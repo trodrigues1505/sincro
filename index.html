@@ -1079,7 +1079,11 @@ function kinHTML(kinNum) {
   <div class="section">
     <div class="section-title">Prática Diária</div>
     <ul class="praticas-list">
-      <li>Ouça a prece das 7 direções galácticas</li>
+      <li style="justify-content:space-between;align-items:center">
+        <span>Ouça a prece das 7 direções galácticas</span>
+        <button onclick="togglePrece(this)" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+        <audio id="audio-prece" src="./assets/prece.mpeg" preload="none"></audio>
+      </li>
       <li style="justify-content:space-between;align-items:center">
         <span>Meditação do selo</span>
         <button onclick="abrirModalVideo(MEDITACOES[String(anelKin)],'${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
@@ -1771,6 +1775,27 @@ function abrirModalVideo(url, nomeSeloVideo) {
   if (t) t.textContent = '🎧 ' + (nomeSeloVideo || 'Meditação do Selo');
   document.getElementById('modal-video').classList.add('active');
   document.body.style.overflow = 'hidden';
+}
+function togglePrece(btn) {
+  const audio = document.getElementById('audio-prece');
+  if (!audio) return;
+  if (audio.paused) {
+    audio.play();
+    btn.textContent = '■ parar';
+    btn.style.color = 'var(--gold2)';
+    btn.style.borderColor = 'var(--gold)';
+    audio.onended = () => {
+      btn.textContent = '▶ ouvir';
+      btn.style.color = 'var(--green2)';
+      btn.style.borderColor = 'var(--green3)';
+    };
+  } else {
+    audio.pause();
+    audio.currentTime = 0;
+    btn.textContent = '▶ ouvir';
+    btn.style.color = 'var(--green2)';
+    btn.style.borderColor = 'var(--green3)';
+  }
 }
 function fecharModalVideo() {
   document.getElementById('modal-video').classList.remove('active');
