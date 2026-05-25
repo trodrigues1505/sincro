@@ -386,13 +386,14 @@ Entrar com Google
 // DADOS E CONFIGURAÇÕES
 let DATA = {};
 const MEDITACOES = {"1":"https://youtu.be/9nisqbS4SJ8","2":"https://youtu.be/K5EF62Xe8d8","3":"https://youtu.be/UV3BaCJRrWQ","4":"https://youtu.be/2mGZSbgjYeA","5":"https://youtu.be/1U3lksU0cas","6":"https://youtu.be/sAG4HQeFyZk","7":"https://youtu.be/niT-GgQ33qw","8":"https://youtu.be/GjO5jASFDoY","9":"https://youtu.be/H8geSLOq1X0","10":"https://youtu.be/L1h57Wud_U0","11":"https://youtu.be/5CDzGT94u1U","12":"https://youtu.be/PMTE6lcz4So","13":"https://youtu.be/NvSvZBQxssU","14":"https://youtu.be/THFoC7MqBWw","15":"https://youtu.be/NDHELzsH-iU","16":"https://youtu.be/jyTPQEvE6lw","17":"https://youtu.be/bSNU94GJEzA","18":"https://youtu.be/8ITZekt7KIE","19":"https://youtu.be/Dtv0d6pZ9qI","20":"https://youtu.be/nmLnIQHrsmI"};
-const DATA_PRONTO = fetch('./sincronario_dados.json')
-  .then(r => r.json())
-  .then(d => {
-    DATA = d;
-    console.log('✓ Dados carregados:', Object.keys(DATA.kins).length, 'kins');
-  })
-  .catch(e => console.warn('⚠️ Erro:', e));
+const DATA_PRONTO = Promise.all([
+  fetch('./sincronario_dados.json').then(r => r.json()),
+  fetch('./ondas_propositos.json').then(r => r.json()).catch(() => [])
+]).then(([d, ondas]) => {
+  DATA = d;
+  DATA.ondas_propositos = ondas;
+  console.log('✓ Dados carregados:', Object.keys(DATA.kins).length, 'kins,', ondas.length, 'ondas');
+}).catch(e => console.warn('⚠️ Erro:', e));
 
 const EMOJIS = ['🐉', '💨', '🌌', '🌱', '🐍', '☯️', '✋', '⭐', '🌙', '🐕', '🐒', '👤', '🚶', '🧙', '🦅', '⚔️', '🌍', '🪞', '⛈️', '☀️'];
 const CORES_SELO = ['red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow'];
@@ -957,7 +958,18 @@ function kinHTML(kinNum) {
   const ondaKinInicioData = (DATA.kins||{})[String(ondaKinInicio)] || {};
   // Encontrar o selo correto no DATA.selos pelo nome
   const ondaSeloNome = ondaKinInicioData.selo || '';
-  const ondaSelo = Object.values(DATA.selos||{}).find(s => s.nome === ondaSeloNome) || {};
+  // Busca pelo nome base sem a cor para garantir o match
+  const ondaSeloNomeBase = ondaSeloNome ? ondaSeloNome.split(' ').slice(0,-1).join(' ') : '';
+  const ondaSelo = Object.values(DATA.selos||{}).find(s => {
+    const sBase = s.nome ? s.nome.split(' ').slice(0,-1).join(' ') : '';
+    return sBase === ondaSeloNomeBase || s.nome === ondaSeloNome;
+  }) || {};
+  // Propósito vem do JSON de ondas (indexado por número da onda 1-20)
+  const ondaProposito = (() => {
+    const arr = DATA.ondas_propositos || [];
+    const item = arr.find(o => o.onda === ondaNum);
+    return item ? item.propositos : (ondaSelo.desc || ondaSelo.acao || '');
+  })();
 
   // Castelo com direção cardinal
   const casteloTextoFmt = '🏰 Castelo ' + (castelo.nome||'') + ' · ' + (['Leste','Norte','Oeste','Sul','Leste'][casteloNum]||castelo.dir||'') + ' · ' + (castelo.proposito||'');
@@ -1015,7 +1027,7 @@ function kinHTML(kinNum) {
 <div class="section">
   <div class="section-title">Onda Encantada ${ondaNum} · Dia ${diaOnda}</div>
   <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold3);margin-bottom:.5rem;letter-spacing:.03em">Onda Encantada ${ondaSeloNome ? (()=>{const palavras=ondaSeloNome.split(' ');const nomeBase=palavras.slice(0,-1).join(' ');const femininos=['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta'];const ehFem=femininos.some(f=>nomeBase.includes(f));return ehFem?'da ':'do ';})() : 'da '}${ondaSeloNome ? ondaSeloNome.split(' ').slice(0,-1).join(' ') : ''}</div>
-  <p style="font-size:.78rem;color:var(--text2);margin-bottom:.9rem"><span style="color:var(--text3)">Propósito:</span> ${ondaSelo.desc || ondaSelo.proposito || ondaSelo.acao || ''}</p>
+  <p style="font-size:.78rem;color:var(--text2);margin-bottom:.9rem"><span style="color:var(--text3)">Propósito:</span> ${ondaProposito}</p>
   <div class="onda-wrap">${ondaHTML}</div>
 </div>
 
