@@ -1781,7 +1781,7 @@ function togglePrece(btn) {
   if (!audio) {
     audio = document.createElement('audio');
     audio.id = 'audio-prece';
-    audio.src = './assets/prece.mpeg';
+    audio.src = './assets/icons/prece.mpeg';
     document.body.appendChild(audio);
   }
   if (!audio.paused) {
@@ -1820,7 +1820,7 @@ function fecharModalVideo() {
 if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
 </script>
 <!-- ÁUDIO FIXO - PRECE -->
-<audio id="audio-prece" src="./assets/prece.mpeg" preload="auto"></audio>
+<audio id="audio-prece" src="./assets/icons/prece.mpeg" preload="auto"></audio>
 
 </body>
 </html>
