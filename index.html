@@ -1082,7 +1082,6 @@ function kinHTML(kinNum) {
       <li style="justify-content:space-between;align-items:center">
         <span>Ouça a prece das 7 direções galácticas</span>
         <button onclick="togglePrece(this)" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
-        <audio id="audio-prece" src="./assets/prece.mpeg" preload="none"></audio>
       </li>
       <li style="justify-content:space-between;align-items:center">
         <span>Meditação do selo</span>
@@ -1776,19 +1775,18 @@ function abrirModalVideo(url, nomeSeloVideo) {
   document.getElementById('modal-video').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
+let _preceBtn = null;
 function togglePrece(btn) {
   const audio = document.getElementById('audio-prece');
   if (!audio) return;
+  _preceBtn = btn;
   if (audio.paused) {
-    audio.play();
-    btn.textContent = '■ parar';
-    btn.style.color = 'var(--gold2)';
-    btn.style.borderColor = 'var(--gold)';
-    audio.onended = () => {
-      btn.textContent = '▶ ouvir';
-      btn.style.color = 'var(--green2)';
-      btn.style.borderColor = 'var(--green3)';
-    };
+    audio.currentTime = 0;
+    audio.play().then(() => {
+      btn.textContent = '■ parar';
+      btn.style.color = 'var(--gold2)';
+      btn.style.borderColor = 'var(--gold)';
+    }).catch(e => console.warn('Erro ao tocar prece:', e));
   } else {
     audio.pause();
     audio.currentTime = 0;
@@ -1797,6 +1795,20 @@ function togglePrece(btn) {
     btn.style.borderColor = 'var(--green3)';
   }
 }
+// Resetar botão quando áudio termina
+document.addEventListener('DOMContentLoaded', () => {
+  const audio = document.getElementById('audio-prece');
+  if (audio) {
+    audio.addEventListener('ended', () => {
+      if (_preceBtn) {
+        _preceBtn.textContent = '▶ ouvir';
+        _preceBtn.style.color = 'var(--green2)';
+        _preceBtn.style.borderColor = 'var(--green3)';
+        _preceBtn = null;
+      }
+    });
+  }
+});
 function fecharModalVideo() {
   document.getElementById('modal-video').classList.remove('active');
   document.getElementById('modal-video-iframe').src = '';
@@ -1804,5 +1816,8 @@ function fecharModalVideo() {
 }
 if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
 </script>
+<!-- ÁUDIO FIXO - PRECE -->
+<audio id="audio-prece" src="./assets/prece.mpeg" preload="none"></audio>
+
 </body>
 </html>
