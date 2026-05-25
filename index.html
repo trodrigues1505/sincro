@@ -1775,40 +1775,43 @@ function abrirModalVideo(url, nomeSeloVideo) {
   document.getElementById('modal-video').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
-let _preceBtn = null;
 function togglePrece(btn) {
-  const audio = document.getElementById('audio-prece');
-  if (!audio) return;
-  _preceBtn = btn;
-  if (audio.paused) {
-    audio.currentTime = 0;
-    audio.play().then(() => {
-      btn.textContent = '■ parar';
-      btn.style.color = 'var(--gold2)';
-      btn.style.borderColor = 'var(--gold)';
-    }).catch(e => console.warn('Erro ao tocar prece:', e));
-  } else {
+  let audio = document.getElementById('audio-prece');
+  // Se não existe, cria na hora
+  if (!audio) {
+    audio = document.createElement('audio');
+    audio.id = 'audio-prece';
+    audio.src = './assets/prece.mpeg';
+    document.body.appendChild(audio);
+  }
+  if (!audio.paused) {
     audio.pause();
     audio.currentTime = 0;
     btn.textContent = '▶ ouvir';
     btn.style.color = 'var(--green2)';
     btn.style.borderColor = 'var(--green3)';
+    return;
   }
-}
-// Resetar botão quando áudio termina — vincula ao elemento fixo no body
-window.addEventListener('load', () => {
-  const audio = document.getElementById('audio-prece');
-  if (audio) {
-    audio.addEventListener('ended', () => {
-      if (_preceBtn) {
-        _preceBtn.textContent = '▶ ouvir';
-        _preceBtn.style.color = 'var(--green2)';
-        _preceBtn.style.borderColor = 'var(--green3)';
-        _preceBtn = null;
-      }
+  // Resetar e tocar
+  audio.load();
+  const playPromise = audio.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      btn.textContent = '■ parar';
+      btn.style.color = 'var(--gold2)';
+      btn.style.borderColor = 'var(--gold)';
+      audio.onended = () => {
+        btn.textContent = '▶ ouvir';
+        btn.style.color = 'var(--green2)';
+        btn.style.borderColor = 'var(--green3)';
+      };
+    }).catch(e => {
+      console.error('Prece erro:', e);
+      // Fallback: abrir direto
+      window.open('./assets/prece.mpeg', '_blank');
     });
   }
-});
+}
 function fecharModalVideo() {
   document.getElementById('modal-video').classList.remove('active');
   document.getElementById('modal-video-iframe').src = '';
@@ -1817,7 +1820,7 @@ function fecharModalVideo() {
 if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
 </script>
 <!-- ÁUDIO FIXO - PRECE -->
-<audio id="audio-prece" src="./assets/prece.mpeg" preload="none"></audio>
+<audio id="audio-prece" src="./assets/prece.mpeg" preload="auto"></audio>
 
 </body>
 </html>
