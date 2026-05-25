@@ -386,14 +386,15 @@ Entrar com Google
 // DADOS E CONFIGURAÇÕES
 let DATA = {};
 const MEDITACOES = {"1":"https://youtu.be/9nisqbS4SJ8","2":"https://youtu.be/K5EF62Xe8d8","3":"https://youtu.be/UV3BaCJRrWQ","4":"https://youtu.be/2mGZSbgjYeA","5":"https://youtu.be/1U3lksU0cas","6":"https://youtu.be/sAG4HQeFyZk","7":"https://youtu.be/niT-GgQ33qw","8":"https://youtu.be/GjO5jASFDoY","9":"https://youtu.be/H8geSLOq1X0","10":"https://youtu.be/L1h57Wud_U0","11":"https://youtu.be/5CDzGT94u1U","12":"https://youtu.be/PMTE6lcz4So","13":"https://youtu.be/NvSvZBQxssU","14":"https://youtu.be/THFoC7MqBWw","15":"https://youtu.be/NDHELzsH-iU","16":"https://youtu.be/jyTPQEvE6lw","17":"https://youtu.be/bSNU94GJEzA","18":"https://youtu.be/8ITZekt7KIE","19":"https://youtu.be/Dtv0d6pZ9qI","20":"https://youtu.be/nmLnIQHrsmI"};
-const DATA_PRONTO = Promise.all([
-  fetch('./sincronario_dados.json').then(r => r.json()),
-  fetch('./ondas_propositos.json').then(r => r.json()).catch(() => [])
-]).then(([d, ondas]) => {
-  DATA = d;
-  DATA.ondas_propositos = ondas;
-  console.log('✓ Dados carregados:', Object.keys(DATA.kins).length, 'kins,', ondas.length, 'ondas');
-}).catch(e => console.warn('⚠️ Erro:', e));
+const ONDAS_PROPOSITOS = [{"onda":1,"propositos":"Iniciar e nutrir o ser, potencializar a energia vital, purificar-se e estar vigilante"},{"onda":2,"propositos":"Unificar-se para encantar, estando receptivo ao momento presente, refletir comandando a ordem e comunicar-se transcendendo a oportunidade"},{"onda":3,"propositos":"Atrair a cura, comandar a ilusão, realizar a mente e transcender a energia"},{"onda":4,"propositos":"Atrair a luz para a sua vida, comandar a percepção e focalizar, deixar pulsar a arte e transcender na sabedoria"},{"onda":5,"propositos":"Explorar os espaços estando vigilante e atento às sincronicidades e movimentos para se realizar e armazenar força vital"},{"onda":6,"propositos":"Desapegar-se, potencializar o amor, estar receptivo e refletir"},{"onda":7,"propositos":"Atrair energia, potencializar os sonhos, realizar cura e transcender a ilusão"},{"onda":8,"propositos":"Atrair sabedoria, comandar a intrepidez, realizar a vida e perseverar para focalizar"},{"onda":9,"propositos":"Unificar-se para sobreviver, potencializar a purificação, estar vigilante e persistir na evolução"},{"onda":10,"propositos":"Refletir, mantendo a ordem, potencializar a comunicação, desapegue-se e seja leal consigo mesmo"},{"onda":11,"propositos":"Ser mais flexível, dominar a mente, realizar transformações e seguir a intuição."},{"onda":12,"propositos":"Focalizar para perceber, manter a harmonia, usar sabedoria e questionar."},{"onda":13,"propositos":"Movimentar para evoluir, nutrir o ser, cuidar de sua energia vital e seu lado emocional."},{"onda":14,"propositos":"Amar, estar no aqui, agora, refletir e se expressar."},{"onda":15,"propositos":"Atrair abundância, buscar conhecimento, viver no momento presente e ter visão mais ampla."},{"onda":16,"propositos":"Questionar, iluminar a vida, concentrar-se e buscar harmonia."},{"onda":17,"propositos":"Purificar, vigiar, evoluir e nutrir-se."},{"onda":18,"propositos":"Comunicar-se com clareza, desapegar-se, deixar pulsar o amor e estar receptivo ao momento presente."},{"onda":19,"propositos":"Usar a mente para ter uma visão mais ampla, comandar a energia, deixar pulsar os sonhos e persistir em curar-se."},{"onda":20,"propositos":"Atrair a harmonia, comandar a sabedoria, realizar intrepidez e transcender a vida."}];
+
+const DATA_PRONTO = fetch('./sincronario_dados.json')
+  .then(r => r.json())
+  .then(d => {
+    DATA = d;
+    console.log('✓ Dados carregados:', Object.keys(DATA.kins).length, 'kins');
+  })
+  .catch(e => console.warn('⚠️ Erro:', e));
 
 const EMOJIS = ['🐉', '💨', '🌌', '🌱', '🐍', '☯️', '✋', '⭐', '🌙', '🐕', '🐒', '👤', '🚶', '🧙', '🦅', '⚔️', '🌍', '🪞', '⛈️', '☀️'];
 const CORES_SELO = ['red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow', 'red', 'white', 'blue', 'yellow'];
@@ -964,11 +965,11 @@ function kinHTML(kinNum) {
     const sBase = s.nome ? s.nome.split(' ').slice(0,-1).join(' ') : '';
     return sBase === ondaSeloNomeBase || s.nome === ondaSeloNome;
   }) || {};
-  // Propósito vem do JSON de ondas (indexado por número da onda 1-20)
+  // Propósito vem da tabela de ondas embutida (1-20 ciclicamente)
+  const ondaNumCiclo = ((ondaNum - 1) % 20) + 1;
   const ondaProposito = (() => {
-    const arr = DATA.ondas_propositos || [];
-    const item = arr.find(o => o.onda === ondaNum);
-    return item ? item.propositos : (ondaSelo.desc || ondaSelo.acao || '');
+    const item = ONDAS_PROPOSITOS.find(o => o.onda === ondaNumCiclo);
+    return item ? item.propositos : '';
   })();
 
   // Castelo com direção cardinal
