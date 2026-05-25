@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -107,6 +107,8 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .praticas-list li{padding:.6rem .85rem;margin-bottom:4px;background:var(--bg2);border-radius:5px;border-left:2px solid var(--green);display:flex;align-items:flex-start;gap:8px;font-size:.86rem;line-height:1.5;transition:border-color .2s}
 .praticas-list li:hover{border-left-color:var(--gold)}
 .praticas-list li::before{content:'·';color:var(--green2);font-size:1.1rem;flex-shrink:0;line-height:1.3}
+.praticas-list li.has-btn::before{display:none}
+.praticas-list li.has-btn{align-items:center;justify-content:space-between}
 .hidden{display:none}
 input[type="date"]{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 10px;font-family:inherit;color-scheme:dark;font-size:.87rem;transition:border-color .2s}
 input[type="date"]:focus{outline:none;border-color:var(--green)}
@@ -218,7 +220,6 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .modal-video-close:hover{border-color:var(--text2);color:var(--text)}
 .modal-video iframe{width:100%;aspect-ratio:16/9;display:block;border:none}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-
 </style>
 </head>
 <body>
@@ -350,8 +351,7 @@ Entrar com Google
 </div>
 </div>
 
-<!-- MODAL SELOS -->
-<!-- MODAL MEDITAÇÃO -->
+<!-- MODAL MEDITAÇÃO / SELF DESIGN -->
 <div class="modal-video" id="modal-video" onclick="if(event.target===this)fecharModalVideo()">
   <div class="modal-video-box">
     <div class="modal-video-header">
@@ -386,6 +386,8 @@ Entrar com Google
 // DADOS E CONFIGURAÇÕES
 let DATA = {};
 const MEDITACOES = {"1":"https://youtu.be/9nisqbS4SJ8","2":"https://youtu.be/K5EF62Xe8d8","3":"https://youtu.be/UV3BaCJRrWQ","4":"https://youtu.be/2mGZSbgjYeA","5":"https://youtu.be/1U3lksU0cas","6":"https://youtu.be/sAG4HQeFyZk","7":"https://youtu.be/niT-GgQ33qw","8":"https://youtu.be/GjO5jASFDoY","9":"https://youtu.be/H8geSLOq1X0","10":"https://youtu.be/L1h57Wud_U0","11":"https://youtu.be/5CDzGT94u1U","12":"https://youtu.be/PMTE6lcz4So","13":"https://youtu.be/NvSvZBQxssU","14":"https://youtu.be/THFoC7MqBWw","15":"https://youtu.be/NDHELzsH-iU","16":"https://youtu.be/jyTPQEvE6lw","17":"https://youtu.be/bSNU94GJEzA","18":"https://youtu.be/8ITZekt7KIE","19":"https://youtu.be/Dtv0d6pZ9qI","20":"https://youtu.be/nmLnIQHrsmI"};
+const SELF_DESIGN = {"260":"5WeqjzMRj0E","259":"9AX2PmtSlRk","258":"sy7hvilDgQY","257":"Kw1mv_w6jNA","256":"gOIM1xm1SLI","255":"dGpg6GARkoc","254":"sdUeZVUg1G4","253":"obyFp3Z8iBE","252":"HmuyugZpZbs","251":"JYi1c0S2XF4","250":"E0FiK5Ns_ng","249":"p1i0RzSlZzQ","248":"NIJvMvMxARM","247":"g4Nf1hSFSZ8","246":"lMe9SfhlCiI","245":"PZoKXuECbAM","244":"JYkYg_SR4P8","243":"5-gv3CpEsVY","242":"a0Uot_ZlQiQ","241":"7ii8NCQGCvE","240":"gcuNVdVgjoQ","239":"LHASFYckoAQ","238":"vjtTGAmPsAM","237":"3bPiX8kUmWA","236":"hB49kc9thMc","235":"bupQ9Dvl08g","234":"iBAHRHF2rO0","233":"BFKbJbW74bo","232":"7VHcODm1VfQ","231":"_5vMYbsQHN4","230":"shdE_RPu7ik","229":"Dr34guQ0Tqg","228":"E0YXNMuiddA","227":"DTeHzWCih04","226":"zLigyGqxBCI","225":"VGHBZFddu1k","224":"Sdjcdn8P0Tk","223":"3wmOJ3-CZyU","222":"TZgZQ16zDTU","221":"K0MgjCN93Yg","220":"kforfq-_YGc","219":"EfeIwjhgATE","218":"YOVlQKFB8b0","217":"6d25biGb64A","216":"aou7WijeAK0","215":"DRUPxr4ZtG0","214":"yE0IlkCjMXI","213":"uJ_4kQ1HKz4","212":"LgArPhzGtKU","211":"uG2xLyTkgP0","210":"y6-zGvOYdXQ","209":"ttsdZSEXrlA","208":"EkT-4vnGJV4","207":"Unp9wp1TjeY","206":"Tee88a0NHn4","205":"KP9rlS33Nr0","204":"SgvOGtYKItA","203":"TAB7pV4fqcA","202":"TswnGlQCmdk","201":"MxruhiJGlpk","200":"EMp9QwRmLiQ","199":"a91Eljplx-Y","198":"hIhf_xUTG08","197":"T0QJkSuManQ","196":"Mi3GrUeRsqc","195":"aRl9PRT6-vE","194":"L9plFh9Arpk","193":"Lbqqf318FoA","192":"NMLorRCKJzI","191":"ObLxCPWIStM","190":"F3fFKj4kLos","189":"GFF2TG279N4","188":"2wfc3eqTSww","187":"x5PS-duYGGc","186":"AR7e2ku-tb4","185":"U3uG7ksXAfk","184":"IoVdUDTzwuo","183":"-FKiqycjo6M","182":"gwpa9-XWycU","181":"xRin1Tk1Lq8","180":"9s029S1bsCo","179":"nAxpiVFGbck","178":"QuF6Mazz2jg","177":"ZHUQ-NfAadM","176":"fP4E95JPTTs","175":"Jdcqy0yxkes","174":"WEX_xyGniNU","173":"Tlu-fSXxPlU","172":"ViuLUMx65ck","171":"weOd0RN34PU","170":"_T4wAM2rHJA","169":"rut3Yqvktok","168":"CfxAaLvFS0o","167":"xYEfeE23ZMc","166":"qhFJe9tNuNU","165":"6s_obqPDBEU","164":"hnVs01XAtKk","163":"NACCiOXzzw4","162":"gOK91NhfcIg","161":"cCcMayeYcgQ","160":"_AcqczXUf_U","159":"vHwROIbunFI","158":"fX5gjTycLa4","157":"QLtOpIDueLw","156":"E2H0aY1Ck4Q","155":"b7cEf5L9J8g","154":"Hi5-vAopHGM","153":"5tdWaHCF2YA","152":"K7hzZDW7nRk","151":"qd2QlT9Ox7k","150":"ur_cNu7x_BU","149":"aJmHDTigEdE","148":"EHEfSnq_VRk","147":"_KIC6KaIGXs","146":"jUC-V2cJ5MM","145":"ZIuWihZkh-g","144":"EeseHuDsNvo","143":"hbAGMT45C_A","142":"P9yn1F20Hl4","141":"O0Ux4jfw8FE","140":"3kZ6Q9OcyHs","139":"i4RSnRNGScc","138":"5OTT0pxJ_1M","137":"WRRrnVMQS28","136":"FPEI2_3bd8M","135":"oLgl5JG9dKY","134":"77NVdEZbf1M","133":"WPOURf60uCU","132":"dhyhDb2JuT4","131":"65Y6u2Dqs-0","130":"HY66LYv-1x8","129":"F-_sep9QDlM","128":"wr97lpDAvcE","127":"-P2VgX7CATc","126":"UbZJ3XaMxvM","125":"kVba1gZn5UM","124":"QV6M6p3W5mc","123":"EcuH4am23Rk","122":"IW4Qjp5hW58","121":"amlYFLdzz04","120":"-BtfzxElhNM","119":"xm2CvY87G3U","118":"rbzBvqTutQk","117":"6ROgHlbXo0c","116":"rDAO9KnScRQ","115":"-fdRvYOWr64","114":"azxOvskk0mA","113":"6x54Nt40dJQ","112":"crdPLh65qEM","111":"qyUqAn_Br_o","110":"KIJsu4xfwBo","109":"Z3FGTxlct7U","108":"jmBsapMWfAI","107":"QDCkJMJbogk","106":"TiUIrBgffiQ","105":"tfwYWF7nYyY","104":"qthMyJRRoTQ","103":"w-PKOb-XaQ4","102":"7AuX9Z5n41M","101":"hbTipxuSMM8","100":"QTPvoq1qT7A","99":"IbrB9xes7PE","98":"7vXg8kLVdnA","97":"zkiDoDcXJK0","96":"YrA9P_do61k","95":"F4AVs77SQRA","94":"MGV94sldkvs","93":"jbdcWDkUf8I","92":"a_y1FrsuzLg","91":"882NAEPtEOc","90":"7f5fULrO7pQ","89":"SDRKwGM0Gx4","88":"cGU_5-1ZAjo","87":"Cd-5qG-ajb0","86":"pDFws8j2LDs","85":"JtRiI2uxoSw","84":"Ric0V658pHo","83":"P_2F3XcEBqY","82":"sRWPIa19CNk","81":"wfzM3wBUl2c","80":"UmC3m9b3bdQ","79":"pahlMOXuA3U","78":"v6PHFcCWhhI","77":"--Y22sXLGDo","76":"S4XaGxqO2LE","75":"PHcwIZQT4bw","74":"UWZF16xYfbc","73":"Qhk3_zm9KRs","72":"AybUTpY0e4c","71":"vT8YLXoVY9g","70":"mrKHmSz9300","69":"cS_pJwuGz9g","68":"dw4o9a-B2sM","67":"zGpb8yK4YXs","66":"dkeHla2A_gY","65":"91kSbNFkrX8","64":"6pGfwg94rsQ","63":"IKzD6x0JYOY","62":"SpIc0JfAJLY","61":"Hq1fSzT8X30","60":"f_abRUI7JLE","59":"smDCDLCbjek","58":"EjGIW-F2o4o","57":"YohJQX1-m54","56":"IaFuSXdObVA","55":"kEBrCBhXAv0","54":"hguUFNQ6w7c","53":"nB8WrAF-MdQ","52":"aPESMwLDBio","51":"fCKXiLu2jhI","50":"7Hu8t_euogs","49":"8VEiOqV_iZ0","48":"ZSlaGKGr6CI","47":"qyUZ0FO4c1w","46":"U7SB37twyRw","45":"9wamO1E28n4","44":"7cyfdS-U5-c","43":"FLAoI5f0YAo","42":"G_WNhiYPwIo","41":"xbiu2jXqmG4","40":"rIRpWE-mcvM","39":"En2PHi6MLWY","38":"UICa058uIjw","37":"d7TM6e-TU0E","36":"pSE4aZ4mEbk","35":"tNZIhxN0csE","34":"pNGr9dODYxA","33":"okSL8Q7MAxU","32":"wZYKcJ30RWA","31":"HTPpTJh7nBQ","30":"hOcQBRg8rZo","29":"Vb4r8HNqJJw","28":"57LXXNQAnF8","27":"G7V-hyJcX0U","26":"RdZNZ2byk-A","25":"_fMBPCCXHoI","24":"7tj8sC3K4Ak","23":"T5dAQ0Ymbp0","22":"Gsj8kL8xU2g","21":"ky6SHQf0Jxk","20":"NXnwMLl9ziU","19":"6HbW_QZzWpM","18":"OCRNozQK2ec","17":"ik5lSzByaj0","16":"ctMSTvwCMSc","15":"-7uYWC6BtEw","14":"oAEh5yUmO-I","13":"DRzOVhbH-eg","12":"9OMJziUx68Y","11":"Gx7R5-dTE-w","10":"iXjToQjNBgM","9":"-n1I6BBdohA","8":"eBerx_dGvdI","7":"WEHJzZOk1u8","6":"2--hiufL1eU","5":"S0y_NsHZllI","4":"9rr2u2oubVI","3":"sA5IhGlVA_g","2":"9d-bjx_PggI","1":"H8D0W9jhHpo"};
+function abrirSelfDesign(kin){const vid=SELF_DESIGN[String(kin)];if(!vid)return;abrirModalVideo('https://youtu.be/'+vid,'Self Design Sounds · Kin '+kin);}
 const ONDAS_PROPOSITOS = [{"onda":1,"propositos":"Iniciar e nutrir o ser, potencializar a energia vital, purificar-se e estar vigilante"},{"onda":2,"propositos":"Unificar-se para encantar, estando receptivo ao momento presente, refletir comandando a ordem e comunicar-se transcendendo a oportunidade"},{"onda":3,"propositos":"Atrair a cura, comandar a ilusão, realizar a mente e transcender a energia"},{"onda":4,"propositos":"Atrair a luz para a sua vida, comandar a percepção e focalizar, deixar pulsar a arte e transcender na sabedoria"},{"onda":5,"propositos":"Explorar os espaços estando vigilante e atento às sincronicidades e movimentos para se realizar e armazenar força vital"},{"onda":6,"propositos":"Desapegar-se, potencializar o amor, estar receptivo e refletir"},{"onda":7,"propositos":"Atrair energia, potencializar os sonhos, realizar cura e transcender a ilusão"},{"onda":8,"propositos":"Atrair sabedoria, comandar a intrepidez, realizar a vida e perseverar para focalizar"},{"onda":9,"propositos":"Unificar-se para sobreviver, potencializar a purificação, estar vigilante e persistir na evolução"},{"onda":10,"propositos":"Refletir, mantendo a ordem, potencializar a comunicação, desapegue-se e seja leal consigo mesmo"},{"onda":11,"propositos":"Ser mais flexível, dominar a mente, realizar transformações e seguir a intuição."},{"onda":12,"propositos":"Focalizar para perceber, manter a harmonia, usar sabedoria e questionar."},{"onda":13,"propositos":"Movimentar para evoluir, nutrir o ser, cuidar de sua energia vital e seu lado emocional."},{"onda":14,"propositos":"Amar, estar no aqui, agora, refletir e se expressar."},{"onda":15,"propositos":"Atrair abundância, buscar conhecimento, viver no momento presente e ter visão mais ampla."},{"onda":16,"propositos":"Questionar, iluminar a vida, concentrar-se e buscar harmonia."},{"onda":17,"propositos":"Purificar, vigiar, evoluir e nutrir-se."},{"onda":18,"propositos":"Comunicar-se com clareza, desapegar-se, deixar pulsar o amor e estar receptivo ao momento presente."},{"onda":19,"propositos":"Usar a mente para ter uma visão mais ampla, comandar a energia, deixar pulsar os sonhos e persistir em curar-se."},{"onda":20,"propositos":"Atrair a harmonia, comandar a sabedoria, realizar intrepidez e transcender a vida."}];
 
 const DATA_PRONTO = fetch('./sincronario_dados.json')
@@ -406,7 +408,6 @@ function getSeloEmoji(nome) {
   const idx = nomes.findIndex(s => nome.includes(s));
   return idx >= 0 ? EMOJIS[idx] : '🌀';
 }
-
 
 function getSeloIconURL(nomeCompleto) {
   const partes = nomeCompleto.split(' ');
@@ -440,7 +441,6 @@ function getSeloIconURL(nomeCompleto) {
   return mapa[nomeBase] || './assets/icons/default.png';
 }
 
-
 function getSeloBase(nomeCompleto) {
   const partes = nomeCompleto.split(' ');
   return partes.slice(0, -1).join(' ');
@@ -456,17 +456,10 @@ function concordar(selo, tom) {
     if (selo.includes(p)) {
       return tom
         .replace('Magnético', 'Magnética')
-        .replace('Lunar', 'Lunar')
         .replace('Elétrico', 'Elétrica')
-        .replace('Autoexistente', 'Autoexistente')
-        .replace('Overtone', 'Overtone')
         .replace('Rítmico', 'Rítmica')
-        .replace('Ressonante', 'Ressonante')
         .replace('Galáctico', 'Galáctica')
-        .replace('Solar', 'Solar')
         .replace('Planetário', 'Planetária')
-        .replace('Espectral', 'Espectral')
-        .replace('Cristal', 'Cristal')
         .replace('Cósmico', 'Cósmica');
     }
   }
@@ -489,256 +482,90 @@ const db = firebase.firestore();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 document.getElementById('btn-login').onclick = () => {
-  console.log('[Login] Iniciando login com Google...');
-  
   document.getElementById('login-error').classList.add('hidden');
   document.getElementById('login-loading').textContent = 'Entrando...';
   document.getElementById('login-loading').classList.remove('hidden');
-  
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.addScope('profile');
   provider.addScope('email');
-  
   auth.signInWithPopup(provider).catch(e => {
-    console.error('[Login] ❌ Erro no popup:', e.code, e.message);
-    
     let mensagem = e.message;
-    if (e.code === 'auth/popup-blocked') {
-      mensagem = '⚠️ Popup bloqueado! Verifique as configurações do navegador.';
-    } else if (e.code === 'auth/cancelled-popup-request') {
-      mensagem = '⚠️ Login cancelado.';
-    }
-    
+    if (e.code === 'auth/popup-blocked') mensagem = '⚠️ Popup bloqueado! Verifique as configurações do navegador.';
+    else if (e.code === 'auth/cancelled-popup-request') mensagem = '⚠️ Login cancelado.';
     document.getElementById('login-error').textContent = mensagem;
     document.getElementById('login-error').classList.remove('hidden');
     document.getElementById('login-loading').classList.add('hidden');
   });
 };
 
-// ══════════════════════════════════════════════════════════════════════
-// AUTENTICAÇÃO FIREBASE - VERSÃO CORRIGIDA COM POLLING
-// ══════════════════════════════════════════════════════════════════════
-
 let isProcessingAuth = false;
 let authCheckInterval = null;
 
 auth.onAuthStateChanged(async u => {
-  if (isProcessingAuth) {
-    console.log('[Auth] Já está processando autenticação, ignorando...');
-    return;
-  }
-  
+  if (isProcessingAuth) return;
   if (u) {
     isProcessingAuth = true;
-    console.log('[Auth] Usuário detectado:', u.email);
-    
     try {
       const uR = db.collection('users').doc(u.uid);
       const uD = await uR.get();
-      
       if (uD.exists) {
         const d = uD.data();
-        console.log('[Auth] Documento existe:', { email: d.email, authorized: d.authorized });
-        
         if (d.authorized === true) {
-          // ✅ USUÁRIO AUTORIZADO - MOSTRA APP
-          console.log('[Auth] ✅ Usuário autorizado');
-          
           document.getElementById('login-screen').style.display = 'none';
           document.getElementById('app-screen').classList.add('active');
           document.getElementById('user-avatar').src = u.photoURL || '';
           document.getElementById('user-name').textContent = u.displayName;
           document.getElementById('user-role').textContent = d.role || 'usuário';
-          
-          if (d.role === 'admin') {
-            document.getElementById('btn-admin').classList.remove('hidden');
-          }
-          
-          // Atualiza timestamp de último acesso
-          db.collection('users').doc(u.uid).update({
-            ultimoAcesso: firebase.firestore.FieldValue.serverTimestamp()
-          }).catch(err => console.warn('Erro ao atualizar acesso:', err));
-          
+          if (d.role === 'admin') document.getElementById('btn-admin').classList.remove('hidden');
+          db.collection('users').doc(u.uid).update({ ultimoAcesso: firebase.firestore.FieldValue.serverTimestamp() }).catch(()=>{});
           loadToday();
           carregarPerfil(u);
           carregarAviso();
-          
-          // Limpa intervalo de verificação se estava em espera
-          if (authCheckInterval) {
-            clearInterval(authCheckInterval);
-            authCheckInterval = null;
-          }
-          
+          if (authCheckInterval) { clearInterval(authCheckInterval); authCheckInterval = null; }
         } else {
-          // ⏳ PENDENTE DE AUTORIZAÇÃO
-          console.log('[Auth] ⏳ Usuário aguardando autorização');
           mostrarTelaAguardoAprovacao(u.uid);
-          
-          // Inicia verificação periódica (a cada 10 segundos)
           if (!authCheckInterval) {
             authCheckInterval = setInterval(async () => {
               try {
-                console.log('[Auth] Verificando status de autorização...');
-                const updatedDoc = await uR.get();
-                
-                if (updatedDoc.exists && updatedDoc.data().authorized === true) {
-                  console.log('[Auth] ✅ Usuário foi autorizado! Atualizando...');
-                  clearInterval(authCheckInterval);
-                  authCheckInterval = null;
-                  window.location.reload();
-                }
-              } catch (err) {
-                console.warn('[Auth] Erro ao verificar autorização:', err);
-              }
+                const upd = await uR.get();
+                if (upd.exists && upd.data().authorized === true) { clearInterval(authCheckInterval); authCheckInterval = null; window.location.reload(); }
+              } catch(err) {}
             }, 10000);
           }
-          
-          // Timeout de segurança: logout após 30 minutos de espera
-          setTimeout(() => {
-            if (authCheckInterval) {
-              console.log('[Auth] Tempo de espera excedido (30min), desconectando...');
-              clearInterval(authCheckInterval);
-              authCheckInterval = null;
-              auth.signOut();
-            }
-          }, 1800000);
+          setTimeout(() => { if (authCheckInterval) { clearInterval(authCheckInterval); authCheckInterval = null; auth.signOut(); } }, 1800000);
         }
       } else {
-        // 📝 NOVO USUÁRIO - CRIAR DOCUMENTO
-        console.log('[Auth] Novo usuário, criando documento...');
-        
-        await uR.set({
-          authorized: false,
-          displayName: u.displayName || 'Usuário',
-          email: u.email,
-          photoURL: u.photoURL || '',
-          role: 'usuário',
-          createdAt: new Date()
-        });
-        
-        console.log('[Auth] ⏳ Documento criado, aguardando autorização...');
+        await uR.set({ authorized: false, displayName: u.displayName || 'Usuário', email: u.email, photoURL: u.photoURL || '', role: 'usuário', createdAt: new Date() });
         mostrarTelaAguardoAprovacao(u.uid);
-        
-        // Inicia verificação periódica (a cada 10 segundos)
         if (!authCheckInterval) {
           authCheckInterval = setInterval(async () => {
             try {
-              const updatedDoc = await uR.get();
-              if (updatedDoc.exists && updatedDoc.data().authorized === true) {
-                console.log('[Auth] ✅ Novo usuário foi autorizado!');
-                clearInterval(authCheckInterval);
-                authCheckInterval = null;
-                window.location.reload();
-              }
-            } catch (err) {
-              console.warn('[Auth] Erro ao verificar novo usuário:', err);
-            }
+              const upd = await uR.get();
+              if (upd.exists && upd.data().authorized === true) { clearInterval(authCheckInterval); authCheckInterval = null; window.location.reload(); }
+            } catch(err) {}
           }, 10000);
         }
-        
-        // Timeout de 30 minutos
-        setTimeout(() => {
-          if (authCheckInterval) {
-            console.log('[Auth] Novo usuário timeout (30min)');
-            clearInterval(authCheckInterval);
-            authCheckInterval = null;
-            auth.signOut();
-          }
-        }, 1800000);
+        setTimeout(() => { if (authCheckInterval) { clearInterval(authCheckInterval); authCheckInterval = null; auth.signOut(); } }, 1800000);
       }
-    } catch (e) {
-      console.error('[Auth] ❌ Erro na autenticação:', e);
-      
-      document.getElementById('login-error').innerHTML = `
-        <div style="text-align: center;">
-          <div style="margin-bottom: 0.5rem">❌ Erro na Autenticação</div>
-          <p style="font-size: 0.85rem; color: var(--text2); margin: 0; word-break: break-word;">
-            ${e.message || 'Erro desconhecido'}
-          </p>
-          <button onclick="location.reload()" style="
-            margin-top: 0.8rem;
-            padding: 6px 12px;
-            background: var(--green);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.75rem;
-          ">Tentar Novamente</button>
-        </div>
-      `;
-      document.getElementById('login-error').style.background = 'rgba(138,32,24,.12)';
-      document.getElementById('login-error').style.borderColor = 'rgba(138,32,24,.3)';
+    } catch(e) {
+      document.getElementById('login-error').innerHTML = `<div style="text-align:center"><div style="margin-bottom:.5rem">❌ Erro na Autenticação</div><p style="font-size:.85rem;color:var(--text2);margin:0;word-break:break-word">${e.message||'Erro desconhecido'}</p><button onclick="location.reload()" style="margin-top:.8rem;padding:6px 12px;background:var(--green);color:white;border:none;border-radius:4px;cursor:pointer;font-size:.75rem">Tentar Novamente</button></div>`;
       document.getElementById('login-error').classList.remove('hidden');
     }
-    
     isProcessingAuth = false;
   } else {
-    // 🚪 DESCONECTADO
-    console.log('[Auth] Usuário desconectado');
-    
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app-screen').classList.remove('active');
     document.getElementById('login-loading').classList.add('hidden');
-    
-    // Limpa intervalo se houver
-    if (authCheckInterval) {
-      clearInterval(authCheckInterval);
-      authCheckInterval = null;
-    }
-    
+    if (authCheckInterval) { clearInterval(authCheckInterval); authCheckInterval = null; }
     isProcessingAuth = false;
   }
 });
 
-// ══════════════════════════════════════════════════════════════════════
-// FUNÇÃO: Mostrar tela melhorada de espera por aprovação
-// ══════════════════════════════════════════════════════════════════════
-
 function mostrarTelaAguardoAprovacao(uid) {
   document.getElementById('login-loading').style.display = 'block';
-  document.getElementById('login-loading').innerHTML = `
-    <div style="text-align: center; animation: fadeUp 0.4s both;">
-      <div style="font-size: 2rem; margin-bottom: 0.8rem; animation: spin 2s linear infinite">⏳</div>
-      <div style="font-family: Cinzel; font-size: 1rem; color: var(--gold2); margin-bottom: 0.4rem;">
-        Aguardando Aprovação
-      </div>
-      <p style="font-size: 0.85rem; color: var(--text); margin: 0.3rem 0; line-height: 1.5;">
-        Sua conta foi criada com sucesso!<br>
-        Aguarde a aprovação do administrador.
-      </p>
-    </div>
-  `;
-  
+  document.getElementById('login-loading').innerHTML = `<div style="text-align:center;animation:fadeUp 0.4s both"><div style="font-size:2rem;margin-bottom:.8rem;animation:spin 2s linear infinite">⏳</div><div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.4rem">Aguardando Aprovação</div><p style="font-size:.85rem;color:var(--text);margin:.3rem 0;line-height:1.5">Sua conta foi criada com sucesso!<br>Aguarde a aprovação do administrador.</p></div>`;
   document.getElementById('login-loading').classList.remove('hidden');
-  
-  document.getElementById('login-error').innerHTML = `
-    <div style="text-align: center;">
-      <p style="margin: 0 0 0.8rem 0; color: var(--text); font-size: 0.9rem;">
-        ✓ Verificamos sua conta: <strong>${uid.substring(0, 8)}...</strong>
-      </p>
-      <p style="font-size: 0.82rem; color: var(--text3); margin: 0.3rem 0; line-height: 1.5;">
-        Assim que aprovado, você terá acesso imediato ao Sincronário.<br>
-        Esta página será atualizada automaticamente.
-      </p>
-      <button onclick="auth.signOut()" style="
-        margin-top: 1rem;
-        padding: 7px 14px;
-        background: transparent;
-        border: 1px solid var(--border);
-        color: var(--text2);
-        border-radius: 4px;
-        cursor: pointer;
-        font-family: Cinzel;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.07em;
-        transition: all 0.2s;
-      " onmouseover="this.style.borderColor='var(--green3)'" onmouseout="this.style.borderColor='var(--border)'">
-        Voltar ao Login
-      </button>
-    </div>
-  `;
+  document.getElementById('login-error').innerHTML = `<div style="text-align:center"><p style="margin:0 0 .8rem 0;color:var(--text);font-size:.9rem">✓ Verificamos sua conta: <strong>${uid.substring(0,8)}...</strong></p><p style="font-size:.82rem;color:var(--text3);margin:.3rem 0;line-height:1.5">Assim que aprovado, você terá acesso imediato ao Sincronário.<br>Esta página será atualizada automaticamente.</p><button onclick="auth.signOut()" style="margin-top:1rem;padding:7px 14px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:4px;cursor:pointer;font-family:Cinzel;font-size:.75rem;text-transform:uppercase;letter-spacing:.07em">Voltar ao Login</button></div>`;
   document.getElementById('login-error').style.background = 'rgba(245,200,66,0.08)';
   document.getElementById('login-error').style.borderColor = 'rgba(245,200,66,0.25)';
   document.getElementById('login-error').classList.remove('hidden');
@@ -763,19 +590,13 @@ function switchTab(t) {
   if (t === 'selos') renderSelos();
 }
 
-// CÁLCULOS DE DATA
-function isLeapDay(d) {
-  return d.getMonth() === 1 && d.getDate() === 29;
-}
+function isLeapDay(d) { return d.getMonth() === 1 && d.getDate() === 29; }
 
 function daysBetween(f, t) {
   if (f > t) return -daysBetween(t, f);
   let c = 0;
   const d = new Date(f.getTime());
-  while (d < t) {
-    d.setDate(d.getDate() + 1);
-    if (!isLeapDay(d)) c++;
-  }
+  while (d < t) { d.setDate(d.getDate() + 1); if (!isLeapDay(d)) c++; }
   return c;
 }
 
@@ -799,10 +620,6 @@ function getFaseLunar(d) {
   return '🌑 Nova';
 }
 
-// PARTE 3 CONTINUA NA PRÓXIMA MENSAGEM (função kinHTML)
-
-
-// FUNÇÃO PRINCIPAL - GERA TODO O HTML DO KIN
 async function calcNatal() {
   await DATA_PRONTO;
   const v = document.getElementById('nasc-inp').value;
@@ -819,8 +636,6 @@ async function loadToday() {
   const k = dateToKin(new Date());
   document.getElementById('res-dia').innerHTML = kinHTML(k);
 }
-
-
 
 function gerarLuaCircular(diaAtivo) {
   const cores = ['red','white','blue','yellow'];
@@ -870,7 +685,6 @@ function kinHTML(kinNum) {
   const tomNum = kD.tom;
   const tomInfo = DATA.tons[tomNum] || {};
 
-  // Onda Encantada — 13 kins em sequência no grid quadro 4x4
   const ondaInicio = Math.floor((kinNum - 1) / 13) * 13 + 1;
   const diaOnda = ((kinNum - 1) % 13) + 1;
 
@@ -885,44 +699,35 @@ function kinHTML(kinNum) {
   }
   ondaHTML += '</div>';
 
-  // Castelo COMPLETO
   const casteloNum = Math.floor((kinNum - 1) / 52);
   const castelo = DATA.castelos[casteloNum] || {};
-  const casteloTexto = `🏰 Castelo ${castelo.nome} ${castelo.dir} do ${castelo.proposito}`;
   const casteloOndas = castelo.ondas || [];
   let casteloOndasHTML = '<div style="display:flex;gap:8px;justify-content:center;margin-top:0.5rem">';
   for (let ondaNome of casteloOndas) {
-    // Pegar o selo completo da onda para ter a cor
     const ondaIdx = casteloOndas.indexOf(ondaNome);
     const ondaKinInicio = casteloNum * 52 + ondaIdx * 13 + 1;
     const ondaKinData = DATA.kins && DATA.kins[ondaKinInicio] ? DATA.kins[ondaKinInicio] : null;
-    
     let ondaSeloCompleto, ondaIconURL;
     if (ondaKinData && ondaKinData.selo) {
       ondaSeloCompleto = ondaKinData.selo;
       ondaIconURL = getSeloIconURL(ondaSeloCompleto);
     } else {
-      // Fallback: usar o nome da onda + cor padrão baseado no índice
       const cores = ['Vermelho', 'Branco', 'Azul', 'Amarelo'];
       ondaSeloCompleto = ondaNome + ' ' + cores[ondaIdx % 4];
       ondaIconURL = getSeloIconURL(ondaSeloCompleto);
     }
-    
     casteloOndasHTML += `<div class="tooltip" data-tooltip="${ondaNome}" style="width:50px;height:50px"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='${getSeloEmoji(ondaNome)}'"></div>`;
   }
   casteloOndasHTML += '</div>';
 
-  // Plasma
   const diaSemana = (kinNum - 1) % 7;
   const plasma = DATA.plasmas[diaSemana] || '';
   const plasmaEmojiMap = {'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'};
   const plasmaChave = plasma.split(' - ')[0];
   const plasmaEmoji = plasmaEmojiMap[plasmaChave] || '⚡';
 
-  // Ritual
   const ritual = DATA.rituais[diaOnda] || {};
 
-  // Lua Galáctica com SEMANAS COLORIDAS
   const hoje = new Date();
   const anoGal = hoje >= new Date(hoje.getFullYear(), 6, 26) ? hoje.getFullYear() : hoje.getFullYear() - 1;
   const inicioAno = new Date(anoGal, 6, 26);
@@ -930,52 +735,33 @@ function kinHTML(kinNum) {
   const luaNum = Math.floor(diasPassados / 28) + 1;
   const diaLua = (diasPassados % 28) + 1;
   const luaNome = DATA.luas[luaNum - 1] || '';
-  
   const luaHTML = gerarLuaCircular(diaLua);
-
-  // Fase Lunar
   const faseLunar = getFaseLunar(hoje);
 
-  // Anel Solar com ÍCONE
   const anelKin = ((kinNum - 1) % 20) + 1;
-  
-  // Função auxiliar para executar após renderizar
-  setTimeout(() => {
-    const btnMed = document.getElementById('btn-meditacao');
-    if (btnMed && MEDITACOES[String(anelKin)]) {
-      btnMed.href = MEDITACOES[String(anelKin)];
-      btnMed.style.cursor = 'pointer';
-    }
-  }, 100);
   const anelSelo = DATA.selos[anelKin] || {};
   const anelNomeCompleto = anelSelo.nome || '';
   const anelIconURL = getSeloIconURL(anelNomeCompleto);
   const anelNome = anelSelo.nome || '';
   const anelAcao = anelSelo.acao || '';
 
-  // Onda propósito — usando o PRIMEIRO kin da onda para pegar o selo correto
   const ondaNum = Math.floor((kinNum - 1) / 13) + 1;
   const ondaKinInicio = Math.floor((kinNum - 1) / 13) * 13 + 1;
   const ondaKinInicioData = (DATA.kins||{})[String(ondaKinInicio)] || {};
-  // Encontrar o selo correto no DATA.selos pelo nome
   const ondaSeloNome = ondaKinInicioData.selo || '';
-  // Busca pelo nome base sem a cor para garantir o match
   const ondaSeloNomeBase = ondaSeloNome ? ondaSeloNome.split(' ').slice(0,-1).join(' ') : '';
   const ondaSelo = Object.values(DATA.selos||{}).find(s => {
     const sBase = s.nome ? s.nome.split(' ').slice(0,-1).join(' ') : '';
     return sBase === ondaSeloNomeBase || s.nome === ondaSeloNome;
   }) || {};
-  // Propósito vem da tabela de ondas embutida (1-20 ciclicamente)
   const ondaNumCiclo = ((ondaNum - 1) % 20) + 1;
   const ondaProposito = (() => {
     const item = ONDAS_PROPOSITOS.find(o => o.onda === ondaNumCiclo);
     return item ? item.propositos : '';
   })();
 
-  // Castelo com direção cardinal
   const casteloTextoFmt = '🏰 Castelo ' + (castelo.nome||'') + ' · ' + (['Leste','Norte','Oeste','Sul','Leste'][casteloNum]||castelo.dir||'') + ' · ' + (castelo.proposito||'');
 
-  // Kin representativo de cada lua (onda de serviço planetário do ano)
   const LUA_KINS = [118,119,120,121,122,123,124,130,129,127,128,126,125];
   const luaKinNum = LUA_KINS[luaNum - 1] || 1;
   const luaKinData = (DATA.kins||{})[String(luaKinNum)] || null;
@@ -1079,15 +865,18 @@ function kinHTML(kinNum) {
   <div class="section">
     <div class="section-title">Prática Diária</div>
     <ul class="praticas-list">
-      <li style="justify-content:space-between;align-items:center">
+      <li class="has-btn">
         <span>Ouça a prece das 7 direções galácticas</span>
         <button onclick="togglePrece(this)" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
       </li>
-      <li style="justify-content:space-between;align-items:center">
+      <li class="has-btn">
         <span>Meditação do selo</span>
         <button onclick="abrirModalVideo('${MEDITACOES[String(anelKin)]}','${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
       </li>
-      <li>Ouça o Self Design Sounds</li>
+      <li class="has-btn">
+        <span>Ouça o Self Design Sounds</span>
+        <button onclick="abrirSelfDesign(${kinNum})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+      </li>
       <li>Leitura da página ${diaOnda} do e-book</li>
       <li>${ritual.ritual || ''}</li>
     </ul>
@@ -1096,36 +885,14 @@ function kinHTML(kinNum) {
   `;
 }
 
-
-async function calcNatal() {
-  await DATA_PRONTO;
-  const v = document.getElementById('nasc-inp').value;
-  if (!v) return;
-  const [y, m, d] = v.split('-').map(Number);
-  const dt = new Date(y, m - 1, d);
-  const k = dateToKin(dt);
-  document.getElementById('res-natal').innerHTML = kinHTML(k);
-  document.getElementById('res-natal').classList.remove('hidden');
-}
-
-
-
-// ══════════════════════════════════════════════════
-// COMPARTILHAR KIN
-// ══════════════════════════════════════════════════
 async function compartilharKin() {
   const area = document.getElementById('export-area');
   const canvas = await html2canvas(area, { backgroundColor: '#071209', scale: 2 });
   canvas.toBlob(async (blob) => {
     const file = new File([blob], 'meu-kin.png', { type: 'image/png' });
     if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({
-        title: 'Sincronário das 13 Luas',
-        text: 'Meu Kin do dia 🌀',
-        files: [file]
-      });
+      await navigator.share({ title: 'Sincronário das 13 Luas', text: 'Meu Kin do dia 🌀', files: [file] });
     } else {
-      // fallback: download
       const link = document.createElement('a');
       link.download = `kin-${new Date().toISOString().split('T')[0]}.png`;
       link.href = canvas.toDataURL();
@@ -1134,19 +901,13 @@ async function compartilharKin() {
   });
 }
 
-// ══════════════════════════════════════════════════
-// PÁGINA DE SELOS
-// ══════════════════════════════════════════════════
 async function renderSelos() {
   await DATA_PRONTO;
   const grid = document.getElementById('selos-grid');
   if (!grid || grid.children.length > 0) return;
   const selos = DATA.selos || {};
   const keys = Object.keys(selos).sort((a,b) => Number(a)-Number(b));
-  if (!keys.length) {
-    grid.innerHTML = '<p style="color:var(--text3);font-style:italic;padding:1rem;grid-column:1/-1">Dados não carregados.</p>';
-    return;
-  }
+  if (!keys.length) { grid.innerHTML = '<p style="color:var(--text3);font-style:italic;padding:1rem;grid-column:1/-1">Dados não carregados.</p>'; return; }
   keys.forEach(k => {
     const sd = selos[k];
     if (!sd || !sd.nome) return;
@@ -1155,38 +916,21 @@ async function renderSelos() {
     const base  = getSeloBase(nomeCompleto);
     const icon  = getSeloIconURL(nomeCompleto);
     const emoji = getSeloEmoji(nomeCompleto);
-
     const card = document.createElement('div');
     card.className = 'selo-card';
-
-    // Ícone: tenta imagem, se falhar mostra emoji
     const iconDiv = document.createElement('div');
     iconDiv.className = 'selo-card-icon selo-' + cor;
     iconDiv.style.cssText = 'width:52px;height:52px';
     const img = document.createElement('img');
-    img.src = icon;
-    img.alt = base;
+    img.src = icon; img.alt = base;
     img.style.cssText = 'width:100%;height:100%;object-fit:contain';
-    img.onerror = function() {
-      iconDiv.textContent = emoji;
-      iconDiv.style.fontSize = '1.8rem';
-      iconDiv.style.display = 'flex';
-      iconDiv.style.alignItems = 'center';
-      iconDiv.style.justifyContent = 'center';
-    };
+    img.onerror = function() { iconDiv.textContent = emoji; iconDiv.style.fontSize = '1.8rem'; iconDiv.style.display = 'flex'; iconDiv.style.alignItems = 'center'; iconDiv.style.justifyContent = 'center'; };
     iconDiv.appendChild(img);
-
     const nomeDiv = document.createElement('div');
-    nomeDiv.className = 'selo-card-nome';
-    nomeDiv.textContent = base;
-
+    nomeDiv.className = 'selo-card-nome'; nomeDiv.textContent = base;
     const acaoDiv = document.createElement('div');
-    acaoDiv.className = 'selo-card-acao';
-    acaoDiv.textContent = sd.acao || '';
-
-    card.appendChild(iconDiv);
-    card.appendChild(nomeDiv);
-    card.appendChild(acaoDiv);
+    acaoDiv.className = 'selo-card-acao'; acaoDiv.textContent = sd.acao || '';
+    card.appendChild(iconDiv); card.appendChild(nomeDiv); card.appendChild(acaoDiv);
     card.onclick = () => abrirModalSelo(nomeCompleto, cor, icon, sd);
     grid.appendChild(card);
   });
@@ -1209,14 +953,8 @@ function fecharModalSelo() {
   document.body.style.overflow = '';
 }
 
-// Fechar modal clicando fora
-document.getElementById('modal-selo').addEventListener('click', function(e) {
-  if (e.target === this) fecharModalSelo();
-});
+document.getElementById('modal-selo').addEventListener('click', function(e) { if (e.target === this) fecharModalSelo(); });
 
-// ══════════════════════════════════════════════════
-// PERFIL — KIN NATAL SALVO NO FIRESTORE
-// ══════════════════════════════════════════════════
 let currentUserUID = null;
 
 async function carregarPerfil(user) {
@@ -1224,25 +962,17 @@ async function carregarPerfil(user) {
   document.getElementById('perfil-avatar').src = user.photoURL || '';
   document.getElementById('perfil-nome').textContent = user.displayName || '';
   document.getElementById('perfil-email').textContent = user.email || '';
-
-  // Carregar kin natal salvo
   try {
     const doc = await db.collection('users').doc(user.uid).get();
     const data = doc.data() || {};
-    // Onboarding — mostrar se for primeiro acesso
     if (!data.onboardingCompleto) mostrarOnboarding();
     if (data.kinNatalData) {
       document.getElementById('perfil-nasc-inp').value = data.kinNatalData;
       mostrarKinNatalSalvo(data.kinNatalData, data.kinNatalNum);
     } else {
-      document.getElementById('perfil-kin-salvo').innerHTML =
-        '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
+      document.getElementById('perfil-kin-salvo').innerHTML = '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
     }
-  } catch(e) {
-    console.warn('Erro ao carregar perfil:', e);
-  }
-
-  // Estado da notificação
+  } catch(e) { console.warn('Erro ao carregar perfil:', e); }
   atualizarBotaoNotif();
 }
 
@@ -1252,26 +982,18 @@ function mostrarKinNatalSalvo(data, kinNum) {
   const kd = (DATA.kins || {})[String(k)] || {};
   const [y,mo,dy] = data.split('-');
   const dataFmt = dy+'/'+mo+'/'+y;
-
-  const nomeKin = kd.selo       || 'Kin '+k;
+  const nomeKin = kd.selo || 'Kin '+k;
   const tomNome = concordar(nomeKin, kd.tom_nome || '');
-  const frase   = kd.frase_curta|| '';
+  const frase   = kd.frase_curta || '';
   const cor     = getSeloCor(nomeKin);
   const icon    = getSeloIconURL(nomeKin);
-  const orac    = kd.oraculo    || {};
-  const tomIdx  = kd.tom        || 0;
-  const tomData = (DATA.tons    || {})[String(tomIdx)] || (DATA.tons||{})[tomIdx] || {};
-
-  // Busca desc do selo pelo nome base (inclui variações como "Enlaçador de Mundos")
-  // Buscar pelo nome EXATO no selos (não por includes — evita matches errados)
+  const orac    = kd.oraculo || {};
+  const tomIdx  = kd.tom || 0;
+  const tomData = (DATA.tons || {})[String(tomIdx)] || (DATA.tons||{})[tomIdx] || {};
   const seloEntry = Object.values(DATA.selos||{}).find(s => s.nome === nomeKin) || {};
 
   const html = '<div class="perfil-kin-card">'
-
-    // ── Cabeçalho ──
     + '<div class="perfil-kin-label">Kin '+k+' de 260 · '+dataFmt+'</div>'
-
-    // ── Ícone centrado + nome ──
     + '<div style="text-align:center;padding:.8rem 0 .4rem">'
     +   '<div class="selo-icon selo-'+cor+'" style="width:72px;height:72px;border-radius:10px;margin:0 auto .7rem">'
     +     '<img src="'+icon+'" style="width:100%;height:100%;object-fit:contain">'
@@ -1280,56 +1002,26 @@ function mostrarKinNatalSalvo(data, kinNum) {
     +   '<div class="perfil-kin-sub" style="margin-top:.2rem">'+tomNome+(seloEntry.maya?' · '+seloEntry.maya:'')+'</div>'
     +   (seloEntry.acao ? '<div style="font-size:.62rem;color:var(--green2);text-transform:uppercase;letter-spacing:.07em;margin-top:.25rem">'+seloEntry.acao+'</div>' : '')
     + '</div>'
-
-    // ── Frase ──
     + (frase ? '<div style="font-style:italic;color:var(--text);font-size:.88rem;border-left:2px solid var(--gold3);padding:.65rem .9rem;background:rgba(165,124,0,.06);margin:.5rem 0;line-height:1.8">&ldquo;'+frase+'&rdquo;</div>' : '')
-
-    // ── Tom ──
     + (tomNome ? '<div style="background:var(--bg2);border-radius:6px;padding:.7rem .9rem;margin:.5rem 0;border-left:2px solid var(--green3)">'
     +   '<div style="font-family:Cinzel;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem">Tom '+tomIdx+' · '+tomNome+'</div>'
     +   (tomData.verbo ? '<div style="font-size:.85rem;color:var(--text2)">'+tomData.verbo+'</div>' : '')
     +   (tomData.pergunta ? '<div style="font-size:.8rem;color:var(--text3);margin-top:.25rem;font-style:italic">'+tomData.pergunta+'</div>' : '')
     + '</div>' : '')
-
-    // ── Oráculo ──
-    + (orac.guia ? '<div style="margin:.6rem 0" id="perfil-oraculo-grid">'
+    + (orac.guia ? '<div style="margin:.6rem 0">'
     +   '<div style="font-family:Cinzel;font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem">Oráculo do Destino</div>'
     +   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem" id="perfil-oraculo-cells">'
     +   [['Guia',orac.guia],['Análogo',orac.analogo||''],['Antípoda',orac.antipoda||''],['Oculto',orac.oculto||'']].map(function(pair){
           return '<div class="perfil-orac-cell" data-nome="'+pair[1]+'" style="background:var(--bg2);border-radius:7px;padding:.6rem .7rem;display:flex;align-items:center;gap:.6rem">'
             +'<div class="perfil-orac-icon" style="width:40px;height:40px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem"></div>'
-            +'<div>'
-            +'<div style="font-size:.54rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">'+pair[0]+'</div>'
-            +'<div style="font-size:.78rem;color:var(--text);font-family:Cinzel,serif">'+getSeloBase(pair[1])+'</div>'
-            +'</div>'
-            +'</div>';
+            +'<div><div style="font-size:.54rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem">'+pair[0]+'</div>'
+            +'<div style="font-size:.78rem;color:var(--text);font-family:Cinzel,serif">'+getSeloBase(pair[1])+'</div></div></div>';
         }).join('')
-    +   '</div>'
-    + '</div>' : '')
-
+    +   '</div></div>' : '')
     + '<button class="btn-limpar-natal" onclick="limparKinNatal()">Remover</button>';
 
   document.getElementById('perfil-kin-salvo').innerHTML = html;
 
-  // Popular ícone principal do kin natal
-  (function() {
-    var mainIcon = document.getElementById('perfil-kin-main-icon');
-    if (!mainIcon) return;
-    var img = document.createElement('img');
-    img.src = icon;
-    img.alt = nomeKin;
-    img.style.cssText = 'width:100%;height:100%;object-fit:contain';
-    img.onerror = function() {
-      mainIcon.textContent = getSeloEmoji(nomeKin);
-      mainIcon.style.fontSize = '2rem';
-      mainIcon.style.display = 'flex';
-      mainIcon.style.alignItems = 'center';
-      mainIcon.style.justifyContent = 'center';
-    };
-    mainIcon.appendChild(img);
-  })();
-
-  // Popular ícones do oráculo via createElement (evita onerror em atributo)
   document.querySelectorAll('.perfil-orac-cell').forEach(function(cell) {
     var nome  = cell.getAttribute('data-nome');
     if (!nome) return;
@@ -1341,16 +1033,9 @@ function mostrarKinNatalSalvo(data, kinNum) {
     wrap.className = 'perfil-orac-icon selo-' + cor;
     wrap.style.cssText = 'width:40px;height:40px;border-radius:6px;flex-shrink:0';
     var img = document.createElement('img');
-    img.src = icon;
-    img.alt = nome;
+    img.src = icon; img.alt = nome;
     img.style.cssText = 'width:100%;height:100%;object-fit:contain';
-    img.onerror = function() {
-      wrap.textContent = emoji;
-      wrap.style.fontSize = '1.3rem';
-      wrap.style.display = 'flex';
-      wrap.style.alignItems = 'center';
-      wrap.style.justifyContent = 'center';
-    };
+    img.onerror = function() { wrap.textContent = emoji; wrap.style.fontSize = '1.3rem'; wrap.style.display = 'flex'; wrap.style.alignItems = 'center'; wrap.style.justifyContent = 'center'; };
     wrap.appendChild(img);
   });
 }
@@ -1362,231 +1047,119 @@ async function salvarKinNatal() {
   const dt = new Date(v + 'T12:00:00');
   const k = dateToKin(dt);
   try {
-    await db.collection('users').doc(currentUserUID).update({
-      kinNatalData: v,
-      kinNatalNum: k
-    });
+    await db.collection('users').doc(currentUserUID).update({ kinNatalData: v, kinNatalNum: k });
     mostrarKinNatalSalvo(v, k);
-    // Também atualizar a aba Kin Natal
     document.getElementById('nasc-inp').value = v;
     await calcNatal();
-  } catch(e) {
-    alert('Erro ao salvar: ' + e.message);
-  }
+  } catch(e) { alert('Erro ao salvar: ' + e.message); }
 }
 
 async function limparKinNatal() {
   if (!currentUserUID) return;
-  await db.collection('users').doc(currentUserUID).update({
-    kinNatalData: firebase.firestore.FieldValue.delete(),
-    kinNatalNum: firebase.firestore.FieldValue.delete()
-  });
-  document.getElementById('perfil-kin-salvo').innerHTML =
-    '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
+  await db.collection('users').doc(currentUserUID).update({ kinNatalData: firebase.firestore.FieldValue.delete(), kinNatalNum: firebase.firestore.FieldValue.delete() });
+  document.getElementById('perfil-kin-salvo').innerHTML = '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
   document.getElementById('perfil-nasc-inp').value = '';
 }
 
-// ══════════════════════════════════════════════════
-// NOTIFICAÇÕES PUSH (PWA)
-// ══════════════════════════════════════════════════
 function atualizarBotaoNotif() {
   const btn = document.getElementById('btn-notif');
   if (!btn) return;
-  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-    btn.textContent = 'Não disponível';
-    btn.disabled = true;
-    btn.classList.add('ativo');
-    return;
-  }
-  if (Notification.permission === 'granted') {
-    btn.textContent = '✓ Ativado';
-    btn.classList.add('ativo');
-  } else if (Notification.permission === 'denied') {
-    btn.textContent = 'Bloqueado';
-    btn.disabled = true;
-    btn.classList.add('ativo');
-  } else {
-    btn.textContent = 'Ativar';
-    btn.classList.remove('ativo');
-  }
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) { btn.textContent = 'Não disponível'; btn.disabled = true; btn.classList.add('ativo'); return; }
+  if (Notification.permission === 'granted') { btn.textContent = '✓ Ativado'; btn.classList.add('ativo'); }
+  else if (Notification.permission === 'denied') { btn.textContent = 'Bloqueado'; btn.disabled = true; btn.classList.add('ativo'); }
+  else { btn.textContent = 'Ativar'; btn.classList.remove('ativo'); }
 }
 
 async function toggleNotificacao() {
-  if (!('Notification' in window)) {
-    alert('Seu navegador não suporta notificações.');
-    return;
-  }
-  if (Notification.permission === 'granted') {
-    alert('Notificações já estão ativas! Para desativar, acesse as configurações do seu navegador.');
-    return;
-  }
+  if (!('Notification' in window)) { alert('Seu navegador não suporta notificações.'); return; }
+  if (Notification.permission === 'granted') { alert('Notificações já estão ativas!'); return; }
   const perm = await Notification.requestPermission();
   if (perm === 'granted') {
     await agendarNotificacaoDiaria();
     atualizarBotaoNotif();
-    // Mostrar notificação de teste
-    new Notification('🌀 Sincronário das 13 Luas', {
-      body: 'Notificações ativadas! Você receberá o Kin do dia toda manhã.',
-      icon: './icon-192.png',
-      badge: './icon-192.png'
-    });
+    new Notification('🌀 Sincronário das 13 Luas', { body: 'Notificações ativadas! Você receberá o Kin do dia toda manhã.', icon: './icon-192.png', badge: './icon-192.png' });
   }
   atualizarBotaoNotif();
 }
 
 async function agendarNotificacaoDiaria() {
-  // Verifica suporte a Background Sync / periodic sync
   if (!('serviceWorker' in navigator)) return;
   try {
     const reg = await navigator.serviceWorker.ready;
-    // Periodic Background Sync (Chrome Android)
     if ('periodicSync' in reg) {
       const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
-      if (status.state === 'granted') {
-        await reg.periodicSync.register('kin-diario', { minInterval: 24 * 60 * 60 * 1000 });
-      }
+      if (status.state === 'granted') await reg.periodicSync.register('kin-diario', { minInterval: 24 * 60 * 60 * 1000 });
     }
-  } catch(e) {
-    console.log('Periodic sync não disponível:', e);
-  }
+  } catch(e) { console.log('Periodic sync não disponível:', e); }
 }
 
-
-// ════════════════════════════════════════════════════════
-// ONBOARDING
-// ════════════════════════════════════════════════════════
 let onboardStep = 0;
 const ONBOARD_STEPS = 5;
 
-function mostrarOnboarding() {
-  document.getElementById('onboarding').classList.add('active');
-  onboardStep = 0;
-  atualizarOnboarding();
-}
+function mostrarOnboarding() { document.getElementById('onboarding').classList.add('active'); onboardStep = 0; atualizarOnboarding(); }
 
 function atualizarOnboarding() {
-  document.querySelectorAll('.onboarding-step').forEach((el, i) => {
-    el.classList.toggle('active', i === onboardStep);
-  });
-  document.querySelectorAll('.onboarding-dot').forEach((el, i) => {
-    el.classList.toggle('active', i === onboardStep);
-  });
+  document.querySelectorAll('.onboarding-step').forEach((el, i) => el.classList.toggle('active', i === onboardStep));
+  document.querySelectorAll('.onboarding-dot').forEach((el, i) => el.classList.toggle('active', i === onboardStep));
   const btn = document.getElementById('btn-onboard-next');
   if (btn) btn.textContent = onboardStep === ONBOARD_STEPS - 1 ? 'Começar ✓' : 'Próximo →';
 }
 
-function proximoOnboarding() {
-  onboardStep++;
-  if (onboardStep >= ONBOARD_STEPS) {
-    fecharOnboarding();
-  } else {
-    atualizarOnboarding();
-  }
-}
+function proximoOnboarding() { onboardStep++; if (onboardStep >= ONBOARD_STEPS) fecharOnboarding(); else atualizarOnboarding(); }
 
 function fecharOnboarding() {
   document.getElementById('onboarding').classList.remove('active');
-  if (currentUserUID) {
-    db.collection('users').doc(currentUserUID)
-      .update({ onboardingCompleto: true }).catch(() => {});
-  }
+  if (currentUserUID) db.collection('users').doc(currentUserUID).update({ onboardingCompleto: true }).catch(()=>{});
 }
 
-// ════════════════════════════════════════════════════════
-// AVISO PARA TODOS (lido do Firestore — admin escreve, usuário lê)
-// ════════════════════════════════════════════════════════
 async function carregarAviso() {
   try {
     const doc = await db.collection('config').doc('aviso').get();
     if (!doc.exists) return;
     const data = doc.data();
     if (!data.texto || !data.ativo) return;
-    // Verificar se usuário já fechou este aviso
     const chave = 'aviso_' + (data.id || 'geral');
     if (localStorage.getItem(chave)) return;
     const container = document.getElementById('aviso-container');
     if (!container) return;
     const div = document.createElement('div');
     div.className = 'aviso-banner';
-    const iconEl = document.createElement('span');
-    iconEl.className = 'aviso-banner-icon';
-    iconEl.textContent = data.emoji || '📢';
-    const txtEl = document.createElement('div');
-    txtEl.className = 'aviso-banner-texto';
-    txtEl.textContent = data.texto;
-    const closeEl = document.createElement('button');
-    closeEl.className = 'aviso-banner-close';
-    closeEl.textContent = '✕';
-    closeEl.onclick = function() { fecharAviso(closeEl, chave); };
-    div.appendChild(iconEl);
-    div.appendChild(txtEl);
-    div.appendChild(closeEl);
+    const iconEl = document.createElement('span'); iconEl.className = 'aviso-banner-icon'; iconEl.textContent = data.emoji || '📢';
+    const txtEl = document.createElement('div'); txtEl.className = 'aviso-banner-texto'; txtEl.textContent = data.texto;
+    const closeEl = document.createElement('button'); closeEl.className = 'aviso-banner-close'; closeEl.textContent = '✕'; closeEl.onclick = function() { fecharAviso(closeEl, chave); };
+    div.appendChild(iconEl); div.appendChild(txtEl); div.appendChild(closeEl);
     container.appendChild(div);
   } catch(e) {}
 }
 
-function fecharAviso(btn, chave) {
-  localStorage.setItem(chave, '1');
-  btn.closest('.aviso-banner').remove();
-}
+function fecharAviso(btn, chave) { localStorage.setItem(chave, '1'); btn.closest('.aviso-banner').remove(); }
 
-// ════════════════════════════════════════════════════════
-// EXPORTAR CALENDÁRIO — .ics com os próximos 28 dias
-// ════════════════════════════════════════════════════════
 async function exportarCalendario28() {
   await DATA_PRONTO;
-  const linhas = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Sincronario 13 Luas//PT',
-    'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH',
-    'X-WR-CALNAME:Sincronário das 13 Luas',
-    'X-WR-TIMEZONE:America/Sao_Paulo',
-  ];
-
+  const linhas = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Sincronario 13 Luas//PT','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Sincronário das 13 Luas','X-WR-TIMEZONE:America/Sao_Paulo'];
   for (let i = 0; i < 28; i++) {
-    const dt = new Date();
-    dt.setDate(dt.getDate() + i);
+    const dt = new Date(); dt.setDate(dt.getDate() + i);
     const kin = dateToKin(dt);
     const kd  = (DATA.kins || {})[String(kin)] || {};
     const nome = kd.selo ? concordar(kd.selo, kd.tom_nome || '') + ' ' + kd.selo.split(' ').pop() : 'Kin ' + kin;
     const frase = kd.frase_curta || '';
     const dtStr = dt.toISOString().split('T')[0].replace(/-/g,'');
-
-    linhas.push('BEGIN:VEVENT');
-    linhas.push('DTSTART;VALUE=DATE:' + dtStr);
-    linhas.push('DTEND;VALUE=DATE:' + dtStr);
-    linhas.push('SUMMARY:🌀 Kin ' + kin + ' · ' + nome);
+    linhas.push('BEGIN:VEVENT','DTSTART;VALUE=DATE:' + dtStr,'DTEND;VALUE=DATE:' + dtStr,'SUMMARY:🌀 Kin ' + kin + ' · ' + nome);
     if (frase) linhas.push('DESCRIPTION:' + frase.replace(/,/g,'\\,'));
-    linhas.push('CATEGORIES:Sincronário');
-    linhas.push('END:VEVENT');
+    linhas.push('CATEGORIES:Sincronário','END:VEVENT');
   }
-
   linhas.push('END:VCALENDAR');
-
   const blob = new Blob([linhas.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
   const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = 'sincronario-28dias.ics';
-  a.click();
+  const a    = document.createElement('a'); a.href = url; a.download = 'sincronario-28dias.ics'; a.click();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
-
-// ════════════════════════════════════════════════════════
-// RELATÓRIO PDF DO KIN — via jsPDF (gratuito, roda no browser)
-// ════════════════════════════════════════════════════════
 async function exportarPDFKin() {
   await DATA_PRONTO;
-  if (typeof window.jspdf === 'undefined') {
-    alert('Aguarde o carregamento da biblioteca PDF...');
-    return;
-  }
+  if (typeof window.jspdf === 'undefined') { alert('Aguarde o carregamento da biblioteca PDF...'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-
   const hoje = new Date();
   const kin  = dateToKin(hoje);
   const kd   = (DATA.kins || {})[String(kin)] || {};
@@ -1597,169 +1170,38 @@ async function exportarPDFKin() {
   const frase = kd.frase_curta || '';
   const orac  = kd.oraculo || {};
   const tomData = (DATA.tons || {})[String(kd.tom || 0)] || {};
-
-  // Cores
-  const VERDE  = [0, 70, 30];
-  const VERDE2 = [0, 151, 57];
-  const OURO   = [165, 124, 0];
-  const TEXTO  = [20, 40, 20];
-  const CINZA  = [100, 120, 100];
-
-  // Fundo
-  doc.setFillColor(...VERDE);
-  doc.rect(0, 0, 210, 297, 'F');
-
-  // Linha decorativa topo
-  doc.setDrawColor(...VERDE2);
-  doc.setLineWidth(0.5);
-  doc.line(15, 18, 195, 18);
-
-  // Título
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(...OURO);
-  doc.text('SINCRONÁRIO DAS 13 LUAS', 105, 14, { align: 'center' });
-
-  // Data
-  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  const dataFmt = hoje.getDate() + ' de ' + meses[hoje.getMonth()] + ' de ' + hoje.getFullYear();
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(...CINZA);
-  doc.text(dataFmt, 105, 22, { align: 'center' });
-
-  // KIN principal
-  doc.setFontSize(28);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(...VERDE2);
-  doc.text(nomeCompleto.toUpperCase(), 105, 45, { align: 'center' });
-
-  doc.setFontSize(11);
-  doc.setTextColor(...OURO);
-  doc.text('Kin ' + kin + ' de 260', 105, 54, { align: 'center' });
-
-  // Linha
-  doc.setDrawColor(...OURO);
-  doc.setLineWidth(0.3);
-  doc.line(40, 58, 170, 58);
-
-  // Frase
-  if (frase) {
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'italic');
-    doc.setTextColor(200, 230, 200);
-    const linhasFrase = doc.splitTextToSize('"' + frase + '"', 150);
-    doc.text(linhasFrase, 105, 68, { align: 'center' });
-  }
-
-  let y = frase ? 68 + (frase.length > 80 ? 16 : 10) : 68;
-
-  // Tom
-  doc.setDrawColor(0, 100, 40);
-  doc.setFillColor(0, 40, 15);
-  doc.roundedRect(15, y, 180, tomData.pergunta ? 28 : 20, 2, 2, 'FD');
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7);
-  doc.setTextColor(...OURO);
-  doc.text('TOM ' + (kd.tom||'') + ' · ' + tomConcordado.toUpperCase(), 20, y+6);
-  if (tomData.verbo) {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(200, 230, 200);
-    doc.text(tomData.verbo, 20, y+13);
-  }
-  if (tomData.pergunta) {
-    doc.setFontSize(9);
-    doc.setTextColor(...CINZA);
-    doc.text(tomData.pergunta, 20, y+20);
-  }
-  y += tomData.pergunta ? 35 : 27;
-
-  // Oráculo
-  if (orac.guia) {
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7);
-    doc.setTextColor(...OURO);
-    doc.text('ORÁCULO DO DESTINO', 20, y+6);
-    y += 10;
-
-    const posicoes = [
-      ['GUIA',     orac.guia],
-      ['ANÁLOGO',  orac.analogo  || ''],
-      ['ANTÍPODA', orac.antipoda || ''],
-      ['OCULTO',   orac.oculto   || ''],
-    ];
-    posicoes.forEach(([label, val], i) => {
-      const col = i % 2;
-      const row = Math.floor(i / 2);
-      const bx = 15 + col * 92;
-      const by = y + row * 18;
-      doc.setFillColor(0, 40, 15);
-      doc.setDrawColor(0, 80, 30);
-      doc.roundedRect(bx, by, 88, 14, 2, 2, 'FD');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(6);
-      doc.setTextColor(...OURO);
-      doc.text(label, bx + 4, by + 5);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(200, 230, 200);
-      doc.text(val, bx + 4, by + 11);
-    });
-    y += 40;
-  }
-
-  // Descrição do selo
-  const seloEntry = Object.values(DATA.selos || {}).find(s => s.nome === kd.selo) || {};
-  if (seloEntry.desc) {
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7);
-    doc.setTextColor(...OURO);
-    doc.text('ESSÊNCIA DO SELO', 20, y+4);
-    y += 10;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(180, 210, 180);
-    const linhasDesc = doc.splitTextToSize(seloEntry.desc, 170);
-    doc.text(linhasDesc, 20, y);
-    y += linhasDesc.length * 5 + 8;
-  }
-
-  // Onda Encantada
-  const ondaNum  = Math.floor((kin - 1) / 13) + 1;
-  const diaOnda  = ((kin - 1) % 13) + 1;
-  const ondaSelo = (DATA.selos || {})[String(((ondaNum - 1) % 20) + 1)] || {};
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(7);
-  doc.setTextColor(...OURO);
-  doc.text('ONDA ENCANTADA ' + ondaNum + ' · DIA ' + diaOnda, 20, y + 4);
-  if (ondaSelo.acao) {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(...CINZA);
-    doc.text(ondaSelo.acao, 20, y + 10);
-  }
-
-  // Linha rodapé
-  doc.setDrawColor(...VERDE2);
-  doc.setLineWidth(0.3);
-  doc.line(15, 285, 195, 285);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7);
-  doc.setTextColor(...CINZA);
-  doc.text('Sincronário das 13 Luas · Lei do Tempo', 105, 290, { align: 'center' });
-
-  // Salvar
-  const nomeArq = 'kin-' + kin + '-' + hoje.toISOString().split('T')[0] + '.pdf';
-  doc.save(nomeArq);
+  const VERDE=[0,70,30],VERDE2=[0,151,57],OURO=[165,124,0],TEXTO=[20,40,20],CINZA=[100,120,100];
+  doc.setFillColor(...VERDE); doc.rect(0,0,210,297,'F');
+  doc.setDrawColor(...VERDE2); doc.setLineWidth(0.5); doc.line(15,18,195,18);
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...OURO); doc.text('SINCRONÁRIO DAS 13 LUAS',105,14,{align:'center'});
+  const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const dataFmt=hoje.getDate()+' de '+meses[hoje.getMonth()]+' de '+hoje.getFullYear();
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...CINZA); doc.text(dataFmt,105,22,{align:'center'});
+  doc.setFontSize(28); doc.setFont('helvetica','bold'); doc.setTextColor(...VERDE2); doc.text(nomeCompleto.toUpperCase(),105,45,{align:'center'});
+  doc.setFontSize(11); doc.setTextColor(...OURO); doc.text('Kin '+kin+' de 260',105,54,{align:'center'});
+  doc.setDrawColor(...OURO); doc.setLineWidth(0.3); doc.line(40,58,170,58);
+  let y=68;
+  if(frase){doc.setFontSize(10);doc.setFont('helvetica','italic');doc.setTextColor(200,230,200);const lf=doc.splitTextToSize('"'+frase+'"',150);doc.text(lf,105,68,{align:'center'});y=68+(frase.length>80?16:10);}
+  doc.setFillColor(0,40,15);doc.setDrawColor(0,100,40);doc.roundedRect(15,y,180,tomData.pergunta?28:20,2,2,'FD');
+  doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...OURO);doc.text('TOM '+(kd.tom||'')+' · '+tomConcordado.toUpperCase(),20,y+6);
+  if(tomData.verbo){doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(200,230,200);doc.text(tomData.verbo,20,y+13);}
+  if(tomData.pergunta){doc.setFontSize(9);doc.setTextColor(...CINZA);doc.text(tomData.pergunta,20,y+20);}
+  y+=tomData.pergunta?35:27;
+  if(orac.guia){doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...OURO);doc.text('ORÁCULO DO DESTINO',20,y+6);y+=10;
+    [['GUIA',orac.guia],['ANÁLOGO',orac.analogo||''],['ANTÍPODA',orac.antipoda||''],['OCULTO',orac.oculto||'']].forEach(([label,val],i)=>{
+      const col=i%2,row=Math.floor(i/2),bx=15+col*92,by=y+row*18;
+      doc.setFillColor(0,40,15);doc.setDrawColor(0,80,30);doc.roundedRect(bx,by,88,14,2,2,'FD');
+      doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(...OURO);doc.text(label,bx+4,by+5);
+      doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(200,230,200);doc.text(val,bx+4,by+11);
+    });y+=40;}
+  const seloEntry=Object.values(DATA.selos||{}).find(s=>s.nome===kd.selo)||{};
+  if(seloEntry.desc){doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...OURO);doc.text('ESSÊNCIA DO SELO',20,y+4);y+=10;doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(180,210,180);const ld=doc.splitTextToSize(seloEntry.desc,170);doc.text(ld,20,y);y+=ld.length*5+8;}
+  const ondaNum2=Math.floor((kin-1)/13)+1,diaOnda2=((kin-1)%13)+1,ondaSelo2=(DATA.selos||{})[String(((ondaNum2-1)%20)+1)]||{};
+  doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...OURO);doc.text('ONDA ENCANTADA '+ondaNum2+' · DIA '+diaOnda2,20,y+4);
+  if(ondaSelo2.acao){doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...CINZA);doc.text(ondaSelo2.acao,20,y+10);}
+  doc.setDrawColor(...VERDE2);doc.setLineWidth(0.3);doc.line(15,285,195,285);doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...CINZA);doc.text('Sincronário das 13 Luas · Lei do Tempo',105,290,{align:'center'});
+  doc.save('kin-'+kin+'-'+hoje.toISOString().split('T')[0]+'.pdf');
 }
-
-async function loadToday() {
-  await DATA_PRONTO;
-  const k = dateToKin(new Date());
-  document.getElementById('res-dia').innerHTML = kinHTML(k);
-}
-
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
@@ -1777,39 +1219,15 @@ function abrirModalVideo(url, nomeSeloVideo) {
 }
 function togglePrece(btn) {
   let audio = document.getElementById('audio-prece');
-  // Se não existe, cria na hora
-  if (!audio) {
-    audio = document.createElement('audio');
-    audio.id = 'audio-prece';
-    audio.src = './assets/icons/prece.mpeg';
-    document.body.appendChild(audio);
-  }
-  if (!audio.paused) {
-    audio.pause();
-    audio.currentTime = 0;
-    btn.textContent = '▶ ouvir';
-    btn.style.color = 'var(--green2)';
-    btn.style.borderColor = 'var(--green3)';
-    return;
-  }
-  // Resetar e tocar
+  if (!audio) { audio = document.createElement('audio'); audio.id = 'audio-prece'; audio.src = './assets/icons/prece.mpeg'; document.body.appendChild(audio); }
+  if (!audio.paused) { audio.pause(); audio.currentTime = 0; btn.textContent = '▶ ouvir'; btn.style.color = 'var(--green2)'; btn.style.borderColor = 'var(--green3)'; return; }
   audio.load();
   const playPromise = audio.play();
   if (playPromise !== undefined) {
     playPromise.then(() => {
-      btn.textContent = '■ parar';
-      btn.style.color = 'var(--gold2)';
-      btn.style.borderColor = 'var(--gold)';
-      audio.onended = () => {
-        btn.textContent = '▶ ouvir';
-        btn.style.color = 'var(--green2)';
-        btn.style.borderColor = 'var(--green3)';
-      };
-    }).catch(e => {
-      console.error('Prece erro:', e);
-      // Fallback: abrir direto
-      window.open('./assets/prece.mpeg', '_blank');
-    });
+      btn.textContent = '■ parar'; btn.style.color = 'var(--gold2)'; btn.style.borderColor = 'var(--gold)';
+      audio.onended = () => { btn.textContent = '▶ ouvir'; btn.style.color = 'var(--green2)'; btn.style.borderColor = 'var(--green3)'; };
+    }).catch(e => { console.error('Prece erro:', e); window.open('./assets/prece.mpeg', '_blank'); });
   }
 }
 function fecharModalVideo() {
