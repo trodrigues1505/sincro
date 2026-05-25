@@ -1085,7 +1085,7 @@ function kinHTML(kinNum) {
       </li>
       <li style="justify-content:space-between;align-items:center">
         <span>Meditação do selo</span>
-        <button onclick="abrirModalVideo(MEDITACOES[String(anelKin)],'${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+        <button onclick="abrirModalVideo('${MEDITACOES[String(anelKin)]}','${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
       </li>
       <li>Ouça o Self Design Sounds</li>
       <li>Leitura da página ${diaOnda} do e-book</li>
@@ -1795,8 +1795,8 @@ function togglePrece(btn) {
     btn.style.borderColor = 'var(--green3)';
   }
 }
-// Resetar botão quando áudio termina
-document.addEventListener('DOMContentLoaded', () => {
+// Resetar botão quando áudio termina — vincula ao elemento fixo no body
+window.addEventListener('load', () => {
   const audio = document.getElementById('audio-prece');
   if (audio) {
     audio.addEventListener('ended', () => {
