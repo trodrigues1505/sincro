@@ -72,8 +72,8 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .selo-blue,.selo-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 .oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
-.oraculo-wrap::before{content:'';position:absolute;width:390px;height:390px;border-radius:50%;border:1px solid rgba(165,124,0,.30);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
-.oraculo-wrap::after{content:'';position:absolute;width:255px;height:255px;border-radius:50%;border:1px solid rgba(165,124,0,.22);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.oraculo-wrap::before{content:'';position:absolute;width:min(390px,95vw);height:min(390px,95vw);border-radius:50%;border:1px solid rgba(165,124,0,.30);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.oraculo-wrap::after{content:'';position:absolute;width:min(255px,62vw);height:min(255px,62vw);border-radius:50%;border:1px solid rgba(165,124,0,.22);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
 .oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
@@ -598,32 +598,34 @@ async function loadToday(){
   document.getElementById('res-dia').innerHTML=kinHTML(k);
 }
 
-function gerarGlifoTom(tom){
+function gerarGlifoTom(tom, iconSize){
+  // iconSize: largura do ícone ao qual o glifo está associado (default 64)
+  const sz = iconSize || 64;
   const barras=Math.floor(tom/5);
   const pontos=tom%5;
-  // dimensões
-  const bw=28,bh=5,bg=4,pr=4,pg=5;
-  // calcular altura total necessária
+  const bw=sz;         // barra tem mesma largura que o ícone
+  const bh=Math.max(4, Math.round(sz*0.07));
+  const bg=Math.round(sz*0.06);
+  const pr=Math.max(3, Math.round(sz*0.06));
+  const pg=Math.round(sz*0.07);
   const totalBarH=barras*(bh+bg);
-  const totalPonH=pontos>0?pr*2+6:0;
-  const totalH=Math.max(totalBarH+totalPonH,10);
-  const svgH=totalH+6;
-  const cx=20; // centro x
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="${svgH}" viewBox="0 0 40 ${svgH}">`;
-  let y=svgH-3;
-  // barras de baixo para cima
+  const totalPonH=pontos>0?pr*2+bg:0;
+  const totalH=Math.max(totalBarH+totalPonH, pr*2);
+  const svgH=totalH+4;
+  const cx=sz/2;
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${svgH}" viewBox="0 0 ${sz} ${svgH}">`;
+  let y=svgH-2;
   for(let b=0;b<barras;b++){
     y-=bh;
-    svg+=`<rect x="${cx-bw/2}" y="${y}" width="${bw}" height="${bh}" rx="2" fill="#c9a030" opacity=".85"/>`;
+    svg+=`<rect x="0" y="${y}" width="${bw}" height="${bh}" rx="2" fill="#c9a030" opacity=".85"/>`;
     y-=bg;
   }
-  // pontos acima das barras
   if(pontos>0){
-    y-=pr+2;
+    y-=pr+1;
     const totalW=(pontos-1)*pg+pontos*(pr*2);
     let px=cx-totalW/2+pr;
     for(let p=0;p<pontos;p++){
-      svg+=`<circle cx="${px}" cy="${y}" r="${pr}" fill="#c9a030" opacity=".85"/>`;
+      svg+=`<circle cx="${px.toFixed(1)}" cy="${y}" r="${pr}" fill="#c9a030" opacity=".85"/>`;
       px+=pr*2+pg;
     }
   }
@@ -633,7 +635,7 @@ function gerarGlifoTom(tom){
 function gerarLuaCircular(diaAtivo){
   const cores=['red','white','blue','yellow'];
   const nomes=['VERMELHA','BRANCA','AZUL','AMARELA'];
-  const cx=100,cy=100,rOut=88,rIn=58,rLbl=73,rRing=95;
+  const cx=110,cy=110,rOut=90,rIn=60,rLbl=75,rRing=102;
   let segs='',labels='',ringLabels='';
   for(let i=0;i<28;i++){
     const dia=i+1,cor=cores[Math.floor(i/7)];
@@ -654,7 +656,7 @@ function gerarLuaCircular(diaAtivo){
     const lx=cx+rRing*Math.cos(am),ly=cy+rRing*Math.sin(am);
     ringLabels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="ring-label">${nomes[s]}</text>`;
   }
-  return`<svg class="lua-circular" viewBox="-18 -18 236 236" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
+  return`<svg class="lua-circular" viewBox="-28 -28 276 276" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
 }
 
 function kinHTML(kinNum){
@@ -772,7 +774,7 @@ function kinHTML(kinNum){
   return`
 <div class="section anim-1">
   <div class="kin-hero">
-    <div style="display:flex;justify-content:center;margin-bottom:.3rem">${gerarGlifoTom(tomNum)}</div>
+    <div style="display:flex;justify-content:center;margin-bottom:.3rem">${gerarGlifoTom(tomNum,64)}</div>
     <div class="selo-icon selo-${corSelo}" style="width:64px;height:64px;border-radius:9px;margin:0 auto .5rem"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
     <div class="kin-title">${nomeCompleto}</div>
     <div class="kin-num" style="font-size:.78rem;color:var(--gold2);letter-spacing:.12em;margin-top:.3rem">Kin ${kinNum} · 260</div>
@@ -799,7 +801,7 @@ function kinHTML(kinNum){
     </div>
     <div class="oraculo-cell-center oraculo-item oraculo-central">
       <div class="selo-icon selo-${corSelo}" style="width:76px;height:76px;border-radius:11px"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div style="display:flex;justify-content:center;margin:.3rem 0 .1rem">${gerarGlifoTom(tomNum)}</div>
+      <div style="display:flex;justify-content:center;margin:.3rem 0 .1rem">${gerarGlifoTom(tomNum,76)}</div>
       <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem">${seloBase}</div>
       <div style="font-family:Cinzel;font-size:.52rem;color:rgba(165,124,0,.6);letter-spacing:.12em;margin-top:.1rem">KIN ${kinNum}</div>
     </div>
@@ -826,7 +828,7 @@ function kinHTML(kinNum){
     <div class="section-title">Castelo · 52 dias</div>
     <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Castelo ${casteloCorNome} ${casteloDirNome} do ${castelo.proposito||''}</div>
     <div style="margin-bottom:1.1rem">
-      <img src="./assets/icons/castelo-${(['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde')}.png" alt="Castelo" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 auto .8rem">
+      <img src="./assets/icons/castelo-${(['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde')}.png" alt="Castelo" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 0 .8rem 0">
       ${casteloOndasHTML}
     </div>
     <div style="margin-bottom:1.1rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.9rem">
@@ -834,13 +836,13 @@ function kinHTML(kinNum){
       <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Lua Galáctica do ${luaAnimal}</div>
       <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.7rem">
         <div style="text-align:center">
+          <div style="display:flex;justify-content:center;margin-bottom:.2rem">${luaKinData?gerarGlifoTom(luaKinData.tom,54):''}</div>
           <div class="selo-icon selo-${luaKinCorSelo}" style="width:54px;height:54px;flex-shrink:0">${luaKinIconURL?`<img src="${luaKinIconURL}" style="width:100%;height:100%;object-fit:contain">`:''}</div>
-          <div style="display:flex;justify-content:center;margin-top:.25rem">${luaKinData?gerarGlifoTom(luaKinData.tom):''}</div>
         </div>
         <div>
           <div style="font-family:Cinzel;font-size:.75rem;color:var(--gold2)">${luaKinData?luaKinData.tom_nome+' do '+luaAnimal:''}</div>
           <div style="font-size:.65rem;color:var(--text2);margin-top:.15rem">Dia ${diaLua} de 28</div>
-          <div style="font-size:.62rem;color:var(--text3);margin-top:.1rem">${luaNome}</div>
+
         </div>
       </div>
       ${luaHTML}
