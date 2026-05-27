@@ -72,8 +72,8 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .selo-blue,.selo-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 .oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
-.oraculo-wrap::before{content:'';position:absolute;width:380px;height:380px;border-radius:50%;border:1px solid rgba(165,124,0,.30);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
-.oraculo-wrap::after{content:'';position:absolute;width:220px;height:220px;border-radius:50%;border:1px solid rgba(165,124,0,.20);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.oraculo-wrap::before{content:'';position:absolute;width:390px;height:390px;border-radius:50%;border:1px solid rgba(165,124,0,.30);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.oraculo-wrap::after{content:'';position:absolute;width:255px;height:255px;border-radius:50%;border:1px solid rgba(165,124,0,.22);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
 .oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
@@ -599,21 +599,33 @@ async function loadToday(){
 }
 
 function gerarGlifoTom(tom){
-  // Glifo maia: pontos (1) e barras (5)
   const barras=Math.floor(tom/5);
   const pontos=tom%5;
-  const pw=6,ph=6,gap=3,bw=24,bh=4,bg=3;
-  let svg='<svg xmlns="http://www.w3.org/2000/svg" width="30" height="28" viewBox="0 0 30 28">';
-  // barras (de baixo para cima)
+  // dimensões
+  const bw=28,bh=5,bg=4,pr=4,pg=5;
+  // calcular altura total necessária
+  const totalBarH=barras*(bh+bg);
+  const totalPonH=pontos>0?pr*2+6:0;
+  const totalH=Math.max(totalBarH+totalPonH,10);
+  const svgH=totalH+6;
+  const cx=20; // centro x
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="${svgH}" viewBox="0 0 40 ${svgH}">`;
+  let y=svgH-3;
+  // barras de baixo para cima
   for(let b=0;b<barras;b++){
-    const y=24-b*(bh+bg);
-    svg+=`<rect x="3" y="${y}" width="${bw}" height="${bh}" rx="1" fill="var(--gold2)" opacity=".9"/>`;
+    y-=bh;
+    svg+=`<rect x="${cx-bw/2}" y="${y}" width="${bw}" height="${bh}" rx="2" fill="#c9a030" opacity=".85"/>`;
+    y-=bg;
   }
-  // pontos (acima das barras)
-  const pyBase=barras>0?24-barras*(bh+bg)-pw-2:22;
-  for(let p=0;p<pontos;p++){
-    const px=3+p*(pw+gap);
-    svg+=`<circle cx="${px+pw/2}" cy="${pyBase+pw/2}" r="${pw/2}" fill="var(--gold2)" opacity=".9"/>`;
+  // pontos acima das barras
+  if(pontos>0){
+    y-=pr+2;
+    const totalW=(pontos-1)*pg+pontos*(pr*2);
+    let px=cx-totalW/2+pr;
+    for(let p=0;p<pontos;p++){
+      svg+=`<circle cx="${px}" cy="${y}" r="${pr}" fill="#c9a030" opacity=".85"/>`;
+      px+=pr*2+pg;
+    }
   }
   svg+='</svg>';
   return svg;
@@ -698,9 +710,9 @@ function kinHTML(kinNum){
     const ehFem=femininos.some(f=>ondaSeloBase.includes(f));
     const prep=ehFem?'da ':'do ';
     const corLabel={'red':'Vermelha','white':'Branca','blue':'Azul','yellow':'Amarela','vermelho':'Vermelha','branco':'Branca','azul':'Azul','amarelo':'Amarela'}[ondaSeloCor]||'';
-    casteloOndasHTML+=`<div style="display:flex;align-items:center;gap:.6rem;padding:.3rem 0;border-bottom:1px solid var(--border)">
-      <div class="selo-icon selo-${ondaSeloCor}" style="width:36px;height:36px;flex-shrink:0"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain"></div>
-      <span style="font-size:.78rem;color:var(--text);font-family:Cinzel">Onda ${prep}${ondaSeloBase} <span style="color:var(--text3);font-size:.7rem">${corLabel}</span></span>
+    casteloOndasHTML+=`<div style="display:flex;align-items:center;gap:.7rem;padding:.25rem 0">
+      <div class="selo-icon selo-${ondaSeloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain"></div>
+      <span style="font-size:.78rem;color:var(--text);font-family:Cinzel;line-height:1.3">Onda ${prep}${ondaSeloBase} ${corLabel}</span>
     </div>`;
   }
   casteloOndasHTML+='</div>';
@@ -745,7 +757,8 @@ function kinHTML(kinNum){
   const LUA_KINS=[118,119,120,121,122,123,124,130,129,127,128,126,125];
   const luaKinNum=LUA_KINS[luaNum-1]||1;
   const luaKinData=(DATA.kins||{})[String(luaKinNum)]||null;
-  const luaAnimal=(DATA.luas&&DATA.luas[luaNum-1]?DATA.luas[luaNum-1].replace(/.*?\((.+?)\).*/,'$1'):'');
+  const const LUAS_ANIMAIS=['Morcego','Escorpião','Cervo','Coruja','Pavão','Lagarto','Macaco','Falcão','Jaguar','Cão','Serpente','Coelho','Tartaruga'];
+  const luaAnimal=LUAS_ANIMAIS[luaNum-1]||'';
   const luaKinIconURL=luaKinData?getSeloIconURL(luaKinData.selo):'';
   const luaKinCorSelo=luaKinData?getSeloCor(luaKinData.selo):'red';
 
@@ -759,10 +772,10 @@ function kinHTML(kinNum){
   return`
 <div class="section anim-1">
   <div class="kin-hero">
-    <div class="selo-icon selo-${corSelo}" style="width:64px;height:64px;border-radius:9px;margin:0 auto .8rem"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
+    <div style="display:flex;justify-content:center;margin-bottom:.3rem">${gerarGlifoTom(tomNum)}</div>
+    <div class="selo-icon selo-${corSelo}" style="width:64px;height:64px;border-radius:9px;margin:0 auto .5rem"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
     <div class="kin-title">${nomeCompleto}</div>
     <div class="kin-num" style="font-size:.78rem;color:var(--gold2);letter-spacing:.12em;margin-top:.3rem">Kin ${kinNum} · 260</div>
-    <div style="display:flex;justify-content:center;margin-top:.4rem">${gerarGlifoTom(tomNum)}</div>
   </div>
   ${fraseCurta?`<div class="kin-frase">"${fraseCurta}"</div>`:''}
   <div class="export-btns">
@@ -786,8 +799,8 @@ function kinHTML(kinNum){
     </div>
     <div class="oraculo-cell-center oraculo-item oraculo-central">
       <div class="selo-icon selo-${corSelo}" style="width:76px;height:76px;border-radius:11px"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem;margin-top:.5rem">${seloBase}</div>
-      <div style="display:flex;justify-content:center;margin:.2rem 0">${gerarGlifoTom(tomNum)}</div>
+      <div style="display:flex;justify-content:center;margin:.3rem 0 .1rem">${gerarGlifoTom(tomNum)}</div>
+      <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem">${seloBase}</div>
       <div style="font-family:Cinzel;font-size:.52rem;color:rgba(165,124,0,.6);letter-spacing:.12em;margin-top:.1rem">KIN ${kinNum}</div>
     </div>
     <div class="oraculo-cell-right oraculo-item oraculo-side">
