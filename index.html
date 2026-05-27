@@ -72,8 +72,8 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .selo-blue,.selo-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 .oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
-.oraculo-wrap::before{content:'';position:absolute;width:340px;height:340px;border-radius:50%;border:1px solid rgba(165,124,0,.25);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
-.oraculo-wrap::after{content:'';position:absolute;width:210px;height:210px;border-radius:50%;border:1px solid rgba(165,124,0,.18);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.oraculo-wrap::before{content:'';position:absolute;width:360px;height:360px;border-radius:50%;border:1px solid rgba(165,124,0,.30);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.oraculo-wrap::after{content:'';position:absolute;width:160px;height:160px;border-radius:50%;border:1px solid rgba(165,124,0,.20);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
 .oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
@@ -656,15 +656,31 @@ function kinHTML(kinNum){
   const casteloNum=Math.floor((kinNum-1)/52);
   const castelo=DATA.castelos[casteloNum]||{};
   const casteloOndas=castelo.ondas||[];
-  let casteloOndasHTML='<div style="display:flex;gap:8px;justify-content:center;margin-top:0.5rem">';
+  let casteloOndasHTML='<div style="display:flex;flex-direction:column;gap:8px;margin-top:.4rem">';
   for(let ondaNome of casteloOndas){
     const ondaIdx=casteloOndas.indexOf(ondaNome);
     const ondaKinInicio=casteloNum*52+ondaIdx*13+1;
     const ondaKinData=DATA.kins&&DATA.kins[ondaKinInicio]?DATA.kins[ondaKinInicio]:null;
-    let ondaSeloCompleto,ondaIconURL;
-    if(ondaKinData&&ondaKinData.selo){ondaSeloCompleto=ondaKinData.selo;ondaIconURL=getSeloIconURL(ondaSeloCompleto);}
-    else{const cores=['Vermelho','Branco','Azul','Amarelo'];ondaSeloCompleto=ondaNome+' '+cores[ondaIdx%4];ondaIconURL=getSeloIconURL(ondaSeloCompleto);}
-    casteloOndasHTML+=`<div style="width:50px;height:50px"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='${getSeloEmoji(ondaNome)}'"></div>`;
+    let ondaSeloCompleto,ondaIconURL,ondaSeloBase,ondaSeloCor;
+    if(ondaKinData&&ondaKinData.selo){
+      ondaSeloCompleto=ondaKinData.selo;
+      ondaIconURL=getSeloIconURL(ondaSeloCompleto);
+      ondaSeloBase=getSeloBase(ondaSeloCompleto);
+      ondaSeloCor=getSeloCor(ondaSeloCompleto);
+    }else{
+      const cores=['Vermelho','Branco','Azul','Amarelo'];
+      ondaSeloCompleto=ondaNome+' '+cores[ondaIdx%4];
+      ondaIconURL=getSeloIconURL(ondaSeloCompleto);
+      ondaSeloBase=ondaNome;
+      ondaSeloCor=cores[ondaIdx%4].toLowerCase();
+    }
+    const femininos=['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta'];
+    const ehFem=femininos.some(f=>ondaSeloBase.includes(f));
+    const prep=ehFem?'da ':'do ';
+    casteloOndasHTML+=`<div style="display:flex;align-items:center;gap:.6rem">
+      <div class="selo-icon selo-${ondaSeloCor}" style="width:36px;height:36px;flex-shrink:0"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain"></div>
+      <span style="font-size:.78rem;color:var(--text);font-family:Cinzel">Onda ${prep}${ondaSeloBase}</span>
+    </div>`;
   }
   casteloOndasHTML+='</div>';
 
@@ -765,19 +781,16 @@ function kinHTML(kinNum){
 <div class="section">
   <div class="section-title">Onda Encantada ${ondaNum} · Dia ${diaOnda} · 13 dias</div>
   <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold3);margin-bottom:.5rem;letter-spacing:.03em">Onda Encantada ${ondaSeloNome?(()=>{const palavras=ondaSeloNome.split(' ');const nomeBase=palavras.slice(0,-1).join(' ');const femininos=['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta'];const ehFem=femininos.some(f=>nomeBase.includes(f));return ehFem?'da ':'do ';})():'da '}${ondaSeloNome?ondaSeloNome.split(' ').slice(0,-1).join(' '):''}</div>
-  <p style="font-size:.78rem;color:var(--text2);margin-bottom:.9rem"><span style="color:var(--text3)">Propósito:</span> ${ondaProposito}</p>
+  <p style="font-size:.88rem;color:var(--text);margin-bottom:.9rem;line-height:1.7"><span style="color:var(--gold2);font-family:Cinzel;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em">Propósito: </span>${ondaProposito}</p>
   <div class="onda-wrap">${ondaHTML}</div>
 </div>
 
 <div class="grid-2">
   <div class="section">
     <div class="section-title">Castelo · 52 dias</div>
-    <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold3);margin-bottom:.5rem;letter-spacing:.03em">Castelo ${casteloCorNome} ${casteloDirNome} do ${castelo.proposito||''}</div>
+    <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Castelo ${casteloCorNome} ${casteloDirNome} do ${castelo.proposito||''}</div>
     <div style="margin-bottom:1.1rem">
-      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem">
-        <img src="./assets/icons/castelo-${(['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde')}.png" alt="Castelo" style="width:54px;height:54px;object-fit:contain;flex-shrink:0">
-        <div style="font-family:Cinzel;font-size:.74rem;color:var(--text);line-height:1.6">${casteloTextoFmt}</div>
-      </div>
+      <img src="./assets/icons/castelo-${(['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde')}.png" alt="Castelo" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 auto .8rem">
       ${casteloOndasHTML}
     </div>
     <div style="margin-bottom:1.1rem">
@@ -1157,4 +1170,4 @@ if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.se
 </script>
 <audio id="audio-prece" src="./assets/icons/prece.mpeg" preload="auto"></audio>
 </body>
-</html>   
+</html>     
