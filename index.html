@@ -822,7 +822,7 @@ function kinHTML(kinNum){
         <span>Leitura da página ${selfDesignPagina} do e-book</span>
         <button onclick="abrirEbook('${selfDesignURL}', ${selfDesignPagina})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ abrir</button>
       </li>
-      <li>${PERGUNTAS_TOM[tomNum]||''}</li>
+      <li>${PERGUNTAS_TOM[diaOnda]||''}</li>
     </ul>
   </div>
 </div>
@@ -1150,4 +1150,4 @@ if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.se
 </script>
 <audio id="audio-prece" src="./assets/icons/prece.mpeg" preload="auto"></audio>
 </body>
-</html>  
+</html>   
