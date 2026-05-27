@@ -757,7 +757,7 @@ function kinHTML(kinNum){
   const LUA_KINS=[118,119,120,121,122,123,124,130,129,127,128,126,125];
   const luaKinNum=LUA_KINS[luaNum-1]||1;
   const luaKinData=(DATA.kins||{})[String(luaKinNum)]||null;
-  const const LUAS_ANIMAIS=['Morcego','Escorpião','Cervo','Coruja','Pavão','Lagarto','Macaco','Falcão','Jaguar','Cão','Serpente','Coelho','Tartaruga'];
+  const LUAS_ANIMAIS=['Morcego','Escorpião','Cervo','Coruja','Pavão','Lagarto','Macaco','Falcão','Jaguar','Cão','Serpente','Coelho','Tartaruga'];
   const luaAnimal=LUAS_ANIMAIS[luaNum-1]||'';
   const luaKinIconURL=luaKinData?getSeloIconURL(luaKinData.selo):'';
   const luaKinCorSelo=luaKinData?getSeloCor(luaKinData.selo):'red';
