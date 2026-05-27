@@ -73,7 +73,7 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 .oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
 .oraculo-wrap::before{content:'';position:absolute;width:min(390px,95vw);height:min(390px,95vw);border-radius:50%;border:1px solid rgba(165,124,0,.30);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
-.oraculo-wrap::after{content:'';position:absolute;width:min(270px,68vw);height:min(270px,68vw);border-radius:50%;border:1px solid rgba(165,124,0,.22);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.oraculo-wrap::after{content:'';position:absolute;width:min(320px,80vw);height:min(320px,80vw);border-radius:50%;border:1px solid rgba(165,124,0,.22);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
 .oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
@@ -635,7 +635,7 @@ function gerarGlifoTom(tom, iconSize){
 function gerarLuaCircular(diaAtivo){
   const cores=['red','white','blue','yellow'];
   const nomes=['VERMELHA','BRANCA','AZUL','AMARELA'];
-  const cx=110,cy=110,rOut=90,rIn=60,rLbl=75,rRing=102;
+  const cx=120,cy=120,rOut=100,rIn=65,rLbl=80,rRing=110;
   let segs='',labels='',ringLabels='';
   for(let i=0;i<28;i++){
     const dia=i+1,cor=cores[Math.floor(i/7)];
@@ -656,7 +656,7 @@ function gerarLuaCircular(diaAtivo){
     const lx=cx+rRing*Math.cos(am),ly=cy+rRing*Math.sin(am);
     ringLabels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="ring-label">${nomes[s]}</text>`;
   }
-  return`<svg class="lua-circular" viewBox="-28 -28 276 276" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
+  return`<svg class="lua-circular" viewBox="-40 -40 320 320" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
 }
 
 function kinHTML(kinNum){
@@ -1223,4 +1223,4 @@ if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.se
 </script>
 <audio id="audio-prece" src="./assets/icons/prece.mpeg" preload="auto"></audio>
 </body>
-</html>
+</html>   
