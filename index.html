@@ -407,6 +407,21 @@ const SELF_DESIGN_ONDAS = {
   20: ["https://drive.google.com/file/d/1MIjtHCgNvg-WkR5YU6Q270pP3ADIXiO0/view?usp=sharing","https://drive.google.com/file/d/1fQwkFpwxOtsjmAKXvs1rtAs2aJnulCjn/view?usp=sharing","https://drive.google.com/file/d/1hxMlPAtjtWYGni0TgDugDquQQQhiDIeT/view?usp=sharing","https://drive.google.com/file/d/1lmyOW2gVbgllVm-NILud3_2pCBZ4442R/view?usp=sharing","https://drive.google.com/file/d/1vlk816YAHUmtaEVZYTdyLDVDEjW07aaR/view?usp=sharing","https://drive.google.com/file/d/1x8P2-jh6Z9AgZ4rwEwUd9QoR6N8G7cQl/view?usp=sharing"]
 };
 const DIA_ONDA_PARA_IDX = [null,1,2,3,4,1,2,3,4,1,2,3,4,5];
+const PERGUNTAS_TOM = [null,
+  'Como servir?',         // 1 Magnético
+  'Qual é o desafio?',    // 2 Lunar
+  'Como ativar?',         // 3 Elétrico
+  'Qual é a forma?',      // 4 Autoexistente
+  'Como irradiar?',       // 5 Harmônico
+  'Como equilibrar?',     // 6 Rítmico
+  'Como se sintonizar?',  // 7 Ressonante
+  'Vivo o que acredito?', // 8 Galáctico
+  'Como realizar as intenções?', // 9 Solar
+  'Como aperfeiçoar?',    // 10 Planetário
+  'Como liberar?',        // 11 Espectral
+  'Como dedicar?',        // 12 Cristal
+  'Como transcender?'     // 13 Cósmico
+];
 const DATA_PRONTO = fetch('./sincronario_dados.json')
   .then(r => r.json())
   .then(d => { DATA = d; console.log('✓ Dados carregados:', Object.keys(DATA.kins).length, 'kins'); })
@@ -807,7 +822,7 @@ function kinHTML(kinNum){
         <span>Leitura da página ${selfDesignPagina} do e-book</span>
         <button onclick="abrirEbook('${selfDesignURL}', ${selfDesignPagina})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ abrir</button>
       </li>
-      <li>${ritual.ritual||''}</li>
+      <li>${PERGUNTAS_TOM[tomNum]||''}</li>
     </ul>
   </div>
 </div>
