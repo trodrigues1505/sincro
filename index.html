@@ -73,7 +73,7 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 .oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
 .oraculo-wrap::before{content:'';position:absolute;width:min(390px,95vw);height:min(390px,95vw);border-radius:50%;border:1px solid rgba(165,124,0,.30);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
-.oraculo-wrap::after{content:'';position:absolute;width:min(255px,62vw);height:min(255px,62vw);border-radius:50%;border:1px solid rgba(165,124,0,.22);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+.oraculo-wrap::after{content:'';position:absolute;width:min(270px,68vw);height:min(270px,68vw);border-radius:50%;border:1px solid rgba(165,124,0,.22);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
 .oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
@@ -711,7 +711,17 @@ function kinHTML(kinNum){
     const femininos=['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta'];
     const ehFem=femininos.some(f=>ondaSeloBase.includes(f));
     const prep=ehFem?'da ':'do ';
-    const corLabel={'red':'Vermelha','white':'Branca','blue':'Azul','yellow':'Amarela','vermelho':'Vermelha','branco':'Branca','azul':'Azul','amarelo':'Amarela'}[ondaSeloCor]||'';
+    const corMapa={
+      'red':ehFem?'Vermelha':'Vermelho',
+      'white':ehFem?'Branca':'Branco',
+      'blue':ehFem?'Azul':'Azul',
+      'yellow':ehFem?'Amarela':'Amarelo',
+      'vermelho':ehFem?'Vermelha':'Vermelho',
+      'branco':ehFem?'Branca':'Branco',
+      'azul':ehFem?'Azul':'Azul',
+      'amarelo':ehFem?'Amarela':'Amarelo'
+    };
+    const corLabel=corMapa[ondaSeloCor]||'';
     casteloOndasHTML+=`<div style="display:flex;align-items:center;gap:.7rem;padding:.25rem 0">
       <div class="selo-icon selo-${ondaSeloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain"></div>
       <span style="font-size:.78rem;color:var(--text);font-family:Cinzel;line-height:1.3">Onda ${prep}${ondaSeloBase} ${corLabel}</span>
@@ -834,18 +844,18 @@ function kinHTML(kinNum){
     <div style="margin-bottom:1.1rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.9rem">
       <div class="section-title">Lua Galáctica · ${luaNum} de 13</div>
       <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Lua Galáctica do ${luaAnimal}</div>
-      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.7rem">
+      <div style="display:flex;align-items:center;gap:.75rem">
         <div style="text-align:center">
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${luaKinData?gerarGlifoTom(luaKinData.tom,54):''}</div>
           <div class="selo-icon selo-${luaKinCorSelo}" style="width:54px;height:54px;flex-shrink:0">${luaKinIconURL?`<img src="${luaKinIconURL}" style="width:100%;height:100%;object-fit:contain">`:''}</div>
         </div>
         <div>
-          <div style="font-family:Cinzel;font-size:.75rem;color:var(--gold2)">${luaKinData?luaKinData.tom_nome+' do '+luaAnimal:''}</div>
-          <div style="font-size:.65rem;color:var(--text2);margin-top:.15rem">Dia ${diaLua} de 28</div>
+          <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${luaKinData?luaKinData.tom_nome+' do '+luaAnimal:''}</div>
+          <div style="font-size:.68rem;color:var(--text);margin-top:.2rem">Dia ${diaLua} de 28</div>
 
         </div>
       </div>
-      ${luaHTML}
+      <div style="margin-top:.8rem">${luaHTML}</div>
     </div>
     <div class="grid-3">
       <div class="card">
