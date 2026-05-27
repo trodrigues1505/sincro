@@ -47,7 +47,7 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .btn-admin{border-color:var(--border-g);color:var(--gold)}
 .btn-admin:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
 .tabs{display:flex;margin-bottom:.9rem;border-bottom:1px solid var(--border)}
-.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-family:'Cinzel',serif;font-size:.62rem;padding:8px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.09em;transition:color .2s,border-color .2s;margin-bottom:-1px}
+.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-family:'Cinzel',serif;font-size:.66rem;padding:8px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.09em;transition:color .2s,border-color .2s;margin-bottom:-1px}
 .tab:hover{color:var(--text)}
 .tab.active{color:var(--gold2);border-bottom-color:var(--gold)}
 .tab-content{display:none}.tab-content.active{display:block}
@@ -59,12 +59,12 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .kin-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.45}
 .kin-num{font-family:'Cinzel',serif;font-size:.58rem;color:rgba(165,124,0,.7);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.5rem}
 .kin-title{font-family:'Cinzel',serif;font-size:1.6rem;margin:.25rem 0 .45rem;letter-spacing:.03em;color:var(--gold2);line-height:1.2}
-.kin-subtitle{color:rgba(165,124,0,.65);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em}
-.kin-frase{color:var(--text);font-size:.9rem;font-style:italic;margin:.9rem auto 0;padding:.85rem 1.1rem;background:rgba(0,151,57,.08);border-left:2px solid var(--gold3);max-width:640px;line-height:1.9}
+.kin-subtitle{color:rgba(165,124,0,.8);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}
+.kin-frase{color:var(--text);font-size:.95rem;font-style:italic;margin:.9rem auto 0;padding:.85rem 1.1rem;background:rgba(0,151,57,.08);border-left:2px solid var(--gold3);max-width:640px;line-height:1.9}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px;margin:.8rem 0}
 .card{background:var(--bg2);border-radius:6px;padding:.85rem .95rem;border:1px solid var(--border);transition:border-color .2s}
 .card:hover{border-color:var(--border2)}
-.card-label{font-size:.58rem;color:var(--text2);text-transform:uppercase;letter-spacing:.11em;margin-bottom:4px}
+.card-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:.11em;margin-bottom:4px}
 .card-val{font-family:'Cinzel',serif;font-size:.84rem;color:var(--gold3)}
 .selo-icon{border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid;margin:0 auto .5rem;overflow:hidden}
 .selo-red,.selo-vermelho,.selo-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
@@ -76,10 +76,10 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
-.oraculo-item{text-align:center}
+.oraculo-item{text-align:center;position:relative;z-index:1}
 .oraculo-central .selo-icon{width:82px;height:82px;border-radius:10px}
 .oraculo-side .selo-icon{width:60px;height:60px;border-radius:7px}
-.oraculo-nome{font-size:.58rem;margin-top:.3rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.03em;line-height:1.3;max-width:80px}
+.oraculo-nome{font-size:.62rem;margin-top:.3rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.03em;line-height:1.3;max-width:90px}
 .onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
 .onda-L{display:grid;grid-template-columns:repeat(5,var(--cell));grid-template-rows:repeat(5,var(--cell));--cell:52px;gap:4px}
 .onda-L .onda-kin:nth-child(1) {grid-column:1;grid-row:1}
@@ -103,7 +103,7 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .cor-blue,.cor-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .cor-yellow,.cor-amarelo,.cor-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 .praticas-list{list-style:none;padding:0}
-.praticas-list li{padding:.6rem .85rem;margin-bottom:4px;background:var(--bg2);border-radius:5px;border-left:2px solid var(--green);display:flex;align-items:flex-start;gap:8px;font-size:.86rem;line-height:1.5;transition:border-color .2s}
+.praticas-list li{padding:.65rem .9rem;margin-bottom:4px;background:var(--bg2);border-radius:5px;border-left:2px solid var(--green);display:flex;align-items:flex-start;gap:8px;font-size:.9rem;line-height:1.5;transition:border-color .2s}
 .praticas-list li:hover{border-left-color:var(--gold)}
 .praticas-list li::before{content:'·';color:var(--green2);font-size:1.1rem;flex-shrink:0;line-height:1.3}
 .praticas-list li.has-btn::before{display:none}
@@ -115,7 +115,7 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .btn-calc:hover{background:var(--green);color:#fff;border-color:var(--green)}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:.6rem}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.55rem}
-.info-text{color:var(--text);font-size:.82rem;line-height:1.65;margin:.28rem 0}
+.info-text{color:var(--text);font-size:.88rem;line-height:1.65;margin:.28rem 0}
 .info-box{background:var(--bg2);padding:.75rem .85rem;border-radius:5px;border-left:2px solid var(--gold);margin:.55rem 0}
 .lua-circular{width:100%;max-width:260px;margin:0 auto;display:block}
 .lua-circular .seg{fill:var(--bg2);stroke-width:1;transition:fill .2s}
@@ -643,7 +643,7 @@ function gerarGlifoTom(tom, iconSize){
 function gerarLuaCircular(diaAtivo){
   const cores=['red','white','blue','yellow'];
   const nomes=['VERMELHA','BRANCA','AZUL','AMARELA'];
-  const cx=140,cy=140,rOut=118,rIn=76,rLbl=96,rRing=131;
+  const cx=175,cy=175,rOut=150,rIn=96,rLbl=120,rRing=164;
   let segs='',labels='',ringLabels='';
   for(let i=0;i<28;i++){
     const dia=i+1,cor=cores[Math.floor(i/7)];
@@ -664,7 +664,7 @@ function gerarLuaCircular(diaAtivo){
     const lx=cx+rRing*Math.cos(am),ly=cy+rRing*Math.sin(am);
     ringLabels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="ring-label">${nomes[s]}</text>`;
   }
-  return`<svg class="lua-circular" viewBox="-55 -55 390 390" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
+  return`<svg class="lua-circular" viewBox="-60 -60 470 470" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
 }
 
 function kinHTML(kinNum){
@@ -759,10 +759,8 @@ function kinHTML(kinNum){
   const luaHTML=gerarLuaCircular(diaLua);
   const faseLunar=getFaseLunar(hoje);
 
-  // Anel Solar: 364 dias (52 semanas), selo baseado no dia do ano galáctico
-  const inicioAnoAnel=new Date(anoGal,6,26);
-  const diasAnoAnel=Math.floor((new Date()-inicioAnoAnel)/(1000*60*60*24));
-  const anelKin=((diasAnoAnel%20))+1;
+  // Anel Solar: kin do 1o dia do ano galáctico (fixo para o ano todo)
+  const anelKin=dateToKin(new Date(anoGal,6,26));
   const anelSelo=DATA.selos[anelKin]||{};
   const anelIconURL=getSeloIconURL(anelSelo.nome||'');
   const anelNome=anelSelo.nome||'';
@@ -823,13 +821,13 @@ function kinHTML(kinNum){
 <div class="section anim-2">
   <div class="section-title">Oráculo do Destino</div>
   <div class="oraculo-wrap">
-    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
       <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(165,124,0,.30)" stroke-width=".4"/>
       <circle cx="50" cy="50" r="32" fill="none" stroke="rgba(165,124,0,.20)" stroke-width=".3"/>
     </svg>
     <div class="oraculo-cell-top oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(guia)}" style="width:54px;height:54px"><img src="${getSeloIconURL(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Guia</span>${getSeloBase(guia)}</div>
+      <div class="selo-icon selo-${getSeloCor(guia)}" style="width:54px;height:54px;margin-top:.3rem"><img src="${getSeloIconURL(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
     </div>
     <div class="oraculo-cell-left oraculo-item oraculo-side">
       <div class="selo-icon selo-${getSeloCor(analogo)}" style="width:54px;height:54px"><img src="${getSeloIconURL(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
@@ -869,7 +867,7 @@ function kinHTML(kinNum){
     </div>
     <div style="margin-bottom:1.1rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.9rem">
       <div class="section-title">Lua Galáctica · ${luaNum} de 13</div>
-      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Lua Galáctica do ${luaAnimal}</div>
+      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${(()=>{const fem=["Serpente","Águia","Terra","Lua","Mão","Estrela","Noite","Semente","Tormenta","Tartaruga","Coruja"];const art=fem.some(f=>luaAnimal.includes(f))?"da ":"do ";return"Lua Galáctica "+art+luaAnimal;})()}</div>
       <div style="display:flex;align-items:center;gap:.75rem">
         <div style="text-align:center">
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${luaKinData?gerarGlifoTom(luaKinData.tom,54):''}</div>
@@ -900,17 +898,17 @@ function kinHTML(kinNum){
       <div class="section-title">Plasma · Fase Lunar</div>
       <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px">
-          ${plasmaSVGUrl?`<img src="${plasmaSVGUrl}" style="width:48px;height:48px;object-fit:contain;filter:invert(1) sepia(1) saturate(2) hue-rotate(20deg)" alt="${plasmaChave}">`:'<span style="font-size:1.5rem">${plasmaEmoji}</span>'}
+          ${plasmaSVGUrl?`<img src="${plasmaSVGUrl}" style="width:48px;height:48px;object-fit:contain;filter:brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(5deg) brightness(1.2)" alt="${plasmaChave}">`:'<span style="font-size:1.5rem">${plasmaEmoji}</span>'}
           <div>
             <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${plasmaChave}</div>
             <div style="font-size:.65rem;color:var(--text2);margin-top:.1rem">${plasma.split(' - ')[1]||''}</div>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:100px">
-          <span style="font-size:1.4rem">${faseLunar.split(' ')[0]}</span>
+        <div style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px">
+          <span style="font-size:2.2rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${faseLunar.split(' ')[0]}</span>
           <div>
-            <div style="font-family:Cinzel;font-size:.72rem;color:var(--text)">${faseLunar.replace(/^[^ ]+ /,'')}</div>
-            <div style="font-size:.6rem;color:var(--text3);margin-top:.1rem">Fase Lunar</div>
+            <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${faseLunar.replace(/^[^ ]+ /,'')}</div>
+            <div style="font-size:.65rem;color:var(--text2);margin-top:.1rem">Fase Lunar</div>
           </div>
         </div>
       </div>
