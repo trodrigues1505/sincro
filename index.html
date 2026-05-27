@@ -72,8 +72,7 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .selo-blue,.selo-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
 .oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
-.oraculo-wrap::before{content:'';position:absolute;width:min(390px,95vw);height:min(390px,95vw);border-radius:50%;border:1px solid rgba(165,124,0,.30);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
-.oraculo-wrap::after{content:'';position:absolute;width:min(320px,80vw);height:min(320px,80vw);border-radius:50%;border:1px solid rgba(165,124,0,.22);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0}
+
 .oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
@@ -127,7 +126,7 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
 .lua-circular .seg-label{font-family:'Cinzel',serif;font-size:8px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
 .lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
-.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:7px;fill:var(--gold);text-transform:uppercase;text-anchor:middle;dominant-baseline:central;letter-spacing:.05em}
+.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:6px;fill:var(--gold);text-transform:uppercase;text-anchor:middle;dominant-baseline:central;letter-spacing:.05em}
 .lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
 .lua-circular .center-num{font-size:18px;dominant-baseline:central}
 .lua-circular .center-sub{font-size:7px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
@@ -635,7 +634,7 @@ function gerarGlifoTom(tom, iconSize){
 function gerarLuaCircular(diaAtivo){
   const cores=['red','white','blue','yellow'];
   const nomes=['VERMELHA','BRANCA','AZUL','AMARELA'];
-  const cx=120,cy=120,rOut=100,rIn=65,rLbl=80,rRing=110;
+  const cx=130,cy=130,rOut=108,rIn=70,rLbl=88,rRing=120;
   let segs='',labels='',ringLabels='';
   for(let i=0;i<28;i++){
     const dia=i+1,cor=cores[Math.floor(i/7)];
@@ -656,7 +655,7 @@ function gerarLuaCircular(diaAtivo){
     const lx=cx+rRing*Math.cos(am),ly=cy+rRing*Math.sin(am);
     ringLabels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="ring-label">${nomes[s]}</text>`;
   }
-  return`<svg class="lua-circular" viewBox="-40 -40 320 320" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
+  return`<svg class="lua-circular" viewBox="-50 -50 360 360" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
 }
 
 function kinHTML(kinNum){
@@ -717,9 +716,12 @@ function kinHTML(kinNum){
       'blue':ehFem?'Azul':'Azul',
       'yellow':ehFem?'Amarela':'Amarelo',
       'vermelho':ehFem?'Vermelha':'Vermelho',
+      'vermelha':ehFem?'Vermelha':'Vermelho',
       'branco':ehFem?'Branca':'Branco',
+      'branca':ehFem?'Branca':'Branco',
       'azul':ehFem?'Azul':'Azul',
-      'amarelo':ehFem?'Amarela':'Amarelo'
+      'amarelo':ehFem?'Amarela':'Amarelo',
+      'amarela':ehFem?'Amarela':'Amarelo'
     };
     const corLabel=corMapa[ondaSeloCor]||'';
     casteloOndasHTML+=`<div style="display:flex;align-items:center;gap:.7rem;padding:.25rem 0">
@@ -760,11 +762,16 @@ function kinHTML(kinNum){
   const ondaSelo=Object.values(DATA.selos||{}).find(s=>{const sBase=s.nome?s.nome.split(' ').slice(0,-1).join(' '):'';return sBase===ondaSeloNomeBase||s.nome===ondaSeloNome;})||{};
   const ondaNumCiclo=((ondaNum-1)%20)+1;
   const ondaProposito=(()=>{const item=ONDAS_PROPOSITOS.find(o=>o.onda===ondaNumCiclo);return item?item.propositos:'';})();
+  const CASTELO_NOMES=[
+    'Castelo Vermelho Leste do Girar',
+    'Castelo Branco Norte do Cruzar',
+    'Castelo Azul Oeste do Queimar',
+    'Castelo Amarelo Sul do Doar',
+    'Castelo Verde Central do Encantar'
+  ];
   const CASTELO_CORES=['Vermelho','Branco','Azul','Amarelo','Verde'];
-  const CASTELO_DIRS=['Leste','Norte','Oeste','Sul','Central'];
   const casteloCorNome=CASTELO_CORES[casteloNum]||'Verde';
-  const casteloDirNome=CASTELO_DIRS[casteloNum]||'Central';
-  const casteloTextoFmt='Castelo '+(castelo.nome||'')+' · '+casteloDirNome+' · '+(castelo.proposito||'');
+  const casteloTextoFmt=CASTELO_NOMES[casteloNum]||'Castelo';
 
   const LUA_KINS=[118,119,120,121,122,123,124,130,129,127,128,126,125];
   const luaKinNum=LUA_KINS[luaNum-1]||1;
@@ -801,6 +808,10 @@ function kinHTML(kinNum){
 <div class="section anim-2">
   <div class="section-title">Oráculo do Destino</div>
   <div class="oraculo-wrap">
+    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+      <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(165,124,0,.30)" stroke-width=".4"/>
+      <circle cx="50" cy="50" r="32" fill="none" stroke="rgba(165,124,0,.20)" stroke-width=".3"/>
+    </svg>
     <div class="oraculo-cell-top oraculo-item oraculo-side">
       <div class="selo-icon selo-${getSeloCor(guia)}" style="width:54px;height:54px"><img src="${getSeloIconURL(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Guia</span>${getSeloBase(guia)}</div>
@@ -836,7 +847,7 @@ function kinHTML(kinNum){
 <div class="grid-2">
   <div class="section">
     <div class="section-title">Castelo · 52 dias</div>
-    <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Castelo ${casteloCorNome} ${casteloDirNome} do ${castelo.proposito||''}</div>
+    <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${casteloTextoFmt}</div>
     <div style="margin-bottom:1.1rem">
       <img src="./assets/icons/castelo-${(['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde')}.png" alt="Castelo" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 0 .8rem 0">
       ${casteloOndasHTML}
@@ -1223,4 +1234,4 @@ if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.se
 </script>
 <audio id="audio-prece" src="./assets/icons/prece.mpeg" preload="auto"></audio>
 </body>
-</html>   
+</html>
