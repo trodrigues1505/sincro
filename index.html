@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -800,10 +800,13 @@ function kinHTML(kinNum){
         <button onclick="abrirModalVideo('${MEDITACOES[String(anelKin)]}','${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
       </li>
       <li class="has-btn">
-        <span>Self Design Sounds · Pág. ${selfDesignPagina}</span>
-        <a href="${selfDesignURL}" target="_blank" rel="noopener" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;text-decoration:none;white-space:nowrap;flex-shrink:0;letter-spacing:.04em">▶ abrir</a>
+        <span>Ouça o Self Design Sounds</span>
+        <button onclick="abrirSelfDesign(${kinNum})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
       </li>
-      <li>Leitura da página ${selfDesignPagina} do e-book</li>
+      <li class="has-btn">
+        <span>Leitura da página ${selfDesignPagina} do e-book</span>
+        <a href="${selfDesignURL}" target="_blank" rel="noopener" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;text-decoration:none;white-space:nowrap;flex-shrink:0;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ abrir</a>
+      </li>
       <li>${ritual.ritual||''}</li>
     </ul>
   </div>
@@ -1082,6 +1085,11 @@ async function exportarPDFKin(){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
+function abrirSelfDesign(kin){
+  const vid=SELF_DESIGN[String(kin)];
+  if(!vid)return;
+  abrirModalVideo('https://youtu.be/'+vid,'Self Design Sounds · Kin '+kin);
+}
 function abrirModalVideo(url,nomeSeloVideo){
   if(!url)return;
   const m=url.match(/youtu\.be\/([\w-]+)/)||url.match(/[?&]v=([\w-]+)/);
