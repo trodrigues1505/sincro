@@ -805,7 +805,7 @@ function kinHTML(kinNum){
       </li>
       <li class="has-btn">
         <span>Leitura da página ${selfDesignPagina} do e-book</span>
-        <a href="${selfDesignURL}" target="_blank" rel="noopener" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;text-decoration:none;white-space:nowrap;flex-shrink:0;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ abrir</a>
+        <button onclick="abrirEbook('${selfDesignURL}', ${selfDesignPagina})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ abrir</button>
       </li>
       <li>${ritual.ritual||''}</li>
     </ul>
@@ -1085,6 +1085,19 @@ async function exportarPDFKin(){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script>
+function abrirEbook(url, pagina) {
+  // Converte link de compartilhamento do Drive para embed
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (!match) return;
+  const fileId = match[1];
+  const embedUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
+  const modal = document.getElementById('modal-video');
+  document.getElementById('modal-video-iframe').src = embedUrl;
+  const t = document.getElementById('modal-video-titulo');
+  if (t) t.textContent = '📖 Self Design Sounds · Página ' + pagina;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 function abrirSelfDesign(kin){
   const vid=SELF_DESIGN[String(kin)];
   if(!vid)return;
@@ -1122,4 +1135,4 @@ if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.se
 </script>
 <audio id="audio-prece" src="./assets/icons/prece.mpeg" preload="auto"></audio>
 </body>
-</html>
+</html>  
