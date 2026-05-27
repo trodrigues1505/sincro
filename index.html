@@ -793,6 +793,12 @@ function kinHTML(kinNum) {
   const luaKinIconURL = luaKinData ? getSeloIconURL(luaKinData.selo) : '';
   const luaKinCorSelo = luaKinData ? getSeloCor(luaKinData.selo) : 'red';
 
+  // Self Design Sounds
+  const selfDesignOndaNum = ((ondaNum - 1) % 20) + 1;
+  const selfDesignIdx = DIA_ONDA_PARA_IDX[diaOnda] || 1;
+  const selfDesignLinks = SELF_DESIGN_ONDAS[selfDesignOndaNum] || [];
+  const selfDesignURL = selfDesignLinks[selfDesignIdx] || '#';
+  const selfDesignPagina = [null,2,3,4,5,2,3,4,5,2,3,4,5,6][diaOnda] || 2;
   return `
 <div class="section anim-1">
   <div class="kin-hero">
@@ -897,11 +903,11 @@ function kinHTML(kinNum) {
         <span>Meditação do selo</span>
         <button onclick="abrirModalVideo('${MEDITACOES[String(anelKin)]}','${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
       </li>
-      <li class="has-btn">
-        <span>Ouça o Self Design Sounds</span>
-        <button onclick="abrirSelfDesign(${kinNum})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+      <li style="justify-content:space-between;align-items:center">
+        <span>Ouça o Self Design Sounds · Pág. ${selfDesignPagina}</span>
+        <a href="${selfDesignURL}" target="_blank" rel="noopener" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em">▶ abrir</a>
       </li>
-      <li>Leitura da página ${diaOnda} do e-book</li>
+      <li>Leitura da página ${selfDesignPagina} do e-book</li>
       <li>${ritual.ritual || ''}</li>
     </ul>
   </div>
