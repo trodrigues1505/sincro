@@ -77,7 +77,9 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
 .oraculo-item{text-align:center;position:relative;z-index:1}
-.oraculo-central .selo-icon{width:82px;height:82px;border-radius:10px}
+.oraculo-central .selo-icon{width:90px;height:90px;border-radius:11px;box-shadow:0 0 0 2px var(--gold),0 0 18px rgba(165,124,0,.18)}
+.oraculo-central .oraculo-nome{font-size:.7rem;color:var(--gold3);max-width:100px}
+.oraculo-nome{font-size:.62rem;margin-top:.3rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.03em;line-height:1.3;max-width:90px;word-break:break-word}
 .oraculo-side .selo-icon{width:60px;height:60px;border-radius:7px}
 .oraculo-nome{font-size:.62rem;margin-top:.3rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.03em;line-height:1.3;max-width:90px}
 .onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
@@ -117,21 +119,39 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.55rem}
 .info-text{color:var(--text);font-size:.88rem;line-height:1.65;margin:.28rem 0}
 .info-box{background:var(--bg2);padding:.75rem .85rem;border-radius:5px;border-left:2px solid var(--gold);margin:.55rem 0}
-.lua-circular{width:100%;max-width:520px;margin:0 auto;display:block}
+.lua-circular{width:100%;max-width:380px;margin:0 auto;display:block}
 .lua-circular .seg{fill:var(--bg2);stroke-width:1;transition:fill .2s}
-.lua-circular .seg.red,.lua-circular .seg.vermelho{stroke:rgba(138,32,24,.38)}
-.lua-circular .seg.white,.lua-circular .seg.branco{stroke:rgba(168,184,144,.2)}
-.lua-circular .seg.blue,.lua-circular .seg.azul{stroke:rgba(26,72,96,.38)}
-.lua-circular .seg.yellow,.lua-circular .seg.amarelo{stroke:rgba(165,124,0,.32)}
+.lua-circular .seg.red,.lua-circular .seg.vermelho{fill:rgba(138,32,24,.10);stroke:rgba(138,32,24,.38)}
+.lua-circular .seg.white,.lua-circular .seg.branco{fill:rgba(168,184,144,.04);stroke:rgba(168,184,144,.2)}
+.lua-circular .seg.blue,.lua-circular .seg.azul{fill:rgba(26,72,96,.10);stroke:rgba(26,72,96,.38)}
+.lua-circular .seg.yellow,.lua-circular .seg.amarelo{fill:rgba(165,124,0,.09);stroke:rgba(165,124,0,.32)}
 .lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
-.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:11px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
+.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:9px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
 .lua-circular .seg-label.active{fill:#1a1000;font-weight:700}
-.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:9px;fill:var(--gold);text-transform:uppercase;text-anchor:middle;dominant-baseline:central;letter-spacing:.05em}
 .lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
-.lua-circular .center-num{font-size:22px;dominant-baseline:central}
-.lua-circular .center-sub{font-size:10px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
+.lua-circular .center-num{font-size:20px;dominant-baseline:central;font-weight:600}
+.lua-circular .center-sub{font-size:8px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
+.lua-legenda{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-top:.5rem}
+.lua-legenda-item{display:flex;align-items:center;gap:4px;font-family:'Cinzel',serif;font-size:.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:.07em}
+.lua-legenda-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.lua-legenda-dot.red{background:rgba(138,32,24,.6);border:1px solid rgba(138,32,24,.5)}
+.lua-legenda-dot.white{background:rgba(168,184,144,.3);border:1px solid rgba(168,184,144,.45)}
+.lua-legenda-dot.blue{background:rgba(26,72,96,.6);border:1px solid rgba(26,72,96,.5)}
+.lua-legenda-dot.yellow{background:rgba(165,124,0,.55);border:1px solid rgba(165,124,0,.5)}
 .btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
 .btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
+.btn-pratica{background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:'Cinzel',serif;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s,color .2s;letter-spacing:.04em}
+.btn-pratica:hover,.btn-pratica:focus-visible{border-color:var(--green2);color:var(--green2);outline:none}
+.btn-pratica.tocando{color:var(--gold2);border-color:var(--gold)}
+.onda-detail{background:var(--card2);border:1px solid var(--border-g);border-radius:6px;padding:.5rem .75rem;margin:.5rem auto 0;text-align:center;font-size:.72rem;color:var(--gold3);font-family:'Cinzel',serif;letter-spacing:.03em;min-height:1.8rem;display:none;max-width:320px}
+.onda-detail.visible{display:block}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.skeleton{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:400px 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}
+.skeleton-hero{height:160px;border-radius:var(--radius);margin-bottom:.6rem}
+.skeleton-row{height:14px;margin:.4rem 0}
+.skeleton-row.w60{width:60%}.skeleton-row.w80{width:80%}.skeleton-row.w40{width:40%}
+.skeleton-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;margin:.8rem 0}
+.skeleton-card{height:60px;border-radius:6px}
 .btn-cal{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
 .btn-cal:hover{border-color:var(--green);color:var(--green)}
 .export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
@@ -197,11 +217,11 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
   .section{padding:.85rem}.kin-hero{padding:1.2rem .9rem 1rem}.kin-title{font-size:1.2rem}
   .kin-frase{font-size:.83rem;padding:.75rem .85rem}
   .oraculo-wrap{max-width:290px}.oraculo-central .selo-icon{width:62px;height:62px}
-  .oraculo-side .selo-icon{width:48px;height:48px}.oraculo-nome{font-size:.5rem}
+  .oraculo-side .selo-icon{width:48px;height:48px}.oraculo-nome{font-size:.56rem;max-width:80px;word-break:break-word}
   .onda-L{--cell:36px;gap:3px}.cards{grid-template-columns:1fr 1fr;gap:5px}
   .grid-2,.grid-3{grid-template-columns:1fr;gap:.55rem}
   input[type="date"]{width:100%}.btn-calc{width:100%;margin-top:5px}
-  .tab{padding:7px 10px;font-size:.58rem}.lua-circular{max-width:220px}
+  .tab{padding:7px 10px;font-size:.58rem}.lua-circular{max-width:260px}
 }
 @media(max-width:400px){
   .container{padding:.65rem .5rem}h1{font-size:1rem}.kin-title{font-size:1rem}
@@ -268,6 +288,16 @@ Entrar com Google
 <div id="login-error" class="error-msg hidden"></div>
 <div id="login-loading" class="loading hidden">Entrando...</div>
 </div>
+<div id="tela-aguardo" class="login-box hidden" style="margin-top:0">
+  <div style="text-align:center">
+    <div style="font-size:2rem;margin-bottom:.8rem;animation:spin 2s linear infinite">⏳</div>
+    <div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.4rem">Aguardando Aprovação</div>
+    <p style="font-size:.85rem;color:var(--text);margin:.3rem 0 .8rem;line-height:1.5">Sua conta foi criada com sucesso!<br>Aguarde a aprovação do administrador.</p>
+    <p id="aguardo-uid" style="font-size:.82rem;color:var(--text3);margin:.3rem 0;line-height:1.5"></p>
+    <p style="font-size:.82rem;color:var(--text3);margin:.3rem 0;line-height:1.5">Assim que aprovado, você terá acesso imediato.<br>Esta página será atualizada automaticamente.</p>
+    <button onclick="auth.signOut()" style="margin-top:1rem;padding:7px 14px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:4px;cursor:pointer;font-family:Cinzel;font-size:.75rem;text-transform:uppercase;letter-spacing:.07em">Voltar ao Login</button>
+  </div>
+</div>
 </div>
 
 <div id="app-screen" class="container">
@@ -290,15 +320,15 @@ Entrar com Google
 <p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Calculadora Completa · Lei do Tempo</p>
 
 <div class="tabs">
-<button class="tab active" onclick="switchTab('dia')">Kin do Dia</button>
-<button class="tab" onclick="switchTab('natal')">Kin Natal</button>
-<button class="tab" onclick="switchTab('selos')">Selos</button>
-<button class="tab" onclick="switchTab('perfil')">Perfil</button>
+<button class="tab active" onclick="switchTab('dia',this)">Kin do Dia</button>
+<button class="tab" onclick="switchTab('natal',this)">Kin Natal</button>
+<button class="tab" onclick="switchTab('selos',this)">Selos</button>
+<button class="tab" onclick="switchTab('perfil',this)">Perfil</button>
 </div>
 
 <div id="export-area">
 <div id="tab-dia" class="tab-content active">
-<div id="res-dia"></div>
+<div id="res-dia"><div class="section skeleton-hero skeleton"></div><div class="section"><div class="skeleton skeleton-row w60"></div><div class="skeleton skeleton-row w80" style="margin-top:.6rem"></div><div class="skeleton skeleton-row w40" style="margin-top:.4rem"></div><div class="skeleton-cards"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div></div></div></div>
 </div>
 
 <div id="tab-natal" class="tab-content">
@@ -453,10 +483,8 @@ function getSeloBase(nomeCompleto){return nomeCompleto.split(' ').slice(0,-1).jo
 function getSeloCor(nomeCompleto){const p=nomeCompleto.split(' ');return p[p.length-1].toLowerCase();}
 
 function concordar(selo,tom){
-  for(let p of FEMININOS){
-    if(selo.includes(p)){
-      return tom.replace('Magnético','Magnética').replace('Elétrico','Elétrica').replace('Rítmico','Rítmica').replace('Galáctico','Galáctica').replace('Planetário','Planetária').replace('Cósmico','Cósmica');
-    }
+  if(ehSeloFeminino(selo)){
+    return tom.replace('Magnético','Magnética').replace('Elétrico','Elétrica').replace('Rítmico','Rítmica').replace('Galáctico','Galáctica').replace('Planetário','Planetária').replace('Cósmico','Cósmica');
   }
   return tom;
 }
@@ -538,13 +566,11 @@ auth.onAuthStateChanged(async u=>{
 });
 
 function mostrarTelaAguardoAprovacao(uid){
-  document.getElementById('login-loading').style.display='block';
-  document.getElementById('login-loading').innerHTML=`<div style="text-align:center;animation:fadeUp 0.4s both"><div style="font-size:2rem;margin-bottom:.8rem;animation:spin 2s linear infinite">⏳</div><div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.4rem">Aguardando Aprovação</div><p style="font-size:.85rem;color:var(--text);margin:.3rem 0;line-height:1.5">Sua conta foi criada com sucesso!<br>Aguarde a aprovação do administrador.</p></div>`;
-  document.getElementById('login-loading').classList.remove('hidden');
-  document.getElementById('login-error').innerHTML=`<div style="text-align:center"><p style="margin:0 0 .8rem 0;color:var(--text);font-size:.9rem">✓ Verificamos sua conta: <strong>${uid.substring(0,8)}...</strong></p><p style="font-size:.82rem;color:var(--text3);margin:.3rem 0;line-height:1.5">Assim que aprovado, você terá acesso imediato ao Sincronário.<br>Esta página será atualizada automaticamente.</p><button onclick="auth.signOut()" style="margin-top:1rem;padding:7px 14px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:4px;cursor:pointer;font-family:Cinzel;font-size:.75rem;text-transform:uppercase;letter-spacing:.07em">Voltar ao Login</button></div>`;
-  document.getElementById('login-error').style.background='rgba(245,200,66,0.08)';
-  document.getElementById('login-error').style.borderColor='rgba(245,200,66,0.25)';
-  document.getElementById('login-error').classList.remove('hidden');
+  document.querySelector('.login-box:not(#tela-aguardo)').classList.add('hidden');
+  document.getElementById('aguardo-uid').textContent=`✓ Conta identificada: ${uid.substring(0,8)}...`;
+  document.getElementById('tela-aguardo').classList.remove('hidden');
+  document.getElementById('login-loading').classList.add('hidden');
+  document.getElementById('login-error').classList.add('hidden');
 }
 
 document.getElementById('btn-logout').onclick=()=>auth.signOut();
@@ -557,20 +583,39 @@ async function exportPNG(){
   link.href=canvas.toDataURL();link.click();
 }
 
-function switchTab(t){
+function mostrarDetalheOnda(el,texto){
+  const det=document.getElementById('onda-detail');
+  if(!det)return;
+  if(det.textContent===texto&&det.classList.contains('visible')){det.classList.remove('visible');return;}
+  det.textContent=texto;
+  det.classList.add('visible');
+}
+
+function switchTab(t,el){
   document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
-  event.target.classList.add('active');
+  (el||event.target).classList.add('active');
   document.getElementById('tab-'+t).classList.add('active');
   if(t==='selos')renderSelos();
 }
 
 function isLeapDay(d){return d.getMonth()===1&&d.getDate()===29;}
+function countLeapDays(f,t){
+  let count=0;
+  for(let y=f.getFullYear();y<=t.getFullYear();y++){
+    if((y%4===0&&y%100!==0)||y%400===0){
+      const leapDay=new Date(y,1,29);
+      if(leapDay>f&&leapDay<=t)count++;
+    }
+  }
+  return count;
+}
 function daysBetween(f,t){
   if(f>t)return -daysBetween(t,f);
-  let c=0;const d=new Date(f.getTime());
-  while(d<t){d.setDate(d.getDate()+1);if(!isLeapDay(d))c++;}
-  return c;
+  const fNorm=new Date(f.getFullYear(),f.getMonth(),f.getDate());
+  const tNorm=new Date(t.getFullYear(),t.getMonth(),t.getDate());
+  const totalDays=Math.round((tNorm-fNorm)/86400000);
+  return totalDays-countLeapDays(fNorm,tNorm);
 }
 function dateToKin(dt){
   if(isLeapDay(dt))return dateToKin(new Date(dt.getFullYear(),1,28));
@@ -640,11 +685,20 @@ function gerarGlifoTom(tom, iconSize){
   svg+='</svg>';
   return svg;
 }
+const SELOS_FEMININOS=new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
+const FEMININOS=SELOS_FEMININOS;
+function ehSeloFeminino(nomeBase){return [...SELOS_FEMININOS].some(f=>nomeBase.includes(f));}
+function concordarCor(corBase,nomeBase){
+  const fem=ehSeloFeminino(nomeBase);
+  const mapa={Vermelho:fem?'Vermelha':'Vermelho',Branco:fem?'Branca':'Branco',Azul:'Azul',Amarelo:fem?'Amarela':'Amarelo'};
+  return mapa[corBase]||corBase;
+}
+
 function gerarLuaCircular(diaAtivo){
   const cores=['red','white','blue','yellow'];
-  const nomes=['VERMELHA','BRANCA','AZUL','AMARELA'];
-  const cx=200,cy=200,rOut=178,rIn=114,rLbl=144,rRing=193;
-  let segs='',labels='',ringLabels='';
+  const nomesCores=[['red','Vermelha'],['white','Branca'],['blue','Azul'],['yellow','Amarela']];
+  const cx=200,cy=200,rOut=178,rIn=118,rLbl=148;
+  let segs='',labels='';
   for(let i=0;i<28;i++){
     const dia=i+1,cor=cores[Math.floor(i/7)];
     const a1=(i*360/28-90)*Math.PI/180,a2=((i+1)*360/28-90)*Math.PI/180;
@@ -659,12 +713,10 @@ function gerarLuaCircular(diaAtivo){
     const lx=cx+rLbl*Math.cos(am),ly=cy+rLbl*Math.sin(am);
     labels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="seg-label${ativo}">${dia}</text>`;
   }
-  for(let s=0;s<4;s++){
-    const am=((s*7+3.5)*360/28-90)*Math.PI/180;
-    const lx=cx+rRing*Math.cos(am),ly=cy+rRing*Math.sin(am);
-    ringLabels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="ring-label">${nomes[s]}</text>`;
-  }
-  return`<svg class="lua-circular" viewBox="-70 -70 540 540" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
+  const legenda=nomesCores.map(([cor,nome])=>
+    `<span class="lua-legenda-item"><span class="lua-legenda-dot ${cor}"></span>${nome}</span>`
+  ).join('');
+  return`<div><svg class="lua-circular" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">${segs}${labels}<text x="${cx}" y="${cy-9}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+13}" class="center-text center-sub">DE 28</text></svg><div class="lua-legenda">${legenda}</div></div>`;
 }
 
 function kinHTML(kinNum,modoNatal=false){
@@ -684,16 +736,16 @@ function kinHTML(kinNum,modoNatal=false){
   const ondaInicio=Math.floor((kinNum-1)/13)*13+1;
   const diaOnda=((kinNum-1)%13)+1;
 
-  let ondaHTML='<div class="onda-L">';
+  let ondaHTML='<div class="onda-wrap"><div class="onda-L">';
   for(let i=0;i<13;i++){
     const k=ondaInicio+i;
     const kData=DATA.kins[k];
     const corKin=kData?getSeloCor(kData.selo):'white';
     const ativo=k===kinNum?'active':'';
     const tooltip=kData?`Kin ${k} · ${kData.selo} ${kData.tom_nome}`:'';
-    ondaHTML+=`<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData?kData.selo:'')}" style="width:100%;height:100%;object-fit:contain"></div>`;
+    ondaHTML+=`<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}" onclick="mostrarDetalheOnda(this,'${tooltip}')"><img src="${getSeloIconURL(kData?kData.selo:'')}" style="width:100%;height:100%;object-fit:contain"></div>`;
   }
-  ondaHTML+='</div>';
+  ondaHTML+='</div><div class="onda-detail" id="onda-detail"></div></div>';
 
   const casteloNum=Math.floor((kinNum-1)/52);
   const castelo=DATA.castelos[casteloNum]||{};
@@ -716,23 +768,10 @@ function kinHTML(kinNum,modoNatal=false){
       ondaSeloBase=ondaNome;
       ondaSeloCor=cores[ondaIdx%4].toLowerCase();
     }
-    const femininos=['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta'];
-    const ehFem=femininos.some(f=>ondaSeloBase.includes(f));
+    const ehFem=ehSeloFeminino(ondaSeloBase);
     const prep=ehFem?'da ':'do ';
-    const corMapa={
-      'red':ehFem?'Vermelha':'Vermelho',
-      'white':ehFem?'Branca':'Branco',
-      'blue':ehFem?'Azul':'Azul',
-      'yellow':ehFem?'Amarela':'Amarelo',
-      'vermelho':ehFem?'Vermelha':'Vermelho',
-      'vermelha':ehFem?'Vermelha':'Vermelho',
-      'branco':ehFem?'Branca':'Branco',
-      'branca':ehFem?'Branca':'Branco',
-      'azul':ehFem?'Azul':'Azul',
-      'amarelo':ehFem?'Amarela':'Amarelo',
-      'amarela':ehFem?'Amarela':'Amarelo'
-    };
-    const corLabel=corMapa[ondaSeloCor]||'';
+    const corBaseNorm={'red':'Vermelho','white':'Branco','blue':'Azul','yellow':'Amarelo','vermelho':'Vermelho','vermelha':'Vermelho','branco':'Branco','branca':'Branco','azul':'Azul','amarelo':'Amarelo','amarela':'Amarelo'};
+    const corLabel=concordarCor(corBaseNorm[ondaSeloCor]||'',ondaSeloBase);
     casteloOndasHTML+=`<div style="display:flex;align-items:center;gap:.7rem;padding:.25rem 0">
       <div class="selo-icon selo-${ondaSeloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain"></div>
       <span style="font-size:.78rem;color:var(--text);font-family:Cinzel;line-height:1.3">Onda ${prep}${ondaSeloBase} ${corLabel}</span>
@@ -766,16 +805,13 @@ function kinHTML(kinNum,modoNatal=false){
   const _SELOS_AN=['Dragão','Vento','Noite','Semente','Serpente','Enlaçador de Mundos','Mão','Estrela','Lua','Cão','Macaco','Humano','Caminhante do Céu','Mago','Águia','Guerreiro','Terra','Espelho','Tormenta','Sol'];
   const _TONS_AN=['Magnético','Lunar','Elétrico','Autoexistente','Harmônico','Rítmico','Ressonante','Galáctico','Solar','Planetário','Espectral','Cristal','Cósmico'];
   const _CORES_AN=['Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo'];
-  const _FEMINOS_AN=new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
   const _anelSeloNome=_SELOS_AN[_anelS];
   const _anelTomNome=_TONS_AN[_anelT];
   const _anelCorBase=_CORES_AN[_anelS];
-  const _anelEhFem=_FEMINOS_AN.has(_anelSeloNome);
-  const _anelCor=_anelEhFem?(_anelCorBase==='Vermelho'?'Vermelha':_anelCorBase==='Branco'?'Branca':_anelCorBase==='Amarelo'?'Amarela':_anelCorBase):_anelCorBase;
+  const _anelCor=concordarCor(_anelCorBase,_anelSeloNome);
   const anelTomNum=_anelT+1;
   const anelNomeCompleto=_anelSeloNome+' '+_anelTomNome+' '+_anelCor;
-  // Manter compatibilidade com o resto do código
- const anelSelo=DATA.selos[_anelS]||{};
+  const anelSelo=DATA.selos[_anelS]||{};
   const anelIconURL=getSeloIconURL(_anelSeloNome+' '+_anelCorBase);
   const anelAcao=anelSelo.acao||'';
   const anelCorSelo=_anelCorBase.toLowerCase();
@@ -825,7 +861,7 @@ function kinHTML(kinNum,modoNatal=false){
     </div>
     <div style="margin-bottom:1.1rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.9rem">
       <div class="section-title">Lua Galáctica · ${luaNum} de 13</div>
-      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${(()=>{const fem=["Serpente","Águia","Terra","Lua","Mão","Estrela","Noite","Semente","Tormenta","Tartaruga","Coruja"];const art=fem.some(f=>luaAnimal.includes(f))?"da ":"do ";return"Lua Galáctica "+art+luaAnimal;})()}</div>
+      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${(()=>{const ANIMAIS_FEM=new Set(["Serpente","Águia","Terra","Lua","Mão","Estrela","Noite","Semente","Tormenta","Tartaruga","Coruja"]);const art=ANIMAIS_FEM.has(luaAnimal)?"da ":"do ";return"Lua Galáctica "+art+luaAnimal;})()}</div>
       <div style="display:flex;align-items:center;gap:.75rem">
         <div style="text-align:center">
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${luaKinData?gerarGlifoTom(luaKinData.tom,54):''}</div>
@@ -881,19 +917,19 @@ function kinHTML(kinNum,modoNatal=false){
     <ul class="praticas-list">
       <li class="has-btn">
         <span>Ouça a prece das 7 direções galácticas</span>
-        <button onclick="togglePrece(this)" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+        <button class="btn-pratica" onclick="togglePrece(this)">▶ ouvir</button>
       </li>
       <li class="has-btn">
         <span>Meditação do selo</span>
-        <button onclick="abrirModalVideo('${MEDITACOES[String(_anelS+1)]}','${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+        <button class="btn-pratica" onclick="abrirModalVideo('${MEDITACOES[String(_anelS+1)]}','${seloBase}')">▶ ouvir</button>
       </li>
       <li class="has-btn">
         <span>Ouça o Self Design Sounds</span>
-        <button onclick="abrirSelfDesign(${kinNum})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+        <button class="btn-pratica" onclick="abrirSelfDesign(${kinNum})">▶ ouvir</button>
       </li>
       <li class="has-btn">
         <span>Leitura da página ${selfDesignPagina} do e-book</span>
-        <button onclick="abrirEbook('${selfDesignURL}', ${selfDesignPagina})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ abrir</button>
+        <button class="btn-pratica" onclick="abrirEbook('${selfDesignURL}', ${selfDesignPagina})">▶ abrir</button>
       </li>
       <li class="has-btn" style="justify-content:flex-start">${PERGUNTAS_TOM[diaOnda]||''}</li>
     </ul>
@@ -1261,13 +1297,13 @@ function abrirModalVideo(url,nomeSeloVideo){
 function togglePrece(btn){
   let audio=document.getElementById('audio-prece');
   if(!audio){audio=document.createElement('audio');audio.id='audio-prece';audio.src='./assets/icons/prece.mpeg';document.body.appendChild(audio);}
-  if(!audio.paused){audio.pause();audio.currentTime=0;btn.textContent='▶ ouvir';btn.style.color='var(--green2)';btn.style.borderColor='var(--green3)';return;}
+  if(!audio.paused){audio.pause();audio.currentTime=0;btn.textContent='▶ ouvir';btn.classList.remove('tocando');return;}
   audio.load();
   const playPromise=audio.play();
   if(playPromise!==undefined){
     playPromise.then(()=>{
-      btn.textContent='■ parar';btn.style.color='var(--gold2)';btn.style.borderColor='var(--gold)';
-      audio.onended=()=>{btn.textContent='▶ ouvir';btn.style.color='var(--green2)';btn.style.borderColor='var(--green3)';};
+      btn.textContent='■ parar';btn.classList.add('tocando');
+      audio.onended=()=>{btn.textContent='▶ ouvir';btn.classList.remove('tocando');};
     }).catch(e=>{console.error('Prece erro:',e);window.open('./assets/prece.mpeg','_blank');});
   }
 }
