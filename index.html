@@ -27,6 +27,14 @@ body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font
 @keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
 .anim-1{animation:fadeUp .28s .00s both}.anim-2{animation:fadeUp .28s .08s both}
 .anim-3{animation:fadeUp .28s .16s both}.anim-4{animation:fadeUp .28s .24s both}
+.skeleton{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:400px 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}
+.skeleton-hero{height:160px;border-radius:var(--radius);margin-bottom:.6rem}
+.skeleton-row{height:14px;margin:.4rem 0}
+.skeleton-row.w60{width:60%}
+.skeleton-row.w80{width:80%}
+.skeleton-row.w40{width:40%}
+.skeleton-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;margin:.8rem 0}
+.skeleton-card{height:60px;border-radius:6px}
 .login-container{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:max(1.5rem,env(safe-area-inset-top,0px)) 1.5rem 1.5rem;gap:1.8rem}
 .login-logo{width:88px;height:88px;border-radius:18px;animation:fadeUp .35s both;box-shadow:0 0 40px rgba(0,151,57,.18)}
 .login-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:2rem 2.4rem 2.4rem;max-width:360px;width:100%;text-align:center;animation:fadeUp .4s .08s both}
@@ -77,9 +85,10 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
 .oraculo-item{text-align:center;position:relative;z-index:1}
-.oraculo-central .selo-icon{width:82px;height:82px;border-radius:10px}
+.oraculo-central .selo-icon{width:90px;height:90px;border-radius:11px;box-shadow:0 0 0 2px var(--gold),0 0 18px rgba(165,124,0,.18)}
 .oraculo-side .selo-icon{width:60px;height:60px;border-radius:7px}
-.oraculo-nome{font-size:.62rem;margin-top:.3rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.03em;line-height:1.3;max-width:90px}
+.oraculo-nome{font-size:.62rem;margin-top:.3rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.03em;line-height:1.3;max-width:90px;word-break:break-word}
+.oraculo-central .oraculo-nome{font-size:.7rem;color:var(--gold3);max-width:100px}
 .onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
 .onda-L{display:grid;grid-template-columns:repeat(5,var(--cell));grid-template-rows:repeat(5,var(--cell));--cell:52px;gap:4px}
 .onda-L .onda-kin:nth-child(1) {grid-column:1;grid-row:1}
@@ -98,6 +107,8 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s;position:relative}
 .onda-kin:hover{transform:scale(1.06)}
 .onda-kin.active{box-shadow:0 0 0 3px var(--green2);border-color:var(--green2)!important;border-width:2px}
+.onda-detail{background:var(--card2);border:1px solid var(--border-g);border-radius:6px;padding:.5rem .75rem;margin:.5rem auto 0;text-align:center;font-size:.72rem;color:var(--gold3);font-family:'Cinzel',serif;letter-spacing:.03em;min-height:1.8rem;display:none;max-width:320px}
+.onda-detail.visible{display:block}
 .cor-red,.cor-vermelho,.cor-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
 .cor-white,.cor-branco,.cor-branca{background:rgba(168,184,144,.05);border-color:rgba(168,184,144,.18)}
 .cor-blue,.cor-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
@@ -117,21 +128,42 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.55rem}
 .info-text{color:var(--text);font-size:.88rem;line-height:1.65;margin:.28rem 0}
 .info-box{background:var(--bg2);padding:.75rem .85rem;border-radius:5px;border-left:2px solid var(--gold);margin:.55rem 0}
-.lua-circular{width:100%;max-width:520px;margin:0 auto;display:block}
+.lua-circular{width:100%;max-width:380px;margin:0 auto;display:block}
 .lua-circular .seg{fill:var(--bg2);stroke-width:1;transition:fill .2s}
-.lua-circular .seg.red,.lua-circular .seg.vermelho{stroke:rgba(138,32,24,.38)}
-.lua-circular .seg.white,.lua-circular .seg.branco{stroke:rgba(168,184,144,.2)}
-.lua-circular .seg.blue,.lua-circular .seg.azul{stroke:rgba(26,72,96,.38)}
-.lua-circular .seg.yellow,.lua-circular .seg.amarelo{stroke:rgba(165,124,0,.32)}
+.lua-circular .seg.red,.lua-circular .seg.vermelho{fill:rgba(138,32,24,.10);stroke:rgba(138,32,24,.38)}
+.lua-circular .seg.white,.lua-circular .seg.branco{fill:rgba(168,184,144,.04);stroke:rgba(168,184,144,.2)}
+.lua-circular .seg.blue,.lua-circular .seg.azul{fill:rgba(26,72,96,.10);stroke:rgba(26,72,96,.38)}
+.lua-circular .seg.yellow,.lua-circular .seg.amarelo{fill:rgba(165,124,0,.09);stroke:rgba(165,124,0,.32)}
 .lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
-.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:11px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
-.lua-circular .seg-label.active{fill:#1a1000;font-weight:700}
-.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:9px;fill:var(--gold);text-transform:uppercase;text-anchor:middle;dominant-baseline:central;letter-spacing:.05em}
+.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:9px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
+.lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
 .lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
-.lua-circular .center-num{font-size:22px;dominant-baseline:central}
-.lua-circular .center-sub{font-size:10px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
+.lua-circular .center-num{font-size:20px;dominant-baseline:central;font-weight:600}
+.lua-circular .center-sub{font-size:8px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
+.lua-legenda{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-top:.5rem}
+.lua-legenda-item{display:flex;align-items:center;gap:4px;font-family:'Cinzel',serif;font-size:.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:.07em}
+.lua-legenda-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.lua-legenda-dot.red{background:rgba(138,32,24,.6);border:1px solid rgba(138,32,24,.5)}
+.lua-legenda-dot.white{background:rgba(168,184,144,.3);border:1px solid rgba(168,184,144,.45)}
+.lua-legenda-dot.blue{background:rgba(26,72,96,.6);border:1px solid rgba(26,72,96,.5)}
+.lua-legenda-dot.yellow{background:rgba(165,124,0,.55);border:1px solid rgba(165,124,0,.5)}
 .btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
 .btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
+.btn-pratica{background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:'Cinzel',serif;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s,color .2s;letter-spacing:.04em}
+.btn-pratica:hover,.btn-pratica:focus-visible{border-color:var(--green2);color:var(--green2);outline:none}
+.btn-pratica.tocando{color:var(--gold2);border-color:var(--gold)}
+.historico-lista{display:flex;flex-direction:column;gap:4px;margin-top:.4rem}
+.historico-item{display:flex;align-items:center;gap:.6rem;padding:.45rem .55rem;background:var(--bg2);border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:border-color .2s}
+.historico-item:hover{border-color:var(--border2)}
+.historico-item-icon{width:32px;height:32px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.historico-item-info{flex:1;min-width:0}
+.historico-item-nome{font-size:.72rem;font-family:'Cinzel',serif;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.historico-item-sub{font-size:.6rem;color:var(--text3);margin-top:1px}
+.historico-item-kin{font-size:.6rem;font-family:'Cinzel',serif;color:var(--text3);flex-shrink:0}
+.btn-fav{background:none;border:none;cursor:pointer;font-size:1rem;line-height:1;padding:2px;opacity:.5;transition:opacity .2s,transform .15s}
+.btn-fav:hover{opacity:1;transform:scale(1.15)}
+.btn-fav.ativo{opacity:1;filter:drop-shadow(0 0 4px var(--gold))}
+.historico-vazio{font-size:.8rem;color:var(--text3);font-style:italic;padding:.4rem 0}
 .btn-cal{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
 .btn-cal:hover{border-color:var(--green);color:var(--green)}
 .export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
@@ -197,17 +229,17 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
   .section{padding:.85rem}.kin-hero{padding:1.2rem .9rem 1rem}.kin-title{font-size:1.2rem}
   .kin-frase{font-size:.83rem;padding:.75rem .85rem}
   .oraculo-wrap{max-width:290px}.oraculo-central .selo-icon{width:62px;height:62px}
-  .oraculo-side .selo-icon{width:48px;height:48px}.oraculo-nome{font-size:.5rem}
+  .oraculo-side .selo-icon{width:48px;height:48px}.oraculo-nome{font-size:.56rem;max-width:80px}
   .onda-L{--cell:36px;gap:3px}.cards{grid-template-columns:1fr 1fr;gap:5px}
   .grid-2,.grid-3{grid-template-columns:1fr;gap:.55rem}
   input[type="date"]{width:100%}.btn-calc{width:100%;margin-top:5px}
-  .tab{padding:7px 10px;font-size:.58rem}.lua-circular{max-width:220px}
+  .tab{padding:7px 10px;font-size:.58rem}.lua-circular{max-width:260px}
 }
 @media(max-width:400px){
   .container{padding:.65rem .5rem}h1{font-size:1rem}.kin-title{font-size:1rem}
   .oraculo-wrap{max-width:256px}.oraculo-central .selo-icon{width:54px;height:54px}
   .oraculo-side .selo-icon{width:42px;height:42px}.onda-L{--cell:36px;gap:3px}
-  .cards{grid-template-columns:1fr}.lua-circular{max-width:190px}
+  .cards{grid-template-columns:1fr}.lua-circular{max-width:220px}
 }
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .modal-video{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
@@ -268,6 +300,17 @@ Entrar com Google
 <div id="login-error" class="error-msg hidden"></div>
 <div id="login-loading" class="loading hidden">Entrando...</div>
 </div>
+<!-- TELA AGUARDO APROVAÇÃO (hidden por padrão, ativada via JS) -->
+<div id="tela-aguardo" class="login-box hidden" style="margin-top:0">
+  <div style="text-align:center">
+    <div style="font-size:2rem;margin-bottom:.8rem;animation:spin 2s linear infinite">⏳</div>
+    <div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.4rem">Aguardando Aprovação</div>
+    <p style="font-size:.85rem;color:var(--text);margin:.3rem 0 .8rem;line-height:1.5">Sua conta foi criada com sucesso!<br>Aguarde a aprovação do administrador.</p>
+    <p id="aguardo-uid" style="font-size:.82rem;color:var(--text3);margin:.3rem 0;line-height:1.5"></p>
+    <p style="font-size:.82rem;color:var(--text3);margin:.3rem 0;line-height:1.5">Assim que aprovado, você terá acesso imediato.<br>Esta página será atualizada automaticamente.</p>
+    <button onclick="auth.signOut()" style="margin-top:1rem;padding:7px 14px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:4px;cursor:pointer;font-family:Cinzel;font-size:.75rem;text-transform:uppercase;letter-spacing:.07em">Voltar ao Login</button>
+  </div>
+</div>
 </div>
 
 <div id="app-screen" class="container">
@@ -290,15 +333,15 @@ Entrar com Google
 <p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Calculadora Completa · Lei do Tempo</p>
 
 <div class="tabs">
-<button class="tab active" onclick="switchTab('dia')">Kin do Dia</button>
-<button class="tab" onclick="switchTab('natal')">Kin Natal</button>
-<button class="tab" onclick="switchTab('selos')">Selos</button>
-<button class="tab" onclick="switchTab('perfil')">Perfil</button>
+<button class="tab active" onclick="switchTab('dia',this)">Kin do Dia</button>
+<button class="tab" onclick="switchTab('natal',this)">Kin Natal</button>
+<button class="tab" onclick="switchTab('selos',this)">Selos</button>
+<button class="tab" onclick="switchTab('perfil',this)">Perfil</button>
 </div>
 
 <div id="export-area">
 <div id="tab-dia" class="tab-content active">
-<div id="res-dia"></div>
+<div id="res-dia"><div class="section skeleton-hero skeleton"></div><div class="section"><div class="skeleton skeleton-row w60"></div><div class="skeleton skeleton-row w80" style="margin-top:.6rem"></div><div class="skeleton skeleton-row w40" style="margin-top:.4rem"></div><div class="skeleton-cards"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div></div></div></div>
 </div>
 
 <div id="tab-natal" class="tab-content">
@@ -344,6 +387,20 @@ Entrar com Google
       <input type="date" id="perfil-nasc-inp">
       <button class="btn-salvar-natal" onclick="salvarKinNatal()">Salvar</button>
     </div>
+  </div>
+  <div class="section">
+    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Kins Favoritos</span>
+      <button onclick="limparFavoritos()" style="background:none;border:none;color:var(--text3);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:0">Limpar</button>
+    </div>
+    <div id="favoritos-lista" class="historico-lista"></div>
+  </div>
+  <div class="section">
+    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Histórico de Consultas</span>
+      <button onclick="limparHistorico()" style="background:none;border:none;color:var(--text3);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:0">Limpar</button>
+    </div>
+    <div id="historico-lista" class="historico-lista"></div>
   </div>
 </div>
 
@@ -438,7 +495,17 @@ const DATA_PRONTO = fetch('./sincronario_dados.json')
   .catch(e => console.warn('⚠️ Erro:', e));
 
 const EMOJIS = ['🐉','💨','🌌','🌱','🐍','☯️','✋','⭐','🌙','🐕','🐒','👤','🚶','🧙','🦅','⚔️','🌍','🪞','⛈️','☀️'];
-const FEMININOS = new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
+// Fonte única de verdade para selos femininos — usado em concordar(), castelos, anel solar, etc.
+const SELOS_FEMININOS = new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
+const FEMININOS = SELOS_FEMININOS; // alias de compatibilidade
+
+function ehSeloFeminino(nomeBase){return [...SELOS_FEMININOS].some(f=>nomeBase.includes(f));}
+
+function concordarCor(corBase, nomeBase){
+  const fem=ehSeloFeminino(nomeBase);
+  const mapa={Vermelho:fem?'Vermelha':'Vermelho',Branco:fem?'Branca':'Branco',Azul:'Azul',Amarelo:fem?'Amarela':'Amarelo'};
+  return mapa[corBase]||corBase;
+}
 
 function getSeloEmoji(nome){const nomes=['Dragão','Vento','Noite','Semente','Serpente','Enlaçador','Mão','Estrela','Lua','Cão','Macaco','Humano','Caminhante','Mago','Águia','Guerreiro','Terra','Espelho','Tormenta','Sol'];const idx=nomes.findIndex(s=>nome.includes(s));return idx>=0?EMOJIS[idx]:'🌀';}
 
@@ -538,13 +605,12 @@ auth.onAuthStateChanged(async u=>{
 });
 
 function mostrarTelaAguardoAprovacao(uid){
-  document.getElementById('login-loading').style.display='block';
-  document.getElementById('login-loading').innerHTML=`<div style="text-align:center;animation:fadeUp 0.4s both"><div style="font-size:2rem;margin-bottom:.8rem;animation:spin 2s linear infinite">⏳</div><div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.4rem">Aguardando Aprovação</div><p style="font-size:.85rem;color:var(--text);margin:.3rem 0;line-height:1.5">Sua conta foi criada com sucesso!<br>Aguarde a aprovação do administrador.</p></div>`;
-  document.getElementById('login-loading').classList.remove('hidden');
-  document.getElementById('login-error').innerHTML=`<div style="text-align:center"><p style="margin:0 0 .8rem 0;color:var(--text);font-size:.9rem">✓ Verificamos sua conta: <strong>${uid.substring(0,8)}...</strong></p><p style="font-size:.82rem;color:var(--text3);margin:.3rem 0;line-height:1.5">Assim que aprovado, você terá acesso imediato ao Sincronário.<br>Esta página será atualizada automaticamente.</p><button onclick="auth.signOut()" style="margin-top:1rem;padding:7px 14px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:4px;cursor:pointer;font-family:Cinzel;font-size:.75rem;text-transform:uppercase;letter-spacing:.07em">Voltar ao Login</button></div>`;
-  document.getElementById('login-error').style.background='rgba(245,200,66,0.08)';
-  document.getElementById('login-error').style.borderColor='rgba(245,200,66,0.25)';
-  document.getElementById('login-error').classList.remove('hidden');
+  document.querySelector('.login-box:not(#tela-aguardo)').classList.add('hidden');
+  const tela=document.getElementById('tela-aguardo');
+  document.getElementById('aguardo-uid').textContent=`✓ Conta identificada: ${uid.substring(0,8)}...`;
+  tela.classList.remove('hidden');
+  document.getElementById('login-loading').classList.add('hidden');
+  document.getElementById('login-error').classList.add('hidden');
 }
 
 document.getElementById('btn-logout').onclick=()=>auth.signOut();
@@ -557,20 +623,122 @@ async function exportPNG(){
   link.href=canvas.toDataURL();link.click();
 }
 
-function switchTab(t){
+function mostrarDetalheOnda(el,texto){
+  const det=document.getElementById('onda-detail');
+  if(!det)return;
+  if(det.textContent===texto&&det.classList.contains('visible')){det.classList.remove('visible');return;}
+  det.textContent=texto;
+  det.classList.add('visible');
+}
+
+// ─── Histórico e Favoritos ───────────────────────────────────────────────────
+const HIST_KEY='sinc13_historico', FAV_KEY='sinc13_favoritos';
+const HIST_MAX=20;
+
+function getHistorico(){try{return JSON.parse(localStorage.getItem(HIST_KEY)||'[]');}catch{return[];}}
+function getFavoritos(){try{return JSON.parse(localStorage.getItem(FAV_KEY)||'[]');}catch{return[];}}
+function salvarHistorico(lista){localStorage.setItem(HIST_KEY,JSON.stringify(lista));}
+function salvarFavoritos(lista){localStorage.setItem(FAV_KEY,JSON.stringify(lista));}
+
+function registrarNoHistorico(kinNum){
+  const lista=getHistorico().filter(e=>e.kin!==kinNum);
+  lista.unshift({kin:kinNum,ts:Date.now()});
+  if(lista.length>HIST_MAX)lista.pop();
+  salvarHistorico(lista);
+}
+
+function isFavorito(kinNum){return getFavoritos().some(e=>e.kin===kinNum);}
+
+function toggleFavorito(kinNum,btn){
+  let lista=getFavoritos();
+  if(isFavorito(kinNum)){
+    lista=lista.filter(e=>e.kin!==kinNum);
+    if(btn){btn.textContent='☆';btn.classList.remove('ativo');btn.title='Salvar nos favoritos';}
+  }else{
+    lista.unshift({kin:kinNum,ts:Date.now()});
+    if(btn){btn.textContent='★';btn.classList.add('ativo');btn.title='Remover dos favoritos';}
+  }
+  salvarFavoritos(lista);
+  renderFavoritos();
+}
+
+function limparHistorico(){salvarHistorico([]);renderHistorico();}
+function limparFavoritos(){salvarFavoritos([]);renderFavoritos();}
+
+function kinListItem(entry, onClickFn, showFav=false){
+  if(!DATA||!DATA.kins)return'';
+  const kd=DATA.kins[String(entry.kin)];
+  if(!kd)return'';
+  const cor=getSeloCor(kd.selo);
+  const base=getSeloBase(kd.selo);
+  const icon=getSeloIconURL(kd.selo);
+  const data=new Date(entry.ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
+  const fav=showFav?`<button class="btn-fav ativo" onclick="toggleFavorito(${entry.kin},this);event.stopPropagation()" title="Remover dos favoritos">★</button>`:'';
+  return `<div class="historico-item" onclick="${onClickFn}(${entry.kin})">
+    <div class="historico-item-icon selo-icon selo-${cor}"><img src="${icon}" style="width:100%;height:100%;object-fit:contain"></div>
+    <div class="historico-item-info">
+      <div class="historico-item-nome">${base} ${kd.tom_nome}</div>
+      <div class="historico-item-sub">${data}</div>
+    </div>
+    <span class="historico-item-kin">Kin ${entry.kin}</span>
+    ${fav}
+  </div>`;
+}
+
+function renderHistorico(){
+  const el=document.getElementById('historico-lista');
+  if(!el)return;
+  const lista=getHistorico();
+  if(!lista.length){el.innerHTML='<div class="historico-vazio">Nenhuma consulta ainda.</div>';return;}
+  el.innerHTML=lista.map(e=>kinListItem(e,'verKinPerfil',false)).join('');
+}
+
+function renderFavoritos(){
+  const el=document.getElementById('favoritos-lista');
+  if(!el)return;
+  const lista=getFavoritos();
+  if(!lista.length){el.innerHTML='<div class="historico-vazio">Nenhum kin favoritado ainda. Use a ★ no Kin do Dia ou Natal.</div>';return;}
+  el.innerHTML=lista.map(e=>kinListItem(e,'verKinPerfil',true)).join('');
+}
+
+function verKinPerfil(kinNum){
+  // navega para a aba natal e mostra o kin consultado
+  const tabNatal=document.querySelector('[onclick*="natal"]');
+  if(tabNatal)switchTab('natal',tabNatal);
+  document.getElementById('nasc-inp').value='';
+  document.getElementById('res-natal').innerHTML=kinHTML(kinNum,true);
+  document.getElementById('res-natal').classList.remove('hidden');
+  document.getElementById('res-natal').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function switchTab(t,el){
   document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
-  event.target.classList.add('active');
+  (el||event.target).classList.add('active');
   document.getElementById('tab-'+t).classList.add('active');
   if(t==='selos')renderSelos();
+  if(t==='perfil'){renderHistorico();renderFavoritos();}
 }
 
 function isLeapDay(d){return d.getMonth()===1&&d.getDate()===29;}
+function countLeapDays(f,t){
+  // conta 29-fev entre as datas (exclusivo do início, inclusivo do fim)
+  let count=0;
+  for(let y=f.getFullYear();y<=t.getFullYear();y++){
+    if((y%4===0&&y%100!==0)||y%400===0){
+      const leapDay=new Date(y,1,29);
+      if(leapDay>f&&leapDay<=t)count++;
+    }
+  }
+  return count;
+}
 function daysBetween(f,t){
   if(f>t)return -daysBetween(t,f);
-  let c=0;const d=new Date(f.getTime());
-  while(d<t){d.setDate(d.getDate()+1);if(!isLeapDay(d))c++;}
-  return c;
+  const fNorm=new Date(f.getFullYear(),f.getMonth(),f.getDate());
+  const tNorm=new Date(t.getFullYear(),t.getMonth(),t.getDate());
+  const msPerDay=86400000;
+  const totalDays=Math.round((tNorm-fNorm)/msPerDay);
+  return totalDays-countLeapDays(fNorm,tNorm);
 }
 function dateToKin(dt){
   if(isLeapDay(dt))return dateToKin(new Date(dt.getFullYear(),1,28));
@@ -596,14 +764,46 @@ async function calcNatal(){
   const[y,m,d]=v.split('-').map(Number);
   const dt=new Date(y,m-1,d);
   const k=dateToKin(dt);
+  registrarNoHistorico(k);
   document.getElementById('res-natal').innerHTML=kinHTML(k,true);
   document.getElementById('res-natal').classList.remove('hidden');
 }
 
+// Retorna a relação entre dois kins, se houver
+function getRelacaoKins(kinDia,kinNatal){
+  if(!kinDia||!kinNatal||!DATA.kins)return null;
+  const kd=DATA.kins[String(kinDia)];
+  if(!kd||!kd.oraculo)return null;
+  const seloNatal=(DATA.kins[String(kinNatal)]||{}).selo||'';
+  const {guia,analogo,antipoda,oculto}=kd.oraculo;
+  if(seloNatal&&guia&&seloNatal===guia)return{label:'Guia',desc:'Seu kin natal guia o kin de hoje',cor:'var(--gold2)',icon:'🔮'};
+  if(seloNatal&&analogo&&seloNatal===analogo)return{label:'Análogo',desc:'Seu kin natal é análogo ao de hoje',cor:'var(--green2)',icon:'🌱'};
+  if(seloNatal&&antipoda&&seloNatal===antipoda)return{label:'Antípoda',desc:'Seu kin natal é antípoda ao de hoje',cor:'#6080c0',icon:'⚡'};
+  if(seloNatal&&oculto&&seloNatal===oculto)return{label:'Oculto',desc:'Seu kin natal está oculto no kin de hoje',cor:'rgba(165,124,0,.8)',icon:'🌙'};
+  if(kinDia===kinNatal)return{label:'Sincronicidade Total',desc:'Hoje é exatamente o seu Kin Natal!',cor:'var(--gold3)',icon:'✨'};
+  return null;
+}
+
+let _kinNatalSalvo=null; // armazena kin natal para comparação
+
 async function loadToday(){
   await DATA_PRONTO;
   const k=dateToKin(new Date());
+  registrarNoHistorico(k);
   document.getElementById('res-dia').innerHTML=kinHTML(k);
+  if(_kinNatalSalvo){
+    const relacao=getRelacaoKins(k,_kinNatalSalvo);
+    if(relacao){
+      const hero=document.querySelector('#res-dia .kin-hero');
+      if(hero){
+        const badge=document.createElement('div');
+        badge.style.cssText='margin-top:.8rem;display:inline-flex;align-items:center;gap:.4rem;background:rgba(165,124,0,.1);border:1px solid var(--border-g);border-radius:20px;padding:.3rem .8rem;font-family:Cinzel;font-size:.62rem;letter-spacing:.05em';
+        badge.style.color=relacao.cor;
+        badge.innerHTML=`${relacao.icon} <strong>${relacao.label}</strong> com seu Kin Natal · ${relacao.desc}`;
+        hero.appendChild(badge);
+      }
+    }
+  }
 }
 
 function gerarGlifoTom(tom, iconSize){
@@ -642,9 +842,9 @@ function gerarGlifoTom(tom, iconSize){
 }
 function gerarLuaCircular(diaAtivo){
   const cores=['red','white','blue','yellow'];
-  const nomes=['VERMELHA','BRANCA','AZUL','AMARELA'];
-  const cx=200,cy=200,rOut=178,rIn=114,rLbl=144,rRing=193;
-  let segs='',labels='',ringLabels='';
+  const nomesCores=[['red','Vermelha'],['white','Branca'],['blue','Azul'],['yellow','Amarela']];
+  const cx=200,cy=200,rOut=178,rIn=118,rLbl=148;
+  let segs='',labels='';
   for(let i=0;i<28;i++){
     const dia=i+1,cor=cores[Math.floor(i/7)];
     const a1=(i*360/28-90)*Math.PI/180,a2=((i+1)*360/28-90)*Math.PI/180;
@@ -659,207 +859,229 @@ function gerarLuaCircular(diaAtivo){
     const lx=cx+rLbl*Math.cos(am),ly=cy+rLbl*Math.sin(am);
     labels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="seg-label${ativo}">${dia}</text>`;
   }
-  for(let s=0;s<4;s++){
-    const am=((s*7+3.5)*360/28-90)*Math.PI/180;
-    const lx=cx+rRing*Math.cos(am),ly=cy+rRing*Math.sin(am);
-    ringLabels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" class="ring-label">${nomes[s]}</text>`;
-  }
-  return`<svg class="lua-circular" viewBox="-70 -70 540 540" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
+  const legenda=nomesCores.map(([cor,nome])=>
+    `<span class="lua-legenda-item"><span class="lua-legenda-dot ${cor}"></span>${nome}</span>`
+  ).join('');
+  return`<div><svg class="lua-circular" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">${segs}${labels}<text x="${cx}" y="${cy-9}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+13}" class="center-text center-sub">DE 28</text></svg><div class="lua-legenda">${legenda}</div></div>`;
 }
 
-function kinHTML(kinNum,modoNatal=false){
-  const kD=DATA.kins[kinNum];
-  if(!kD)return'<p>Carregando dados...</p>';
-  const seloCompleto=kD.selo;
-  const partes=seloCompleto.split(' ');
-  const cor=partes[partes.length-1];
-  const seloBase=partes.slice(0,-1).join(' ');
-  const tomOriginal=kD.tom_nome;
-  const tomConcordado=concordar(seloCompleto,tomOriginal);
-  const nomeCompleto=`${seloBase} ${tomConcordado} ${cor}`;
-  const fraseCurta=kD.frase_curta||'';
-  const corSelo=getSeloCor(seloCompleto);
+// ─── Constantes globais extraídas de kinHTML ────────────────────────────────
+const SELOS_NOMES = ['Dragão','Vento','Noite','Semente','Serpente','Enlaçador de Mundos','Mão','Estrela','Lua','Cão','Macaco','Humano','Caminhante do Céu','Mago','Águia','Guerreiro','Terra','Espelho','Tormenta','Sol'];
+const TONS_NOMES  = ['Magnético','Lunar','Elétrico','Autoexistente','Harmônico','Rítmico','Ressonante','Galáctico','Solar','Planetário','Espectral','Cristal','Cósmico'];
+const CORES_CICLO = ['Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo'];
+const CASTELO_NOMES = ['Castelo Vermelho Leste do Girar','Castelo Branco Norte do Cruzar','Castelo Azul Oeste do Queimar','Castelo Amarelo Sul do Doar','Castelo Verde Central do Encantar'];
+const LUAS_ANIMAIS  = ['Morcego','Escorpião','Cervo','Coruja','Pavão','Lagarto','Macaco','Falcão','Jaguar','Cão','Serpente','Coelho','Tartaruga'];
+const LUA_KINS      = [118,119,120,121,122,123,124,130,129,127,128,126,125];
+const COR_BASE_NORM = {red:'Vermelho',white:'Branco',blue:'Azul',yellow:'Amarelo',vermelho:'Vermelho',vermelha:'Vermelho',branco:'Branco',branca:'Branco',azul:'Azul',amarelo:'Amarelo',amarela:'Amarelo'};
+const ANIMAIS_FEM   = new Set(['Serpente','Águia','Terra','Lua','Mão','Estrela','Noite','Semente','Tormenta','Tartaruga','Coruja']);
+const SELF_DESIGN_PAGINAS = [null,2,3,4,5,2,3,4,5,2,3,4,5,6];
+
+// ─── Helpers de cálculo de ciclo ────────────────────────────────────────────
+function getAnoGalactico(){
+  const hoje=new Date();
+  return hoje>=new Date(hoje.getFullYear(),6,26)?hoje.getFullYear():hoje.getFullYear()-1;
+}
+
+function getContextoLua(diasPassados){
+  const luaNum=Math.floor(diasPassados/28)+1;
+  const diaLua=(diasPassados%28)||28;
+  const luaKinNum=LUA_KINS[luaNum-1]||1;
+  const luaAnimal=LUAS_ANIMAIS[luaNum-1]||'';
+  const luaKinData=(DATA.kins||{})[String(luaKinNum)]||null;
+  return{luaNum,diaLua,luaAnimal,luaKinData,luaKinNum};
+}
+
+function getContextoAnelSolar(anoGal){
+  const anelKin=dateToKin(new Date(anoGal,6,26));
+  const s=(anelKin-1)%20, t=(anelKin-1)%13;
+  const nome=SELOS_NOMES[s], tom=TONS_NOMES[t], corBase=CORES_CICLO[s];
+  const cor=concordarCor(corBase,nome);
+  const selo=DATA.selos[s]||{};
+  return{anelKin,anelTomNum:t+1,anelNomeCompleto:`${nome} ${tom} ${cor}`,
+         anelIconURL:getSeloIconURL(`${nome} ${corBase}`),
+         anelAcao:selo.acao||'',anelCorSelo:corBase.toLowerCase(),anoGal};
+}
+
+// ─── Funções de renderização de seções ──────────────────────────────────────
+
+function renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, seloBase, tomNum, fraseCurta){
+  const isFav=isFavorito(kinNum);
+  return `
+<div class="section anim-1">
+  <div class="kin-hero">
+    <div style="display:flex;justify-content:center;margin-bottom:.3rem">${gerarGlifoTom(tomNum,64)}</div>
+    <div class="selo-icon selo-${corSelo}" style="width:64px;height:64px;border-radius:9px;margin:0 auto .5rem">
+      <img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain">
+    </div>
+    <div class="kin-title">${nomeCompleto}</div>
+    <div class="kin-num" style="font-size:.78rem;color:var(--gold2);letter-spacing:.12em;margin-top:.3rem">
+      Kin ${kinNum} · 260
+      <button class="btn-fav${isFav?' ativo':''}" onclick="toggleFavorito(${kinNum},this)" title="${isFav?'Remover dos favoritos':'Salvar nos favoritos'}">${isFav?'★':'☆'}</button>
+    </div>
+  </div>
+  ${fraseCurta?`<div class="kin-frase">"${fraseCurta}"</div>`:''}
+  <div class="export-btns">
+    <button class="btn-share" onclick="compartilharKin()">⬆ Compartilhar</button>
+    <button class="btn-share" onclick="exportPNG()" style="border-color:var(--border);color:var(--text2)">↓ PNG</button>
+    <button class="btn-cal" onclick="exportarCalendario28()">📅 28 dias</button>
+    <button class="btn-cal" onclick="exportarPDFKin()">📄 PDF</button>
+  </div>
+</div>`;
+}
+
+function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNum){
   const{guia,analogo,antipoda,oculto}=kD.oraculo;
-  const tomNum=kD.tom;
+  // nome-label em cima: texto antes do ícone
+  const celTopo=(nome,label,extraStyle='')=>`
+    <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">${label}</span>${getSeloBase(nome)}</div>
+    <div class="selo-icon selo-${getSeloCor(nome)}" style="width:54px;height:54px${extraStyle}"><img src="${getSeloIconURL(nome)}" style="width:100%;height:100%;object-fit:contain"></div>`;
+  // ícone-nome embaixo: ícone antes do texto
+  const celBase=(nome,label)=>`
+    <div class="selo-icon selo-${getSeloCor(nome)}" style="width:54px;height:54px"><img src="${getSeloIconURL(nome)}" style="width:100%;height:100%;object-fit:contain"></div>
+    <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">${label}</span>${getSeloBase(nome)}</div>`;
+  return `
+<div class="section anim-2">
+  <div class="section-title">Oráculo do Destino</div>
+  <div class="oraculo-wrap">
+    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+      <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(165,124,0,.30)" stroke-width=".4"/>
+      <circle cx="50" cy="50" r="32" fill="none" stroke="rgba(165,124,0,.20)" stroke-width=".3"/>
+    </svg>
+    <div class="oraculo-cell-top oraculo-item oraculo-side">${celTopo(guia,'Guia',';margin-top:.3rem')}</div>
+    <div class="oraculo-cell-left oraculo-item oraculo-side">${celBase(analogo,'Análogo')}</div>
+    <div class="oraculo-cell-center oraculo-item oraculo-central">
+      <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(tomNum,76)}</div>
+      <div class="selo-icon selo-${corSelo}" style="width:76px;height:76px;border-radius:11px"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem">${seloBase}</div>
+      <div style="font-family:Cinzel;font-size:.52rem;color:rgba(165,124,0,.6);letter-spacing:.12em;margin-top:.1rem">KIN ${kinNum}</div>
+    </div>
+    <div class="oraculo-cell-right oraculo-item oraculo-side">${celBase(oculto,'Oculto')}</div>
+    <div class="oraculo-cell-bottom oraculo-item oraculo-side">${celBase(antipoda,'Antípoda')}</div>
+  </div>
+</div>`;
+}
+
+function renderOndaEncantada(kinNum){
+  const ondaNum=Math.floor((kinNum-1)/13)+1;
   const ondaInicio=Math.floor((kinNum-1)/13)*13+1;
   const diaOnda=((kinNum-1)%13)+1;
+  const ondaKinInicioData=(DATA.kins||{})[String(ondaInicio)]||{};
+  const ondaSeloNome=ondaKinInicioData.selo||'';
+  const ondaSeloBase=ondaSeloNome?ondaSeloNome.split(' ').slice(0,-1).join(' '):'';
+  const ondaNumCiclo=((ondaNum-1)%20)+1;
+  const ondaProposito=(ONDAS_PROPOSITOS.find(o=>o.onda===ondaNumCiclo)||{}).propositos||'';
+  const prep=ehSeloFeminino(ondaSeloBase)?'da ':'do ';
 
-  let ondaHTML='<div class="onda-L">';
+  let kins='';
   for(let i=0;i<13;i++){
     const k=ondaInicio+i;
     const kData=DATA.kins[k];
-    const corKin=kData?getSeloCor(kData.selo):'white';
+    const cor=kData?getSeloCor(kData.selo):'white';
     const ativo=k===kinNum?'active':'';
     const tooltip=kData?`Kin ${k} · ${kData.selo} ${kData.tom_nome}`:'';
-    ondaHTML+=`<div class="onda-kin cor-${corKin} ${ativo}" title="${tooltip}"><img src="${getSeloIconURL(kData?kData.selo:'')}" style="width:100%;height:100%;object-fit:contain"></div>`;
+    kins+=`<div class="onda-kin cor-${cor} ${ativo}" title="${tooltip}" onclick="mostrarDetalheOnda(this,'${tooltip}')"><img src="${getSeloIconURL(kData?kData.selo:'')}" style="width:100%;height:100%;object-fit:contain"></div>`;
   }
-  ondaHTML+='</div>';
+  return `
+<div class="section">
+  <div class="section-title">Onda Encantada ${ondaNum} · Dia ${diaOnda} · 13 dias</div>
+  <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold3);margin-bottom:.5rem;letter-spacing:.03em">Onda Encantada ${prep}${ondaSeloBase}</div>
+  <p style="font-size:.88rem;color:var(--text);margin-bottom:.9rem;line-height:1.7">
+    <span style="color:var(--gold2);font-family:Cinzel;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em">Propósito: </span>${ondaProposito}
+  </p>
+  <div class="onda-wrap"><div class="onda-L">${kins}</div><div class="onda-detail" id="onda-detail"></div></div>
+</div>`;
+}
 
+function renderCastelo(kinNum){
   const casteloNum=Math.floor((kinNum-1)/52);
   const castelo=DATA.castelos[casteloNum]||{};
   const casteloOndas=castelo.ondas||[];
-  let casteloOndasHTML='<div style="display:flex;flex-direction:column;gap:8px;margin-top:.4rem">';
-  for(let ondaNome of casteloOndas){
-    const ondaIdx=casteloOndas.indexOf(ondaNome);
+  const casteloImg=['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde';
+
+  let ondasHTML='<div style="display:flex;flex-direction:column;gap:8px;margin-top:.4rem">';
+  casteloOndas.forEach((ondaNome,ondaIdx)=>{
     const ondaKinInicio=casteloNum*52+ondaIdx*13+1;
-    const ondaKinData=DATA.kins&&DATA.kins[ondaKinInicio]?DATA.kins[ondaKinInicio]:null;
-    let ondaSeloCompleto,ondaIconURL,ondaSeloBase,ondaSeloCor;
+    const ondaKinData=(DATA.kins&&DATA.kins[ondaKinInicio])||null;
+    let seloBase,iconURL,seloCor;
     if(ondaKinData&&ondaKinData.selo){
-      ondaSeloCompleto=ondaKinData.selo;
-      ondaIconURL=getSeloIconURL(ondaSeloCompleto);
-      ondaSeloBase=getSeloBase(ondaSeloCompleto);
-      ondaSeloCor=getSeloCor(ondaSeloCompleto);
+      seloBase=getSeloBase(ondaKinData.selo);
+      iconURL=getSeloIconURL(ondaKinData.selo);
+      seloCor=getSeloCor(ondaKinData.selo);
     }else{
       const cores=['Vermelho','Branco','Azul','Amarelo'];
-      ondaSeloCompleto=ondaNome+' '+cores[ondaIdx%4];
-      ondaIconURL=getSeloIconURL(ondaSeloCompleto);
-      ondaSeloBase=ondaNome;
-      ondaSeloCor=cores[ondaIdx%4].toLowerCase();
+      seloBase=ondaNome;
+      seloCor=cores[ondaIdx%4].toLowerCase();
+      iconURL=getSeloIconURL(`${ondaNome} ${cores[ondaIdx%4]}`);
     }
-    const femininos=['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta'];
-    const ehFem=femininos.some(f=>ondaSeloBase.includes(f));
-    const prep=ehFem?'da ':'do ';
-    const corMapa={
-      'red':ehFem?'Vermelha':'Vermelho',
-      'white':ehFem?'Branca':'Branco',
-      'blue':ehFem?'Azul':'Azul',
-      'yellow':ehFem?'Amarela':'Amarelo',
-      'vermelho':ehFem?'Vermelha':'Vermelho',
-      'vermelha':ehFem?'Vermelha':'Vermelho',
-      'branco':ehFem?'Branca':'Branco',
-      'branca':ehFem?'Branca':'Branco',
-      'azul':ehFem?'Azul':'Azul',
-      'amarelo':ehFem?'Amarela':'Amarelo',
-      'amarela':ehFem?'Amarela':'Amarelo'
-    };
-    const corLabel=corMapa[ondaSeloCor]||'';
-    casteloOndasHTML+=`<div style="display:flex;align-items:center;gap:.7rem;padding:.25rem 0">
-      <div class="selo-icon selo-${ondaSeloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0"><img src="${ondaIconURL}" style="width:100%;height:100%;object-fit:contain"></div>
-      <span style="font-size:.78rem;color:var(--text);font-family:Cinzel;line-height:1.3">Onda ${prep}${ondaSeloBase} ${corLabel}</span>
+    const prep=ehSeloFeminino(seloBase)?'da ':'do ';
+    const corLabel=concordarCor(COR_BASE_NORM[seloCor]||'',seloBase);
+    ondasHTML+=`<div style="display:flex;align-items:center;gap:.7rem;padding:.25rem 0">
+      <div class="selo-icon selo-${seloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
+      <span style="font-size:.78rem;color:var(--text);font-family:Cinzel;line-height:1.3">Onda ${prep}${seloBase} ${corLabel}</span>
     </div>`;
-  }
-  casteloOndasHTML+='</div>';
+  });
+  ondasHTML+='</div>';
 
-  const diaSemana=(kinNum-1)%7;
-  const plasma=DATA.plasmas[diaSemana]||'';
-  const plasmaEmojiMap={'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'};
-  const plasmaChave=plasma.split(' - ')[0];
-  const plasmaEmoji=plasmaEmojiMap[plasmaChave]||'⚡';
-  const plasmaSVGKey=plasmaChave.toLowerCase();
-  const plasmaSVGUrl=PLASMA_SVGS[plasmaSVGKey]||'';
-  const ritual=DATA.rituais[diaOnda]||{};
+  return{casteloNum,casteloTexto:CASTELO_NOMES[casteloNum]||'Castelo',casteloImg,ondasHTML};
+}
 
-  const hoje=new Date();
-  const anoGal=hoje>=new Date(hoje.getFullYear(),6,26)?hoje.getFullYear():hoje.getFullYear()-1;
-  const inicioAno=new Date(anoGal,6,26);
-  const diasPassados=daysBetween(inicioAno,hoje);
-  const luaNum=Math.floor(diasPassados/28)+1;
-  const diaLua=(diasPassados%28)||28;
-  const luaNome=DATA.luas[luaNum-1]||'';
-  const luaHTML=gerarLuaCircular(diaLua||28);
-  const faseLunar=getFaseLunar(hoje);
-
-  // Anel Solar: kin do 1o dia do ano galáctico (fixo para o ano todo)
-  const anelKin=dateToKin(new Date(anoGal,6,26));
-  const _anelS=((anelKin-1)%20); // índice 0-19
-  const _anelT=((anelKin-1)%13); // índice 0-12
-  const _SELOS_AN=['Dragão','Vento','Noite','Semente','Serpente','Enlaçador de Mundos','Mão','Estrela','Lua','Cão','Macaco','Humano','Caminhante do Céu','Mago','Águia','Guerreiro','Terra','Espelho','Tormenta','Sol'];
-  const _TONS_AN=['Magnético','Lunar','Elétrico','Autoexistente','Harmônico','Rítmico','Ressonante','Galáctico','Solar','Planetário','Espectral','Cristal','Cósmico'];
-  const _CORES_AN=['Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo'];
-  const _FEMINOS_AN=new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
-  const _anelSeloNome=_SELOS_AN[_anelS];
-  const _anelTomNome=_TONS_AN[_anelT];
-  const _anelCorBase=_CORES_AN[_anelS];
-  const _anelEhFem=_FEMINOS_AN.has(_anelSeloNome);
-  const _anelCor=_anelEhFem?(_anelCorBase==='Vermelho'?'Vermelha':_anelCorBase==='Branco'?'Branca':_anelCorBase==='Amarelo'?'Amarela':_anelCorBase):_anelCorBase;
-  const anelTomNum=_anelT+1;
-  const anelNomeCompleto=_anelSeloNome+' '+_anelTomNome+' '+_anelCor;
-  // Manter compatibilidade com o resto do código
- const anelSelo=DATA.selos[_anelS]||{};
-  const anelIconURL=getSeloIconURL(_anelSeloNome+' '+_anelCorBase);
-  const anelAcao=anelSelo.acao||'';
-  const anelCorSelo=_anelCorBase.toLowerCase();
-
-  const ondaNum=Math.floor((kinNum-1)/13)+1;
-  const ondaKinInicio=Math.floor((kinNum-1)/13)*13+1;
-  const ondaKinInicioData=(DATA.kins||{})[String(ondaKinInicio)]||{};
-  const ondaSeloNome=ondaKinInicioData.selo||'';
-  const ondaSeloNomeBase=ondaSeloNome?ondaSeloNome.split(' ').slice(0,-1).join(' '):'';
-  const ondaSelo=Object.values(DATA.selos||{}).find(s=>{const sBase=s.nome?s.nome.split(' ').slice(0,-1).join(' '):'';return sBase===ondaSeloNomeBase||s.nome===ondaSeloNome;})||{};
-  const ondaNumCiclo=((ondaNum-1)%20)+1;
-  const ondaProposito=(()=>{const item=ONDAS_PROPOSITOS.find(o=>o.onda===ondaNumCiclo);return item?item.propositos:'';})();
-  const CASTELO_NOMES=[
-    'Castelo Vermelho Leste do Girar',
-    'Castelo Branco Norte do Cruzar',
-    'Castelo Azul Oeste do Queimar',
-    'Castelo Amarelo Sul do Doar',
-    'Castelo Verde Central do Encantar'
-  ];
-  const CASTELO_CORES=['Vermelho','Branco','Azul','Amarelo','Verde'];
-  const casteloCorNome=CASTELO_CORES[casteloNum]||'Verde';
-  const casteloTextoFmt=CASTELO_NOMES[casteloNum]||'Castelo';
-
-  const LUA_KINS=[118,119,120,121,122,123,124,130,129,127,128,126,125];
-  const luaKinNum=LUA_KINS[luaNum-1]||1;
-  const luaKinData=(DATA.kins||{})[String(luaKinNum)]||null;
-  const LUAS_ANIMAIS=['Morcego','Escorpião','Cervo','Coruja','Pavão','Lagarto','Macaco','Falcão','Jaguar','Cão','Serpente','Coelho','Tartaruga'];
-  const luaAnimal=LUAS_ANIMAIS[luaNum-1]||'';
-  const luaKinIconURL=luaKinData?getSeloIconURL(luaKinData.selo):'';
+function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData){
+  const art=ANIMAIS_FEM.has(luaAnimal)?'da ':'do ';
   const luaKinCorSelo=luaKinData?getSeloCor(luaKinData.selo):'red';
-
-  // Self Design Sounds
-  const selfDesignOndaNum=((ondaNum-1)%20)+1;
-  const selfDesignIdx=DIA_ONDA_PARA_IDX[diaOnda]||1;
-  const selfDesignLinks=SELF_DESIGN_ONDAS[selfDesignOndaNum]||[];
-  const selfDesignURL=selfDesignLinks[selfDesignIdx]||'#';
-  const selfDesignPagina=[null,2,3,4,5,2,3,4,5,2,3,4,5,6][diaOnda]||2;
-
-  let _gridHTML="";if(!modoNatal){_gridHTML=`
-<div class="grid-2">
-  <div class="section">
-    <div class="section-title">Castelo · 52 dias</div>
-    <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${casteloTextoFmt}</div>
-    <div style="margin-bottom:1.1rem">
-      <img src="./assets/icons/castelo-${(['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde')}.png" alt="Castelo" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 0 .8rem 0">
-      ${casteloOndasHTML}
-    </div>
+  const luaKinIconURL=luaKinData?getSeloIconURL(luaKinData.selo):'';
+  const nomeKinLua=luaKinData?(()=>{const p=luaKinData.selo.split(' ');return p.slice(0,-1).join(' ')+' '+luaKinData.tom_nome+' '+p[p.length-1];})():'';
+  return `
     <div style="margin-bottom:1.1rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.9rem">
       <div class="section-title">Lua Galáctica · ${luaNum} de 13</div>
-      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${(()=>{const fem=["Serpente","Águia","Terra","Lua","Mão","Estrela","Noite","Semente","Tormenta","Tartaruga","Coruja"];const art=fem.some(f=>luaAnimal.includes(f))?"da ":"do ";return"Lua Galáctica "+art+luaAnimal;})()}</div>
+      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Lua Galáctica ${art}${luaAnimal}</div>
       <div style="display:flex;align-items:center;gap:.75rem">
         <div style="text-align:center">
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${luaKinData?gerarGlifoTom(luaKinData.tom,54):''}</div>
-          <div class="selo-icon selo-${luaKinCorSelo}" style="width:54px;height:54px;flex-shrink:0">${luaKinIconURL?`<img src="${luaKinIconURL}" style="width:100%;height:100%;object-fit:contain">`:''}</div>
-        </div>
-        <div>
-          <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${luaKinData?(()=>{const partes=luaKinData.selo.split(' ');const base=partes.slice(0,-1).join(' ');const cor=partes[partes.length-1];return base+' '+luaKinData.tom_nome+' '+cor;})():''}</div>
-          <div style="font-size:.68rem;color:var(--text);margin-top:.2rem">Dia ${diaLua} de 28</div>
-
-        </div>
-      </div>
-      <div style="margin-top:.8rem">${luaHTML}</div>
-    </div>
-    <div style="margin-bottom:.6rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.3rem">
-      <div class="section-title">Anel Solar · 364 dias</div>
-      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.6rem">${anelNomeCompleto}</div>
-      <div style="display:flex;align-items:center;gap:.75rem">
-        <div style="text-align:center">
-          <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(anelTomNum,54)}</div>
-          <div class="selo-icon selo-${anelCorSelo}" style="width:54px;height:54px;flex-shrink:0">
-            <img src="${anelIconURL}" style="width:100%;height:100%;object-fit:contain">
+          <div class="selo-icon selo-${luaKinCorSelo}" style="width:54px;height:54px;flex-shrink:0">
+            ${luaKinIconURL?`<img src="${luaKinIconURL}" style="width:100%;height:100%;object-fit:contain">`:''}
           </div>
         </div>
         <div>
-          <div style="font-size:.72rem;color:var(--text2)">${anelAcao}</div>
-          <div style="font-size:.65rem;color:var(--gold);margin-top:.2rem">Kin ${anelKin} · Ano ${anoGal}–${anoGal+1}</div>
+          <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${nomeKinLua}</div>
+          <div style="font-size:.68rem;color:var(--text);margin-top:.2rem">Dia ${diaLua} de 28</div>
         </div>
       </div>
-    </div>
+      <div style="margin-top:.8rem">${gerarLuaCircular(diaLua)}</div>
+    </div>`;
+}
+
+function renderAnelSolar(anel, anoGal){
+  return `
+    <div style="margin-bottom:.6rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.3rem">
+      <div class="section-title">Anel Solar · 364 dias</div>
+      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.6rem">${anel.anelNomeCompleto}</div>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div style="text-align:center">
+          <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(anel.anelTomNum,54)}</div>
+          <div class="selo-icon selo-${anel.anelCorSelo}" style="width:54px;height:54px;flex-shrink:0">
+            <img src="${anel.anelIconURL}" style="width:100%;height:100%;object-fit:contain">
+          </div>
+        </div>
+        <div>
+          <div style="font-size:.72rem;color:var(--text2)">${anel.anelAcao}</div>
+          <div style="font-size:.65rem;color:var(--gold);margin-top:.2rem">Kin ${anel.anelKin} · Ano ${anoGal}–${anoGal+1}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderPlasmaFaseLunar(kinNum, faseLunar){
+  const diaSemana=(kinNum-1)%7;
+  const plasma=DATA.plasmas[diaSemana]||'';
+  const plasmaChave=plasma.split(' - ')[0];
+  const plasmaSVGUrl=PLASMA_SVGS[plasmaChave.toLowerCase()]||'';
+  return `
     <div style="margin-bottom:.6rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.3rem">
       <div class="section-title">Plasma · Fase Lunar</div>
       <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px">
-          ${plasmaSVGUrl?`<img src="${plasmaSVGUrl}" style="width:48px;height:48px;object-fit:contain;" alt="${plasmaChave}">`:'<span style="font-size:1.5rem">${plasmaEmoji}</span>'}
+          ${plasmaSVGUrl?`<img src="${plasmaSVGUrl}" style="width:48px;height:48px;object-fit:contain;" alt="${plasmaChave}">`:
+            `<span style="font-size:1.5rem;width:48px;text-align:center">${({'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'}[plasmaChave]||'⚡')}</span>`}
           <div>
             <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${plasmaChave}</div>
             <div style="font-size:.65rem;color:var(--text2);margin-top:.1rem">${plasma.split(' - ')[1]||''}</div>
@@ -873,90 +1095,94 @@ function kinHTML(kinNum,modoNatal=false){
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </div>`;
+}
 
+function renderPraticaDiaria(kinNum, diaOnda, anelKin, seloBase){
+  const ondaNum=Math.floor((kinNum-1)/13)+1;
+  const selfDesignOndaNum=((ondaNum-1)%20)+1;
+  const selfDesignIdx=DIA_ONDA_PARA_IDX[diaOnda]||1;
+  const selfDesignURL=(SELF_DESIGN_ONDAS[selfDesignOndaNum]||[])[selfDesignIdx]||'#';
+  const selfDesignPagina=SELF_DESIGN_PAGINAS[diaOnda]||2;
+  return `
   <div class="section">
     <div class="section-title">Prática Diária</div>
     <ul class="praticas-list">
       <li class="has-btn">
         <span>Ouça a prece das 7 direções galácticas</span>
-        <button onclick="togglePrece(this)" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+        <button class="btn-pratica" onclick="togglePrece(this)">▶ ouvir</button>
       </li>
       <li class="has-btn">
         <span>Meditação do selo</span>
-        <button onclick="abrirModalVideo('${MEDITACOES[String(_anelS+1)]}','${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+        <button class="btn-pratica" onclick="abrirModalVideo('${MEDITACOES[String(anelKin)]}','${seloBase}')">▶ ouvir</button>
       </li>
       <li class="has-btn">
         <span>Ouça o Self Design Sounds</span>
-        <button onclick="abrirSelfDesign(${kinNum})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+        <button class="btn-pratica" onclick="abrirSelfDesign(${kinNum})">▶ ouvir</button>
       </li>
       <li class="has-btn">
         <span>Leitura da página ${selfDesignPagina} do e-book</span>
-        <button onclick="abrirEbook('${selfDesignURL}', ${selfDesignPagina})" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ abrir</button>
+        <button class="btn-pratica" onclick="abrirEbook('${selfDesignURL}',${selfDesignPagina})">▶ abrir</button>
       </li>
       <li class="has-btn" style="justify-content:flex-start">${PERGUNTAS_TOM[diaOnda]||''}</li>
     </ul>
-`;}
+  </div>`;
+}
+
+// ─── kinHTML: orquestra as funções de renderização ───────────────────────────
+function kinHTML(kinNum, modoNatal=false){
+  const kD=DATA.kins[kinNum];
+  if(!kD)return'<p>Carregando dados...</p>';
+
+  // Dados básicos do kin
+  const seloCompleto=kD.selo;
+  const seloBase=getSeloBase(seloCompleto);
+  const corSelo=getSeloCor(seloCompleto);
+  const tomConcordado=concordar(seloCompleto,kD.tom_nome);
+  const nomeCompleto=`${seloBase} ${tomConcordado} ${corSelo.charAt(0).toUpperCase()+corSelo.slice(1)}`;
+  const diaOnda=((kinNum-1)%13)+1;
+
+  // Ciclos de tempo (só necessários fora do modo natal)
+  const anoGal=getAnoGalactico();
+  const diasPassados=daysBetween(new Date(anoGal,6,26),new Date());
+  const{luaNum,diaLua,luaAnimal,luaKinData}=getContextoLua(diasPassados);
+  const anel=getContextoAnelSolar(anoGal);
+  const faseLunar=getFaseLunar(new Date());
+
+  const heroHTML=renderHeroKin(kinNum,kD,nomeCompleto,corSelo,seloCompleto,seloBase,kD.tom,kD.frase_curta||'');
+  const oraculoHTML=renderOraculo(kinNum,kD,corSelo,seloBase,seloCompleto,kD.tom);
+  const ondaHTML=renderOndaEncantada(kinNum);
+
+  if(modoNatal){
+    return`<div>${heroHTML}${oraculoHTML}${ondaHTML}</div>`;
+  }
+
+  const{casteloNum,casteloTexto,casteloImg,ondasHTML}=renderCastelo(kinNum);
+  const luaHTML=renderLuaGalactica(luaNum,diaLua,luaAnimal,luaKinData);
+  const anelHTML=renderAnelSolar(anel,anoGal);
+  const plasmaHTML=renderPlasmaFaseLunar(kinNum,faseLunar);
+  const praticaHTML=renderPraticaDiaria(kinNum,diaOnda,anel.anelKin,seloBase);
+
   return`
-<div class="section anim-1">
-  <div class="kin-hero">
-    <div style="display:flex;justify-content:center;margin-bottom:.3rem">${gerarGlifoTom(tomNum,64)}</div>
-    <div class="selo-icon selo-${corSelo}" style="width:64px;height:64px;border-radius:9px;margin:0 auto .5rem"><img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain"></div>
-    <div class="kin-title">${nomeCompleto}</div>
-    <div class="kin-num" style="font-size:.78rem;color:var(--gold2);letter-spacing:.12em;margin-top:.3rem">Kin ${kinNum} · 260</div>
+<div>
+${heroHTML}
+${oraculoHTML}
+${ondaHTML}
+<div class="grid-2">
+  <div class="section">
+    <div class="section-title">Castelo · 52 dias</div>
+    <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${casteloTexto}</div>
+    <div style="margin-bottom:1.1rem">
+      <img src="./assets/icons/castelo-${casteloImg}.png" alt="Castelo" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 0 .8rem 0">
+      ${ondasHTML}
+    </div>
+    ${luaHTML}
+    ${anelHTML}
+    ${plasmaHTML}
   </div>
-  ${fraseCurta?`<div class="kin-frase">"${fraseCurta}"</div>`:''}
-  <div class="export-btns">
-    <button class="btn-share" onclick="compartilharKin()">⬆ Compartilhar</button>
-    <button class="btn-share" onclick="exportPNG()" style="border-color:var(--border);color:var(--text2)">↓ PNG</button>
-    <button class="btn-cal" onclick="exportarCalendario28()">📅 28 dias</button>
-    <button class="btn-cal" onclick="exportarPDFKin()">📄 PDF</button>
-  </div>
+${praticaHTML}
 </div>
-
-<div class="section anim-2">
-  <div class="section-title">Oráculo do Destino</div>
-  <div class="oraculo-wrap">
-    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-      <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(165,124,0,.30)" stroke-width=".4"/>
-      <circle cx="50" cy="50" r="32" fill="none" stroke="rgba(165,124,0,.20)" stroke-width=".3"/>
-    </svg>
-    <div class="oraculo-cell-top oraculo-item oraculo-side">
-      <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Guia</span>${getSeloBase(guia)}</div>
-      <div class="selo-icon selo-${getSeloCor(guia)}" style="width:54px;height:54px;margin-top:.3rem"><img src="${getSeloIconURL(guia)}" style="width:100%;height:100%;object-fit:contain"></div>
-    </div>
-    <div class="oraculo-cell-left oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(analogo)}" style="width:54px;height:54px"><img src="${getSeloIconURL(analogo)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Análogo</span>${getSeloBase(analogo)}</div>
-    </div>
-    <div class="oraculo-cell-center oraculo-item oraculo-central">
-      <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(tomNum,76)}</div>
-      <div class="selo-icon selo-${corSelo}" style="width:76px;height:76px;border-radius:11px"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem">${seloBase}</div>
-      <div style="font-family:Cinzel;font-size:.52rem;color:rgba(165,124,0,.6);letter-spacing:.12em;margin-top:.1rem">KIN ${kinNum}</div>
-    </div>
-    <div class="oraculo-cell-right oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(oculto)}" style="width:54px;height:54px"><img src="${getSeloIconURL(oculto)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Oculto</span>${getSeloBase(oculto)}</div>
-    </div>
-    <div class="oraculo-cell-bottom oraculo-item oraculo-side">
-      <div class="selo-icon selo-${getSeloCor(antipoda)}" style="width:54px;height:54px"><img src="${getSeloIconURL(antipoda)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Antípoda</span>${getSeloBase(antipoda)}</div>
-    </div>
-  </div>
-</div>
-
-<div class="section">
-  <div class="section-title">Onda Encantada ${ondaNum} · Dia ${diaOnda} · 13 dias</div>
-  <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold3);margin-bottom:.5rem;letter-spacing:.03em">Onda Encantada ${ondaSeloNome?(()=>{const palavras=ondaSeloNome.split(' ');const nomeBase=palavras.slice(0,-1).join(' ');const femininos=['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta'];const ehFem=femininos.some(f=>nomeBase.includes(f));return ehFem?'da ':'do ';})():'da '}${ondaSeloNome?ondaSeloNome.split(' ').slice(0,-1).join(' '):''}</div>
-  <p style="font-size:.88rem;color:var(--text);margin-bottom:.9rem;line-height:1.7"><span style="color:var(--gold2);font-family:Cinzel;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em">Propósito: </span>${ondaProposito}</p>
-  <div class="onda-wrap">${ondaHTML}</div>
-</div>
-
-${_gridHTML}  </div>
-</div>
-  `;
+</div>`;
 }
 
 async function compartilharKin(){
@@ -1028,7 +1254,10 @@ async function carregarPerfil(user){
     if(!data.onboardingCompleto)mostrarOnboarding();
     if(data.kinNatalData){
       document.getElementById('perfil-nasc-inp').value=data.kinNatalData;
-      mostrarKinNatalSalvo(data.kinNatalData,data.kinNatalNum);
+      const kinNatalNum=data.kinNatalNum||dateToKin(new Date(data.kinNatalData+'T12:00:00'));
+      _kinNatalSalvo=kinNatalNum;
+      mostrarKinNatalSalvo(data.kinNatalData,kinNatalNum);
+      loadToday(); // refresh com comparação
     }else{
       document.getElementById('perfil-kin-salvo').innerHTML='<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
     }
@@ -1085,16 +1314,20 @@ async function salvarKinNatal(){
   const dt=new Date(v+'T12:00:00'),k=dateToKin(dt);
   try{
     await db.collection('users').doc(currentUserUID).update({kinNatalData:v,kinNatalNum:k});
+    _kinNatalSalvo=k;
     mostrarKinNatalSalvo(v,k);
     document.getElementById('nasc-inp').value=v;await calcNatal();
+    loadToday(); // atualiza comparação no kin do dia
   }catch(e){alert('Erro ao salvar: '+e.message);}
 }
 
 async function limparKinNatal(){
   if(!currentUserUID)return;
   await db.collection('users').doc(currentUserUID).update({kinNatalData:firebase.firestore.FieldValue.delete(),kinNatalNum:firebase.firestore.FieldValue.delete()});
+  _kinNatalSalvo=null;
   document.getElementById('perfil-kin-salvo').innerHTML='<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
   document.getElementById('perfil-nasc-inp').value='';
+  loadToday(); // remove badge de comparação
 }
 
 function atualizarBotaoNotif(){
@@ -1261,13 +1494,13 @@ function abrirModalVideo(url,nomeSeloVideo){
 function togglePrece(btn){
   let audio=document.getElementById('audio-prece');
   if(!audio){audio=document.createElement('audio');audio.id='audio-prece';audio.src='./assets/icons/prece.mpeg';document.body.appendChild(audio);}
-  if(!audio.paused){audio.pause();audio.currentTime=0;btn.textContent='▶ ouvir';btn.style.color='var(--green2)';btn.style.borderColor='var(--green3)';return;}
+  if(!audio.paused){audio.pause();audio.currentTime=0;btn.textContent='▶ ouvir';btn.classList.remove('tocando');return;}
   audio.load();
   const playPromise=audio.play();
   if(playPromise!==undefined){
     playPromise.then(()=>{
-      btn.textContent='■ parar';btn.style.color='var(--gold2)';btn.style.borderColor='var(--gold)';
-      audio.onended=()=>{btn.textContent='▶ ouvir';btn.style.color='var(--green2)';btn.style.borderColor='var(--green3)';};
+      btn.textContent='■ parar';btn.classList.add('tocando');
+      audio.onended=()=>{btn.textContent='▶ ouvir';btn.classList.remove('tocando');};
     }).catch(e=>{console.error('Prece erro:',e);window.open('./assets/prece.mpeg','_blank');});
   }
 }
