@@ -761,15 +761,24 @@ function kinHTML(kinNum){
 
   // Anel Solar: kin do 1o dia do ano galáctico (fixo para o ano todo)
   const anelKin=dateToKin(new Date(anoGal,6,26));
-  const anelSeloNum=((anelKin-1)%20)+1;
-  const anelTomNum=((anelKin-1)%13)+1;
-  const anelTomNomes=['Magnético','Lunar','Elétrico','Autoexistente','Harmônico','Rítmico','Ressonante','Galáctico','Solar','Planetário','Espectral','Cristal','Cósmico'];
-  const anelTomNome=anelTomNomes[anelTomNum-1]||'';
-  const anelSelo=DATA.selos[anelSeloNum]||{};
-  const anelIconURL=getSeloIconURL(anelSelo.nome||'');
-  const anelNome=anelSelo.nome||'';
+  const _anelS=((anelKin-1)%20); // índice 0-19
+  const _anelT=((anelKin-1)%13); // índice 0-12
+  const _SELOS_AN=['Dragão','Vento','Noite','Semente','Serpente','Enlaçador de Mundos','Mão','Estrela','Lua','Cão','Macaco','Humano','Caminhante do Céu','Mago','Águia','Guerreiro','Terra','Espelho','Tormenta','Sol'];
+  const _TONS_AN=['Magnético','Lunar','Elétrico','Autoexistente','Harmônico','Rítmico','Ressonante','Galáctico','Solar','Planetário','Espectral','Cristal','Cósmico'];
+  const _CORES_AN=['Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo','Vermelho','Branco','Azul','Amarelo'];
+  const _FEMINOS_AN=new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
+  const _anelSeloNome=_SELOS_AN[_anelS];
+  const _anelTomNome=_TONS_AN[_anelT];
+  const _anelCorBase=_CORES_AN[_anelS];
+  const _anelEhFem=_FEMINOS_AN.has(_anelSeloNome);
+  const _anelCor=_anelEhFem?(_anelCorBase==='Vermelho'?'Vermelha':_anelCorBase==='Branco'?'Branca':_anelCorBase==='Amarelo'?'Amarela':_anelCorBase):_anelCorBase;
+  const anelTomNum=_anelT+1;
+  const anelNomeCompleto=_anelSeloNome+' '+_anelTomNome+' '+_anelCor;
+  // Manter compatibilidade com o resto do código
+  const anelSelo=DATA.selos[_anelS+1]||{};
+  const anelIconURL=getSeloIconURL(_anelSeloNome+' '+_anelCorBase);
   const anelAcao=anelSelo.acao||'';
-  const anelCorSelo=getSeloCor(anelSelo.nome||'');
+  const anelCorSelo=_anelCorBase.toLowerCase();
 
   const ondaNum=Math.floor((kinNum-1)/13)+1;
   const ondaKinInicio=Math.floor((kinNum-1)/13)*13+1;
@@ -887,7 +896,7 @@ function kinHTML(kinNum){
     </div>
     <div style="margin-bottom:.6rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.3rem">
       <div class="section-title">Anel Solar · 364 dias</div>
-      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.6rem">${anelSelo.nome?anelSelo.nome.split(' ').slice(0,-1).join(' ')+' '+anelTomNome+' '+anelSelo.nome.split(' ').pop():''}</div>
+      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.6rem">${anelNomeCompleto}</div>
       <div style="display:flex;align-items:center;gap:.75rem">
         <div style="text-align:center">
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(anelTomNum,54)}</div>
