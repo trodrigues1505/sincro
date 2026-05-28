@@ -468,7 +468,6 @@ const DATA_PRONTO = fetch('./sincronario_dados.json')
   .catch(e => console.warn('⚠️ Erro:', e));
 
 const EMOJIS = ['🐉','💨','🌌','🌱','🐍','☯️','✋','⭐','🌙','🐕','🐒','👤','🚶','🧙','🦅','⚔️','🌍','🪞','⛈️','☀️'];
-const FEMININOS = new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
 
 function getSeloEmoji(nome){const nomes=['Dragão','Vento','Noite','Semente','Serpente','Enlaçador','Mão','Estrela','Lua','Cão','Macaco','Humano','Caminhante','Mago','Águia','Guerreiro','Terra','Espelho','Tormenta','Sol'];const idx=nomes.findIndex(s=>nome.includes(s));return idx>=0?EMOJIS[idx]:'🌀';}
 
