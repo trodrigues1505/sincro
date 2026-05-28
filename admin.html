@@ -4,60 +4,79 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Painel Admin — Sincronário</title>
-
-<!-- PWA -->
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#009739">
 <link rel="icon" type="image/png" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-/* Mesmo design system do index */
 :root{
   --bg:#071209;--bg2:#0a1a0c;--card:#0d1f0f;--card2:#112613;
   --green:#009739;--green2:#00b544;--green3:#006828;
   --gold:#A57C00;--gold2:#c9a030;--gold3:#e0c070;
-  --brown:#3C2F2F;
   --border:rgba(0,151,57,.20);--border2:rgba(0,151,57,.40);--border-g:rgba(165,124,0,.28);
   --text:#c0dcc4;--text2:#5a8860;--text3:#2e5034;
   --red:#8a2018;--radius:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:16px;line-height:1.65;min-height:100vh}
-
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .anim-1{animation:fadeUp .28s both}
 .anim-2{animation:fadeUp .28s .1s both}
 .anim-3{animation:fadeUp .28s .2s both}
+.anim-4{animation:fadeUp .28s .3s both}
+.anim-5{animation:fadeUp .28s .4s both}
 
-.container{max-width:820px;margin:0 auto;padding:max(1rem,env(safe-area-inset-top,0px)) 1rem 1rem;animation:fadeUp .3s both}
+.container{max-width:820px;margin:0 auto;padding:max(1rem,env(safe-area-inset-top,0px)) 1rem 1rem}
 h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--gold2);text-align:center;margin-bottom:.2rem;letter-spacing:.06em}
 
 .user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.9rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px}
 .user-info{display:flex;align-items:center;gap:10px}
 .user-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--green3)}
-
 .btn-logout,.btn-back{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:5px 11px;font-family:'Cinzel',serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
 .btn-logout:hover{border-color:var(--green3);color:var(--text2)}
 .btn-back{border-color:var(--border-g);color:var(--gold2)}
 .btn-back:hover{background:var(--gold3);color:var(--bg);border-color:var(--gold2)}
 
 .section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:.6rem}
-.section h2{font-family:'Cinzel',serif;font-size:.6rem;color:var(--text3);margin-bottom:.9rem;text-transform:uppercase;letter-spacing:.13em;display:flex;align-items:center;gap:.5rem}
-.section h2::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-title{font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.13em;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border-g)}
 
+/* ── DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-bottom:.8rem}
+.dash-card{background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:.9rem;text-align:center;transition:border-color .2s}
+.dash-card:hover{border-color:var(--border2)}
+.dash-num{font-family:'Cinzel',serif;font-size:1.6rem;color:var(--green2);margin-bottom:.2rem}
+.dash-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.09em}
+.dash-sub{font-size:.72rem;color:var(--text2);margin-top:.2rem}
+
+/* ── TIPO BADGES ── */
+.tipo-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.tipo-badge{padding:3px 10px;border-radius:20px;font-family:'Cinzel',serif;font-size:.58rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.tipo-badge.admin{background:rgba(165,124,0,.15);color:var(--gold2);border:1px solid rgba(165,124,0,.4)}
+.tipo-badge.usuario{background:rgba(0,151,57,.12);color:var(--green2);border:1px solid rgba(0,151,57,.3)}
+.tipo-badge.pendente{background:rgba(165,124,0,.08);color:var(--gold);border:1px solid rgba(165,124,0,.2)}
+.tipo-count{font-size:.72rem;color:var(--text3);font-style:italic}
+
+/* ── USER ITEMS ── */
 .user-item{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.85rem;margin-bottom:.45rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;transition:border-color .2s}
 .user-item:hover{border-color:var(--border2)}
+.user-item.is-admin{border-left:2px solid var(--gold)}
+.user-item.is-usuario{border-left:2px solid var(--green3)}
+.user-item.is-pendente{border-left:2px solid rgba(165,124,0,.4)}
+.user-item:last-child{margin-bottom:0}
+
 .user-details{flex:1;min-width:180px}
-.user-email{font-family:'Cinzel',serif;color:var(--gold2);font-size:.83rem}
-.user-uid{font-size:.63rem;color:var(--text3);word-break:break-all;margin-top:3px}
-.user-status{display:flex;flex-wrap:wrap;gap:5px;align-items:center;justify-content:flex-end;min-width:240px}
+.user-nome{font-family:'Cinzel',serif;color:var(--text);font-size:.78rem;margin-bottom:2px}
+.user-email{color:var(--gold2);font-size:.75rem}
+.user-uid{font-size:.58rem;color:var(--text3);word-break:break-all;margin-top:3px}
+.user-meta{font-size:.62rem;color:var(--text3);margin-top:3px;display:flex;gap:.5rem;flex-wrap:wrap}
+.user-status{display:flex;flex-wrap:wrap;gap:5px;align-items:center;justify-content:flex-end;min-width:200px}
 
 .badge{padding:2px 8px;border-radius:3px;font-size:.6rem;text-transform:uppercase;font-weight:600;letter-spacing:.05em}
 .badge.authorized{background:rgba(0,151,57,.12);color:#3dd870;border:1px solid rgba(0,151,57,.3)}
-.badge.pending   {background:rgba(165,124,0,.1);color:var(--gold2);border:1px solid rgba(165,124,0,.27)}
-.badge.admin     {background:rgba(165,124,0,.14);color:var(--gold2);border:1px solid rgba(165,124,0,.38)}
+.badge.pending{background:rgba(165,124,0,.1);color:var(--gold2);border:1px solid rgba(165,124,0,.27)}
+.badge.admin{background:rgba(165,124,0,.14);color:var(--gold2);border:1px solid rgba(165,124,0,.38)}
 
 .btn-authorize,.btn-admin-toggle,.btn-remove{border:1px solid;border-radius:4px;padding:5px 10px;font-family:'Cinzel',serif;font-size:.58rem;cursor:pointer;text-transform:uppercase;letter-spacing:.05em;transition:all .2s;background:transparent}
 .btn-authorize{color:var(--green2);border-color:rgba(0,151,57,.35)}
@@ -68,34 +87,7 @@ h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--gold2);text-align:ce
 .btn-remove:hover{background:var(--red);color:#fff;border-color:var(--red)}
 
 .loading{color:var(--text3);text-align:center;padding:1rem;font-style:italic;font-size:.84rem}
-.empty  {color:var(--text3);text-align:center;padding:1.8rem;font-style:italic;font-size:.84rem}
-
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.55rem;margin-bottom:.9rem}
-.stat-card{background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:.8rem;text-align:center;transition:border-color .2s}
-.stat-card:hover{border-color:var(--border2)}
-.stat-number{font-family:'Cinzel',serif;font-size:1.65rem;color:var(--gold2);margin-bottom:.2rem}
-.stat-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
-
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.82);z-index:1000;align-items:center;justify-content:center}
-.modal.active{display:flex}
-.modal-content{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1.7rem;max-width:360px;width:90%}
-.modal-content h3{color:var(--gold2);margin-bottom:.65rem;font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:.05em}
-.modal-content p{color:var(--text2);margin-bottom:1.3rem;font-size:.87rem}
-.modal-buttons{display:flex;gap:6px;justify-content:flex-end}
-.btn-confirm,.btn-cancel{padding:6px 14px;border:1px solid;border-radius:4px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase;font-size:.6rem;letter-spacing:.05em;transition:all .2s;background:transparent}
-.btn-confirm{color:var(--red);border-color:rgba(138,32,24,.42)}
-.btn-confirm:hover{background:var(--red);color:#fff;border-color:var(--red)}
-.btn-cancel{color:var(--text2);border-color:var(--border)}
-.btn-cancel:hover{border-color:var(--green3);color:var(--text2)}
-
-
-/* ── DASHBOARD ── */
-.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.6rem;margin-bottom:.8rem}
-.dash-card{background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:.9rem;text-align:center;transition:border-color .2s}
-.dash-card:hover{border-color:var(--border2)}
-.dash-num{font-family:'Cinzel',serif;font-size:1.6rem;color:var(--green2);margin-bottom:.2rem}
-.dash-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.09em}
-.dash-sub{font-size:.72rem;color:var(--text2);margin-top:.2rem}
+.empty{color:var(--text3);text-align:center;padding:1.8rem;font-style:italic;font-size:.84rem}
 
 /* ── AVISO FORM ── */
 .aviso-form{display:flex;flex-direction:column;gap:.6rem}
@@ -109,8 +101,25 @@ h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--gold2);text-align:ce
 .btn-aviso-del{background:transparent;border:1px solid rgba(138,32,24,.4);border-radius:5px;color:var(--red);font-family:'Cinzel',serif;font-size:.65rem;padding:8px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .2s}
 .btn-aviso-del:hover{background:var(--red);color:#fff}
 .aviso-status{font-size:.8rem;color:var(--green2);font-style:italic;margin-top:.3rem}
-/* MEDIA QUERIES */
-@media (max-width:768px){
+
+/* ── MODAL ── */
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.82);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1.7rem;max-width:360px;width:90%}
+.modal-content h3{color:var(--gold2);margin-bottom:.65rem;font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:.05em}
+.modal-content p{color:var(--text2);margin-bottom:1.3rem;font-size:.87rem}
+.modal-buttons{display:flex;gap:6px;justify-content:flex-end}
+.btn-confirm,.btn-cancel{padding:6px 14px;border:1px solid;border-radius:4px;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase;font-size:.6rem;letter-spacing:.05em;transition:all .2s;background:transparent}
+.btn-confirm{color:var(--red);border-color:rgba(138,32,24,.42)}
+.btn-confirm:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-cancel{color:var(--text2);border-color:var(--border)}
+.btn-cancel:hover{border-color:var(--green3);color:var(--text2)}
+
+/* ── SEPARADOR DE SEÇÃO ── */
+.secao-usuarios{margin-bottom:1.2rem}
+.secao-usuarios:last-child{margin-bottom:0}
+
+@media(max-width:768px){
   .container{padding:.9rem .75rem}
   h1{font-size:1.15rem}
   .user-bar{flex-direction:column;align-items:flex-start;padding:.65rem}
@@ -119,32 +128,21 @@ h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--gold2);text-align:ce
   .user-item{flex-direction:column;gap:7px}
   .user-status{width:100%;flex-direction:column;min-width:auto;gap:4px}
   .btn-authorize,.btn-admin-toggle,.btn-remove{width:100%}
-  .stat-number{font-size:1.35rem}
 }
-@media (max-width:480px){
+@media(max-width:480px){
   body{font-size:14px}
   .container{padding:.75rem .6rem}
   h1{font-size:.98rem}
-  .user-bar{padding:.6rem}
-  .user-avatar{width:26px;height:26px}
-  .btn-logout,.btn-back{padding:4px 7px;font-size:.54rem}
   .section{padding:.8rem;margin-bottom:.45rem}
   .user-item{padding:.7rem;gap:6px}
-  .user-email{font-size:.76rem}
-  .user-uid{font-size:.57rem}
+  .user-email{font-size:.72rem}
+  .user-uid{font-size:.55rem}
   .badge{padding:2px 6px;font-size:.55rem}
   .btn-authorize,.btn-admin-toggle,.btn-remove{padding:5px 8px;font-size:.54rem}
-  .stats{grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:.75rem}
-  .stat-card{padding:.65rem}
-  .stat-number{font-size:1.2rem}
+  .dash-grid{grid-template-columns:1fr 1fr;gap:.45rem}
+  .dash-card{padding:.65rem}
+  .dash-num{font-size:1.3rem}
   .modal-content{padding:1.3rem}
-  .modal-content h3{font-size:.8rem}
-  .btn-confirm,.btn-cancel{padding:5px 11px;font-size:.57rem}
-}
-@media (max-width:360px){
-  .container{padding:.6rem .45rem}
-  h1{font-size:.88rem}
-  .stats{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -168,12 +166,12 @@ h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--gold2);text-align:ce
   <h1 class="anim-1">👑 Painel Admin</h1>
   <p style="text-align:center;color:var(--text3);margin-bottom:1.2rem;font-size:.82rem;font-style:italic">Gerenciar usuários e permissões</p>
 
-  <!-- DASHBOARD DE MÉTRICAS -->
+  <!-- DASHBOARD -->
   <div class="dash-grid anim-2" id="dashboard"></div>
 
-  <!-- AVISO PARA TODOS OS USUÁRIOS -->
+  <!-- AVISO -->
   <div class="section anim-2">
-    <h2>📢 Aviso para Todos</h2>
+    <div class="section-title">📢 Aviso para Todos</div>
     <div class="aviso-form">
       <input class="aviso-input-linha" type="text" id="aviso-emoji" placeholder="Emoji (ex: 🌀)" style="max-width:120px">
       <textarea class="aviso-input" id="aviso-texto" placeholder="Escreva o aviso que aparecerá para todos os usuários ao abrir o app..."></textarea>
@@ -186,19 +184,15 @@ h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--gold2);text-align:ce
     <div id="aviso-atual" style="margin-top:.8rem"></div>
   </div>
 
-  <div class="stats anim-2" id="stats"></div>
-
+  <!-- TODOS OS USUÁRIOS — divididos por tipo -->
   <div class="section anim-3">
-    <h2>⏳ Pendentes de Autorização</h2>
-    <div id="pending-users" class="loading">Carregando...</div>
+    <div class="section-title">👥 Usuários</div>
+    <div id="all-users" class="loading">Carregando...</div>
   </div>
 
-  <div class="section anim-3">
-    <h2>✅ Usuários Autorizados</h2>
-    <div id="authorized-users" class="loading">Carregando...</div>
-  </div>
 </div>
 
+<!-- MODAL CONFIRMAÇÃO -->
 <div id="confirm-modal" class="modal">
   <div class="modal-content">
     <h3 id="modal-title">Confirmar ação</h3>
@@ -213,575 +207,270 @@ h1{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--gold2);text-align:ce
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",
-  authDomain: "sincro13luas.firebaseapp.com",
-  projectId: "sincro13luas",
-  storageBucket: "sincro13luas.firebasestorage.app",
-  messagingSenderId: "886057704979",
-  appId: "1:886057704979:web:31b8348110ff8649c369e6"
-};
-
+const firebaseConfig={apiKey:"AIzaSyDOf77LceD2eKXlewRxxJT60hiBIlRJrJY",authDomain:"sincro13luas.firebaseapp.com",projectId:"sincro13luas",storageBucket:"sincro13luas.firebasestorage.app",messagingSenderId:"886057704979",appId:"1:886057704979:web:31b8348110ff8649c369e6"};
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
+const auth=firebase.auth();
+const db=firebase.firestore();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-let currentUser = null;
-let currentAction = null;
-let authInitialized = false;
+let currentUser=null,currentAction=null,authInitialized=false;
+const LOG='[AdminAuth]';
+const RETRY={attempts:5,delay:500,timeout:5000};
 
-// ══════════════════════════════════════════════════════════════════════
-// AUTENTICAÇÃO ADMIN - VERSÃO CORRIGIDA
-// ══════════════════════════════════════════════════════════════════════
-
-// Constantes de configuração
-const AUTH_CONFIG = {
-  RETRY_ATTEMPTS: 5,
-  RETRY_DELAY: 500,
-  RETRY_TIMEOUT: 5000,
-  LOG_PREFIX: '[AdminAuth]'
-};
-
-auth.onAuthStateChanged(async (user) => {
-  console.log(AUTH_CONFIG.LOG_PREFIX, 'onAuthStateChanged disparado');
-  
-  if (user) {
-    console.log(AUTH_CONFIG.LOG_PREFIX, 'Usuário autenticado:', user.email);
-    
-    try {
-      // Tenta obter documento com retry automático
-      const userDoc = await obterDocUserComRetry(user.uid);
-      
-      if (!userDoc) {
-        console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Documento não encontrado após retry');
-        mostrarErroAdminNaTela(
-          'Documento de usuário não encontrado',
-          'Seu perfil não foi encontrado no sistema.'
-        );
-        return;
-      }
-      
-      const userData = userDoc.data();
-      console.log(AUTH_CONFIG.LOG_PREFIX, 'Documento obtido:', {
-        email: userData.email,
-        role: userData.role,
-        authorized: userData.authorized
-      });
-      
-      // Verifica se é admin
-      if (userData.role !== 'admin') {
-        console.warn(AUTH_CONFIG.LOG_PREFIX, '❌ Usuário não é admin. Role:', userData.role);
-        mostrarErroAdminNaTela(
-          'Acesso Negado',
-          'Você não possui permissão de administrador.'
-        );
-        return;
-      }
-      
-      // ✅ É ADMIN - MOSTRA PAINEL
-      console.log(AUTH_CONFIG.LOG_PREFIX, '✅ Usuário é admin, carregando painel...');
-      
-      currentUser = user;
-      authInitialized = true;
-      
-      // Mostrar painel
-      const container = document.querySelector('.container');
-      if (container) {
-        container.style.display = 'block';
-        console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Container visível');
-      }
-      
-      // Atualizar dados do usuário
-      const avatar = document.getElementById('user-avatar');
-      const nameEl = document.getElementById('user-name');
-      
-      if (avatar) avatar.src = user.photoURL || '';
-      if (nameEl) nameEl.textContent = user.displayName || 'Admin';
-      
-      console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Dados do usuário atualizados');
-      
-      // Carregar dados do painel (com tratamento de erro)
-      console.log(AUTH_CONFIG.LOG_PREFIX, 'Iniciando carregamento de dados...');
-      
-      try {
-        console.log(AUTH_CONFIG.LOG_PREFIX, 'Chamando loadUsers()...');
-        await loadUsers();
-        console.log(AUTH_CONFIG.LOG_PREFIX, '✓ loadUsers completado');
-      } catch (e) {
-        console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Erro em loadUsers:', e.message || e);
-      }
-      
-      try {
-        console.log(AUTH_CONFIG.LOG_PREFIX, 'Chamando carregarDashboard()...');
-        await carregarDashboard();
-        console.log(AUTH_CONFIG.LOG_PREFIX, '✓ carregarDashboard completado');
-      } catch (e) {
-        console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Erro em carregarDashboard:', e.message || e);
-      }
-      
-      try {
-        console.log(AUTH_CONFIG.LOG_PREFIX, 'Chamando carregarAvisoAtual()...');
-        await carregarAvisoAtual();
-        console.log(AUTH_CONFIG.LOG_PREFIX, '✓ carregarAvisoAtual completado');
-      } catch (e) {
-        console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Erro em carregarAvisoAtual:', e.message || e);
-      }
-      
-      console.log(AUTH_CONFIG.LOG_PREFIX, '✅ PAINEL COMPLETAMENTE CARREGADO');
-      
-    } catch (err) {
-      console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Erro:', err.message);
-      
-      mostrarErroAdminNaTela(
-        'Erro de Autenticação',
-        err.message || 'Não foi possível verificar suas permissões.'
-      );
-    }
-    
-  } else {
-    console.log(AUTH_CONFIG.LOG_PREFIX, 'Usuário desconectado');
-    
-    if (authInitialized) {
-      console.log(AUTH_CONFIG.LOG_PREFIX, 'Redirecionando para login (logout)...');
-      window.location.href = 'index.html';
-    } else {
-      console.log(AUTH_CONFIG.LOG_PREFIX, 'Sem autenticação, redirecionando...');
-      window.location.href = 'index.html';
-    }
+auth.onAuthStateChanged(async(user)=>{
+  if(user){
+    try{
+      const doc=await obterDocComRetry(user.uid);
+      if(!doc){mostrarErro('Documento não encontrado','Seu perfil não foi encontrado.');return;}
+      const d=doc.data();
+      if(d.role!=='admin'){mostrarErro('Acesso Negado','Você não possui permissão de administrador.');return;}
+      currentUser=user;authInitialized=true;
+      document.getElementById('user-avatar').src=user.photoURL||'';
+      document.getElementById('user-name').textContent=user.displayName||'Admin';
+      try{await loadUsers();}catch(e){console.error(LOG,'loadUsers:',e);}
+      try{await carregarDashboard();}catch(e){console.error(LOG,'dashboard:',e);}
+      try{await carregarAvisoAtual();}catch(e){console.error(LOG,'aviso:',e);}
+    }catch(err){mostrarErro('Erro de Autenticação',err.message||'Não foi possível verificar suas permissões.');}
+  }else{
+    window.location.href='index.html';
   }
 });
 
-// ══════════════════════════════════════════════════════════════════════════
-// FUNÇÃO: Obter documento do usuário com retry automático
-// ══════════════════════════════════════════════════════════════════════════
-
-async function obterDocUserComRetry(uid) {
-  const startTime = Date.now();
-  let tentativa = 0;
-  
-  while (
-    Date.now() - startTime < AUTH_CONFIG.RETRY_TIMEOUT && 
-    tentativa < AUTH_CONFIG.RETRY_ATTEMPTS
-  ) {
-    try {
-      console.log(
-        AUTH_CONFIG.LOG_PREFIX,
-        `Tentativa ${tentativa + 1}/${AUTH_CONFIG.RETRY_ATTEMPTS} de obter documento...`
-      );
-      
-      const doc = await db.collection('users').doc(uid).get();
-      
-      if (doc.exists) {
-        console.log(AUTH_CONFIG.LOG_PREFIX, '✅ Documento obtido com sucesso');
-        return doc;
-      } else {
-        console.warn(AUTH_CONFIG.LOG_PREFIX, '⚠️ Documento não existe ainda');
-      }
-      
-    } catch (error) {
-      console.warn(
-        AUTH_CONFIG.LOG_PREFIX,
-        `Erro na tentativa ${tentativa + 1}:`,
-        error.code,
-        error.message
-      );
-    }
-    
-    tentativa++;
-    if (tentativa < AUTH_CONFIG.RETRY_ATTEMPTS) {
-      console.log(
-        AUTH_CONFIG.LOG_PREFIX,
-        `Aguardando ${AUTH_CONFIG.RETRY_DELAY}ms antes da próxima tentativa...`
-      );
-      await new Promise(resolve => setTimeout(resolve, AUTH_CONFIG.RETRY_DELAY));
-    }
+async function obterDocComRetry(uid){
+  const start=Date.now();let t=0;
+  while(Date.now()-start<RETRY.timeout&&t<RETRY.attempts){
+    try{const d=await db.collection('users').doc(uid).get();if(d.exists)return d;}catch(e){}
+    t++;if(t<RETRY.attempts)await new Promise(r=>setTimeout(r,RETRY.delay));
   }
-  
-  console.error(AUTH_CONFIG.LOG_PREFIX, '❌ Esgotadas as tentativas de obter documento');
   return null;
 }
 
-// ══════════════════════════════════════════════════════════════════════════
-// FUNÇÃO: Mostrar erro na tela (sem redirecionar imediatamente)
-// ══════════════════════════════════════════════════════════════════════════
-
-function mostrarErroAdminNaTela(titulo, mensagem) {
-  console.log(AUTH_CONFIG.LOG_PREFIX, 'Mostrando erro:', titulo);
-  
-  const container = document.querySelector('.container');
-  if (container) {
-    container.style.display = 'none';
-  }
-  
-  let overlay = document.getElementById('admin-error-overlay');
-  if (overlay) {
-    overlay.remove();
-  }
-  
-  overlay = document.createElement('div');
-  overlay.id = 'admin-error-overlay';
-  overlay.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(7,18,9,0.95), rgba(10,26,12,0.95));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    animation: fadeUp 0.3s both;
-  `;
-  
-  const box = document.createElement('div');
-  box.style.cssText = `
-    background: var(--card);
-    border: 1px solid var(--border2);
-    border-radius: 12px;
-    padding: 2rem;
-    text-align: center;
-    max-width: 380px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-  `;
-  
-  box.innerHTML = `
-    <div style="
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      animation: fadeUp 0.4s 0.1s both;
-    ">🔐</div>
-    
-    <div style="
-      font-family: Cinzel;
-      font-size: 1.1rem;
-      color: var(--gold2);
-      margin-bottom: 0.8rem;
-      letter-spacing: 0.05em;
-      animation: fadeUp 0.4s 0.2s both;
-    ">${titulo}</div>
-    
-    <p style="
-      color: var(--text);
-      margin-bottom: 1.8rem;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      animation: fadeUp 0.4s 0.3s both;
-    ">${mensagem}</p>
-    
-    <div style="
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-      animation: fadeUp 0.4s 0.4s both;
-    ">
-      <button onclick="window.location.href='index.html'" style="
-        padding: 9px 18px;
-        background: var(--green);
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-family: Cinzel;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        transition: all 0.2s;
-      " onmouseover="this.style.background='var(--green2)'" onmouseout="this.style.background='var(--green)'">
-        ← Voltar
-      </button>
-      
-      <button onclick="location.reload()" style="
-        padding: 9px 18px;
-        background: transparent;
-        color: var(--text2);
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        cursor: pointer;
-        font-family: Cinzel;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        transition: all 0.2s;
-      " onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--border)'">
-        🔄 Tentar novamente
-      </button>
+function mostrarErro(titulo,msg){
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(7,18,9,.96);display:flex;align-items:center;justify-content:center;z-index:9999';
+  overlay.innerHTML=`<div style="background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:2rem;text-align:center;max-width:360px;width:90%">
+    <div style="font-size:2.5rem;margin-bottom:1rem">🔐</div>
+    <div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.7rem">${titulo}</div>
+    <p style="color:var(--text2);margin-bottom:1.5rem;font-size:.9rem;line-height:1.6">${msg}</p>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button onclick="window.location.href='index.html'" style="padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:4px;cursor:pointer;font-family:Cinzel;font-size:.75rem;text-transform:uppercase">← Voltar</button>
+      <button onclick="location.reload()" style="padding:8px 16px;background:transparent;color:var(--text2);border:1px solid var(--border);border-radius:4px;cursor:pointer;font-family:Cinzel;font-size:.75rem;text-transform:uppercase">🔄 Tentar novamente</button>
     </div>
-  `;
-  
-  overlay.appendChild(box);
+  </div>`;
   document.body.appendChild(overlay);
-  
-  const timeoutId = setTimeout(() => {
-    console.log(AUTH_CONFIG.LOG_PREFIX, 'Redirecionando após timeout (5s)');
-    window.location.href = 'index.html';
-  }, 5000);
-  
-  const btnVoltar = box.querySelector('button:first-child');
-  if (btnVoltar) {
-    btnVoltar.onclick = () => {
-      clearTimeout(timeoutId);
-      window.location.href = 'index.html';
-    };
-  }
 }
 
-document.getElementById('btn-logout').onclick = () => {
-  console.log(AUTH_CONFIG.LOG_PREFIX, 'Desconectando...');
-  auth.signOut().catch(err => {
-    console.error(AUTH_CONFIG.LOG_PREFIX, 'Erro no logout:', err);
-  });
-};
+document.getElementById('btn-logout').onclick=()=>auth.signOut();
 
-console.log(AUTH_CONFIG.LOG_PREFIX, '✓ Scripts de autenticação carregados');
+// ══════════════════════════════════════════
+// CARREGAR E RENDERIZAR USUÁRIOS POR TIPO
+// ══════════════════════════════════════════
+async function loadUsers(){
+  try{
+    const snapshot=await db.collection('users').get();
+    const users=[];
+    snapshot.forEach(doc=>users.push({id:doc.id,...doc.data()}));
 
-async function loadUsers() {
-  try {
-    const snapshot = await db.collection('users').get();
-    const users = [];
-    snapshot.forEach(doc => {
-      users.push({ id: doc.id, ...doc.data() });
-    });
+    const admins=users.filter(u=>u.authorized&&u.role==='admin');
+    const comuns=users.filter(u=>u.authorized&&u.role!=='admin');
+    const pendentes=users.filter(u=>!u.authorized);
 
-    const pending = users.filter(u => !u.authorized);
-    const authorized = users.filter(u => u.authorized);
-
-    // Stats
-    document.getElementById('stats').innerHTML = `
-      <div class="stat-card">
-        <div class="stat-number">${users.length}</div>
-        <div class="stat-label">Total de Usuários</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">${pending.length}</div>
-        <div class="stat-label">Pendentes</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">${authorized.length}</div>
-        <div class="stat-label">Autorizados</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">${users.filter(u => u.role === 'admin').length}</div>
-        <div class="stat-label">Admins</div>
-      </div>
-    `;
-
-    // Pending users
-    if (pending.length === 0) {
-      document.getElementById('pending-users').innerHTML = '<div class="empty">✅ Ninguém aguardando autorização</div>';
-    } else {
-      document.getElementById('pending-users').innerHTML = pending.map(u => `
-        <div class="user-item">
-          <div class="user-details">
-            <div class="user-email">${u.email}</div>
-            <div class="user-uid">UID: ${u.id}</div>
-          </div>
-          <div class="user-status">
-            <span class="badge pending">Pendente</span>
-            <button class="btn-authorize" onclick="authorize('${u.id}')">✅ Autorizar</button>
-            <button class="btn-remove" onclick="removeUser('${u.id}')">🗑️ Remover</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // Authorized users
-    if (authorized.length === 0) {
-      document.getElementById('authorized-users').innerHTML = '<div class="empty">Nenhum usuário autorizado</div>';
-    } else {
-      document.getElementById('authorized-users').innerHTML = authorized.map(u => `
-        <div class="user-item">
-          <div class="user-details">
-            <div class="user-email">${u.email}</div>
-            <div style="color:var(--text3);font-size:0.75rem;margin-top:4px">UID: ${u.id}</div>
-          </div>
-          <div class="user-status">
-            <span class="badge authorized">✅ Autorizado</span>
-            ${u.role === 'admin' ? '<span class="badge admin">👑 Admin</span>' : ''}
-            <button class="btn-admin-toggle" onclick="toggleAdmin('${u.id}', ${u.role === 'admin'})">
-              ${u.role === 'admin' ? '👤 Remover Admin' : '👑 Fazer Admin'}
-            </button>
-            <button class="btn-remove" onclick="removeUser('${u.id}')">🗑️ Remover</button>
-          </div>
-        </div>
-      `).join('');
-    }
-  } catch (err) {
-    console.error('Erro ao carregar usuários:', err);
-    document.getElementById('pending-users').innerHTML = '<div class="empty">❌ Erro ao carregar</div>';
-  }
-}
-
-function showModal(title, message, action) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-message').textContent = message;
-  currentAction = action;
-  document.getElementById('confirm-modal').classList.add('active');
-}
-
-function closeModal() {
-  document.getElementById('confirm-modal').classList.remove('active');
-  currentAction = null;
-}
-
-document.getElementById('modal-confirm').onclick = () => {
-  if (currentAction) currentAction();
-  closeModal();
-};
-
-async function authorize(uid) {
-  showModal(
-    'Autorizar Usuário',
-    'Deseja autorizar este usuário a acessar o app?',
-    async () => {
-      await db.collection('users').doc(uid).update({ authorized: true });
-      loadUsers();
-    }
-  );
-}
-
-async function toggleAdmin(uid, isAdmin) {
-  const action = isAdmin ? 'remover' : 'tornar';
-  showModal(
-    `${isAdmin ? 'Remover' : 'Tornar'} Admin`,
-    `Deseja ${action} este usuário como admin?`,
-    async () => {
-      await db.collection('users').doc(uid).update({ role: isAdmin ? 'usuário' : 'admin' });
-      loadUsers();
-    }
-  );
-}
-
-async function removeUser(uid) {
-  showModal(
-    'Remover Usuário',
-    'Esta ação é irreversível. Deseja continuar?',
-    async () => {
-      await db.collection('users').doc(uid).delete();
-      loadUsers();
-    }
-  );
-}
-</script>
-
-<!-- PWA -->
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
-  });
-}
-
-// ════════════════════════════════════════════════════════
-// DASHBOARD DE MÉTRICAS
-// ════════════════════════════════════════════════════════
-async function carregarDashboard() {
-  try {
-    const hoje = new Date();
-    const inicioHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-    const inicioSemana = new Date(inicioHoje);
-    inicioSemana.setDate(inicioHoje.getDate() - 7);
-
-    const snapshot = await db.collection('users').get();
-    let total = 0, autorizados = 0, admins = 0, ativos7d = 0, ativos1d = 0;
-
-    snapshot.forEach(doc => {
-      const d = doc.data();
-      total++;
-      if (d.authorized) autorizados++;
-      if (d.role === 'admin') admins++;
-      if (d.ultimoAcesso) {
-        const ua = d.ultimoAcesso.toDate ? d.ultimoAcesso.toDate() : new Date(d.ultimoAcesso);
-        if (ua >= inicioHoje)  ativos1d++;
-        if (ua >= inicioSemana) ativos7d++;
+    // Dashboard stats
+    const hoje=new Date();
+    const inicioHoje=new Date(hoje.getFullYear(),hoje.getMonth(),hoje.getDate());
+    const inicioSemana=new Date(inicioHoje);inicioSemana.setDate(inicioHoje.getDate()-7);
+    let ativos1d=0,ativos7d=0;
+    users.forEach(u=>{
+      if(u.ultimoAcesso){
+        const ua=u.ultimoAcesso.toDate?u.ultimoAcesso.toDate():new Date(u.ultimoAcesso);
+        if(ua>=inicioHoje)ativos1d++;
+        if(ua>=inicioSemana)ativos7d++;
       }
     });
 
-    document.getElementById('dashboard').innerHTML = [
-      { num: total,       label: 'Total',         sub: 'usuários cadastrados' },
-      { num: autorizados, label: 'Autorizados',    sub: 'com acesso ativo' },
-      { num: ativos1d,    label: 'Hoje',           sub: 'acessos nas últimas 24h' },
-      { num: ativos7d,    label: 'Esta Semana',    sub: 'ativos nos últimos 7 dias' },
-      { num: admins,      label: 'Admins',         sub: '' },
-    ].map(item => `
-      <div class="dash-card">
-        <div class="dash-num">${item.num}</div>
-        <div class="dash-label">${item.label}</div>
-        ${item.sub ? `<div class="dash-sub">${item.sub}</div>` : ''}
-      </div>
-    `).join('');
+    document.getElementById('dashboard').innerHTML=[
+      {num:users.length,label:'Total',sub:'cadastrados'},
+      {num:users.filter(u=>u.authorized).length,label:'Autorizados',sub:'com acesso'},
+      {num:pendentes.length,label:'Pendentes',sub:'aguardando'},
+      {num:ativos1d,label:'Hoje',sub:'últ. 24h'},
+      {num:ativos7d,label:'Esta Semana',sub:'últ. 7 dias'},
+      {num:admins.length,label:'Admins',sub:''},
+    ].map(i=>`<div class="dash-card"><div class="dash-num">${i.num}</div><div class="dash-label">${i.label}</div>${i.sub?`<div class="dash-sub">${i.sub}</div>`:''}</div>`).join('');
 
-  } catch(e) {
-    console.error('Dashboard:', e);
-  }
-}
+    // Montar HTML por blocos
+    let html='';
 
-// ════════════════════════════════════════════════════════
-// AVISO PARA TODOS
-// ════════════════════════════════════════════════════════
-async function carregarAvisoAtual() {
-  try {
-    const doc = await db.collection('config').doc('aviso').get();
-    const container = document.getElementById('aviso-atual');
-    if (doc.exists && doc.data().ativo) {
-      const d = doc.data();
-      document.getElementById('aviso-emoji').value = d.emoji || '';
-      document.getElementById('aviso-texto').value = d.texto || '';
-      container.innerHTML =
-        '<div style="background:var(--bg2);border:1px solid var(--border-g);border-radius:6px;padding:.7rem .9rem;font-size:.82rem;color:var(--text2)">' +
-        '<span style="color:var(--text3);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.3rem">Aviso atual publicado:</span>' +
-        (d.emoji||'') + ' ' + (d.texto||'') +
-        '</div>';
-    } else {
-      container.innerHTML =
-        '<div style="font-size:.8rem;color:var(--text3);font-style:italic">Nenhum aviso ativo no momento.</div>';
+    // ── BLOCO ADMINS ──
+    html+=`<div class="secao-usuarios">
+      <div class="tipo-header">
+        <span class="tipo-badge admin">👑 Administradores</span>
+        <span class="tipo-count">${admins.length} usuário${admins.length!==1?'s':''}</span>
+      </div>`;
+    if(admins.length===0){
+      html+='<div class="empty">Nenhum administrador cadastrado</div>';
+    }else{
+      html+=admins.map(u=>renderUserItem(u,'admin')).join('');
     }
-  } catch(e) {}
-}
+    html+='</div>';
 
-async function publicarAviso() {
-  const texto = document.getElementById('aviso-texto').value.trim();
-  const emoji = document.getElementById('aviso-emoji').value.trim() || '📢';
-  const status = document.getElementById('aviso-status');
-  if (!texto) { status.textContent = '⚠️ Escreva o aviso antes de publicar.'; return; }
-  try {
-    await db.collection('config').doc('aviso').set({
-      texto, emoji,
-      ativo: true,
-      id: Date.now().toString(),
-      criadoEm: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    status.textContent = '✓ Aviso publicado! Todos os usuários verão ao abrir o app.';
-    status.style.color = 'var(--green2)';
-    carregarAvisoAtual();
-  } catch(e) {
-    status.textContent = '❌ Erro: ' + e.message;
-    status.style.color = 'var(--red)';
+    // ── BLOCO USUÁRIOS COMUNS ──
+    html+=`<div class="secao-usuarios">
+      <div class="tipo-header">
+        <span class="tipo-badge usuario">✅ Usuários Autorizados</span>
+        <span class="tipo-count">${comuns.length} usuário${comuns.length!==1?'s':''}</span>
+      </div>`;
+    if(comuns.length===0){
+      html+='<div class="empty">Nenhum usuário comum autorizado</div>';
+    }else{
+      html+=comuns.map(u=>renderUserItem(u,'usuario')).join('');
+    }
+    html+='</div>';
+
+    // ── BLOCO PENDENTES ──
+    html+=`<div class="secao-usuarios">
+      <div class="tipo-header">
+        <span class="tipo-badge pendente">⏳ Pendentes de Autorização</span>
+        <span class="tipo-count">${pendentes.length} usuário${pendentes.length!==1?'s':''}</span>
+      </div>`;
+    if(pendentes.length===0){
+      html+='<div class="empty">✅ Ninguém aguardando autorização</div>';
+    }else{
+      html+=pendentes.map(u=>renderUserItem(u,'pendente')).join('');
+    }
+    html+='</div>';
+
+    document.getElementById('all-users').innerHTML=html;
+
+  }catch(err){
+    console.error('loadUsers:',err);
+    document.getElementById('all-users').innerHTML='<div class="empty">❌ Erro ao carregar usuários</div>';
   }
 }
 
-async function removerAviso() {
-  const status = document.getElementById('aviso-status');
-  try {
-    await db.collection('config').doc('aviso').set({ ativo: false });
-    document.getElementById('aviso-texto').value = '';
-    document.getElementById('aviso-emoji').value = '';
-    status.textContent = '✓ Aviso removido.';
-    status.style.color = 'var(--text2)';
-    carregarAvisoAtual();
-  } catch(e) {
-    status.textContent = '❌ Erro: ' + e.message;
+function renderUserItem(u,tipo){
+  const isAdmin=u.role==='admin';
+  const nome=u.displayName||'';
+  const ultimoAcesso=u.ultimoAcesso?(()=>{
+    const d=u.ultimoAcesso.toDate?u.ultimoAcesso.toDate():new Date(u.ultimoAcesso);
+    return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  })():'nunca';
+
+  let botoes='';
+  if(tipo==='pendente'){
+    botoes=`
+      <button class="btn-authorize" onclick="authorize('${u.id}')">✅ Autorizar</button>
+      <button class="btn-remove" onclick="removeUser('${u.id}')">🗑️ Remover</button>`;
+  }else{
+    botoes=`
+      <button class="btn-admin-toggle" onclick="toggleAdmin('${u.id}',${isAdmin})">
+        ${isAdmin?'👤 Remover Admin':'👑 Tornar Admin'}
+      </button>
+      <button class="btn-remove" onclick="removeUser('${u.id}')">🗑️ Remover</button>`;
   }
+
+  return`<div class="user-item is-${tipo}">
+    <div class="user-details">
+      ${nome?`<div class="user-nome">${nome}</div>`:''}
+      <div class="user-email">${u.email||'—'}</div>
+      <div class="user-uid">UID: ${u.id}</div>
+      <div class="user-meta">
+        ${tipo!=='pendente'?`<span>Último acesso: ${ultimoAcesso}</span>`:''}
+        ${u.createdAt?`<span>Criado: ${(u.createdAt.toDate?u.createdAt.toDate():new Date(u.createdAt)).toLocaleDateString('pt-BR')}</span>`:''}
+      </div>
+    </div>
+    <div class="user-status">
+      ${tipo==='admin'?'<span class="badge admin">👑 Admin</span>':''}
+      ${tipo==='usuario'?'<span class="badge authorized">✅ Autorizado</span>':''}
+      ${tipo==='pendente'?'<span class="badge pending">⏳ Pendente</span>':''}
+      ${botoes}
+    </div>
+  </div>`;
 }
 
+// ══════════════════════════════════════════
+// AÇÕES
+// ══════════════════════════════════════════
+function showModal(title,message,action){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-message').textContent=message;
+  currentAction=action;
+  document.getElementById('confirm-modal').classList.add('active');
+}
+function closeModal(){document.getElementById('confirm-modal').classList.remove('active');currentAction=null;}
+document.getElementById('modal-confirm').onclick=()=>{if(currentAction)currentAction();closeModal();};
+
+async function authorize(uid){
+  showModal('Autorizar Usuário','Deseja autorizar este usuário a acessar o app?',async()=>{
+    await db.collection('users').doc(uid).update({authorized:true});
+    loadUsers();
+  });
+}
+async function toggleAdmin(uid,isAdmin){
+  showModal(
+    isAdmin?'Remover Admin':'Tornar Admin',
+    isAdmin?'Deseja remover a permissão de admin deste usuário?':'Deseja tornar este usuário administrador?',
+    async()=>{
+      await db.collection('users').doc(uid).update({role:isAdmin?'usuário':'admin'});
+      loadUsers();
+    }
+  );
+}
+async function removeUser(uid){
+  showModal('Remover Usuário','Esta ação é irreversível. Deseja continuar?',async()=>{
+    await db.collection('users').doc(uid).delete();
+    loadUsers();
+  });
+}
+
+// ══════════════════════════════════════════
+// AVISO
+// ══════════════════════════════════════════
+async function carregarDashboard(){/* integrado em loadUsers */}
+
+async function carregarAvisoAtual(){
+  try{
+    const doc=await db.collection('config').doc('aviso').get();
+    const container=document.getElementById('aviso-atual');
+    if(doc.exists&&doc.data().ativo){
+      const d=doc.data();
+      document.getElementById('aviso-emoji').value=d.emoji||'';
+      document.getElementById('aviso-texto').value=d.texto||'';
+      container.innerHTML=`<div style="background:var(--bg2);border:1px solid var(--border-g);border-radius:6px;padding:.7rem .9rem;font-size:.82rem;color:var(--text2)">
+        <span style="color:var(--text3);font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.3rem">Aviso atual publicado:</span>
+        ${d.emoji||''} ${d.texto||''}
+      </div>`;
+    }else{
+      container.innerHTML='<div style="font-size:.8rem;color:var(--text3);font-style:italic">Nenhum aviso ativo no momento.</div>';
+    }
+  }catch(e){}
+}
+
+async function publicarAviso(){
+  const texto=document.getElementById('aviso-texto').value.trim();
+  const emoji=document.getElementById('aviso-emoji').value.trim()||'📢';
+  const status=document.getElementById('aviso-status');
+  if(!texto){status.textContent='⚠️ Escreva o aviso antes de publicar.';return;}
+  try{
+    await db.collection('config').doc('aviso').set({texto,emoji,ativo:true,id:Date.now().toString(),criadoEm:firebase.firestore.FieldValue.serverTimestamp()});
+    status.textContent='✓ Aviso publicado!';status.style.color='var(--green2)';
+    carregarAvisoAtual();
+  }catch(e){status.textContent='❌ Erro: '+e.message;status.style.color='var(--red)';}
+}
+
+async function removerAviso(){
+  const status=document.getElementById('aviso-status');
+  try{
+    await db.collection('config').doc('aviso').set({ativo:false});
+    document.getElementById('aviso-texto').value='';
+    document.getElementById('aviso-emoji').value='';
+    status.textContent='✓ Aviso removido.';status.style.color='var(--text2)';
+    carregarAvisoAtual();
+  }catch(e){status.textContent='❌ Erro: '+e.message;}
+}
+</script>
+<script>
+if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').catch(()=>{});});}
 </script>
 </body>
 </html>
