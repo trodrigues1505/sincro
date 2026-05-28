@@ -775,7 +775,7 @@ function kinHTML(kinNum){
   const anelTomNum=_anelT+1;
   const anelNomeCompleto=_anelSeloNome+' '+_anelTomNome+' '+_anelCor;
   // Manter compatibilidade com o resto do código
-  const anelSelo=DATA.selos[_anelS+1]||{};
+ const anelSelo=DATA.selos[_anelS]||{};
   const anelIconURL=getSeloIconURL(_anelSeloNome+' '+_anelCorBase);
   const anelAcao=anelSelo.acao||'';
   const anelCorSelo=_anelCorBase.toLowerCase();
