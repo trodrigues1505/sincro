@@ -124,12 +124,12 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .lua-circular .seg.blue,.lua-circular .seg.azul{stroke:rgba(26,72,96,.38)}
 .lua-circular .seg.yellow,.lua-circular .seg.amarelo{stroke:rgba(165,124,0,.32)}
 .lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
-.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:8px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
-.lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
-.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:7px;fill:var(--gold);text-transform:uppercase;text-anchor:middle;dominant-baseline:central;letter-spacing:.05em}
+.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:11px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
+.lua-circular .seg-label.active{fill:#1a1000;font-weight:700}
+.lua-circular .ring-label{font-family:'Cinzel',serif;font-size:9px;fill:var(--gold);text-transform:uppercase;text-anchor:middle;dominant-baseline:central;letter-spacing:.05em}
 .lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
-.lua-circular .center-num{font-size:18px;dominant-baseline:central}
-.lua-circular .center-sub{font-size:7px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
+.lua-circular .center-num{font-size:22px;dominant-baseline:central}
+.lua-circular .center-sub{font-size:10px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
 .btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
 .btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
 .btn-cal{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
@@ -885,7 +885,7 @@ function kinHTML(kinNum,modoNatal=false){
       </li>
       <li class="has-btn">
         <span>Meditação do selo</span>
-        <button onclick="abrirModalVideo('${MEDITACOES[String(anelKin)]}','${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
+        <button onclick="abrirModalVideo('${MEDITACOES[String(_anelS+1)]}','${seloBase}')" style="background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s;letter-spacing:.04em" onmouseover="this.style.borderColor='var(--green2)'" onmouseout="this.style.borderColor='var(--green3)'">▶ ouvir</button>
       </li>
       <li class="has-btn">
         <span>Ouça o Self Design Sounds</span>
