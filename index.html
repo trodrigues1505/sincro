@@ -136,7 +136,7 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 .btn-cal:hover{border-color:var(--green);color:var(--green)}
 .export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
 .selos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem;margin-top:.3rem}
-.selo-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.9rem .8rem;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s}
+.selo-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.9rem .8rem;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s;display:flex;flex-direction:column;align-items:center}
 .selo-card:hover{border-color:var(--border-g);transform:translateY(-2px)}
 .selo-card-nome{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold2);margin-bottom:.2rem;margin-top:.4rem}
 .selo-card-acao{font-size:.62rem;color:var(--text3);font-style:italic}
@@ -596,7 +596,7 @@ async function calcNatal(){
   const[y,m,d]=v.split('-').map(Number);
   const dt=new Date(y,m-1,d);
   const k=dateToKin(dt);
-  document.getElementById('res-natal').innerHTML=kinHTML(k);
+  document.getElementById('res-natal').innerHTML=kinHTML(k,true);
   document.getElementById('res-natal').classList.remove('hidden');
 }
 
@@ -667,7 +667,7 @@ function gerarLuaCircular(diaAtivo){
   return`<svg class="lua-circular" viewBox="-70 -70 540 540" xmlns="http://www.w3.org/2000/svg">${segs}${labels}${ringLabels}<text x="${cx}" y="${cy-7}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+14}" class="center-text center-sub">DE 28</text></svg>`;
 }
 
-function kinHTML(kinNum){
+function kinHTML(kinNum,modoNatal=false){
   const kD=DATA.kins[kinNum];
   if(!kD)return'<p>Carregando dados...</p>';
   const seloCompleto=kD.selo;
@@ -870,7 +870,7 @@ function kinHTML(kinNum){
   <div class="onda-wrap">${ondaHTML}</div>
 </div>
 
-<div class="grid-2">
+${!modoNatal?`<div class="grid-2">
   <div class="section">
     <div class="section-title">Castelo · 52 dias</div>
     <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${casteloTextoFmt}</div>
@@ -953,8 +953,7 @@ function kinHTML(kinNum){
       <li class="has-btn" style="justify-content:flex-start">${PERGUNTAS_TOM[diaOnda]||''}</li>
     </ul>
   </div>
-</div>
-  `;
+</div>`:''};
 }
 
 async function compartilharKin(){
