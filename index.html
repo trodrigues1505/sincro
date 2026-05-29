@@ -440,9 +440,14 @@ Entrar com Google
 
 <script type="module" src="./js/app.js"></script>
 <script>
+// Delega para a versão do módulo quando disponível (limpa também o modal-kin-content)
 function fecharModalVideo(){
+  if(window._fecharModalVideo){ window._fecharModalVideo(); return; }
   document.getElementById('modal-video').classList.remove('active');
-  document.getElementById('modal-video-iframe').src='';
+  const iframe=document.getElementById('modal-video-iframe');
+  if(iframe){iframe.src='';iframe.style.display='';}
+  const kc=document.getElementById('modal-kin-content');
+  if(kc){kc.style.display='none';kc.innerHTML='';}
   document.body.style.overflow='';
 }
 if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
