@@ -3,7 +3,8 @@ import { DATA, DATA_PRONTO, SELF_DESIGN, MEDITACOES } from './data.js';
 import { dateToKin, getRelacaoKins, getAnoGalactico, daysBetween } from './calculos.js';
 import { kinHTML } from './renderer.js';
 import { registrarNoHistorico, toggleFavorito, limparHistorico, limparFavoritos, renderHistorico, renderFavoritos } from './storage.js';
-import { carregarPerfil, _kinNatalSalvo, salvarKinNatal, limparKinNatal, mostrarKinNatalSalvo } from './api.js';
+import { carregarPerfil, salvarKinNatal, limparKinNatal, mostrarKinNatalSalvo } from './api.js';
+import * as Api from './api.js';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 export function switchTab(t, el) {
@@ -30,8 +31,7 @@ export async function loadToday() {
   const k = dateToKin(new Date());
   registrarNoHistorico(k);
   document.getElementById('res-dia').innerHTML = kinHTML(k);
-  // Badge de relação com kin natal
-  const { _kinNatalSalvo: natal } = await import('./api.js');
+  const natal = Api._kinNatalSalvo;
   if (natal) {
     const relacao = getRelacaoKins(k, natal);
     if (relacao) {
@@ -215,9 +215,8 @@ export function fecharOnboarding() {
 
 // ─── Aviso banner ─────────────────────────────────────────────────────────────
 export async function carregarAviso() {
-  const { db } = await import('./api.js');
   try {
-    const snap = await db.collection('config').doc('aviso').get();
+    const snap = await Api.db.collection('config').doc('aviso').get();
     if (!snap.exists) return;
     const d = snap.data();
     if (!d.ativo || !d.mensagem) return;
