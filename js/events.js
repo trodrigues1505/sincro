@@ -75,13 +75,31 @@ export async function renderSelos() {
   if (!grid || grid.children.length > 0) return;
   const selosObj = DATA.selos || {};
   const selos = Array.isArray(selosObj) ? selosObj : Object.values(selosObj);
-  const nomeIcone = ['dragao','vento','noite','semente','serpente','enlacador','mao','estrela','lua','cao','macaco','humano','caminhante','mago','aguia','guerreiro','terra','espelho','tormenta','sol'];
+
+  // Mapa nome do selo → nome do arquivo de ícone
+  const ICONE_MAPA = {
+    'Dragão':'dragao','Vento':'vento','Noite':'noite','Semente':'semente',
+    'Serpente':'serpente','Enlaçador':'enlacador','Enlaçador de Mundos':'enlacador',
+    'Mão':'mao','Estrela':'estrela','Lua':'lua','Cão':'cao','Macaco':'macaco',
+    'Humano':'humano','Caminhante':'caminhante','Caminhante do Céu':'caminhante',
+    'Mago':'mago','Feiticeiro':'mago','Águia':'aguia','Guerreiro':'guerreiro',
+    'Terra':'terra','Espelho':'espelho','Tormenta':'tormenta','Sol':'sol',
+  };
+  const CORES = ['vermelho','branco','azul','amarelo'];
+
   grid.innerHTML = selos.map((s, i) => {
-    const cor = ['vermelho','branco','azul','amarelo'][i % 4];
-    const iconURL = `./assets/icons/${nomeIcone[i]||'default'}.png`;
-    return `<div class="selo-card" onclick="abrirModalSelo('${(s.nome||'').replace(/'/g,"\\'")}','${cor}','${iconURL}',DATA.selos[${i}])">
+    const nomeCompleto = s.nome || '';
+    // extrai a base (sem a cor no final) para buscar o ícone
+    const partes = nomeCompleto.split(' ');
+    const cor = CORES[i % 4];
+    // tenta achar o ícone pelo nome completo, depois pelo primeiro token
+    const nomeBase = partes.slice(0, -1).join(' ') || nomeCompleto;
+    const iconeKey = ICONE_MAPA[nomeBase] || ICONE_MAPA[partes[0]] || 'default';
+    const iconURL = `./assets/icons/${iconeKey}.png`;
+    const safe = nomeCompleto.replace(/'/g,"\\'");
+    return `<div class="selo-card" onclick="abrirModalSelo('${safe}','${cor}','${iconURL}',DATA.selos[${i}])">
       <div class="selo-icon selo-${cor}" style="width:56px;height:56px;margin:0 auto"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="selo-card-nome">${s.nome||''}</div>
+      <div class="selo-card-nome">${nomeCompleto}</div>
       <div class="selo-card-acao">${s.acao||''}</div>
     </div>`;
   }).join('');
@@ -119,15 +137,58 @@ export function abrirModalVideo(url, nomeSeloVideo) {
   document.body.style.overflow = 'hidden';
 }
 
+// ─── Modal de kin (oráculo, onda, castelo) ────────────────────────────────────
+export function abrirKinModal(kinNum, seloNome, modoResumido = false) {
+  if (!kinNum || !DATA.kins) return;
+  const kD = DATA.kins[String(kinNum)];
+  if (!kD) return;
+  const { kinHTML } = window._renderer || {};
+  // Reusa o modal-video para exibir o kinHTML resumido
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
+  // Esconde o iframe e insere HTML do kin no lugar
+  iframe.style.display = 'none';
+  iframe.src = '';
+  let kinContainer = document.getElementById('modal-kin-content');
+  if (!kinContainer) {
+    kinContainer = document.createElement('div');
+    kinContainer.id = 'modal-kin-content';
+    kinContainer.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(kinContainer, iframe);
+  }
+  kinContainer.style.display = 'block';
+  // importa kinHTML dinamicamente para evitar ciclo em tempo de carga
+  import('./renderer.js').then(({ kinHTML: kh }) => {
+    kinContainer.innerHTML = kh(kinNum, true);
+  });
+  if (titulo) titulo.textContent = `Kin ${kinNum} · ${kD.selo}`;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+export function fecharModalVideo() {
+  const modal = document.getElementById('modal-video');
+  if (!modal) return;
+  modal.classList.remove('active');
+  const iframe = document.getElementById('modal-video-iframe');
+  if (iframe) { iframe.src = ''; iframe.style.display = ''; }
+  const kinContainer = document.getElementById('modal-kin-content');
+  if (kinContainer) { kinContainer.style.display = 'none'; kinContainer.innerHTML = ''; }
+  document.body.style.overflow = '';
+}
+
 export function abrirEbook(url, pagina) {
   if (!url || url === '#') return;
   window.open(url, '_blank');
 }
 
+// FIX: abrirSelfDesign abre dentro do modal de vídeo em vez de nova aba
 export function abrirSelfDesign(kin) {
   const videoId = SELF_DESIGN[String(kin)];
   if (!videoId) return;
-  window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+  abrirModalVideo(`https://youtu.be/${videoId}`, `Self Design Sounds · Kin ${kin}`);
 }
 
 // ─── Prece ────────────────────────────────────────────────────────────────────
