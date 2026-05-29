@@ -101,11 +101,10 @@ export function renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, s
 </div>`;
 }
 
-// ─── Oráculo — FIX: borda dourada removida; células clicáveis ────────────────
+// ─── Oráculo — central sem style inline de tamanho (CSS controla) ────────────
 export function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNum) {
   const { guia, analogo, antipoda, oculto } = kD.oraculo;
 
-  // resolve kin number de um selo para poder abrir modal
   function kinNumDeSelo(seloNome) {
     if (!DATA.kins) return 0;
     const entry = Object.entries(DATA.kins).find(([,v]) => v.selo === seloNome);
@@ -121,11 +120,13 @@ export function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNu
     const onclick = kn ? `onclick="abrirKinModal(${kn},'${safe}',true)"` : '';
     return `<div style="display:flex;flex-direction:${flexDir};align-items:center;gap:3px;cursor:${kn?'pointer':'default'}" ${onclick}>
       <span style="color:var(--text2);font-size:.48rem;letter-spacing:.08em;text-transform:uppercase;font-family:Cinzel">${label}</span>
-      <div class="selo-icon selo-${cor}" style="width:54px;height:54px;box-shadow:none;border:1px solid rgba(255,255,255,.06)"><img src="${icon}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="selo-icon oraculo-side-icon selo-${cor}"><img src="${icon}" style="width:100%;height:100%;object-fit:contain"></div>
       <span style="font-family:Cinzel;font-size:.55rem;color:var(--text);text-align:center;max-width:60px;line-height:1.2">${base}</span>
     </div>`;
   };
 
+  // FIX: central usa apenas a classe CSS — sem style inline de width/height
+  // para não sobrescrever o box-shadow definido em .oraculo-central .selo-icon
   return `
 <div class="section anim-2">
   <div class="section-title">Oráculo do Destino</div>
@@ -138,7 +139,7 @@ export function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNu
     <div class="oraculo-cell-left oraculo-item oraculo-side">${celOraculo(analogo,'Análogo','column-reverse')}</div>
     <div class="oraculo-cell-center oraculo-item oraculo-central">
       <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(tomNum,76)}</div>
-      <div class="selo-icon selo-${corSelo}" style="width:82px;height:82px;border-radius:11px;box-shadow:0 0 0 2px var(--gold),0 0 18px rgba(165,124,0,.18)"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem;margin-top:.3rem">${seloBase}</div>
       <div style="font-family:Cinzel;font-size:.52rem;color:rgba(165,124,0,.6);letter-spacing:.12em;margin-top:.1rem">KIN ${kinNum}</div>
     </div>
@@ -215,17 +216,19 @@ export function renderCastelo(kinNum) {
   return { casteloNum, casteloTexto: CASTELO_NOMES[casteloNum]||'Castelo', casteloImg, ondasHTML };
 }
 
-export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData) {
+export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum) {
   const art = ANIMAIS_FEM.has(luaAnimal) ? 'da ' : 'do ';
   const luaKinCorSelo = luaKinData ? getSeloCor(luaKinData.selo) : 'red';
   const luaKinIconURL = luaKinData ? getSeloIconURL(luaKinData.selo) : '';
   const nomeKinLua    = luaKinData ? (()=>{const p=luaKinData.selo.split(' ');return p.slice(0,-1).join(' ')+' '+luaKinData.tom_nome+' '+p[p.length-1];})() : '';
+  const safeSelo = (luaKinData?.selo||'').replace(/'/g,"\\'");
+  const clickAttr = luaKinNum ? `onclick="abrirKinModal(${luaKinNum},'${safeSelo}',true)" style="cursor:pointer"` : '';
   return `
     <div style="margin-bottom:1.1rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.9rem">
       <div class="section-title">Lua Galáctica · ${luaNum} de 13</div>
       <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Lua Galáctica ${art}${luaAnimal}</div>
       <div style="display:flex;align-items:center;gap:.75rem">
-        <div style="text-align:center">
+        <div style="text-align:center" ${clickAttr}>
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${luaKinData?gerarGlifoTom(luaKinData.tom,54):''}</div>
           <div class="selo-icon selo-${luaKinCorSelo}" style="width:54px;height:54px;flex-shrink:0">${luaKinIconURL?`<img src="${luaKinIconURL}" style="width:100%;height:100%;object-fit:contain">`:''}</div>
         </div>
@@ -239,12 +242,13 @@ export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData) {
 }
 
 export function renderAnelSolar(anel, anoGal) {
+  const safeSelo = (anel.anelNomeCompleto||'').replace(/'/g,"\\'");
   return `
     <div style="margin-bottom:.6rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.3rem">
       <div class="section-title">Anel Solar · 364 dias</div>
       <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.6rem">${anel.anelNomeCompleto}</div>
       <div style="display:flex;align-items:center;gap:.75rem">
-        <div style="text-align:center">
+        <div style="text-align:center;cursor:pointer" onclick="abrirKinModal(${anel.anelKin},'${safeSelo}',true)">
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(anel.anelTomNum,54)}</div>
           <div class="selo-icon selo-${anel.anelCorSelo}" style="width:54px;height:54px;flex-shrink:0"><img src="${anel.anelIconURL}" style="width:100%;height:100%;object-fit:contain"></div>
         </div>
@@ -291,9 +295,9 @@ export function renderPraticaDiaria(kinNum, diaOnda, anelKin, seloBase) {
   const selfDesignIdx = DIA_ONDA_PARA_IDX[diaOnda]||1;
   const selfDesignURL = (SELF_DESIGN_ONDAS[selfDesignOndaNum]||[])[selfDesignIdx]||'#';
   const selfDesignPagina = SELF_DESIGN_PAGINAS[diaOnda]||2;
-  // FIX: meditação usa o número do anel (1–20) não o kinNum absoluto
-  const anelIdx = ((anelKin-1)%20)+1;
-  const meditacaoURL = MEDITACOES[String(anelIdx)] || '';
+  // FIX: meditação usa o índice do selo do kin ATUAL (posição 0–19 no ciclo de 20 selos)
+  const seloIdx = ((kinNum-1) % 20) + 1;
+  const meditacaoURL = MEDITACOES[String(seloIdx)] || '';
   return `
   <div class="section">
     <div class="section-title">Prática Diária</div>
@@ -319,7 +323,7 @@ export function kinHTML(kinNum, modoNatal = false) {
   const diaOnda = ((kinNum-1)%13)+1;
   const anoGal  = getAnoGalactico();
   const diasPassados = daysBetween(new Date(anoGal,6,26), new Date());
-  const { luaNum, diaLua, luaAnimal, luaKinData } = getContextoLua(diasPassados);
+  const { luaNum, diaLua, luaAnimal, luaKinData, luaKinNum } = getContextoLua(diasPassados);
   const anel = getContextoAnelSolar(anoGal);
   const faseLunar = getFaseLunar(new Date());
   const heroHTML    = renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, seloBase, kD.tom, kD.frase_curta||'');
@@ -327,7 +331,7 @@ export function kinHTML(kinNum, modoNatal = false) {
   const ondaHTML    = renderOndaEncantada(kinNum);
   if (modoNatal) return `<div>${heroHTML}${oraculoHTML}${ondaHTML}</div>`;
   const { casteloNum, casteloTexto, casteloImg, ondasHTML } = renderCastelo(kinNum);
-  const luaHTML     = renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData);
+  const luaHTML     = renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum);
   const anelHTML    = renderAnelSolar(anel, anoGal);
   const plasmaHTML  = renderPlasmaFaseLunar(kinNum, faseLunar);
   const praticaHTML = renderPraticaDiaria(kinNum, diaOnda, anel.anelKin, seloBase);
