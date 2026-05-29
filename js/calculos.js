@@ -1,5 +1,5 @@
 // ─── js/calculos.js — cálculos do sincronário (sem efeitos colaterais) ───────
-import { DATA, SELOS_FEMININOS, SELOS_NOMES, TONS_NOMES, CORES_CICLO } from './data.js';
+import { DATA, SELOS_FEMININOS, SELOS_NOMES, TONS_NOMES, CORES_CICLO, LUA_KINS, LUAS_ANIMAIS } from './data.js';
 
 export function ehSeloFeminino(nomeBase) {
   return [...SELOS_FEMININOS].some(f => nomeBase.includes(f));
