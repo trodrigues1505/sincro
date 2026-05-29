@@ -118,7 +118,8 @@ export function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNu
     const kn = kinNumDeSelo(seloNome);
     const safe = seloNome.replace(/'/g,"\\'");
     const onclick = kn ? `onclick="abrirKinModal(${kn},'${safe}',true)"` : '';
-    return `<div style="display:flex;flex-direction:${flexDir};align-items:center;gap:3px;cursor:${kn?'pointer':'default'}" ${onclick}>
+    const clicavel = kn ? 'kin-clicavel' : '';
+    return `<div class="${clicavel}" style="display:flex;flex-direction:${flexDir};align-items:center;gap:3px" ${onclick}>
       <span style="color:var(--text2);font-size:.48rem;letter-spacing:.08em;text-transform:uppercase;font-family:Cinzel">${label}</span>
       <div class="selo-icon oraculo-side-icon selo-${cor}"><img src="${icon}" style="width:100%;height:100%;object-fit:contain"></div>
       <span style="font-family:Cinzel;font-size:.55rem;color:var(--text);text-align:center;max-width:60px;line-height:1.2">${base}</span>
@@ -168,7 +169,7 @@ export function renderOndaEncantada(kinNum) {
     const tooltip = kData ? `Kin ${k} · ${kData.selo} ${kData.tom_nome}` : '';
     const safeSelo = (kData?.selo||'').replace(/'/g,"\\'");
     // FIX: onclick abre modal com dados do kin
-    kins += `<div class="onda-kin cor-${cor} ${ativo}" title="${tooltip}" onclick="abrirKinModal(${k},'${safeSelo}',true)"><img src="${getSeloIconURL(kData?kData.selo:'')}" style="width:100%;height:100%;object-fit:contain"></div>`;
+    kins += `<div class="onda-kin kin-clicavel cor-${cor} ${ativo}" title="${tooltip}" onclick="abrirKinModal(${k},'${safeSelo}',true)"><img src="${getSeloIconURL(kData?kData.selo:'')}" style="width:100%;height:100%;object-fit:contain"></div>`;
   }
   return `
 <div class="section">
@@ -207,7 +208,7 @@ export function renderCastelo(kinNum) {
     const safeSelo = (ondaKinData?.selo||'').replace(/'/g,"\\'");
     // FIX: ícone do kin da onda clicável + marcador "semana atual"
     ondasHTML += `<div style="display:flex;align-items:center;gap:.7rem;padding:.2rem .4rem;border-radius:5px;${isAtual?'background:rgba(165,124,0,.08);border:1px solid rgba(165,124,0,.2)':'border:1px solid transparent'}">
-      <div class="selo-icon selo-${seloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0;cursor:pointer" onclick="abrirKinModal(${ondaKinInicio},'${safeSelo}',true)"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="selo-icon kin-clicavel selo-${seloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0" onclick="abrirKinModal(${ondaKinInicio},'${safeSelo}',true)"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
       <span style="font-size:.75rem;color:${isAtual?'var(--gold2)':'var(--text)'};font-family:Cinzel;line-height:1.3;flex:1">Onda ${prep}${seloBase} ${corLabel}</span>
       ${isAtual ? '<span style="font-size:.5rem;color:var(--gold);font-family:Cinzel;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">← semana atual</span>' : ''}
     </div>`;
@@ -222,13 +223,14 @@ export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKin
   const luaKinIconURL = luaKinData ? getSeloIconURL(luaKinData.selo) : '';
   const nomeKinLua    = luaKinData ? (()=>{const p=luaKinData.selo.split(' ');return p.slice(0,-1).join(' ')+' '+luaKinData.tom_nome+' '+p[p.length-1];})() : '';
   const safeSelo = (luaKinData?.selo||'').replace(/'/g,"\\'");
-  const clickAttr = luaKinNum ? `onclick="abrirKinModal(${luaKinNum},'${safeSelo}',true)" style="cursor:pointer"` : '';
+  const clickAttr = luaKinNum ? `onclick="abrirKinModal(${luaKinNum},'${safeSelo}',true)"` : '';
+  const clicavel = luaKinNum ? 'kin-clicavel' : '';
   return `
     <div style="margin-bottom:1.1rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.9rem">
       <div class="section-title">Lua Galáctica · ${luaNum} de 13</div>
       <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Lua Galáctica ${art}${luaAnimal}</div>
       <div style="display:flex;align-items:center;gap:.75rem">
-        <div style="text-align:center" ${clickAttr}>
+        <div class="${clicavel}" style="text-align:center" ${clickAttr}>
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${luaKinData?gerarGlifoTom(luaKinData.tom,54):''}</div>
           <div class="selo-icon selo-${luaKinCorSelo}" style="width:54px;height:54px;flex-shrink:0">${luaKinIconURL?`<img src="${luaKinIconURL}" style="width:100%;height:100%;object-fit:contain">`:''}</div>
         </div>
@@ -248,7 +250,7 @@ export function renderAnelSolar(anel, anoGal) {
       <div class="section-title">Anel Solar · 364 dias</div>
       <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.6rem">${anel.anelNomeCompleto}</div>
       <div style="display:flex;align-items:center;gap:.75rem">
-        <div style="text-align:center;cursor:pointer" onclick="abrirKinModal(${anel.anelKin},'${safeSelo}',true)">
+        <div class="kin-clicavel" style="text-align:center" onclick="abrirKinModal(${anel.anelKin},'${safeSelo}',true)">
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(anel.anelTomNum,54)}</div>
           <div class="selo-icon selo-${anel.anelCorSelo}" style="width:54px;height:54px;flex-shrink:0"><img src="${anel.anelIconURL}" style="width:100%;height:100%;object-fit:contain"></div>
         </div>
