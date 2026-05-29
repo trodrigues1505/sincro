@@ -4,6 +4,7 @@ import { DATA, DATA_PRONTO } from './data.js';
 import {
   switchTab, mostrarDetalheOnda, loadToday, calcNatal, verKinPerfil,
   renderSelos, abrirModalSelo, fecharModalSelo,
+  abrirKinModal, fecharModalVideo,
   abrirModalVideo, abrirEbook, abrirSelfDesign,
   togglePrece, compartilharKin, exportPNG,
   atualizarBotaoNotif, toggleNotificacao,
@@ -25,6 +26,8 @@ Object.assign(window, {
   DATA,
   switchTab, mostrarDetalheOnda, loadToday, calcNatal, verKinPerfil,
   renderSelos, abrirModalSelo, fecharModalSelo,
+  abrirKinModal, fecharModalVideo,
+  _fecharModalVideo: fecharModalVideo,
   abrirModalVideo, abrirEbook, abrirSelfDesign,
   togglePrece, compartilharKin, exportPNG,
   atualizarBotaoNotif, toggleNotificacao,
