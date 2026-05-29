@@ -66,7 +66,16 @@ export function gerarLuaCircular(diaAtivo) {
   return `<div><svg class="lua-circular" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">${segs}${labels}<text x="${cx}" y="${cy-9}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+13}" class="center-text center-sub">DE 28</text></svg><div class="lua-legenda">${legenda}</div></div>`;
 }
 
-// ─── Seções individuais ───────────────────────────────────────────────────────
+// ─── Célula clicável de kin (reutilizada em oráculo, onda, castelo) ───────────
+// FIX: borda dourada removida do oráculo; todos os kins são clicáveis com abrirKinModal
+function celKin(kinNum, nomeCompleto, corSelo, iconURL, largura, altura, extraStyle='') {
+  const safe = (nomeCompleto||'').replace(/'/g,"\\'");
+  return `<div class="kin-cel-clicavel" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px" onclick="abrirKinModal(${kinNum},'${safe}')">
+    <div class="selo-icon selo-${corSelo}" style="width:${largura}px;height:${altura}px${extraStyle}"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
+  </div>`;
+}
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 export function renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, seloBase, tomNum, fraseCurta) {
   const isFav = isFavorito(kinNum);
   return `
@@ -92,36 +101,54 @@ export function renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, s
 </div>`;
 }
 
+// ─── Oráculo — FIX: borda dourada removida; células clicáveis ────────────────
 export function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNum) {
   const { guia, analogo, antipoda, oculto } = kD.oraculo;
-  const celTopo = (nome, label, extraStyle='') => `
-    <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">${label}</span>${getSeloBase(nome)}</div>
-    <div class="selo-icon selo-${getSeloCor(nome)}" style="width:54px;height:54px${extraStyle}"><img src="${getSeloIconURL(nome)}" style="width:100%;height:100%;object-fit:contain"></div>`;
-  const celBase = (nome, label) => `
-    <div class="selo-icon selo-${getSeloCor(nome)}" style="width:54px;height:54px"><img src="${getSeloIconURL(nome)}" style="width:100%;height:100%;object-fit:contain"></div>
-    <div class="oraculo-nome"><span style="color:var(--text2);font-size:.5rem;display:block;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">${label}</span>${getSeloBase(nome)}</div>`;
+
+  // resolve kin number de um selo para poder abrir modal
+  function kinNumDeSelo(seloNome) {
+    if (!DATA.kins) return 0;
+    const entry = Object.entries(DATA.kins).find(([,v]) => v.selo === seloNome);
+    return entry ? Number(entry[0]) : 0;
+  }
+
+  const celOraculo = (seloNome, label, flexDir='column') => {
+    const cor = getSeloCor(seloNome);
+    const base = getSeloBase(seloNome);
+    const icon = getSeloIconURL(seloNome);
+    const kn = kinNumDeSelo(seloNome);
+    const safe = seloNome.replace(/'/g,"\\'");
+    const onclick = kn ? `onclick="abrirKinModal(${kn},'${safe}',true)"` : '';
+    return `<div style="display:flex;flex-direction:${flexDir};align-items:center;gap:3px;cursor:${kn?'pointer':'default'}" ${onclick}>
+      <span style="color:var(--text2);font-size:.48rem;letter-spacing:.08em;text-transform:uppercase;font-family:Cinzel">${label}</span>
+      <div class="selo-icon selo-${cor}" style="width:54px;height:54px;box-shadow:none;border:1px solid rgba(255,255,255,.06)"><img src="${icon}" style="width:100%;height:100%;object-fit:contain"></div>
+      <span style="font-family:Cinzel;font-size:.55rem;color:var(--text);text-align:center;max-width:60px;line-height:1.2">${base}</span>
+    </div>`;
+  };
+
   return `
 <div class="section anim-2">
   <div class="section-title">Oráculo do Destino</div>
   <div class="oraculo-wrap">
     <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-      <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(165,124,0,.30)" stroke-width=".4"/>
-      <circle cx="50" cy="50" r="32" fill="none" stroke="rgba(165,124,0,.20)" stroke-width=".3"/>
+      <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(165,124,0,.20)" stroke-width=".4"/>
+      <circle cx="50" cy="50" r="32" fill="none" stroke="rgba(165,124,0,.12)" stroke-width=".3"/>
     </svg>
-    <div class="oraculo-cell-top oraculo-item oraculo-side">${celTopo(guia,'Guia',';margin-top:.3rem')}</div>
-    <div class="oraculo-cell-left oraculo-item oraculo-side">${celBase(analogo,'Análogo')}</div>
+    <div class="oraculo-cell-top oraculo-item oraculo-side">${celOraculo(guia,'Guia')}</div>
+    <div class="oraculo-cell-left oraculo-item oraculo-side">${celOraculo(analogo,'Análogo','column-reverse')}</div>
     <div class="oraculo-cell-center oraculo-item oraculo-central">
       <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(tomNum,76)}</div>
-      <div class="selo-icon selo-${corSelo}" style="width:76px;height:76px;border-radius:11px"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem">${seloBase}</div>
+      <div class="selo-icon selo-${corSelo}" style="width:82px;height:82px;border-radius:11px;box-shadow:0 0 0 2px var(--gold),0 0 18px rgba(165,124,0,.18)"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem;margin-top:.3rem">${seloBase}</div>
       <div style="font-family:Cinzel;font-size:.52rem;color:rgba(165,124,0,.6);letter-spacing:.12em;margin-top:.1rem">KIN ${kinNum}</div>
     </div>
-    <div class="oraculo-cell-right oraculo-item oraculo-side">${celBase(oculto,'Oculto')}</div>
-    <div class="oraculo-cell-bottom oraculo-item oraculo-side">${celBase(antipoda,'Antípoda')}</div>
+    <div class="oraculo-cell-right oraculo-item oraculo-side">${celOraculo(oculto,'Oculto','column-reverse')}</div>
+    <div class="oraculo-cell-bottom oraculo-item oraculo-side">${celOraculo(antipoda,'Antípoda')}</div>
   </div>
 </div>`;
 }
 
+// ─── Onda encantada — FIX: clique abre modal do kin ──────────────────────────
 export function renderOndaEncantada(kinNum) {
   const ondaNum = Math.floor((kinNum-1)/13)+1;
   const ondaInicio = Math.floor((kinNum-1)/13)*13+1;
@@ -138,7 +165,9 @@ export function renderOndaEncantada(kinNum) {
     const cor = kData ? getSeloCor(kData.selo) : 'white';
     const ativo = k===kinNum ? 'active' : '';
     const tooltip = kData ? `Kin ${k} · ${kData.selo} ${kData.tom_nome}` : '';
-    kins += `<div class="onda-kin cor-${cor} ${ativo}" title="${tooltip}" onclick="mostrarDetalheOnda(this,'${tooltip}')"><img src="${getSeloIconURL(kData?kData.selo:'')}" style="width:100%;height:100%;object-fit:contain"></div>`;
+    const safeSelo = (kData?.selo||'').replace(/'/g,"\\'");
+    // FIX: onclick abre modal com dados do kin
+    kins += `<div class="onda-kin cor-${cor} ${ativo}" title="${tooltip}" onclick="abrirKinModal(${k},'${safeSelo}',true)"><img src="${getSeloIconURL(kData?kData.selo:'')}" style="width:100%;height:100%;object-fit:contain"></div>`;
   }
   return `
 <div class="section">
@@ -149,12 +178,15 @@ export function renderOndaEncantada(kinNum) {
 </div>`;
 }
 
+// ─── Castelo — FIX: marca onda atual; kins clicáveis ─────────────────────────
 export function renderCastelo(kinNum) {
   const casteloNum = Math.floor((kinNum-1)/52);
   const castelo = DATA.castelos[casteloNum]||{};
   const casteloOndas = castelo.ondas||[];
   const casteloImg = ['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde';
-  let ondasHTML = '<div style="display:flex;flex-direction:column;gap:8px;margin-top:.4rem">';
+  const ondaAtualIdx = Math.floor(((kinNum-1) % 52) / 13); // 0–3: qual onda dentro do castelo
+
+  let ondasHTML = '<div style="display:flex;flex-direction:column;gap:6px;margin-top:.4rem">';
   casteloOndas.forEach((ondaNome, ondaIdx) => {
     const ondaKinInicio = casteloNum*52+ondaIdx*13+1;
     const ondaKinData = (DATA.kins&&DATA.kins[ondaKinInicio])||null;
@@ -170,9 +202,13 @@ export function renderCastelo(kinNum) {
     }
     const prep = ehSeloFeminino(seloBase) ? 'da ' : 'do ';
     const corLabel = concordarCor(COR_BASE_NORM[seloCor]||'', seloBase);
-    ondasHTML += `<div style="display:flex;align-items:center;gap:.7rem;padding:.25rem 0">
-      <div class="selo-icon selo-${seloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
-      <span style="font-size:.78rem;color:var(--text);font-family:Cinzel;line-height:1.3">Onda ${prep}${seloBase} ${corLabel}</span>
+    const isAtual = ondaIdx === ondaAtualIdx;
+    const safeSelo = (ondaKinData?.selo||'').replace(/'/g,"\\'");
+    // FIX: ícone do kin da onda clicável + marcador "semana atual"
+    ondasHTML += `<div style="display:flex;align-items:center;gap:.7rem;padding:.2rem .4rem;border-radius:5px;${isAtual?'background:rgba(165,124,0,.08);border:1px solid rgba(165,124,0,.2)':'border:1px solid transparent'}">
+      <div class="selo-icon selo-${seloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0;cursor:pointer" onclick="abrirKinModal(${ondaKinInicio},'${safeSelo}',true)"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
+      <span style="font-size:.75rem;color:${isAtual?'var(--gold2)':'var(--text)'};font-family:Cinzel;line-height:1.3;flex:1">Onda ${prep}${seloBase} ${corLabel}</span>
+      ${isAtual ? '<span style="font-size:.5rem;color:var(--gold);font-family:Cinzel;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">← semana atual</span>' : ''}
     </div>`;
   });
   ondasHTML += '</div>';
@@ -248,18 +284,22 @@ export function renderPlasmaFaseLunar(kinNum, faseLunar) {
     </div>`;
 }
 
+// ─── Prática diária — FIX: meditação usa kin do anel (índice 1–20) ───────────
 export function renderPraticaDiaria(kinNum, diaOnda, anelKin, seloBase) {
   const ondaNum = Math.floor((kinNum-1)/13)+1;
   const selfDesignOndaNum = ((ondaNum-1)%20)+1;
   const selfDesignIdx = DIA_ONDA_PARA_IDX[diaOnda]||1;
   const selfDesignURL = (SELF_DESIGN_ONDAS[selfDesignOndaNum]||[])[selfDesignIdx]||'#';
   const selfDesignPagina = SELF_DESIGN_PAGINAS[diaOnda]||2;
+  // FIX: meditação usa o número do anel (1–20) não o kinNum absoluto
+  const anelIdx = ((anelKin-1)%20)+1;
+  const meditacaoURL = MEDITACOES[String(anelIdx)] || '';
   return `
   <div class="section">
     <div class="section-title">Prática Diária</div>
     <ul class="praticas-list">
       <li class="has-btn"><span>Ouça a prece das 7 direções galácticas</span><button class="btn-pratica" onclick="togglePrece(this)">▶ ouvir</button></li>
-      <li class="has-btn"><span>Meditação do selo</span><button class="btn-pratica" onclick="abrirModalVideo('${MEDITACOES[String(anelKin)]}','${seloBase}')">▶ ouvir</button></li>
+      <li class="has-btn"><span>Meditação do selo</span><button class="btn-pratica" onclick="abrirModalVideo('${meditacaoURL}','${seloBase}')">▶ ouvir</button></li>
       <li class="has-btn"><span>Ouça o Self Design Sounds</span><button class="btn-pratica" onclick="abrirSelfDesign(${kinNum})">▶ ouvir</button></li>
       <li class="has-btn"><span>Leitura da página ${selfDesignPagina} do e-book</span><button class="btn-pratica" onclick="abrirEbook('${selfDesignURL}',${selfDesignPagina})">▶ abrir</button></li>
       <li class="has-btn" style="justify-content:flex-start">${PERGUNTAS_TOM[diaOnda]||''}</li>
@@ -267,7 +307,7 @@ export function renderPraticaDiaria(kinNum, diaOnda, anelKin, seloBase) {
   </div>`;
 }
 
-// ─── kinHTML: orquestrador principal ─────────────────────────────────────────
+// ─── kinHTML ──────────────────────────────────────────────────────────────────
 export function kinHTML(kinNum, modoNatal = false) {
   const kD = DATA.kins[kinNum];
   if (!kD) return '<p>Carregando dados...</p>';
@@ -282,14 +322,14 @@ export function kinHTML(kinNum, modoNatal = false) {
   const { luaNum, diaLua, luaAnimal, luaKinData } = getContextoLua(diasPassados);
   const anel = getContextoAnelSolar(anoGal);
   const faseLunar = getFaseLunar(new Date());
-  const heroHTML   = renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, seloBase, kD.tom, kD.frase_curta||'');
+  const heroHTML    = renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, seloBase, kD.tom, kD.frase_curta||'');
   const oraculoHTML = renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, kD.tom);
-  const ondaHTML   = renderOndaEncantada(kinNum);
+  const ondaHTML    = renderOndaEncantada(kinNum);
   if (modoNatal) return `<div>${heroHTML}${oraculoHTML}${ondaHTML}</div>`;
   const { casteloNum, casteloTexto, casteloImg, ondasHTML } = renderCastelo(kinNum);
-  const luaHTML    = renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData);
-  const anelHTML   = renderAnelSolar(anel, anoGal);
-  const plasmaHTML = renderPlasmaFaseLunar(kinNum, faseLunar);
+  const luaHTML     = renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData);
+  const anelHTML    = renderAnelSolar(anel, anoGal);
+  const plasmaHTML  = renderPlasmaFaseLunar(kinNum, faseLunar);
   const praticaHTML = renderPraticaDiaria(kinNum, diaOnda, anel.anelKin, seloBase);
   return `
 <div>
