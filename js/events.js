@@ -73,11 +73,13 @@ export async function renderSelos() {
   await DATA_PRONTO;
   const grid = document.getElementById('selos-grid');
   if (!grid || grid.children.length > 0) return;
-  const selos = DATA.selos || [];
-  grid.innerHTML = selos.map((s,i) => {
-    const cor = ['vermelho','branco','azul','amarelo'][i%4];
-    const iconURL = `./assets/icons/${['dragao','vento','noite','semente','serpente','enlacador','mao','estrela','lua','cao','macaco','humano','caminhante','mago','aguia','guerreiro','terra','espelho','tormenta','sol'][i]||'default'}.png`;
-    return `<div class="selo-card" onclick="abrirModalSelo('${s.nome||''}','${cor}','${iconURL}',DATA.selos[${i}])">
+  const selosObj = DATA.selos || {};
+  const selos = Array.isArray(selosObj) ? selosObj : Object.values(selosObj);
+  const nomeIcone = ['dragao','vento','noite','semente','serpente','enlacador','mao','estrela','lua','cao','macaco','humano','caminhante','mago','aguia','guerreiro','terra','espelho','tormenta','sol'];
+  grid.innerHTML = selos.map((s, i) => {
+    const cor = ['vermelho','branco','azul','amarelo'][i % 4];
+    const iconURL = `./assets/icons/${nomeIcone[i]||'default'}.png`;
+    return `<div class="selo-card" onclick="abrirModalSelo('${(s.nome||'').replace(/'/g,"\\'")}','${cor}','${iconURL}',DATA.selos[${i}])">
       <div class="selo-icon selo-${cor}" style="width:56px;height:56px;margin:0 auto"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="selo-card-nome">${s.nome||''}</div>
       <div class="selo-card-acao">${s.acao||''}</div>
