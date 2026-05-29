@@ -101,7 +101,6 @@ export function getAnoGalactico() {
 }
 
 export function getContextoLua(diasPassados) {
-  const { LUAS_ANIMAIS, LUA_KINS } = (await import('./data.js'));
   const luaNum = Math.floor(diasPassados / 28) + 1;
   const diaLua = (diasPassados % 28) || 28;
   const luaKinNum = LUA_KINS[luaNum - 1] || 1;
