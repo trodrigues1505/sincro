@@ -1,4 +1,4 @@
-<!DOCTYPE html>   
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -341,6 +341,7 @@ Entrar com Google
 <button class="tab active" onclick="switchTab('dia',this)">Kin do Dia</button>
 <button class="tab" onclick="switchTab('natal',this)">Kin Natal</button>
 <button class="tab" onclick="switchTab('selos',this)">Selos</button>
+<button class="tab" onclick="switchTab('ranking',this)">🏆 Ranking</button>
 <button class="tab" onclick="switchTab('perfil',this)">Perfil</button>
 </div>
 
@@ -362,6 +363,18 @@ Entrar com Google
 </div>
 </div>
 
+<!-- ABA RANKING -->
+<div id="tab-ranking" class="tab-content">
+  <div class="section">
+    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Top 50 · Ranking Público</span>
+      <button onclick="renderRanking(window._currentUID)" style="background:none;border:none;color:var(--gold2);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:0">↺ Atualizar</button>
+    </div>
+    <p style="font-size:.75rem;color:var(--text3);font-style:italic;margin-bottom:.8rem">Clique em qualquer jogador para comparar com você.</p>
+    <div id="ranking-lista"></div>
+  </div>
+</div>
+
 <!-- ABA SELOS -->
 <div id="tab-selos" class="tab-content">
 <div class="section">
@@ -376,6 +389,11 @@ Entrar com Google
     <img id="perfil-avatar" class="perfil-avatar" src="" alt="">
     <div class="perfil-nome" id="perfil-nome"></div>
     <div class="perfil-email" id="perfil-email"></div>
+  </div>
+  <!-- GAMIFICAÇÃO NO PERFIL -->
+  <div class="section">
+    <div class="section-title">Minha Pontuação</div>
+    <div id="gamificacao-perfil"></div>
   </div>
   <div class="section">
     <div class="section-title">Notificação Diária</div>
@@ -435,6 +453,38 @@ Entrar com Google
       </div>
     </div>
     <div class="modal-selo-desc" id="modal-selo-desc"></div>
+  </div>
+</div>
+
+<style>
+/* ── Gamificação ── */
+.ranking-row{display:flex;align-items:center;gap:.65rem;padding:.6rem .7rem;border-radius:7px;border:1px solid var(--border);background:var(--bg2);margin-bottom:5px;cursor:pointer;transition:border-color .2s,background .15s}
+.ranking-row:hover{border-color:var(--border2);background:var(--card)}
+.ranking-row-me{border-color:var(--gold)!important;background:rgba(165,124,0,.06)!important}
+.ranking-row-me:hover{background:rgba(165,124,0,.1)!important}
+.ranking-pos{font-family:'Cinzel',serif;font-size:.9rem;min-width:28px;text-align:center;color:var(--gold2)}
+.ranking-avatar{width:34px;height:34px;border-radius:50%;border:1px solid var(--green3);flex-shrink:0}
+.ranking-info{flex:1;min-width:0}
+.ranking-nome{font-family:'Cinzel',serif;font-size:.75rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ranking-right{text-align:right;flex-shrink:0}
+.ranking-pts{font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);font-weight:600}
+.ranking-titulo{font-size:.58rem;color:var(--text3)}
+/* Modal comparação */
+.modal-comparacao{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-comparacao.active{display:flex}
+.modal-comparacao-box{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1.1rem;max-width:380px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-comparacao-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;border-bottom:1px solid var(--border);padding-bottom:.6rem}
+.modal-comparacao-header span{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold2);text-transform:uppercase;letter-spacing:.08em}
+</style>
+
+<!-- Modal de comparação -->
+<div class="modal-comparacao" id="modal-comparacao" onclick="if(event.target===this)fecharComparacao()">
+  <div class="modal-comparacao-box">
+    <div class="modal-comparacao-header">
+      <span>Comparação</span>
+      <button onclick="fecharComparacao()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:.75rem;font-family:Cinzel">✕ Fechar</button>
+    </div>
+    <div id="comparacao-content"></div>
   </div>
 </div>
 
