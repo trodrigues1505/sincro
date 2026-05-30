@@ -17,7 +17,11 @@ export function switchTab(t, el) {
   if (t === 'perfil') { renderHistorico(); renderFavoritos(); }
   if (t === 'lei') {
     const el = document.getElementById('lei-content');
-    if (el && el.children.length <= 1) el.innerHTML = renderLeiDoTempo();
+    if (el && el.children.length <= 1) {
+      import('./cartilha.js').then(({ renderLeiDoTempo, renderTabelaGuia }) => {
+        el.innerHTML = renderLeiDoTempo() + renderTabelaGuia();
+      });
+    }
   }
 }
 
@@ -111,16 +115,56 @@ export async function renderSelos() {
 }
 
 export function abrirModalSelo(nome, cor, iconURL, dados) {
-  const box = document.querySelector('.modal-selo-box');
-  if (!box) return;
-  document.querySelector('.modal-selo-icon').style.borderColor = `var(--${cor})`;
-  document.querySelector('.modal-selo-icon').innerHTML = `<img src="${iconURL}" style="width:100%;height:100%;object-fit:contain">`;
-  document.querySelector('.modal-selo-titulo').textContent = dados.nome||nome;
-  document.querySelector('.modal-selo-acao').textContent   = dados.acao||'';
-  document.querySelector('.modal-selo-maya').textContent   = dados.maya||'';
-  document.querySelector('.modal-selo-desc').textContent   = dados.descricao||dados.desc||'';
-  document.getElementById('modal-selo').classList.add('active');
-  document.body.style.overflow = 'hidden';
+  import('./cartilha.js').then(({ gerarInfoSelo }) => {
+    import('./data.js').then(({ SELOS_NOMES, SELOS_MAIAS, POEMA_SELO, FAMILIAS_TERRESTRES, FAMILIAS_DESC, RACAS_RAIZ, RACAS_DESC }) => {
+      // Descobre índice do selo pelo nome
+      const nomeBase = (dados?.nome || nome || '').split(' ').slice(0,-1).join(' ') || nome;
+      const seloIdx = SELOS_NOMES.findIndex(n => n === nomeBase || n === (dados?.nome||'').split(' ').slice(0,-1).join(' '));
+      const nomeMaia   = seloIdx >= 0 ? (SELOS_MAIAS[seloIdx]||'') : '';
+      const familia    = seloIdx >= 0 ? (FAMILIAS_TERRESTRES[seloIdx]||'') : '';
+      const raca       = seloIdx >= 0 ? (RACAS_RAIZ[seloIdx]||'') : '';
+      const palavras   = seloIdx >= 0 ? (POEMA_SELO[seloIdx]||{}) : {};
+      const fdesc      = FAMILIAS_DESC[familia] || {};
+      const rdesc      = RACAS_DESC[raca]       || {};
+
+      const box = document.querySelector('.modal-selo-box');
+      if (!box) return;
+
+      document.querySelector('.modal-selo-icon').style.borderColor = `var(--${cor})`;
+      document.querySelector('.modal-selo-icon').innerHTML = `<img src="${iconURL}" style="width:100%;height:100%;object-fit:contain">`;
+      document.querySelector('.modal-selo-titulo').textContent = dados?.nome || nome;
+      document.querySelector('.modal-selo-acao').textContent   = '';
+      document.querySelector('.modal-selo-maya').textContent   = '';
+
+      const descEl = document.querySelector('.modal-selo-desc');
+      descEl.innerHTML = `
+        ${nomeMaia ? `<div style="font-family:Cinzel;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.5rem">${nomeMaia}</div>` : ''}
+        ${palavras.poder || palavras.qualidade ? `
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem">
+          ${[palavras.poder, palavras.qualidade, palavras.essencia].filter(Boolean).map(p =>
+            `<span style="background:rgba(165,124,0,.1);border:1px solid var(--border-g);border-radius:20px;padding:2px 9px;font-size:.6rem;color:var(--gold2);font-family:Cinzel">${p}</span>`
+          ).join('')}
+        </div>` : ''}
+        ${dados?.acao ? `<div style="font-size:.82rem;color:var(--text2);margin-bottom:.5rem;font-style:italic">${dados.acao}</div>` : ''}
+        ${dados?.descricao || dados?.desc ? `<div style="font-size:.82rem;color:var(--text);margin-bottom:.7rem;line-height:1.7">${dados.descricao||dados.desc}</div>` : ''}
+        ${familia || raca ? `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem">
+          ${raca ? `<div style="background:var(--bg2);border-radius:6px;padding:.5rem;border:1px solid var(--border)">
+            <div style="font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Raça Raiz</div>
+            <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2)">${raca}</div>
+            <div style="font-size:.65rem;color:var(--text3);margin-top:.15rem">${rdesc.papel||''}</div>
+          </div>` : ''}
+          ${familia ? `<div style="background:var(--bg2);border-radius:6px;padding:.5rem;border:1px solid var(--border)">
+            <div style="font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Família</div>
+            <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2)">${familia}</div>
+            <div style="font-size:.65rem;color:var(--text3);margin-top:.15rem">${fdesc.desc||''}</div>
+          </div>` : ''}
+        </div>` : ''}`;
+
+      document.getElementById('modal-selo').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
 }
 
 export function fecharModalSelo() {
