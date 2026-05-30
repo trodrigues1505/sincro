@@ -138,3 +138,37 @@ export function getRelacaoKins(kinDia, kinNatal) {
   if (kinDia === kinNatal)                            return { label:'Sincronicidade Total',desc:'Hoje é exatamente o seu Kin Natal!',           cor:'var(--gold3)', icon:'✨' };
   return null;
 }
+
+// ─── Poema Ressonante do Kin ─────────────────────────────────────────────────
+export function gerarPoemaKin(kinNum) {
+  const { POEMA_TOM, POEMA_SELO, SELOS_NOMES, SELOS_MAIAS,
+          FAMILIAS_TERRESTRES, FAMILIAS_DESC, RACAS_RAIZ, RACAS_DESC } = require('./data.js');
+  // usar imports estáticos via parâmetros passados
+  return kinNum; // placeholder — lógica abaixo no renderer
+}
+
+export function calcPoemaKin(kinNum, kData, poema_tom, poema_selo, selos_nomes) {
+  if (!kData) return null;
+  const seloIdx = (kinNum - 1) % 20;
+  const tomIdx  = ((kinNum - 1) % 13) + 1;
+  const ps = poema_selo[seloIdx];
+  const pt = poema_tom[tomIdx];
+  if (!ps || !pt) return null;
+  const nomeSelo = selos_nomes[seloIdx] || '';
+  // detecta gênero do selo
+  const femininos = new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
+  const isFem = femininos.has(nomeSelo);
+  const artigo = isFem ? 'a' : 'o';
+  const daArticle = isFem ? 'da' : 'do';
+  // linha do guia
+  const guiaLinha = kData.oraculo?.guia
+    ? `Eu sou guiado pelo poder ${daArticle} ${kData.oraculo.guia.split(' ').slice(0,-1).join(' ')}`
+    : `Eu sou guiado pelo meu próprio poder duplicado`;
+  return {
+    linha1: `Eu ${pt.poder} com o fim de ${ps.qualidade},`,
+    linha2: `${pt.acao} ${ps.poder},`,
+    linha3: `Sel${isFem?'a':'o'} ${artigo} ${nomeSelo} d${daArticle} ${ps.essencia},`,
+    linha4: `Com o tom ${pt.qualidade} d${daArticle === 'da' ? 'a' : 'o'} ${pt.acao.toLowerCase().replace('ando','ação').replace('endo','ção')},`,
+    linha5: guiaLinha,
+  };
+}
