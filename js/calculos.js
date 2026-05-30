@@ -36,22 +36,24 @@ export function getSeloCor(nomeCompleto) {
 }
 
 export function getSeloIconURL(nomeCompleto) {
-  const nomeBase = nomeCompleto.split(' ').slice(0, -1).join(' ');
+  if (!nomeCompleto) return './assets/icons/default.png';
+  // remove a cor (última palavra) para pegar o nome base
+  const partes = nomeCompleto.trim().split(' ');
+  const nomeBase = partes.slice(0, -1).join(' ') || nomeCompleto;
   const mapa = {
-    'Dragão':'./assets/icons/dragao.png','Vento':'./assets/icons/vento.png',
-    'Noite':'./assets/icons/noite.png','Semente':'./assets/icons/semente.png',
-    'Serpente':'./assets/icons/serpente.png','Enlaçador':'./assets/icons/enlacador.png',
-    'Enlaçador de Mundos':'./assets/icons/enlacador.png','Mão':'./assets/icons/mao.png',
-    'Estrela':'./assets/icons/estrela.png','Lua':'./assets/icons/lua.png',
-    'Cão':'./assets/icons/cao.png','Cachorro':'./assets/icons/cao.png',
-    'Macaco':'./assets/icons/macaco.png','Humano':'./assets/icons/humano.png',
-    'Caminhante':'./assets/icons/caminhante.png','Caminhante do Céu':'./assets/icons/caminhante.png',
-    'Mago':'./assets/icons/mago.png','Feiticeiro':'./assets/icons/mago.png',
-    'Águia':'./assets/icons/aguia.png','Guerreiro':'./assets/icons/guerreiro.png',
-    'Terra':'./assets/icons/terra.png','Espelho':'./assets/icons/espelho.png',
-    'Tormenta':'./assets/icons/tormenta.png','Sol':'./assets/icons/sol.png',
+    'Dragão':'dragao','Vento':'vento','Noite':'noite','Semente':'semente',
+    'Serpente':'serpente','Enlaçador':'enlacador','Enlaçador de Mundos':'enlacador',
+    'Mão':'mao','Estrela':'estrela','Lua':'lua',
+    // Cachorro — múltiplas variantes pois o JSON pode usar qualquer uma
+    'Cão':'cao','Cachorro':'cao','Cão Branco':'cao','Cachorro Branco':'cao',
+    'Macaco':'macaco','Humano':'humano',
+    'Caminhante':'caminhante','Caminhante do Céu':'caminhante',
+    'Mago':'mago','Feiticeiro':'mago',
+    'Águia':'aguia','Guerreiro':'guerreiro',
+    'Terra':'terra','Espelho':'espelho','Tormenta':'tormenta','Sol':'sol',
   };
-  return mapa[nomeBase] || './assets/icons/default.png';
+  const arquivo = mapa[nomeBase] || mapa[nomeCompleto] || null;
+  return arquivo ? `./assets/icons/${arquivo}.png` : './assets/icons/default.png';
 }
 
 export function isLeapDay(d) {
