@@ -128,4 +128,4 @@ export const POEMA_SELO = [
   { poder:'Refletir',    qualidade:'Infinito',      direcao:'Matriz',   essencia:'Ordem'         }, // Espelho
   { poder:'Catalizar',   qualidade:'Autogeração',   direcao:'Matriz',   essencia:'Energia'       }, // Tormenta
   { poder:'Iluminar',    qualidade:'Fogo Universal',direcao:'Matriz',   essencia:'Vida'          }, // Sol
-];
+];  
