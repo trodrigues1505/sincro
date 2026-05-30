@@ -28,3 +28,104 @@ export const DATA_PRONTO = fetch('./sincronario_dados.json')
   .then(r => r.json())
   .then(json => { Object.assign(DATA, json); })
   .catch(e => console.error('Erro ao carregar dados:', e));
+
+// ─── Dados da Cartilha: Famílias Terrestres ──────────────────────────────────
+// Índice 0=Dragão, 1=Vento, ..., 19=Sol
+export const FAMILIAS_TERRESTRES = [
+  // Dragão, Vento, Noite, Semente, Serpente, Enlaçador, Mão, Estrela, Lua, Cão,
+  // Macaco, Humano, Caminhante, Mago, Águia, Guerreiro, Terra, Espelho, Tormenta, Sol
+  'Cardeal','Central','Sinal','Portal','Polar',   // 0–4
+  'Cardeal','Central','Sinal','Portal','Polar',   // 5–9
+  'Cardeal','Central','Sinal','Portal','Polar',   // 10–14
+  'Cardeal','Central','Sinal','Portal','Polar',   // 15–19
+];
+
+export const FAMILIAS_DESC = {
+  Polar:    { desc: 'Início das Cromáticas', funcao: 'Iniciam os ciclos de 4 dias' },
+  Cardeal:  { desc: 'Estabelece a Gênesis',  funcao: 'Estabelecem a força criadora' },
+  Central:  { desc: 'Cavam os Túneis',       funcao: 'Abrem passagens entre dimensões' },
+  Sinal:    { desc: 'Decifram os Mistérios', funcao: 'Revelam os padrões ocultos' },
+  Portal:   { desc: 'Abrem os Portais',      funcao: 'Ativam os portais galácticos' },
+};
+
+// Raças Raiz por índice do selo (0=Dragão...19=Sol)
+export const RACAS_RAIZ = [
+  'Vermelha','Branca','Azul','Amarela','Vermelha', // Dragão,Vento,Noite,Semente,Serpente
+  'Branca','Azul','Amarela','Vermelha','Branca',   // Enlaçador,Mão,Estrela,Lua,Cão
+  'Azul','Amarela','Vermelha','Branca','Azul',     // Macaco,Humano,Caminhante,Mago,Águia
+  'Amarela','Vermelha','Branca','Azul','Amarela',  // Guerreiro,Terra,Espelho,Tormenta,Sol
+];
+
+export const RACAS_DESC = {
+  Vermelha: { papel: 'Iniciadores', chakra: 'Raiz',    desc: 'Iniciam e nutrem a força vital' },
+  Branca:   { papel: 'Refinadores', chakra: 'Coroa',   desc: 'Refinam e purificam a energia' },
+  Azul:     { papel: 'Transformadores', chakra: 'Garganta', desc: 'Transformam e catalisam mudanças' },
+  Amarela:  { papel: 'Maduros',     chakra: 'Plexo Solar', desc: 'Amadurecem e manifestam resultados' },
+};
+
+// Nomes maias dos 20 selos
+export const SELOS_MAIAS = [
+  'IMIX','IK','AKBAL','KAN','CHICCHAN','CIMI','MANIK','LAMAT',
+  'MULUC','OC','CHUEN','EB','BEN','IX','MEN','CIB',
+  'CABAN','ETZNAB','CAUAC','AHAU'
+];
+
+// Perguntas das 13 Luas Galácticas
+export const PERGUNTAS_LUA = [
+  null, // índice 0 não usado
+  'O que nutro?',
+  'O que desafio?',
+  'Como sirvo?',
+  'Qual é minha forma?',
+  'Como irradio?',
+  'Como me equilíbrio?',
+  'Como me sintonizo?',
+  'Estou vivendo minha integridade?',
+  'Como realizo minhas intenções?',
+  'Como aperfeiço o que faço?',
+  'Como libero e me desapego?',
+  'Como me dedico à cooperação?',
+  'Como transcendo e persevero?',
+];
+
+// Tabela Poema Ressonante — palavras por tom (A=poder, C=ação, B=qualidade, E=direcao, F=essencia)
+export const POEMA_TOM = [
+  null,
+  { poder:'Unifico',     acao:'Atraindo',        qualidade:'Propósito'    },
+  { poder:'Polarizo',    acao:'Estabilizando',   qualidade:'Desafio'      },
+  { poder:'Ativo',       acao:'Vinculando',      qualidade:'Serviço'      },
+  { poder:'Defino',      acao:'Medindo',         qualidade:'Forma'        },
+  { poder:'Potencializo',acao:'Comandando',      qualidade:'Radiação'     },
+  { poder:'Organizo',    acao:'Equilibrando',    qualidade:'Igualdade'    },
+  { poder:'Canalizo',    acao:'Inspirando',      qualidade:'Harmonização' },
+  { poder:'Harmonizo',   acao:'Modelando',       qualidade:'Integridade'  },
+  { poder:'Pulso',       acao:'Realizando',      qualidade:'Intenção'     },
+  { poder:'Aperfeiçoo',  acao:'Produzindo',      qualidade:'Manifestação' },
+  { poder:'Dissolvo',    acao:'Liberando',       qualidade:'Liberação'    },
+  { poder:'Dedico-me',   acao:'Universalizando', qualidade:'Cooperação'   },
+  { poder:'Persevero',   acao:'Transcendendo',   qualidade:'Presença'     },
+];
+
+// Palavras-chave dos selos para o poema (B=qualidade/essência, D=poder do selo)
+export const POEMA_SELO = [
+  { poder:'Nutrir',      qualidade:'Nascimento',    direcao:'Entrada',  essencia:'Ser'           }, // Dragão
+  { poder:'Comunicar',   qualidade:'Espírito',      direcao:'Entrada',  essencia:'Alento'        }, // Vento
+  { poder:'Sonhar',      qualidade:'Abundância',    direcao:'Entrada',  essencia:'Intuição'      }, // Noite
+  { poder:'Focalizar',   qualidade:'Florescimento', direcao:'Entrada',  essencia:'Percepção'     }, // Semente
+  { poder:'Sobreviver',  qualidade:'Força Vital',   direcao:'Armazém',  essencia:'Instinto'      }, // Serpente
+  { poder:'Igualar',     qualidade:'Morte',         direcao:'Armazém',  essencia:'Oportunidade'  }, // Enlaçador
+  { poder:'Conhecer',    qualidade:'Realização',    direcao:'Armazém',  essencia:'Cura'          }, // Mão
+  { poder:'Embelezar',   qualidade:'Elegância',     direcao:'Armazém',  essencia:'Arte'          }, // Estrela
+  { poder:'Purificar',   qualidade:'Água Universal',direcao:'Processo', essencia:'Fluxo'         }, // Lua
+  { poder:'Amar',        qualidade:'Coração',       direcao:'Processo', essencia:'Lealdade'      }, // Cão
+  { poder:'Brincar',     qualidade:'Magia',         direcao:'Processo', essencia:'Ilusão'        }, // Macaco
+  { poder:'Influenciar', qualidade:'Livre-Arbítrio',direcao:'Processo', essencia:'Sabedoria'     }, // Humano
+  { poder:'Explorar',    qualidade:'Espaço',        direcao:'Saída',    essencia:'Vigilância'    }, // Caminhante
+  { poder:'Encantar',    qualidade:'Intemporalidade',direcao:'Saída',   essencia:'Receptividade' }, // Mago
+  { poder:'Criar',       qualidade:'Visão',         direcao:'Saída',    essencia:'Mente'         }, // Águia
+  { poder:'Questionar',  qualidade:'Inteligência',  direcao:'Saída',    essencia:'Intrepidez'    }, // Guerreiro
+  { poder:'Evoluir',     qualidade:'Navegação',     direcao:'Matriz',   essencia:'Sincronicidade'}, // Terra
+  { poder:'Refletir',    qualidade:'Infinito',      direcao:'Matriz',   essencia:'Ordem'         }, // Espelho
+  { poder:'Catalizar',   qualidade:'Autogeração',   direcao:'Matriz',   essencia:'Energia'       }, // Tormenta
+  { poder:'Iluminar',    qualidade:'Fogo Universal',direcao:'Matriz',   essencia:'Vida'          }, // Sol
+];
