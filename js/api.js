@@ -187,9 +187,10 @@ export async function salvarKinNatal() {
   try {
     await db.collection('users').doc(currentUserUID).update({ kinNatalData: v, kinNatalNum: k });
     _kinNatalSalvo = k;
+    // Sincroniza kin natal no ranking público
+    await db.collection('ranking').doc(currentUserUID).set({ kinNatal: k }, { merge: true });
     mostrarKinNatalSalvo(v, k);
     document.getElementById('nasc-inp').value = v;
-    // dispara recalculo do natal e recarrega kin do dia com comparação
     window.calcNatal && window.calcNatal();
     window.loadToday && window.loadToday();
   } catch(e) { alert('Erro ao salvar: ' + e.message); }
@@ -205,4 +206,4 @@ export async function limparKinNatal() {
   document.getElementById('perfil-kin-salvo').innerHTML = '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
   document.getElementById('perfil-nasc-inp').value = '';
   window.loadToday && window.loadToday();
-}
+}    
