@@ -431,3 +431,61 @@ window.verHistoricoCronografo = function() {
   el.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 };
+
+// ─── Tabela Guia Interativa ───────────────────────────────────────────────────
+// Fórmula: guia tem mesma COR que o kin
+// tons 1,6,11 → guia = próprio poder duplicado
+// tons 2,7,12 → subtrai 8 selos
+// tons 3,8,13 → soma 4 selos
+// tons 4,9    → subtrai 4 selos
+// tons 5,10   → soma 8 selos
+export function calcGuia(kinNum) {
+  const seloIdx = (kinNum - 1) % 20; // 0–19
+  const tomIdx  = ((kinNum - 1) % 13) + 1; // 1–13
+  const grupos1611 = [1, 6, 11];
+  const gruposS8   = [2, 7, 12];
+  const gruposP4   = [3, 8, 13];
+  const gruposS4   = [4, 9];
+  const gruposP8   = [5, 10];
+  let guiaSeloIdx;
+  if (grupos1611.includes(tomIdx)) return null; // próprio poder
+  else if (gruposS8.includes(tomIdx)) guiaSeloIdx = (seloIdx - 8 + 20) % 20;
+  else if (gruposP4.includes(tomIdx)) guiaSeloIdx = (seloIdx + 4) % 20;
+  else if (gruposS4.includes(tomIdx)) guiaSeloIdx = (seloIdx - 4 + 20) % 20;
+  else if (gruposP8.includes(tomIdx)) guiaSeloIdx = (seloIdx + 8) % 20;
+  else return null;
+  return guiaSeloIdx;
+}
+
+export function calcOraculo(kinNum) {
+  const seloIdx = (kinNum - 1) % 20;
+  const tomIdx  = ((kinNum - 1) % 13) + 1;
+  const guiaIdx = calcGuia(kinNum); // null = próprio poder
+  const analogoIdx  = (seloIdx + 19) % 20; // soma 19
+  const antipodaIdx = (seloIdx + 10) % 20; // distância 10
+  const ocultoIdx   = (seloIdx + 21) % 20; // soma 21 → (seloIdx+1)%20
+  return {
+    guia:     guiaIdx !== null ? SELOS_NOMES[guiaIdx] : SELOS_NOMES[seloIdx] + ' (poder duplicado)',
+    analogo:  SELOS_NOMES[analogoIdx],
+    antipoda: SELOS_NOMES[antipodaIdx],
+    oculto:   SELOS_NOMES[ocultoIdx],
+  };
+}
+
+export function renderTabelaGuia() {
+  return `
+<div class="section" style="margin-top:.5rem">
+  <div class="section-title">Tabela Guia Interativa</div>
+  <p style="font-size:.82rem;color:var(--text3);margin-bottom:.8rem">Digite seu Kin para calcular automaticamente Guia, Análogo, Antípoda e Oculto.</p>
+  <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem">
+    <input type="number" id="tabela-guia-inp" min="1" max="260" placeholder="Kin (1–260)"
+      style="background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:.4rem .7rem;font-family:Cinzel;font-size:.82rem;width:120px"
+      oninput="calcularTabelaGuia()">
+    <button onclick="calcularTabelaGuia()" style="background:var(--green);border:none;border-radius:4px;color:#fff;padding:5px 14px;font-family:Cinzel;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Calcular</button>
+  </div>
+  <div id="tabela-guia-resultado" style="display:none">
+    <div style="display:flex;flex-direction:column;gap:6px" id="tabela-guia-linhas"></div>
+    <div id="tabela-guia-poema" style="margin-top:.8rem;background:rgba(165,124,0,.05);border:1px solid var(--border-g);border-radius:8px;padding:.8rem;text-align:center;font-style:italic;font-size:.88rem;color:var(--text2);line-height:1.9"></div>
+  </div>
+</div>`;
+}
