@@ -1,368 +1,387 @@
-// ─── js/renderer.js — toda renderização HTML do sincronário ──────────────────
-import {
-  DATA, MEDITACOES, ONDAS_PROPOSITOS, DIA_ONDA_PARA_IDX, PERGUNTAS_TOM,
-  PLASMA_SVGS, SELF_DESIGN_ONDAS, SELF_DESIGN_PAGINAS,
-  SELOS_NOMES, TONS_NOMES, CORES_CICLO, CASTELO_NOMES,
-  LUAS_ANIMAIS, LUA_KINS, COR_BASE_NORM, ANIMAIS_FEM,
-} from './data.js';
-import {
-  getSeloBase, getSeloCor, getSeloIconURL, concordar, concordarCor,
-  ehSeloFeminino, getFaseLunar, getAnoGalactico, getContextoLua,
-  getContextoAnelSolar, daysBetween, 
-} from './calculos.js';
-import { isFavorito } from './storage.js';
-import { renderPoema, renderInfoSelo, getPerguntaLua, renderCronografo } from './cartilha.js';
+// ─── js/gamificacao.js — sistema de gamificação do sincronário ────────────────
+import { db } from './api.js';
+import { DATA } from './data.js';
+import { getSeloBase, getSeloCor, getSeloIconURL, dateToKin } from './calculos.js';
 
-// ─── Glifo do Tom ─────────────────────────────────────────────────────────────
-export function gerarGlifoTom(tom, iconSize) {
-  const sz = iconSize || 64;
-  const barras = Math.floor(tom / 5), pontos = tom % 5;
-  const bw = sz, bh = Math.max(4, Math.round(sz * 0.07));
-  const bg = Math.round(sz * 0.06);
-  const pr = Math.max(3, Math.round(sz * 0.06)), pg = Math.round(sz * 0.07);
-  const totalH = Math.max(barras * (bh + bg) + (pontos > 0 ? pr * 2 + bg : 0), pr * 2);
-  const svgH = totalH + 4;
-  const cx = sz / 2;
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${sz}" height="${svgH}" viewBox="0 0 ${sz} ${svgH}">`;
-  let y = svgH - 2;
-  for (let b = 0; b < barras; b++) {
-    y -= bh;
-    svg += `<rect x="0" y="${y}" width="${bw}" height="${bh}" rx="2" fill="#c9a030" opacity=".85"/>`;
-    y -= bg;
-  }
-  if (pontos > 0) {
-    y -= pr + 1;
-    const totalW = (pontos - 1) * pg + pontos * (pr * 2);
-    let px = cx - totalW / 2 + pr;
-    for (let p = 0; p < pontos; p++) {
-      svg += `<circle cx="${px.toFixed(1)}" cy="${y}" r="${pr}" fill="#c9a030" opacity=".85"/>`;
-      px += pr * 2 + pg;
+// ─── Configuração de pontos ───────────────────────────────────────────────────
+export const PONTOS = {
+  ACESSAR_DIA:        5,
+  PRECE:             15,
+  MEDITACAO:         20,
+  SELF_DESIGN:       20,
+  EBOOK:             10,
+  COMPLETAR_TUDO:    30,
+  KIN_NATAL:         10,
+  FAVORITAR:          5,
+  PRIMEIRO_DIA:       5,  // antes das 9h
+  BONUS_1_COMPLETO:  50,  // 1º a completar tudo no dia
+  BONUS_1_PRECE:     25,  // 1º a ouvir a prece
+};
+
+// Multiplicadores de streak (dias consecutivos)
+export const STREAK_MULT = [
+  { dias: 28, mult: 2.0 },
+  { dias: 14, mult: 1.5 },
+  { dias: 7,  mult: 1.2 },
+  { dias: 0,  mult: 1.0 },
+];
+
+// Títulos galácticos por pontuação total
+export const TITULOS = [
+  { min: 7000, titulo: 'Mago',   emoji: '🌀' },
+  { min: 3500, titulo: 'Sol',    emoji: '☀️' },
+  { min: 1500, titulo: 'Estrela',emoji: '⭐' },
+  { min: 500,  titulo: 'Lua',    emoji: '🌙' },
+  { min: 0,    titulo: 'Semente',emoji: '🌱' },
+];
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function hoje() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getTitulo(pts) {
+  return TITULOS.find(t => pts >= t.min) || TITULOS[TITULOS.length-1];
+}
+
+function getMultStreak(streak) {
+  return (STREAK_MULT.find(s => streak >= s.dias) || STREAK_MULT[STREAK_MULT.length-1]).mult;
+}
+
+function calcPontos(pts, streak) {
+  const mult = getMultStreak(streak);
+  return Math.round(pts * mult);
+}
+
+// ─── Registro de atividade ────────────────────────────────────────────────────
+let _cache = null; // cache local para evitar múltiplas leituras por sessão
+
+async function getAtividade(uid) {
+  if (_cache) return _cache;
+  const snap = await db.collection('gamificacao').doc(uid).get();
+  _cache = snap.exists ? snap.data() : { pontos: 0, streak: 0, ultimoDia: null, atividades: {} };
+  return _cache;
+}
+
+function invalidarCache() { _cache = null; }
+
+async function atualizarFirestore(uid, dados) {
+  await db.collection('gamificacao').doc(uid).set(dados, { merge: true });
+  _cache = { ..._cache, ...dados };
+  // Atualiza snapshot público no ranking
+  const titulo = getTitulo(dados.pontos || _cache.pontos || 0);
+  await db.collection('ranking').doc(uid).set({
+    pontos: dados.pontos ?? _cache.pontos,
+    streak: dados.streak ?? _cache.streak,
+    titulo: titulo.titulo,
+    emoji:  titulo.emoji,
+  }, { merge: true });
+}
+
+export async function registrarAtividade(uid, acao, nomeUsuario, fotoURL, kinNatalNum) {
+  if (!uid) return 0;
+  const dataHoje = hoje();
+  const ativ = await getAtividade(uid);
+
+  // Calcula streak
+  let { streak = 0, ultimoDia, atividades = {}, pontos = 0 } = ativ;
+  const atividadesHoje = atividades[dataHoje] || {};
+
+  // Já fez essa ação hoje?
+  if (atividadesHoje[acao]) return 0;
+
+  // Streak: se ultimoDia foi ontem, incrementa; se foi hoje, mantém; senão reseta
+  const ontem = new Date(); ontem.setDate(ontem.getDate()-1);
+  const ontemStr = `${ontem.getFullYear()}-${String(ontem.getMonth()+1).padStart(2,'0')}-${String(ontem.getDate()).padStart(2,'0')}`;
+  if (ultimoDia === ontemStr) streak++;
+  else if (ultimoDia !== dataHoje) streak = 1;
+
+  // Bônus de primeiro acesso antes das 9h
+  let ptsBase = PONTOS[acao] || 0;
+  if (acao === 'ACESSAR_DIA' && new Date().getHours() < 9) ptsBase += PONTOS.PRIMEIRO_DIA;
+
+  // Bônus 1º a completar tudo / 1º a ouvir prece
+  let ptsBonus = 0;
+  if (acao === 'COMPLETAR_TUDO' || acao === 'PRECE') {
+    const tipoBonus = acao === 'COMPLETAR_TUDO' ? 'bonus_1_completo' : 'bonus_1_prece';
+    const pontosBonus = acao === 'COMPLETAR_TUDO' ? PONTOS.BONUS_1_COMPLETO : PONTOS.BONUS_1_PRECE;
+    const hoje24 = new Date(); hoje24.setHours(0,0,0,0);
+    const snap = await db.collection('bonuses_dia').doc(dataHoje).get();
+    const bData = snap.exists ? snap.data() : {};
+    if (!bData[tipoBonus]) {
+      ptsBonus = pontosBonus;
+      await db.collection('bonuses_dia').doc(dataHoje).set({ [tipoBonus]: uid }, { merge: true });
     }
   }
-  return svg + '</svg>';
-}
 
-// ─── Lua circular ─────────────────────────────────────────────────────────────
-export function gerarLuaCircular(diaAtivo) {
-  const cores = ['red','white','blue','yellow'];
-  const nomesCores = [['red','Vermelha'],['white','Branca'],['blue','Azul'],['yellow','Amarela']];
-  const cx = 200, cy = 200, rOut = 178, rIn = 118, rLbl = 148;
-  let segs = '', labels = '';
-  for (let i = 0; i < 28; i++) {
-    const dia = i + 1, cor = cores[Math.floor(i / 7)];
-    const a1 = (i * 360/28 - 90) * Math.PI/180, a2 = ((i+1) * 360/28 - 90) * Math.PI/180;
-    const x1o = cx+rOut*Math.cos(a1), y1o = cy+rOut*Math.sin(a1);
-    const x2o = cx+rOut*Math.cos(a2), y2o = cy+rOut*Math.sin(a2);
-    const x1i = cx+rIn*Math.cos(a1),  y1i = cy+rIn*Math.sin(a1);
-    const x2i = cx+rIn*Math.cos(a2),  y2i = cy+rIn*Math.sin(a2);
-    const d = `M${x1o.toFixed(1)} ${y1o.toFixed(1)} A${rOut} ${rOut} 0 0 1 ${x2o.toFixed(1)} ${y2o.toFixed(1)} L${x2i.toFixed(1)} ${y2i.toFixed(1)} A${rIn} ${rIn} 0 0 0 ${x1i.toFixed(1)} ${y1i.toFixed(1)}Z`;
-    const ativo = dia === diaAtivo ? ' active' : '';
-    segs   += `<path d="${d}" class="seg ${cor}${ativo}"></path>`;
-    const am = ((i+0.5)*360/28 - 90) * Math.PI/180;
-    labels += `<text x="${(cx+rLbl*Math.cos(am)).toFixed(1)}" y="${(cy+rLbl*Math.sin(am)).toFixed(1)}" class="seg-label${ativo}">${dia}</text>`;
-  }
-  const legenda = nomesCores.map(([cor,nome]) =>
-    `<span class="lua-legenda-item"><span class="lua-legenda-dot ${cor}"></span>${nome}</span>`
-  ).join('');
-  return `<div><svg class="lua-circular" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">${segs}${labels}<text x="${cx}" y="${cy-9}" class="center-text center-num">${diaAtivo}</text><text x="${cx}" y="${cy+13}" class="center-text center-sub">DE 28</text></svg><div class="lua-legenda">${legenda}</div></div>`;
-}
+  // Aplica multiplicador de streak
+  const ptsComMult = calcPontos(ptsBase, streak);
+  const ptsTotal = ptsComMult + ptsBonus;
+  const novoTotal = pontos + ptsTotal;
 
-// ─── Célula clicável de kin (reutilizada em oráculo, onda, castelo) ───────────
-// FIX: borda dourada removida do oráculo; todos os kins são clicáveis com abrirKinModal
-function celKin(kinNum, nomeCompleto, corSelo, iconURL, largura, altura, extraStyle='') {
-  const safe = (nomeCompleto||'').replace(/'/g,"\\'");
-  return `<div class="kin-cel-clicavel" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px" onclick="abrirKinModal(${kinNum},'${safe}')">
-    <div class="selo-icon selo-${corSelo}" style="width:${largura}px;height:${altura}px${extraStyle}"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
-  </div>`;
-}
-
-// ─── Hero ─────────────────────────────────────────────────────────────────────
-export function renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, seloBase, tomNum, fraseCurta) {
-  const isFav = isFavorito(kinNum);
-  const safeSelo = seloCompleto.replace(/'/g,"\\'");
-  return `
-<div class="section anim-1">
-  <div class="kin-hero">
-    <div style="display:flex;justify-content:center;margin-bottom:.3rem">${gerarGlifoTom(tomNum, 64)}</div>
-    <div class="selo-icon kin-clicavel selo-${corSelo}" style="width:64px;height:64px;border-radius:9px;margin:0 auto .5rem" onclick="abrirKinModal(${kinNum},'${safeSelo}',false)" title="Ver detalhes do Kin ${kinNum}">
-      <img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain">
-    </div>
-    <div class="kin-title">${nomeCompleto}</div>
-    <div class="kin-num" style="font-size:.78rem;color:var(--gold2);letter-spacing:.12em;margin-top:.3rem">
-      Kin ${kinNum} · 260
-      <button class="btn-fav${isFav?' ativo':''}" onclick="toggleFavorito(${kinNum},this)" title="${isFav?'Remover dos favoritos':'Salvar nos favoritos'}">${isFav?'★':'☆'}</button>
-    </div>
-  </div>
-  ${fraseCurta ? `<div class="kin-frase">"${fraseCurta}"</div>` : ''}
-  <div class="export-btns">
-    <button class="btn-share" onclick="compartilharKin()">⬆ Compartilhar</button>
-    <button class="btn-share" onclick="exportPNG()" style="border-color:var(--border);color:var(--text2)">↓ PNG</button>
-    <button class="btn-cal" onclick="exportarCalendario28()">📅 28 dias</button>
-    <button class="btn-cal" onclick="exportarPDFKin()">📄 PDF</button>
-  </div>
-</div>`;
-}
-
-// ─── Oráculo — central sem style inline de tamanho (CSS controla) ────────────
-export function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNum) {
-  const { guia, analogo, antipoda, oculto } = kD.oraculo;
-
-  function kinNumDeSelo(seloNome) {
-    if (!DATA.kins) return 0;
-    const entry = Object.entries(DATA.kins).find(([,v]) => v.selo === seloNome);
-    return entry ? Number(entry[0]) : 0;
-  }
-
-  const celOraculo = (seloNome, label, flexDir='column') => {
-    const cor = getSeloCor(seloNome);
-    const base = getSeloBase(seloNome);
-    const icon = getSeloIconURL(seloNome);
-    const kn = kinNumDeSelo(seloNome);
-    const safe = seloNome.replace(/'/g,"\\'");
-    const onclick = kn ? `onclick="abrirKinModal(${kn},'${safe}',true)"` : '';
-    const clicavel = kn ? 'kin-clicavel' : '';
-    return `<div class="${clicavel}" style="display:flex;flex-direction:${flexDir};align-items:center;gap:3px" ${onclick}>
-      <span style="color:var(--text2);font-size:.48rem;letter-spacing:.08em;text-transform:uppercase;font-family:Cinzel">${label}</span>
-      <div class="selo-icon oraculo-side-icon selo-${cor}"><img src="${icon}" style="width:100%;height:100%;object-fit:contain"></div>
-      <span style="font-family:Cinzel;font-size:.55rem;color:var(--text);text-align:center;max-width:60px;line-height:1.2">${base}</span>
-    </div>`;
-  };
-
-  // FIX: central usa apenas a classe CSS — sem style inline de width/height
-  // para não sobrescrever o box-shadow definido em .oraculo-central .selo-icon
-  return `
-<div class="section anim-2">
-  <div class="section-title">Oráculo do Destino</div>
-  <div class="oraculo-wrap">
-    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-      <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(165,124,0,.20)" stroke-width=".4"/>
-      <circle cx="50" cy="50" r="32" fill="none" stroke="rgba(165,124,0,.12)" stroke-width=".3"/>
-    </svg>
-    <div class="oraculo-cell-top oraculo-item oraculo-side">${celOraculo(guia,'Guia')}</div>
-    <div class="oraculo-cell-left oraculo-item oraculo-side">${celOraculo(analogo,'Análogo','column-reverse')}</div>
-    <div class="oraculo-cell-center oraculo-item oraculo-central">
-      <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(tomNum,76)}</div>
-      <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
-      <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem;margin-top:.3rem">${seloBase}</div>
-      <div style="font-family:Cinzel;font-size:.52rem;color:rgba(165,124,0,.6);letter-spacing:.12em;margin-top:.1rem">KIN ${kinNum}</div>
-    </div>
-    <div class="oraculo-cell-right oraculo-item oraculo-side">${celOraculo(oculto,'Oculto','column-reverse')}</div>
-    <div class="oraculo-cell-bottom oraculo-item oraculo-side">${celOraculo(antipoda,'Antípoda')}</div>
-  </div>
-</div>`;
-}
-
-// ─── Onda encantada — FIX: clique abre modal do kin ──────────────────────────
-export function renderOndaEncantada(kinNum) {
-  const ondaNum = Math.floor((kinNum-1)/13)+1;
-  const ondaInicio = Math.floor((kinNum-1)/13)*13+1;
-  const diaOnda = ((kinNum-1)%13)+1;
-  const ondaKinInicioData = (DATA.kins||{})[String(ondaInicio)]||{};
-  const ondaSeloNome = ondaKinInicioData.selo||'';
-  const ondaSeloBase = ondaSeloNome ? ondaSeloNome.split(' ').slice(0,-1).join(' ') : '';
-  const ondaNumCiclo = ((ondaNum-1)%20)+1;
-  const ondaProposito = (ONDAS_PROPOSITOS.find(o=>o.onda===ondaNumCiclo)||{}).propositos||'';
-  const prep = ehSeloFeminino(ondaSeloBase) ? 'da ' : 'do ';
-  let kins = '';
-  for (let i = 0; i < 13; i++) {
-    const k = ondaInicio+i, kData = DATA.kins[k];
-    const cor = kData ? getSeloCor(kData.selo) : 'white';
-    const ativo = k===kinNum ? 'active' : '';
-    const tooltip = kData ? `Kin ${k} · ${kData.selo} ${kData.tom_nome}` : '';
-    const safeSelo = (kData?.selo||'').replace(/'/g,"\\'");
-    // FIX: onclick abre modal com dados do kin
-    kins += `<div class="onda-kin kin-clicavel cor-${cor} ${ativo}" title="${tooltip}" onclick="abrirKinModal(${k},'${safeSelo}',true)"><img src="${getSeloIconURL(kData?kData.selo:'')}" style="width:100%;height:100%;object-fit:contain"></div>`;
-  }
-  return `
-<div class="section">
-  <div class="section-title">Onda Encantada ${ondaNum} · Dia ${diaOnda} · 13 dias</div>
-  <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold3);margin-bottom:.5rem;letter-spacing:.03em">Onda Encantada ${prep}${ondaSeloBase}</div>
-  <p style="font-size:.88rem;color:var(--text);margin-bottom:.9rem;line-height:1.7"><span style="color:var(--gold2);font-family:Cinzel;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em">Propósito: </span>${ondaProposito}</p>
-  <div class="onda-wrap"><div class="onda-L">${kins}</div><div class="onda-detail" id="onda-detail"></div></div>
-</div>`;
-}
-
-// ─── Castelo — FIX: marca onda atual; kins clicáveis ─────────────────────────
-export function renderCastelo(kinNum) {
-  const casteloNum = Math.floor((kinNum-1)/52);
-  const castelo = DATA.castelos[casteloNum]||{};
-  const casteloOndas = castelo.ondas||[];
-  const casteloImg = ['vermelho','branco','azul','amarelo','verde'][casteloNum]||'verde';
-  const ondaAtualIdx = Math.floor(((kinNum-1) % 52) / 13); // 0–3: qual onda dentro do castelo
-
-  let ondasHTML = '<div style="display:flex;flex-direction:column;gap:6px;margin-top:.4rem">';
-  casteloOndas.forEach((ondaNome, ondaIdx) => {
-    const ondaKinInicio = casteloNum*52+ondaIdx*13+1;
-    const ondaKinData = (DATA.kins&&DATA.kins[ondaKinInicio])||null;
-    let seloBase, iconURL, seloCor;
-    if (ondaKinData&&ondaKinData.selo) {
-      seloBase = getSeloBase(ondaKinData.selo);
-      iconURL  = getSeloIconURL(ondaKinData.selo);
-      seloCor  = getSeloCor(ondaKinData.selo);
-    } else {
-      const cores = ['Vermelho','Branco','Azul','Amarelo'];
-      seloBase = ondaNome; seloCor = cores[ondaIdx%4].toLowerCase();
-      iconURL  = getSeloIconURL(`${ondaNome} ${cores[ondaIdx%4]}`);
+  // Verifica se completou TODAS as tarefas hoje
+  const tarefasObrig = ['ACESSAR_DIA','PRECE','MEDITACAO','SELF_DESIGN','EBOOK'];
+  const novasAtivHoje = { ...atividadesHoje, [acao]: true };
+  const todasFeitas = tarefasObrig.every(t => novasAtivHoje[t]);
+  if (todasFeitas && !atividadesHoje.COMPLETAR_TUDO) {
+    novasAtivHoje.COMPLETAR_TUDO = true;
+    // Registra bônus de completar tudo recursivamente sem loop
+    const snapB = await db.collection('bonuses_dia').doc(dataHoje).get();
+    const bData = snapB.exists ? snapB.data() : {};
+    let bExtra = 0;
+    if (!bData.bonus_1_completo) {
+      bExtra = PONTOS.BONUS_1_COMPLETO;
+      await db.collection('bonuses_dia').doc(dataHoje).set({ bonus_1_completo: uid }, { merge: true });
     }
-    const prep = ehSeloFeminino(seloBase) ? 'da ' : 'do ';
-    const corLabel = concordarCor(COR_BASE_NORM[seloCor]||'', seloBase);
-    const isAtual = ondaIdx === ondaAtualIdx;
-    const safeSelo = (ondaKinData?.selo||'').replace(/'/g,"\\'");
-    // FIX: ícone do kin da onda clicável + marcador "semana atual"
-    ondasHTML += `<div style="display:flex;align-items:center;gap:.7rem;padding:.2rem .4rem;border-radius:5px;${isAtual?'background:rgba(165,124,0,.08);border:1px solid rgba(165,124,0,.2)':'border:1px solid transparent'}">
-      <div class="selo-icon kin-clicavel selo-${seloCor}" style="width:36px;height:36px;flex-shrink:0;margin:0" onclick="abrirKinModal(${ondaKinInicio},'${safeSelo}',true)"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
-      <span style="font-size:.75rem;color:${isAtual?'var(--gold2)':'var(--text)'};font-family:Cinzel;line-height:1.3;flex:1">Onda ${prep}${seloBase} ${corLabel}</span>
-      ${isAtual ? '<span style="font-size:.5rem;color:var(--gold);font-family:Cinzel;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">← semana atual</span>' : ''}
-    </div>`;
+    const ptsCompleto = calcPontos(PONTOS.COMPLETAR_TUDO, streak) + bExtra;
+    const totalComCompleto = novoTotal + ptsCompleto;
+    await atualizarFirestore(uid, {
+      pontos: totalComCompleto, streak,
+      ultimoDia: dataHoje,
+      atividades: { ...atividades, [dataHoje]: novasAtivHoje },
+    });
+    await atualizarRankingPublico(uid, nomeUsuario, fotoURL, kinNatalNum, totalComCompleto, streak);
+    invalidarCache();
+    mostrarToast(`+${ptsTotal + ptsCompleto} pts${ptsBonus?` (+${ptsBonus} bônus!)`:''} 🎉 Todas as tarefas concluídas!`);
+    return ptsTotal + ptsCompleto;
+  }
+
+  await atualizarFirestore(uid, {
+    pontos: novoTotal, streak,
+    ultimoDia: dataHoje,
+    atividades: { ...atividades, [dataHoje]: novasAtivHoje },
   });
-  ondasHTML += '</div>';
-  return { casteloNum, casteloTexto: CASTELO_NOMES[casteloNum]||'Castelo', casteloImg, ondasHTML };
+  await atualizarRankingPublico(uid, nomeUsuario, fotoURL, kinNatalNum, novoTotal, streak);
+  invalidarCache();
+  if (ptsTotal > 0) mostrarToast(`+${ptsTotal} pts${ptsBonus?` (+${ptsBonus} bônus 🏆!)`:''}`);
+  return ptsTotal;
 }
 
-export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum, perguntaLua) {
-  const art = ANIMAIS_FEM.has(luaAnimal) ? 'da ' : 'do ';
-  const luaKinCorSelo = luaKinData ? getSeloCor(luaKinData.selo) : 'red';
-  const luaKinIconURL = luaKinData ? getSeloIconURL(luaKinData.selo) : '';
-  const nomeKinLua    = luaKinData ? (()=>{const p=luaKinData.selo.split(' ');return p.slice(0,-1).join(' ')+' '+luaKinData.tom_nome+' '+p[p.length-1];})() : '';
-  const safeSelo = (luaKinData?.selo||'').replace(/'/g,"\\'");
-  const clickAttr = luaKinNum ? `onclick="abrirKinModal(${luaKinNum},'${safeSelo}',true)"` : '';
-  const clicavel = luaKinNum ? 'kin-clicavel' : '';
-  return `
-    <div style="margin-bottom:1.1rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.9rem">
-      <div class="section-title">Lua Galáctica · ${luaNum} de 13</div>
-      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Lua Galáctica ${art}${luaAnimal}</div>
-      ${perguntaLua ? `<div style="background:rgba(165,124,0,.07);border-left:2px solid var(--gold);padding:.4rem .7rem;border-radius:0 5px 5px 0;margin-bottom:.7rem;font-style:italic;font-size:.82rem;color:var(--gold2)">${perguntaLua}</div>` : ''}
-      <div style="display:flex;align-items:center;gap:.75rem">
-        <div class="${clicavel}" style="text-align:center" ${clickAttr}>
-          <div style="display:flex;justify-content:center;margin-bottom:.2rem">${luaKinData?gerarGlifoTom(luaKinData.tom,54):''}</div>
-          <div class="selo-icon selo-${luaKinCorSelo}" style="width:54px;height:54px;flex-shrink:0">${luaKinIconURL?`<img src="${luaKinIconURL}" style="width:100%;height:100%;object-fit:contain">`:''}</div>
+async function atualizarRankingPublico(uid, nome, foto, kinNatal, pontos, streak) {
+  if (!uid) return;
+  const titulo = getTitulo(pontos);
+  await db.collection('ranking').doc(uid).set({
+    uid, nome: nome||'', foto: foto||'',
+    kinNatal: kinNatal||null,
+    pontos, streak,
+    titulo: titulo.titulo,
+    emoji: titulo.emoji,
+    atualizadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+  }, { merge: true });
+}
+
+// ─── Toast de pontos ─────────────────────────────────────────────────────────
+function mostrarToast(msg) {
+  let t = document.getElementById('pts-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'pts-toast';
+    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border-g);border-radius:20px;padding:.4rem 1rem;font-family:Cinzel;font-size:.72rem;color:var(--gold2);letter-spacing:.05em;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 2800);
+}
+
+// ─── Widget de pontos no perfil ───────────────────────────────────────────────
+export async function renderGamificacaoPerfil(uid) {
+  const el = document.getElementById('gamificacao-perfil');
+  if (!el || !uid) return;
+  el.innerHTML = '<div style="color:var(--text3);font-size:.8rem;font-style:italic">Carregando...</div>';
+  try {
+    const ativ = await getAtividade(uid);
+    const { pontos = 0, streak = 0, atividades = {} } = ativ;
+    const titulo = getTitulo(pontos);
+    const mult = getMultStreak(streak);
+    const dataHoje = hoje();
+    const atividadesHoje = atividades[dataHoje] || {};
+    const tarefas = [
+      { acao:'ACESSAR_DIA', label:'Acessar o kin do dia', pts: PONTOS.ACESSAR_DIA },
+      { acao:'PRECE',       label:'Prece das 7 direções', pts: PONTOS.PRECE },
+      { acao:'MEDITACAO',   label:'Meditação do selo',    pts: PONTOS.MEDITACAO },
+      { acao:'SELF_DESIGN', label:'Self Design Sounds',   pts: PONTOS.SELF_DESIGN },
+      { acao:'EBOOK',       label:'Leitura do e-book',    pts: PONTOS.EBOOK },
+    ];
+    const concluidas = tarefas.filter(t => atividadesHoje[t.acao]).length;
+    const pct = Math.round((concluidas/tarefas.length)*100);
+
+    // Próximo título
+    const prox = TITULOS.slice().reverse().find(t => t.min > pontos);
+    const proxFalta = prox ? prox.min - pontos : 0;
+
+    el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem">
+      <div style="text-align:center">
+        <div style="font-size:2.2rem;line-height:1">${titulo.emoji}</div>
+        <div style="font-family:Cinzel;font-size:.65rem;color:var(--gold2);margin-top:.2rem;letter-spacing:.05em">${titulo.titulo}</div>
+      </div>
+      <div style="flex:1;min-width:160px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.25rem">
+          <span style="font-family:Cinzel;font-size:1.3rem;color:var(--gold2);font-weight:600">${pontos.toLocaleString('pt-BR')}</span>
+          <span style="font-size:.6rem;color:var(--text3)">pontos totais</span>
         </div>
-        <div>
-          <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${nomeKinLua}</div>
-          <div style="font-size:.68rem;color:var(--text);margin-top:.2rem">Dia ${diaLua} de 28</div>
+        ${prox ? `<div style="font-size:.6rem;color:var(--text3);margin-bottom:.3rem">Faltam ${proxFalta} pts para ${prox.emoji} ${prox.titulo}</div>` : '<div style="font-size:.6rem;color:var(--gold);margin-bottom:.3rem">🌀 Nível máximo atingido!</div>'}
+        <div style="background:var(--bg2);border-radius:6px;height:5px;overflow:hidden">
+          ${prox ? `<div style="height:100%;width:${Math.round((pontos-getTitulo(pontos).min)/(prox.min-getTitulo(pontos).min)*100)}%;background:var(--gold);border-radius:6px;transition:width .5s"></div>` : '<div style="height:100%;width:100%;background:var(--gold);border-radius:6px"></div>'}
         </div>
       </div>
-      <div style="margin-top:.8rem">${gerarLuaCircular(diaLua)}</div>
-    </div>`;
-}
-
-export function renderAnelSolar(anel, anoGal) {
-  const safeSelo = (anel.anelNomeCompleto||'').replace(/'/g,"\\'");
-  return `
-    <div style="margin-bottom:.6rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.3rem">
-      <div class="section-title">Anel Solar · 364 dias</div>
-      <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.6rem">${anel.anelNomeCompleto}</div>
-      <div style="display:flex;align-items:center;gap:.75rem">
-        <div class="kin-clicavel" style="text-align:center" onclick="abrirKinModal(${anel.anelKin},'${safeSelo}',true)">
-          <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(anel.anelTomNum,54)}</div>
-          <div class="selo-icon selo-${anel.anelCorSelo}" style="width:54px;height:54px;flex-shrink:0"><img src="${anel.anelIconURL}" style="width:100%;height:100%;object-fit:contain"></div>
-        </div>
-        <div>
-          <div style="font-size:.72rem;color:var(--text2)">${anel.anelAcao}</div>
-          <div style="font-size:.65rem;color:var(--gold);margin-top:.2rem">Kin ${anel.anelKin} · Ano ${anoGal}–${anoGal+1}</div>
-        </div>
+      <div style="text-align:center;min-width:60px">
+        <div style="font-family:Cinzel;font-size:1.3rem;color:${streak>=7?'var(--gold2)':'var(--text2)'};font-weight:600">${streak}</div>
+        <div style="font-size:.58rem;color:var(--text3);letter-spacing:.05em">dias seguidos</div>
+        ${streak>=7?`<div style="font-size:.6rem;color:var(--gold2);margin-top:.1rem">×${mult}</div>`:''}
       </div>
-    </div>`;
-}
-
-export function renderPlasmaFaseLunar(kinNum, faseLunar) {
-  const diaSemana = (kinNum-1)%7;
-  const plasma = DATA.plasmas[diaSemana]||'';
-  const plasmaChave = plasma.split(' - ')[0];
-  const plasmaSVGUrl = PLASMA_SVGS[plasmaChave.toLowerCase()]||'';
-  const plasmaEmoji = {'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'}[plasmaChave]||'⚡';
-  return `
-    <div style="margin-bottom:.6rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.3rem">
-      <div class="section-title">Plasma · Fase Lunar</div>
-      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-        <div class="kin-clicavel" style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px" onclick="switchTab('lei',document.querySelector('.tab:nth-child(5)'));setTimeout(()=>{const el=document.getElementById('lei-content');if(el)el.scrollIntoView({behavior:'smooth'})},200)" title="Ver Lei do Tempo · Plasmas">
-          ${plasmaSVGUrl
-            ? `<img src="${plasmaSVGUrl}" style="width:48px;height:48px;object-fit:contain" alt="${plasmaChave}">`
-            : `<span style="font-size:1.5rem;width:48px;text-align:center">${plasmaEmoji}</span>`}
-          <div>
-            <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${plasmaChave}</div>
-            <div style="font-size:.65rem;color:var(--text2);margin-top:.1rem">${plasma.split(' - ')[1]||''}</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px">
-          <span style="font-size:2.8rem;width:54px;height:54px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${faseLunar.split(' ')[0]}</span>
-          <div>
-            <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${faseLunar.replace(/^[^ ]+ /,'')}</div>
-            <div style="font-size:.65rem;color:var(--text2);margin-top:.1rem">Fase Lunar</div>
-          </div>
-        </div>
+    </div>
+    <div style="margin-bottom:.5rem">
+      <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--text3);margin-bottom:.25rem">
+        <span>Progresso de hoje</span>
+        <span>${concluidas}/${tarefas.length} tarefas · ${pct}%</span>
       </div>
+      <div style="background:var(--bg2);border-radius:6px;height:6px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:var(--green2);border-radius:6px;transition:width .5s"></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      ${tarefas.map(t => `
+        <div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:${atividadesHoje[t.acao]?'var(--green2)':'var(--text2)'}">
+          <span>${atividadesHoje[t.acao]?'✓':'○'}</span>
+          <span style="flex:1">${t.label}</span>
+          <span style="font-size:.6rem;color:${atividadesHoje[t.acao]?'var(--gold)':'var(--text3)'}">+${t.pts} pts</span>
+        </div>`).join('')}
+      ${atividadesHoje.COMPLETAR_TUDO ? `<div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--gold2)"><span>🏆</span><span style="flex:1">Todas as tarefas concluídas hoje!</span><span style="font-size:.6rem;color:var(--gold)">+${PONTOS.COMPLETAR_TUDO} pts</span></div>` : ''}
     </div>`;
+  } catch(e) {
+    el.innerHTML = `<div style="color:#e07050;font-size:.8rem">Erro ao carregar pontuação.</div>`;
+    console.error('[Gamif]', e);
+  }
 }
 
-// ─── Prática diária — FIX: meditação usa kin do anel (índice 1–20) ───────────
-export function renderPraticaDiaria(kinNum, diaOnda, anelKin, seloBase) {
-  const ondaNum = Math.floor((kinNum-1)/13)+1;
-  const selfDesignOndaNum = ((ondaNum-1)%20)+1;
-  const selfDesignIdx = DIA_ONDA_PARA_IDX[diaOnda]||1;
-  const selfDesignURL = (SELF_DESIGN_ONDAS[selfDesignOndaNum]||[])[selfDesignIdx]||'#';
-  const selfDesignPagina = SELF_DESIGN_PAGINAS[diaOnda]||2;
-  // FIX: meditação usa o índice do selo do kin ATUAL (posição 0–19 no ciclo de 20 selos)
-  const seloIdx = ((kinNum-1) % 20) + 1;
-  const meditacaoURL = MEDITACOES[String(seloIdx)] || '';
-  return `
-  <div class="section">
-    <div class="section-title">Prática Diária</div>
-    <ul class="praticas-list">
-      <li class="has-btn"><span>Ouça a prece das 7 direções galácticas</span><button class="btn-pratica" onclick="togglePrece(this)">▶ ouvir</button></li>
-      <li class="has-btn"><span>Meditação do selo</span><button class="btn-pratica" onclick="abrirModalVideo('${meditacaoURL}','${seloBase}')">▶ ouvir</button></li>
-      <li class="has-btn"><span>Ouça o Self Design Sounds</span><button class="btn-pratica" onclick="abrirSelfDesign(${kinNum})">▶ ouvir</button></li>
-      <li class="has-btn"><span>Leitura da página ${selfDesignPagina} do e-book</span><button class="btn-pratica" onclick="abrirEbook('${selfDesignURL}',${selfDesignPagina})">▶ abrir</button></li>
-      <li class="has-btn" style="justify-content:flex-start">${PERGUNTAS_TOM[diaOnda]||''}</li>
-    </ul>
+// ─── Aba de Ranking ───────────────────────────────────────────────────────────
+export async function renderRanking(currentUid) {
+  const el = document.getElementById('ranking-lista');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--text3);font-style:italic;font-size:.82rem;padding:.5rem 0">Carregando ranking...</div>';
+  try {
+    const snap = await db.collection('ranking').orderBy('pontos','desc').limit(50).get();
+    if (snap.empty) { el.innerHTML = '<div style="color:var(--text3);font-style:italic;font-size:.82rem">Nenhum dado ainda.</div>'; return; }
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    el.innerHTML = items.map((u, i) => rankingRowHTML(u, i, currentUid)).join('');
+  } catch(e) {
+    el.innerHTML = `<div style="color:#e07050;font-size:.82rem">Erro: ${e.message}</div>`;
+  }
+}
+
+function rankingRowHTML(u, i, currentUid) {
+  const pos = i + 1;
+  const isMe = u.id === currentUid || u.uid === currentUid;
+  const medalha = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : `${pos}º`;
+  const kinNatalStr = u.kinNatal && DATA.kins ? (() => {
+    const kd = DATA.kins[String(u.kinNatal)];
+    if (!kd) return '';
+    const base = kd.selo.split(' ').slice(0,-1).join(' ');
+    const cor = kd.selo.split(' ').pop();
+    const icon = getSeloIconURL(kd.selo);
+    return `<div style="display:flex;align-items:center;gap:4px;margin-top:2px">
+      <div class="selo-icon selo-${cor.toLowerCase()}" style="width:18px;height:18px;flex-shrink:0;border-radius:3px;margin:0">
+        <img src="${icon}" style="width:100%;height:100%;object-fit:contain">
+      </div>
+      <span style="font-size:.58rem;color:var(--text3)">Kin ${u.kinNatal} · ${base} ${cor}</span>
+    </div>`;
+  })() : '';
+
+  return `<div class="ranking-row${isMe?' ranking-row-me':''}" onclick="abrirComparacao('${u.id||u.uid}')">
+    <div class="ranking-pos">${medalha}</div>
+    <img class="ranking-avatar" src="${u.foto||'./icon-192.png'}" onerror="this.src='./icon-192.png'" alt="">
+    <div class="ranking-info">
+      <div class="ranking-nome">${u.nome||'Anônimo'}${isMe?' <span style="color:var(--gold2);font-size:.55rem">(você)</span>':''}</div>
+      ${kinNatalStr}
+    </div>
+    <div class="ranking-right">
+      <div class="ranking-pts">${(u.pontos||0).toLocaleString('pt-BR')}</div>
+      <div class="ranking-titulo">${u.emoji||'🌱'} ${u.titulo||'Semente'}</div>
+      ${u.streak>0?`<div style="font-size:.55rem;color:var(--gold);margin-top:1px">${u.streak}🔥</div>`:''}
+    </div>
   </div>`;
 }
 
-// ─── kinHTML ──────────────────────────────────────────────────────────────────
-export function kinHTML(kinNum, modoNatal = false) {
-  const kD = DATA.kins[kinNum];
-  if (!kD) return '<p>Carregando dados...</p>';
-  const seloCompleto = kD.selo;
-  const seloBase = getSeloBase(seloCompleto);
-  const corSelo  = getSeloCor(seloCompleto);
-  const tomConcordado = concordar(seloCompleto, kD.tom_nome);
-  const nomeCompleto  = `${seloBase} ${tomConcordado} ${corSelo.charAt(0).toUpperCase()+corSelo.slice(1)}`;
-  const diaOnda = ((kinNum-1)%13)+1;
-  const anoGal  = getAnoGalactico();
-  const diasPassados = daysBetween(new Date(anoGal,6,26), new Date());
-  const { luaNum, diaLua, luaAnimal, luaKinData, luaKinNum } = getContextoLua(diasPassados);
-  const anel = getContextoAnelSolar(anoGal);
-  const faseLunar = getFaseLunar(new Date());
-  const heroHTML    = renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, seloBase, kD.tom, kD.frase_curta||'');
-  const oraculoHTML = renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, kD.tom);
-  const ondaHTML    = renderOndaEncantada(kinNum);
-  const poemaHTML   = renderPoema(kinNum, kD);
-  const infoSeloHTML = renderInfoSelo(kinNum);
-  if (modoNatal) return `<div>${heroHTML}${oraculoHTML}${ondaHTML}${poemaHTML}${infoSeloHTML}</div>`;
-  const { casteloNum, casteloTexto, casteloImg, ondasHTML } = renderCastelo(kinNum);
-  const perguntaLua = getPerguntaLua(luaNum);
-  const luaHTML     = renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum, perguntaLua);
-  const anelHTML    = renderAnelSolar(anel, anoGal);
-  const plasmaHTML  = renderPlasmaFaseLunar(kinNum, faseLunar);
-  const praticaHTML = renderPraticaDiaria(kinNum, diaOnda, anel.anelKin, seloBase);
-  // plasma do dia para o cronógrafo
-  const plasmaNome  = (DATA.plasmas || [])[((kinNum-1)%7)] || '';
-  const cronHTML    = renderCronografo(kinNum, kD, luaNum, diaLua, plasmaNome.split(' - ')[0]);
-  return `
-<div>
-${heroHTML}${oraculoHTML}${ondaHTML}${poemaHTML}${infoSeloHTML}
-<div class="grid-2">
-  <div class="section">
-    <div class="section-title">Castelo · 52 dias</div>
-    <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${casteloTexto}</div>
-    <div style="margin-bottom:1.1rem">
-      <img src="./assets/icons/castelo-${casteloImg}.png" alt="Castelo" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 0 .8rem 0">
-      ${ondasHTML}
+// ─── Comparação entre dois usuários ──────────────────────────────────────────
+export async function abrirComparacao(uid2) {
+  const modal = document.getElementById('modal-comparacao');
+  if (!modal) return;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  const box = document.getElementById('comparacao-content');
+  box.innerHTML = '<div style="color:var(--text3);font-style:italic;text-align:center;padding:1rem">Carregando...</div>';
+  try {
+    const [snap1, snap2, rank1, rank2] = await Promise.all([
+      db.collection('gamificacao').doc(window._currentUID).get(),
+      db.collection('gamificacao').doc(uid2).get(),
+      db.collection('ranking').doc(window._currentUID).get(),
+      db.collection('ranking').doc(uid2).get(),
+    ]);
+    const d1 = snap1.exists ? snap1.data() : {};
+    const d2 = snap2.exists ? snap2.data() : {};
+    const r1 = rank1.exists ? rank1.data() : {};
+    const r2 = rank2.exists ? rank2.data() : {};
+    const dataHoje = hoje();
+    const a1 = (d1.atividades||{})[dataHoje]||{};
+    const a2 = (d2.atividades||{})[dataHoje]||{};
+    const tarefas = [
+      { acao:'PRECE',       label:'Prece' },
+      { acao:'MEDITACAO',   label:'Meditação' },
+      { acao:'SELF_DESIGN', label:'Self Design' },
+      { acao:'EBOOK',       label:'E-book' },
+      { acao:'COMPLETAR_TUDO', label:'Todas tarefas' },
+    ];
+
+    box.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:.5rem;align-items:center;margin-bottom:1rem">
+      <div style="text-align:center">
+        <img src="${r1.foto||'./icon-192.png'}" style="width:48px;height:48px;border-radius:50%;border:2px solid var(--gold)" onerror="this.src='./icon-192.png'">
+        <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2);margin-top:.3rem">${r1.nome||'Você'}</div>
+        <div style="font-size:.6rem;color:var(--text3)">${r1.emoji||'🌱'} ${r1.titulo||'Semente'}</div>
+      </div>
+      <div style="font-family:Cinzel;font-size:.7rem;color:var(--text3);text-align:center">VS</div>
+      <div style="text-align:center">
+        <img src="${r2.foto||'./icon-192.png'}" style="width:48px;height:48px;border-radius:50%;border:2px solid var(--green)" onerror="this.src='./icon-192.png'">
+        <div style="font-family:Cinzel;font-size:.72rem;color:var(--green2);margin-top:.3rem">${r2.nome||'Usuário'}</div>
+        <div style="font-size:.6rem;color:var(--text3)">${r2.emoji||'🌱'} ${r2.titulo||'Semente'}</div>
+      </div>
     </div>
-    ${luaHTML}${anelHTML}${plasmaHTML}
-  </div>
-${praticaHTML}
-</div>
-${cronHTML}
-</div>`;
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;margin-bottom:.8rem">
+      <div style="text-align:right;font-family:Cinzel;font-size:1.1rem;color:var(--gold2)">${(d1.pontos||0).toLocaleString('pt-BR')}</div>
+      <div style="text-align:center;font-size:.6rem;color:var(--text3);align-self:center">pontos</div>
+      <div style="text-align:left;font-family:Cinzel;font-size:1.1rem;color:var(--green2)">${(d2.pontos||0).toLocaleString('pt-BR')}</div>
+      <div style="text-align:right;font-size:.75rem;color:${d1.streak>=7?'var(--gold2)':'var(--text3)'}">${d1.streak||0}🔥</div>
+      <div style="text-align:center;font-size:.6rem;color:var(--text3);align-self:center">streak</div>
+      <div style="text-align:left;font-size:.75rem;color:${d2.streak>=7?'var(--green2)':'var(--text3)'}">${d2.streak||0}🔥</div>
+    </div>
+    <div style="font-family:Cinzel;font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Tarefas de hoje</div>
+    ${tarefas.map(t => `
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;align-items:center;padding:.2rem 0;border-bottom:1px solid var(--border)">
+      <div style="text-align:right;font-size:.75rem">${a1[t.acao]?'✓':'–'}</div>
+      <div style="text-align:center;font-size:.62rem;color:var(--text3);padding:0 .5rem">${t.label}</div>
+      <div style="text-align:left;font-size:.75rem">${a2[t.acao]?'✓':'–'}</div>
+    </div>`).join('')}
+    ${(()=>{
+      const kinNatal1 = r1.kinNatal && DATA.kins ? DATA.kins[String(r1.kinNatal)] : null;
+      const kinNatal2 = r2.kinNatal && DATA.kins ? DATA.kins[String(r2.kinNatal)] : null;
+      if (!kinNatal1 && !kinNatal2) return '';
+      const fmt = (kd, n) => kd ? `<div style="font-size:.65rem;color:var(--text)">${kd.selo.split(' ').slice(0,-1).join(' ')}<br><span style="font-size:.58rem;color:var(--text3)">Kin ${n}</span></div>` : '<div style="font-size:.65rem;color:var(--text3)">–</div>';
+      return `<div style="margin-top:.8rem;font-family:Cinzel;font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem">Kin Natal</div>
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;align-items:center">
+        ${fmt(kinNatal1, r1.kinNatal)}<div></div>${fmt(kinNatal2, r2.kinNatal)}
+      </div>`;
+    })()}`;
+  } catch(e) {
+    box.innerHTML = `<div style="color:#e07050;font-size:.82rem">Erro: ${e.message}</div>`;
+  }
 }
+
+export { getTitulo, getMultStreak, mostrarToast };
