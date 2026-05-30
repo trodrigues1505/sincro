@@ -94,6 +94,44 @@ export function initAuthObserver(onAuthorized) {
   });
 }
 
+// Observer específico para admin.html — não depende de login-screen
+export function initAdminObserver(onAuthorized) {
+  const appScreen = document.getElementById('app-screen');
+  auth.onAuthStateChanged(async u => {
+    if (!u) {
+      // Não logado — volta para o index
+      window.location.href = './index.html';
+      return;
+    }
+    try {
+      const snap = await db.collection('users').doc(u.uid).get();
+      if (!snap.exists || !snap.data().authorized) {
+        window.location.href = './index.html';
+        return;
+      }
+      const d = snap.data();
+      if (d.role !== 'admin') {
+        // Logado mas não é admin — volta para o app normal
+        window.location.href = './index.html';
+        return;
+      }
+      // É admin — mostra o painel
+      if (appScreen) appScreen.classList.add('active');
+      const avatarEl = document.getElementById('user-avatar');
+      if (avatarEl) avatarEl.src = u.photoURL||'';
+      const nameEl = document.getElementById('user-name');
+      if (nameEl) nameEl.textContent = u.displayName;
+      const roleEl = document.getElementById('user-role');
+      if (roleEl) roleEl.textContent = 'Admin';
+      currentUserUID = u.uid;
+      onAuthorized(u);
+    } catch(e) {
+      console.error('[Admin] Erro ao verificar permissões:', e);
+      window.location.href = './index.html';
+    }
+  });
+}
+
 // ─── Perfil ───────────────────────────────────────────────────────────────────
 export async function carregarPerfil(user) {
   const avatarEl = document.getElementById('perfil-avatar');
@@ -158,4 +196,4 @@ export async function limparKinNatal() {
   document.getElementById('perfil-kin-salvo').innerHTML = '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
   document.getElementById('perfil-nasc-inp').value = '';
   window.loadToday && window.loadToday();
-}
+}  
