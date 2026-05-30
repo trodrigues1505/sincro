@@ -97,9 +97,11 @@ export function initAuthObserver(onAuthorized) {
 // Observer específico para admin.html — não depende de login-screen
 export function initAdminObserver(onAuthorized) {
   const appScreen = document.getElementById('app-screen');
+  const loading = document.getElementById('admin-loading');
+
   auth.onAuthStateChanged(async u => {
     if (!u) {
-      // Não logado — volta para o index
+      // Não logado — vai para o index fazer login
       window.location.href = './index.html';
       return;
     }
@@ -111,11 +113,13 @@ export function initAdminObserver(onAuthorized) {
       }
       const d = snap.data();
       if (d.role !== 'admin') {
-        // Logado mas não é admin — volta para o app normal
+        // Logado mas não é admin
         window.location.href = './index.html';
         return;
       }
       // É admin — mostra o painel
+      if (loading) loading.style.display = 'none';
+      if (appScreen) appScreen.style.display = '';
       if (appScreen) appScreen.classList.add('active');
       const avatarEl = document.getElementById('user-avatar');
       if (avatarEl) avatarEl.src = u.photoURL||'';
@@ -196,4 +200,4 @@ export async function limparKinNatal() {
   document.getElementById('perfil-kin-salvo').innerHTML = '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
   document.getElementById('perfil-nasc-inp').value = '';
   window.loadToday && window.loadToday();
-}  
+}
