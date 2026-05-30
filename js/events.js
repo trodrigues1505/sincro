@@ -14,7 +14,11 @@ export function switchTab(t, el) {
   (el || event.target).classList.add('active');
   document.getElementById('tab-'+t).classList.add('active');
   if (t === 'selos')  renderSelos();
-  if (t === 'perfil') { renderHistorico(); renderFavoritos(); }
+  if (t === 'perfil') {
+    renderHistorico();
+    renderFavoritos();
+    renderCronografoPerfil();
+  }
   if (t === 'lei') {
     const el = document.getElementById('lei-content');
     if (el && el.children.length <= 1) {
@@ -22,6 +26,36 @@ export function switchTab(t, el) {
         el.innerHTML = renderLeiDoTempo() + renderTabelaGuia();
       });
     }
+  }
+}
+
+function renderCronografoPerfil() {
+  const el = document.getElementById('perfil-cronografo-preview');
+  if (!el) return;
+  try {
+    const hoje = new Date();
+    const key = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(hoje.getDate()).padStart(2,'0')}`;
+    const todos = JSON.parse(localStorage.getItem('sinc13_cronografo') || '{}');
+    const reg = todos[key] || {};
+    const campos = [
+      reg.afirmacao      && ['Afirmação',       reg.afirmacao],
+      reg.intencao       && ['Intenção',         reg.intencao],
+      reg.sincronicidade && ['Sincronicidades',  reg.sincronicidade],
+      reg.gratidao       && ['Gratidão',         reg.gratidao],
+    ].filter(Boolean);
+    if (!campos.length) {
+      el.innerHTML = `<p style="font-size:.82rem;color:var(--text3);font-style:italic">Nenhum registro hoje ainda. Acesse o Kin do Dia para preencher.</p>`;
+      return;
+    }
+    el.innerHTML = `
+      <div style="font-size:.62rem;color:var(--gold);font-family:Cinzel;letter-spacing:.08em;margin-bottom:.5rem">${key}</div>
+      ${campos.map(([lbl, val]) => `
+      <div style="margin-bottom:.4rem">
+        <span style="font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em">${lbl}: </span>
+        <span style="font-size:.8rem;color:var(--text2);font-style:italic">${val.length > 120 ? val.slice(0,120)+'...' : val}</span>
+      </div>`).join('')}`;
+  } catch(e) {
+    el.innerHTML = '';
   }
 }
 
@@ -98,17 +132,19 @@ export async function renderSelos() {
 
   grid.innerHTML = selos.map((s, i) => {
     const nomeCompleto = s.nome || '';
-    // extrai a base (sem a cor no final) para buscar o ícone
     const partes = nomeCompleto.split(' ');
     const cor = CORES[i % 4];
-    // tenta achar o ícone pelo nome completo, depois pelo primeiro token
     const nomeBase = partes.slice(0, -1).join(' ') || nomeCompleto;
     const iconeKey = ICONE_MAPA[nomeBase] || ICONE_MAPA[partes[0]] || 'default';
     const iconURL = `./assets/icons/${iconeKey}.png`;
     const safe = nomeCompleto.replace(/'/g,"\\'");
+    // nome maia — índice baseado na posição no grid
+    const maias = ['IMIX','IK','AKBAL','KAN','CHICCHAN','CIMI','MANIK','LAMAT','MULUC','OC','CHUEN','EB','BEN','IX','MEN','CIB','CABAN','ETZNAB','CAUAC','AHAU'];
+    const nomeMaia = maias[i] || '';
     return `<div class="selo-card" onclick="abrirModalSelo('${safe}','${cor}','${iconURL}',DATA.selos[${i}])">
-      <div class="selo-icon selo-${cor}" style="width:56px;height:56px;margin:0 auto"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="selo-icon selo-${cor}" style="width:56px;height:56px;margin:0 auto"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.style.opacity='.3'"></div>
       <div class="selo-card-nome">${nomeCompleto}</div>
+      <div style="font-size:.55rem;color:var(--gold);letter-spacing:.1em;font-family:Cinzel;margin:.1rem 0">${nomeMaia}</div>
       <div class="selo-card-acao">${s.acao||''}</div>
     </div>`;
   }).join('');
