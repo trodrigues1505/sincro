@@ -16,12 +16,18 @@ const STATIC_ASSETS = [
   'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
 ];
 
+// Resposta pode ser armazenada no cache?
+// HTTP 206 (Partial Content) = range request de áudio/vídeo — nunca cachear
+// status 0 = resposta opaca (cross-origin sem CORS) — pode ser corrompida
+function podeCache(response) {
+  return response && response.status !== 206 && response.status !== 0 && response.ok;
+}
+
 // Instala o SW e pré-cacheia os assets essenciais
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_VERSION)
       .then((cache) => cache.addAll(STATIC_ASSETS).catch(err => {
-        // Não falha se algum asset externo não carregar (CORS, etc)
         console.warn('[SW] Alguns assets não foram cacheados:', err);
       }))
       .then(() => self.skipWaiting())
@@ -48,14 +54,26 @@ self.addEventListener('fetch', (event) => {
   // Pula requisições não-GET
   if (event.request.method !== 'GET') return;
 
-  // Firebase, Google APIs, Auth: sempre rede (precisa de dados frescos)
+  // Pula range requests (áudio, vídeo) — retornam 206 que o Cache API rejeita
+  if (event.request.headers.get('range')) return;
+
+  // Firebase, Google APIs, Auth: sempre rede
   if (
     url.hostname.includes('firebase') ||
     url.hostname.includes('googleapis') ||
     url.hostname.includes('google.com') ||
-    url.hostname.includes('gstatic.com/firebasejs')
+    url.hostname.includes('gstatic.com')
   ) {
-    return; // deixa o navegador lidar normalmente
+    return;
+  }
+
+  // YouTube e outros serviços de mídia: nunca cachear
+  if (
+    url.hostname.includes('youtube') ||
+    url.hostname.includes('youtu.be') ||
+    url.hostname.includes('ytimg')
+  ) {
+    return;
   }
 
   // Para assets locais e estáticos: cache-first
@@ -64,7 +82,7 @@ self.addEventListener('fetch', (event) => {
       if (cached) {
         // Atualiza em background (stale-while-revalidate)
         fetch(event.request).then((fresh) => {
-          if (fresh && fresh.ok) {
+          if (podeCache(fresh)) {
             caches.open(CACHE_VERSION).then(c => c.put(event.request, fresh.clone()));
           }
         }).catch(() => {/* offline, tudo bem */});
@@ -72,13 +90,12 @@ self.addEventListener('fetch', (event) => {
       }
       // Não tem em cache, busca na rede e armazena
       return fetch(event.request).then((response) => {
-        if (response && response.ok) {
+        if (podeCache(response)) {
           const clone = response.clone();
           caches.open(CACHE_VERSION).then(c => c.put(event.request, clone));
         }
         return response;
       }).catch(() => {
-        // Fallback offline para navegação
         if (event.request.mode === 'navigate') {
           return caches.match('./index.html');
         }
@@ -91,14 +108,12 @@ self.addEventListener('fetch', (event) => {
 // NOTIFICAÇÃO DIÁRIA DO KIN
 // ══════════════════════════════════════════════════
 
-// Periodic Background Sync — dispara diariamente
 self.addEventListener('periodicsync', (event) => {
   if (event.tag === 'kin-diario') {
     event.waitUntil(enviarNotificacaoKin());
   }
 });
 
-// Fallback: verificar ao abrir o app (push manual)
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'NOTIF_KIN') {
     enviarNotificacaoKin();
@@ -106,7 +121,6 @@ self.addEventListener('message', (event) => {
 });
 
 async function enviarNotificacaoKin() {
-  // Calcular kin de hoje (mesma lógica do app)
   function dateToKinSW(dt) {
     const dtN = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
     const base = new Date(1987, 6, 26);
@@ -130,7 +144,6 @@ async function enviarNotificacaoKin() {
   });
 }
 
-// Abrir o app ao clicar na notificação
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   event.waitUntil(
@@ -140,4 +153,4 @@ self.addEventListener('notificationclick', (event) => {
       return clients.openWindow('./');
     })
   );
-});
+});    
