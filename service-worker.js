@@ -3,7 +3,7 @@
 //  Estratégia: cache-first com fallback à rede
 // ════════════════════════════════════════
 
-const CACHE_VERSION = 'sincronario-v1';
+const CACHE_VERSION = 'sincronario-v2';
 const STATIC_ASSETS = [
   './',
   './index.html',
