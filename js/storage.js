@@ -74,4 +74,4 @@ export function renderFavoritos() {
   el.innerHTML = lista.length
     ? lista.map(e => kinListItem(e, 'verKinPerfil', true)).join('')
     : '<div class="historico-vazio">Nenhum kin favoritado ainda. Use a ★ no Kin do Dia ou Natal.</div>';
-}
+}   
