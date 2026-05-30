@@ -2,15 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Sincronário das 13 Luas</title>
+<title>Painel Admin · Sincronário 13 Luas</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#009739">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="13 Luas">
 <link rel="icon" type="image/png" href="./icon-192.png">
-<link rel="apple-touch-icon" href="./icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -19,392 +15,540 @@
   --gold:#A57C00;--gold2:#c9a030;--gold3:#e0c070;
   --border:rgba(0,151,57,.20);--border2:rgba(0,151,57,.40);--border-g:rgba(165,124,0,.28);
   --text:#c0dcc4;--text2:#5a8860;--text3:#2e5034;
-  --red:#8a2018;--white:#a8b890;--blue:#1a4860;--radius:8px;
+  --red:#8a2018;--radius:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:16px;line-height:1.65;min-height:100vh}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
-.anim-1{animation:fadeUp .28s .00s both}.anim-2{animation:fadeUp .28s .08s both}
-.anim-3{animation:fadeUp .28s .16s both}.anim-4{animation:fadeUp .28s .24s both}
-.login-container{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:max(1.5rem,env(safe-area-inset-top,0px)) 1.5rem 1.5rem;gap:1.8rem}
-.login-logo{width:88px;height:88px;border-radius:18px;animation:fadeUp .35s both;box-shadow:0 0 40px rgba(0,151,57,.18)}
-.login-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:2rem 2.4rem 2.4rem;max-width:360px;width:100%;text-align:center;animation:fadeUp .4s .08s both}
-.login-box h1{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold2);margin-bottom:.3rem;letter-spacing:.06em}
-.login-divider{width:24px;height:1px;background:var(--gold);margin:.9rem auto;opacity:.5}
-.login-box p{color:var(--text2);margin-bottom:1.7rem;font-size:.92rem}
-.btn-google{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:10px 20px;font-family:'Cinzel',serif;font-size:.76rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:border-color .2s;letter-spacing:.04em}
-.btn-google:hover{border-color:var(--green2)}
-.error-msg{background:rgba(138,32,24,.12);border:1px solid rgba(138,32,24,.3);color:#b06858;padding:.7rem .9rem;border-radius:6px;margin-top:1rem;font-size:.82rem}
-.loading{color:var(--text3);margin-top:1rem;font-style:italic;font-size:.84rem}
-.container{max-width:960px;margin:0 auto;padding:max(1rem,env(safe-area-inset-top,0px)) 1rem 1rem;display:none}
-.container.active{display:block}
-h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:center;margin-bottom:.2rem;letter-spacing:.06em}
-.user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.9rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px}
-.user-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--green3)}
-.btn-logout,.btn-admin,.btn-export{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text2);padding:5px 11px;font-family:'Cinzel',serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
-.btn-logout:hover,.btn-export:hover{border-color:var(--green3);color:var(--text2)}
-.btn-admin{border-color:var(--border-g);color:var(--gold)}
-.btn-admin:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
-.tabs{display:flex;margin-bottom:.9rem;border-bottom:1px solid var(--border)}
-.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-family:'Cinzel',serif;font-size:.66rem;padding:8px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.09em;transition:color .2s,border-color .2s;margin-bottom:-1px}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* ── Loading ── */
+#admin-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:1rem}
+.loading-spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--gold2);border-radius:50%;animation:spin 1s linear infinite}
+.loading-text{font-family:'Cinzel',serif;color:var(--gold2);font-size:.8rem;letter-spacing:.12em}
+
+/* ── Layout ── */
+.container{max-width:1000px;margin:0 auto;padding:max(1rem,env(safe-area-inset-top,0px)) 1rem 2rem;display:none}
+.container.active{display:block;animation:fadeUp .3s both}
+
+/* ── Header ── */
+.admin-header{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);padding:.7rem 1rem;margin-bottom:1.2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem}
+.admin-header-left{display:flex;align-items:center;gap:.8rem}
+.admin-avatar{width:34px;height:34px;border-radius:50%;border:2px solid var(--gold)}
+.admin-nome{font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold2)}
+.admin-badge{font-size:.55rem;color:var(--green2);text-transform:uppercase;letter-spacing:.12em;margin-top:1px}
+.admin-header-right{display:flex;gap:.5rem;align-items:center}
+.btn{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text2);padding:5px 12px;font-family:'Cinzel',serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
+.btn:hover{border-color:var(--green3);color:var(--text)}
+.btn-gold{border-color:var(--border-g);color:var(--gold2)}
+.btn-gold:hover{background:rgba(165,124,0,.1);border-color:var(--gold)}
+.btn-green{background:var(--green);border-color:var(--green);color:#fff}
+.btn-green:hover{background:var(--green2);border-color:var(--green2)}
+.btn-danger{border-color:rgba(138,32,24,.4);color:rgba(200,100,80,.9)}
+.btn-danger:hover{background:rgba(138,32,24,.12)}
+
+h1{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);text-align:center;margin-bottom:.3rem;letter-spacing:.06em}
+.admin-subtitle{text-align:center;color:var(--text3);font-size:.8rem;font-style:italic;margin-bottom:1.4rem}
+
+/* ── Tabs ── */
+.tabs{display:flex;margin-bottom:.9rem;border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-family:'Cinzel',serif;font-size:.63rem;padding:8px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.09em;transition:color .2s,border-color .2s;margin-bottom:-1px;white-space:nowrap}
 .tab:hover{color:var(--text)}
 .tab.active{color:var(--gold2);border-bottom-color:var(--gold)}
 .tab-content{display:none}.tab-content.active{display:block}
-.section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:.6rem}
-.section-title{font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.13em;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border-g)}
-.kin-hero{text-align:center;padding:1.8rem 1.3rem 1.4rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2);position:relative;overflow:hidden}
-.kin-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green3),var(--green2),var(--green3),transparent)}
-.kin-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.45}
-.kin-num{font-family:'Cinzel',serif;font-size:.58rem;color:rgba(165,124,0,.7);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.5rem}
-.kin-title{font-family:'Cinzel',serif;font-size:1.6rem;margin:.25rem 0 .45rem;letter-spacing:.03em;color:var(--gold2);line-height:1.2}
-.kin-subtitle{color:rgba(165,124,0,.8);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}
-.kin-frase{color:var(--text);font-size:.95rem;font-style:italic;margin:.9rem auto 0;padding:.85rem 1.1rem;background:rgba(0,151,57,.08);border-left:2px solid var(--gold3);max-width:640px;line-height:1.9}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px;margin:.8rem 0}
-.card{background:var(--bg2);border-radius:6px;padding:.85rem .95rem;border:1px solid var(--border);transition:border-color .2s}
-.card:hover{border-color:var(--border2)}
-.card-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:.11em;margin-bottom:4px}
-.card-val{font-family:'Cinzel',serif;font-size:.84rem;color:var(--gold3)}
-.selo-icon{border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid;margin:0 auto .5rem;overflow:hidden}
-.selo-red,.selo-vermelho,.selo-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
-.selo-white,.selo-branco,.selo-branca{background:rgba(168,184,144,.07);border-color:rgba(168,184,144,.2)}
-.selo-blue,.selo-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
-.selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
-.oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
 
-.oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
-.oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
-.oraculo-cell-bottom{grid-column:2;grid-row:3}
-.oraculo-item{text-align:center;position:relative;z-index:1}
-.oraculo-central .selo-icon{width:90px;height:90px;border-radius:11px;box-shadow:0 0 0 2px var(--gold),0 0 18px rgba(165,124,0,.18)}
-.oraculo-central .oraculo-nome{font-size:.7rem;color:var(--gold3);max-width:100px}
-.oraculo-nome{font-size:.62rem;margin-top:.3rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.03em;line-height:1.3;max-width:90px;word-break:break-word}
-.oraculo-side .selo-icon{width:60px;height:60px;border-radius:7px}
-.oraculo-nome{font-size:.62rem;margin-top:.3rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.03em;line-height:1.3;max-width:90px}
-.onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
-.onda-L{display:grid;grid-template-columns:repeat(5,var(--cell));grid-template-rows:repeat(5,var(--cell));--cell:52px;gap:4px}
-.onda-L .onda-kin:nth-child(1) {grid-column:1;grid-row:1}
-.onda-L .onda-kin:nth-child(2) {grid-column:1;grid-row:2}
-.onda-L .onda-kin:nth-child(3) {grid-column:1;grid-row:3}
-.onda-L .onda-kin:nth-child(4) {grid-column:1;grid-row:4}
-.onda-L .onda-kin:nth-child(5) {grid-column:1;grid-row:5}
-.onda-L .onda-kin:nth-child(6) {grid-column:2;grid-row:5}
-.onda-L .onda-kin:nth-child(7) {grid-column:3;grid-row:5}
-.onda-L .onda-kin:nth-child(8) {grid-column:4;grid-row:5}
-.onda-L .onda-kin:nth-child(9) {grid-column:5;grid-row:5}
-.onda-L .onda-kin:nth-child(10){grid-column:5;grid-row:4}
-.onda-L .onda-kin:nth-child(11){grid-column:5;grid-row:3}
-.onda-L .onda-kin:nth-child(12){grid-column:5;grid-row:2}
-.onda-L .onda-kin:nth-child(13){grid-column:4;grid-row:2}
-.onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s;position:relative}
-.onda-kin:hover{transform:scale(1.06)}
-.onda-kin.active{box-shadow:0 0 0 3px var(--green2);border-color:var(--green2)!important;border-width:2px}
-.cor-red,.cor-vermelho,.cor-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
-.cor-white,.cor-branco,.cor-branca{background:rgba(168,184,144,.05);border-color:rgba(168,184,144,.18)}
-.cor-blue,.cor-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
-.cor-yellow,.cor-amarelo,.cor-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
-.praticas-list{list-style:none;padding:0}
-.praticas-list li{padding:.65rem .9rem;margin-bottom:4px;background:var(--bg2);border-radius:5px;border-left:2px solid var(--green);display:flex;align-items:flex-start;gap:8px;font-size:.9rem;line-height:1.5;transition:border-color .2s}
-.praticas-list li:hover{border-left-color:var(--gold)}
-.praticas-list li::before{content:'·';color:var(--green2);font-size:1.1rem;flex-shrink:0;line-height:1.3}
-.praticas-list li.has-btn::before{display:none}
-.praticas-list li.has-btn{align-items:center;justify-content:space-between}
-.hidden{display:none}
-input[type="date"]{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 10px;font-family:inherit;color-scheme:dark;font-size:.87rem;transition:border-color .2s}
-input[type="date"]:focus{outline:none;border-color:var(--green)}
-.btn-calc{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold2);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
-.btn-calc:hover{background:var(--green);color:#fff;border-color:var(--green)}
-.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:.6rem}
-.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.55rem}
-.info-text{color:var(--text);font-size:.88rem;line-height:1.65;margin:.28rem 0}
-.info-box{background:var(--bg2);padding:.75rem .85rem;border-radius:5px;border-left:2px solid var(--gold);margin:.55rem 0}
-.lua-circular{width:100%;max-width:380px;margin:0 auto;display:block}
-.lua-circular .seg{fill:var(--bg2);stroke-width:1;transition:fill .2s}
-.lua-circular .seg.red,.lua-circular .seg.vermelho{fill:rgba(138,32,24,.10);stroke:rgba(138,32,24,.38)}
-.lua-circular .seg.white,.lua-circular .seg.branco{fill:rgba(168,184,144,.04);stroke:rgba(168,184,144,.2)}
-.lua-circular .seg.blue,.lua-circular .seg.azul{fill:rgba(26,72,96,.10);stroke:rgba(26,72,96,.38)}
-.lua-circular .seg.yellow,.lua-circular .seg.amarelo{fill:rgba(165,124,0,.09);stroke:rgba(165,124,0,.32)}
-.lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
-.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:9px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
-.lua-circular .seg-label.active{fill:#1a1000;font-weight:700}
-.lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
-.lua-circular .center-num{font-size:20px;dominant-baseline:central;font-weight:600}
-.lua-circular .center-sub{font-size:8px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
-.lua-legenda{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-top:.5rem}
-.lua-legenda-item{display:flex;align-items:center;gap:4px;font-family:'Cinzel',serif;font-size:.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:.07em}
-.lua-legenda-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.lua-legenda-dot.red{background:rgba(138,32,24,.6);border:1px solid rgba(138,32,24,.5)}
-.lua-legenda-dot.white{background:rgba(168,184,144,.3);border:1px solid rgba(168,184,144,.45)}
-.lua-legenda-dot.blue{background:rgba(26,72,96,.6);border:1px solid rgba(26,72,96,.5)}
-.lua-legenda-dot.yellow{background:rgba(165,124,0,.55);border:1px solid rgba(165,124,0,.5)}
-.btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
-.btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
-.btn-pratica{background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:'Cinzel',serif;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s,color .2s;letter-spacing:.04em}
-.btn-pratica:hover,.btn-pratica:focus-visible{border-color:var(--green2);color:var(--green2);outline:none}
-.btn-pratica.tocando{color:var(--gold2);border-color:var(--gold)}
-.onda-detail{background:var(--card2);border:1px solid var(--border-g);border-radius:6px;padding:.5rem .75rem;margin:.5rem auto 0;text-align:center;font-size:.72rem;color:var(--gold3);font-family:'Cinzel',serif;letter-spacing:.03em;min-height:1.8rem;display:none;max-width:320px}
-.onda-detail.visible{display:block}
-@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
-.skeleton{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:400px 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}
-.skeleton-hero{height:160px;border-radius:var(--radius);margin-bottom:.6rem}
-.skeleton-row{height:14px;margin:.4rem 0}
-.skeleton-row.w60{width:60%}.skeleton-row.w80{width:80%}.skeleton-row.w40{width:40%}
-.skeleton-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;margin:.8rem 0}
-.skeleton-card{height:60px;border-radius:6px}
-.btn-cal{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
-.btn-cal:hover{border-color:var(--green);color:var(--green)}
-.export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
-.selos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem;margin-top:.3rem}
-.selo-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.9rem .8rem;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s;display:flex;flex-direction:column;align-items:center}
-.selo-card:hover{border-color:var(--border-g);transform:translateY(-2px)}
-.selo-card-nome{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold2);margin-bottom:.2rem;margin-top:.4rem}
-.selo-card-acao{font-size:.62rem;color:var(--text3);font-style:italic}
-.modal-selo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;align-items:center;justify-content:center;padding:1rem}
-.modal-selo.active{display:flex}
-.modal-selo-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:1.5rem;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;animation:fadeUp .25s both;position:relative}
-.modal-selo-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
-.modal-selo-icon{width:64px;height:64px;border-radius:9px;overflow:hidden;border:1px solid;flex-shrink:0}
-.modal-selo-titulo{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:.2rem}
-.modal-selo-acao{font-size:.72rem;color:var(--green2);text-transform:uppercase;letter-spacing:.08em}
-.modal-selo-maya{font-size:.68rem;color:var(--text3);margin-top:.15rem}
-.modal-selo-desc{color:var(--text);font-size:.88rem;line-height:1.75}
-.modal-selo-close{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
-.modal-selo-close:hover{border-color:var(--text2);color:var(--text2)}
-.perfil-hero{text-align:center;padding:1.5rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2)}
-.perfil-avatar{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);margin:0 auto .7rem;display:block}
-.perfil-nome{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold2);margin-bottom:.2rem}
-.perfil-email{font-size:.72rem;color:var(--text3);margin-bottom:1rem}
-.perfil-kin-card{background:var(--bg2);border:1px solid var(--border-g);border-radius:8px;padding:1rem;text-align:center;margin-bottom:.6rem}
-.perfil-kin-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
-.perfil-kin-nome{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:.2rem}
-.perfil-kin-sub{font-size:.72rem;color:var(--text2)}
-.perfil-sem-kin{color:var(--text3);font-style:italic;font-size:.88rem;padding:1.2rem 0}
-.btn-salvar-natal{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold2);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;margin-top:.6rem}
-.btn-salvar-natal:hover{background:rgba(165,124,0,.15);border-color:var(--gold2)}
-.btn-limpar-natal{background:transparent;border:1px solid rgba(138,32,24,.35);border-radius:5px;color:rgba(138,32,24,.8);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;margin-top:.4rem}
-.btn-limpar-natal:hover{background:rgba(138,32,24,.12)}
-.notif-banner{background:var(--card2);border:1px solid var(--border-g);border-radius:8px;padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-bottom:.6rem}
-.notif-banner p{color:var(--text2);font-size:.82rem;flex:1}
-.btn-notif{background:var(--green);border:none;border-radius:5px;color:#fff;font-family:'Cinzel',serif;font-size:.63rem;padding:7px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .2s;white-space:nowrap}
-.btn-notif:hover{background:var(--green2)}
-.btn-notif.ativo{background:transparent;border:1px solid var(--green3);color:var(--green2)}
-.onboarding{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center;padding:1rem}
-.onboarding.active{display:flex}
-.onboarding-box{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:2.4rem 2rem;max-width:420px;width:100%;text-align:center;animation:fadeUp .3s both}
-.onboarding-step{display:none}.onboarding-step.active{display:block}
-.onboarding-emoji{font-size:2.8rem;margin-bottom:1rem;display:block}
-.onboarding-titulo{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:.7rem}
-.onboarding-texto{color:var(--text2);font-size:.9rem;line-height:1.75;margin-bottom:1.5rem}
-.onboarding-dots{display:flex;justify-content:center;gap:6px;margin-bottom:1.2rem}
-.onboarding-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:background .2s}
-.onboarding-dot.active{background:var(--green)}
-.onboarding-btns{display:flex;gap:.6rem;justify-content:center}
-.btn-onboard-next{background:var(--green);border:none;border-radius:6px;color:#fff;font-family:'Cinzel',serif;font-size:.72rem;padding:9px 20px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}
-.btn-onboard-next:hover{background:var(--green2)}
-.btn-onboard-skip{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text3);font-family:'Cinzel',serif;font-size:.68rem;padding:9px 16px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}
-.btn-onboard-skip:hover{border-color:var(--text2);color:var(--text2)}
-.aviso-banner{background:var(--card2);border:1px solid var(--border-g);border-radius:8px;padding:.85rem 1rem;margin-bottom:.7rem;display:flex;align-items:flex-start;gap:.8rem;animation:fadeUp .3s both}
-.aviso-banner-icon{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
-.aviso-banner-texto{color:var(--text);font-size:.88rem;line-height:1.6;flex:1}
-.aviso-banner-close{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;padding:0;flex-shrink:0}
-.aviso-banner-close:hover{color:var(--text2)}
+/* ── Seções ── */
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:.6rem}
+.section-title{font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.13em;margin-bottom:.9rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.section-title-line{flex:1;height:1px;background:var(--border-g)}
+
+/* ── Cards de métricas ── */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin-bottom:.8rem}
+.metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:.8rem 1rem;text-align:center}
+.metric-num{font-family:'Cinzel',serif;font-size:1.6rem;color:var(--gold2);line-height:1}
+.metric-label{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem}
+.metric-card.pending .metric-num{color:#e07050}
+
+/* ── Lista de usuários ── */
+.user-list{display:flex;flex-direction:column;gap:6px}
+.user-row{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;transition:border-color .2s}
+.user-row:hover{border-color:var(--border2)}
+.user-row-avatar{width:32px;height:32px;border-radius:50%;border:1px solid var(--green3);flex-shrink:0}
+.user-row-info{flex:1;min-width:0}
+.user-row-nome{font-family:'Cinzel',serif;font-size:.78rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-row-email{font-size:.62rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-row-meta{font-size:.58rem;color:var(--text3);margin-top:2px}
+.badge-role{font-size:.52rem;padding:2px 7px;border-radius:10px;font-family:'Cinzel',serif;text-transform:uppercase;letter-spacing:.07em;flex-shrink:0}
+.badge-admin{background:rgba(165,124,0,.15);color:var(--gold2);border:1px solid rgba(165,124,0,.3)}
+.badge-user{background:rgba(0,151,57,.1);color:var(--green2);border:1px solid rgba(0,151,57,.2)}
+.badge-pending{background:rgba(138,32,24,.12);color:#e07050;border:1px solid rgba(138,32,24,.25)}
+.badge-blocked{background:rgba(50,50,50,.2);color:var(--text3);border:1px solid var(--border)}
+.user-row-actions{display:flex;gap:.4rem;flex-shrink:0}
+
+/* ── Filtros ── */
+.filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem;align-items:center}
+.filter-btn{background:transparent;border:1px solid var(--border);border-radius:20px;color:var(--text3);padding:3px 10px;font-size:.6rem;font-family:'Cinzel',serif;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .2s}
+.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold2);background:rgba(165,124,0,.07)}
+.search-inp{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:5px 10px;font-family:inherit;font-size:.82rem;flex:1;min-width:150px;transition:border-color .2s}
+.search-inp:focus{outline:none;border-color:var(--green)}
+.search-inp::placeholder{color:var(--text3)}
+
+/* ── Notificação push ── */
+.notif-form{display:flex;flex-direction:column;gap:.7rem}
+.notif-form textarea{background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.7rem .9rem;font-family:'Crimson Pro',serif;font-size:.95rem;line-height:1.6;resize:vertical;min-height:90px;transition:border-color .2s}
+.notif-form textarea:focus{outline:none;border-color:var(--green)}
+.notif-form textarea::placeholder{color:var(--text3)}
+.notif-form label{font-size:.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em}
+.notif-preview{background:var(--card2);border:1px solid var(--border-g);border-radius:8px;padding:.8rem 1rem;font-size:.85rem;color:var(--text);line-height:1.6;margin-top:.3rem}
+.notif-preview strong{color:var(--gold2);font-family:'Cinzel',serif;font-size:.8rem}
+
+/* ── Aviso banner ── */
+.aviso-section{display:flex;flex-direction:column;gap:.7rem}
+.aviso-section input,.aviso-section textarea{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:.55rem .8rem;font-family:inherit;font-size:.88rem;transition:border-color .2s}
+.aviso-section input:focus,.aviso-section textarea:focus{outline:none;border-color:var(--green)}
+.toggle-row{display:flex;align-items:center;gap:.7rem}
+.toggle{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border2);border-radius:10px;cursor:pointer;transition:.3s}
+.toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s}
+.toggle input:checked + .toggle-slider{background:var(--green)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(16px)}
+
+/* ── Status msg ── */
+.status-msg{padding:.55rem .8rem;border-radius:6px;font-size:.82rem;margin-top:.3rem;display:none}
+.status-msg.ok{display:block;background:rgba(0,151,57,.1);border:1px solid rgba(0,151,57,.25);color:var(--green2)}
+.status-msg.err{display:block;background:rgba(138,32,24,.1);border:1px solid rgba(138,32,24,.25);color:#e07050}
+
+/* ── Confirmação modal ── */
+.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.confirm-overlay.active{display:flex}
+.confirm-box{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1.5rem;max-width:360px;width:100%;text-align:center;animation:fadeUp .2s both}
+.confirm-box p{color:var(--text);font-size:.9rem;margin:.5rem 0 1.2rem;line-height:1.6}
+.confirm-box strong{color:var(--gold2);font-family:'Cinzel',serif}
+.confirm-btns{display:flex;gap:.6rem;justify-content:center}
+
 @media(max-width:600px){
-  body{font-size:15px}.container{padding:.75rem .65rem}h1{font-size:1.2rem}
-  .user-bar{padding:.6rem .7rem;flex-direction:column;align-items:flex-start}
-  .user-bar>div:last-child{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
-  .btn-logout,.btn-admin,.btn-export{width:100%;text-align:center;font-size:.56rem;padding:5px 6px}
-  .section{padding:.85rem}.kin-hero{padding:1.2rem .9rem 1rem}.kin-title{font-size:1.2rem}
-  .kin-frase{font-size:.83rem;padding:.75rem .85rem}
-  .oraculo-wrap{max-width:290px}.oraculo-central .selo-icon{width:62px;height:62px}
-  .oraculo-side .selo-icon{width:48px;height:48px}.oraculo-nome{font-size:.56rem;max-width:80px;word-break:break-word}
-  .onda-L{--cell:36px;gap:3px}.cards{grid-template-columns:1fr 1fr;gap:5px}
-  .grid-2,.grid-3{grid-template-columns:1fr;gap:.55rem}
-  input[type="date"]{width:100%}.btn-calc{width:100%;margin-top:5px}
-  .tab{padding:7px 10px;font-size:.58rem}.lua-circular{max-width:260px}
+  .admin-header{flex-direction:column;align-items:flex-start}
+  .user-row{flex-direction:column;align-items:flex-start}
+  .user-row-actions{width:100%;justify-content:flex-end}
 }
-@media(max-width:400px){
-  .container{padding:.65rem .5rem}h1{font-size:1rem}.kin-title{font-size:1rem}
-  .oraculo-wrap{max-width:256px}.oraculo-central .selo-icon{width:54px;height:54px}
-  .oraculo-side .selo-icon{width:42px;height:42px}.onda-L{--cell:36px;gap:3px}
-  .cards{grid-template-columns:1fr}.lua-circular{max-width:190px}
-}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.modal-video{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
-.modal-video.active{display:flex}
-.modal-video-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;width:100%;max-width:600px;overflow:hidden;animation:fadeUp .2s both;position:relative}
-.modal-video-header{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;border-bottom:1px solid var(--border)}
-.modal-video-titulo{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold2);letter-spacing:.05em}
-.modal-video-close{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:3px 8px;cursor:pointer;font-size:.68rem;transition:all .2s;font-family:'Cinzel',serif}
-.modal-video-close:hover{border-color:var(--text2);color:var(--text)}
-.modal-video iframe{width:100%;aspect-ratio:16/9;display:block;border:none}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<!-- ONBOARDING -->
-<div class="onboarding" id="onboarding">
-  <div class="onboarding-box">
-    <div class="onboarding-dots">
-      <div class="onboarding-dot active"></div><div class="onboarding-dot"></div>
-      <div class="onboarding-dot"></div><div class="onboarding-dot"></div>
-      <div class="onboarding-dot"></div>
-    </div>
-    <div class="onboarding-step active"><span class="onboarding-emoji">🌀</span>
-      <div class="onboarding-titulo">Bem-vindo ao Sincronário das 13 Luas</div>
-      <p class="onboarding-texto">Uma ferramenta viva da Lei do Tempo. Revela o padrão galáctico do seu dia e do dia em que você nasceu.</p></div>
-    <div class="onboarding-step"><span class="onboarding-emoji">☀️</span>
-      <div class="onboarding-titulo">O Kin do Dia</div>
-      <p class="onboarding-texto">Cada dia tem um <strong style="color:var(--gold2)">Kin</strong> — combinação de um Selo Solar com um Tom Galáctico. São 260 combinações que se repetem em ciclo de 260 dias.</p></div>
-    <div class="onboarding-step"><span class="onboarding-emoji">🔮</span>
-      <div class="onboarding-titulo">O Oráculo do Destino</div>
-      <p class="onboarding-texto">Cada Kin tem 5 posições: <strong style="color:var(--gold2)">Ser Central, Guia, Análogo, Antípoda e Oculto</strong>. Juntos revelam as forças que atuam no dia.</p></div>
-    <div class="onboarding-step"><span class="onboarding-emoji">🌊</span>
-      <div class="onboarding-titulo">Onda Encantada</div>
-      <p class="onboarding-texto">Os 13 dias a partir do seu Kin formam uma <strong style="color:var(--gold2)">Onda Encantada</strong>. O primeiro dia define o propósito de toda a jornada.</p></div>
-    <div class="onboarding-step"><span class="onboarding-emoji">🎯</span>
-      <div class="onboarding-titulo">Seu Kin Natal</div>
-      <p class="onboarding-texto">Vá à aba <strong style="color:var(--gold2)">Perfil</strong> e salve sua data de nascimento. Seu Kin Natal revela sua essência e missão permanente.</p></div>
-    <div class="onboarding-btns">
-      <button class="btn-onboard-skip" onclick="fecharOnboarding()">Pular</button>
-      <button class="btn-onboard-next" id="btn-onboard-next" onclick="proximoOnboarding()">Próximo →</button>
-    </div>
-  </div>
+<div id="admin-loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Verificando acesso...</div>
 </div>
 
-<!-- AVISO CONTAINER -->
-<div id="aviso-container"></div>
+<div id="app-screen" class="container">
 
-<!-- Login sempre feito via index.html — admin.html redireciona automaticamente se não autenticado -->
-<div id="admin-loading" style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:Cinzel;color:var(--gold2);font-size:.85rem;letter-spacing:.1em">
-  Verificando acesso...
-</div>
-
-<div id="app-screen" class="container" style="display:none">
-<div class="user-bar">
-<div style="display:flex;align-items:center;gap:12px">
-<img id="user-avatar" class="user-avatar" src="" alt="">
-<div>
-<div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
-<div id="user-role" style="font-size:0.75rem;color:var(--gold);text-transform:uppercase"></div>
-</div>
-</div>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Painel Admin</button>
-<button class="btn-export" onclick="exportPNG()">📸 Exportar PNG</button>
-<button class="btn-logout" id="btn-logout">Sair</button>
-</div>
-</div>
-
-<h1>🌀 Sincronário das 13 Luas</h1>
-<p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Calculadora Completa · Lei do Tempo</p>
-
-<div class="tabs">
-<button class="tab active" onclick="switchTab('dia',this)">Kin do Dia</button>
-<button class="tab" onclick="switchTab('natal',this)">Kin Natal</button>
-<button class="tab" onclick="switchTab('selos',this)">Selos</button>
-<button class="tab" onclick="switchTab('perfil',this)">Perfil</button>
-</div>
-
-<div id="export-area">
-<div id="tab-dia" class="tab-content active">
-<div id="res-dia"><div class="section skeleton-hero skeleton"></div><div class="section"><div class="skeleton skeleton-row w60"></div><div class="skeleton skeleton-row w80" style="margin-top:.6rem"></div><div class="skeleton skeleton-row w40" style="margin-top:.4rem"></div><div class="skeleton-cards"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div></div></div></div>
-</div>
-
-<div id="tab-natal" class="tab-content">
-<div class="section">
-<div style="font-family:Cinzel;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem">Kin Natal</div>
-<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-<label style="color:var(--text2);font-style:italic">Data de Nascimento</label>
-<input type="date" id="nasc-inp">
-<button class="btn-calc" onclick="calcNatal()">Calcular</button>
-</div>
-<div id="res-natal" class="hidden" style="margin-top:1.5rem"></div>
-</div>
-</div>
-</div>
-
-<!-- ABA SELOS -->
-<div id="tab-selos" class="tab-content">
-<div class="section">
-  <div class="section-title">Os 20 Selos Solares</div>
-  <div class="selos-grid" id="selos-grid"></div>
-</div>
-</div>
-
-<!-- ABA PERFIL -->
-<div id="tab-perfil" class="tab-content">
-  <div class="section perfil-hero">
-    <img id="perfil-avatar" class="perfil-avatar" src="" alt="">
-    <div class="perfil-nome" id="perfil-nome"></div>
-    <div class="perfil-email" id="perfil-email"></div>
-  </div>
-  <div class="section">
-    <div class="section-title">Notificação Diária</div>
-    <div class="notif-banner">
-      <p>Receba o Kin do dia toda manhã no seu celular.</p>
-      <button class="btn-notif" id="btn-notif" onclick="toggleNotificacao()">Ativar</button>
-    </div>
-  </div>
-  <div class="section">
-    <div class="section-title">Meu Kin Natal</div>
-    <div id="perfil-kin-salvo"></div>
-    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.8rem">
-      <label style="color:var(--text2);font-size:.85rem;font-style:italic">Data de Nascimento</label>
-      <input type="date" id="perfil-nasc-inp">
-      <button class="btn-salvar-natal" onclick="salvarKinNatal()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-</div>
-</div>
-
-<!-- MODAL MEDITAÇÃO / SELF DESIGN -->
-<div class="modal-video" id="modal-video" onclick="if(event.target===this)fecharModalVideo()">
-  <div class="modal-video-box">
-    <div class="modal-video-header">
-      <span class="modal-video-titulo" id="modal-video-titulo">🎧 Meditação do Selo</span>
-      <button class="modal-video-close" onclick="fecharModalVideo()">✕ Fechar</button>
-    </div>
-    <iframe id="modal-video-iframe" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
-  </div>
-</div>
-
-<div class="modal-selo" id="modal-selo">
-  <div class="modal-selo-box">
-    <button class="modal-selo-close" onclick="fecharModalSelo()">✕ Fechar</button>
-    <div class="modal-selo-header">
-      <div class="modal-selo-icon" id="modal-selo-icon"></div>
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="admin-header-left">
+      <img id="user-avatar" class="admin-avatar" src="" alt="">
       <div>
-        <div class="modal-selo-titulo" id="modal-selo-titulo"></div>
-        <div class="modal-selo-acao" id="modal-selo-acao"></div>
-        <div class="modal-selo-maya" id="modal-selo-maya"></div>
+        <div class="admin-nome" id="user-name"></div>
+        <div class="admin-badge">⚙️ Painel Administrativo</div>
       </div>
     </div>
-    <div class="modal-selo-desc" id="modal-selo-desc"></div>
+    <div class="admin-header-right">
+      <button class="btn btn-gold" onclick="window.location.href='./index.html'">← Voltar ao App</button>
+      <button class="btn" id="btn-logout">Sair</button>
+    </div>
+  </div>
+
+  <h1>⚙️ Painel Admin · 13 Luas</h1>
+  <p class="admin-subtitle">Gerencie usuários, notificações e configurações do app</p>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="adminTab('usuarios',this)">👥 Usuários</button>
+    <button class="tab" onclick="adminTab('pendentes',this)">⏳ Pendentes</button>
+    <button class="tab" onclick="adminTab('notificacao',this)">📢 Notificação</button>
+    <button class="tab" onclick="adminTab('aviso',this)">📌 Aviso</button>
+  </div>
+
+  <!-- ABA USUÁRIOS -->
+  <div id="tab-usuarios" class="tab-content active">
+    <div id="metrics" class="metrics">
+      <div class="metric-card"><div class="metric-num" id="m-total">–</div><div class="metric-label">Total</div></div>
+      <div class="metric-card pending"><div class="metric-num" id="m-pendentes">–</div><div class="metric-label">Pendentes</div></div>
+      <div class="metric-card"><div class="metric-num" id="m-ativos">–</div><div class="metric-label">Ativos</div></div>
+      <div class="metric-card"><div class="metric-num" id="m-admins">–</div><div class="metric-label">Admins</div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">
+        <span>Todos os Usuários</span>
+        <button class="btn btn-gold" onclick="carregarUsuarios()" style="font-size:.55rem;padding:3px 9px">↺ Atualizar</button>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="filter-bar">
+        <input class="search-inp" id="search-inp" placeholder="Buscar por nome ou email..." oninput="filtrarUsuarios()">
+        <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos',this)">Todos</button>
+        <button class="filter-btn" data-filter="ativos" onclick="setFiltro('ativos',this)">Ativos</button>
+        <button class="filter-btn" data-filter="pendentes" onclick="setFiltro('pendentes',this)">Pendentes</button>
+        <button class="filter-btn" data-filter="admins" onclick="setFiltro('admins',this)">Admins</button>
+      </div>
+      <div class="user-list" id="user-list">
+        <p style="color:var(--text3);font-style:italic;font-size:.85rem">Carregando usuários...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABA PENDENTES -->
+  <div id="tab-pendentes" class="tab-content">
+    <div class="section">
+      <div class="section-title">
+        <span>Aguardando Aprovação</span>
+        <button class="btn btn-gold" onclick="carregarPendentes()" style="font-size:.55rem;padding:3px 9px">↺ Atualizar</button>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="user-list" id="pendentes-list">
+        <p style="color:var(--text3);font-style:italic;font-size:.85rem">Carregando...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABA NOTIFICAÇÃO -->
+  <div id="tab-notificacao" class="tab-content">
+    <div class="section">
+      <div class="section-title"><span>Enviar Notificação Push</span><div class="section-title-line"></div></div>
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:.9rem;line-height:1.6">Envia uma notificação para todos os usuários que ativaram notificações no app. Ela aparecerá no celular mesmo com o app fechado.</p>
+      <div class="notif-form">
+        <div>
+          <label>Título</label>
+          <input id="notif-titulo" class="search-inp" style="width:100%;margin-top:.3rem" value="🌀 Sincronário das 13 Luas" placeholder="Título da notificação">
+        </div>
+        <div>
+          <label>Mensagem</label>
+          <textarea id="notif-msg" class="notif-form" style="width:100%;margin-top:.3rem;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.7rem;font-family:inherit;font-size:.95rem;resize:vertical;min-height:80px" placeholder="Ex: Kin 172 · Humano Elétrico Amarelo. Que sua jornada seja plena hoje! ✨"></textarea>
+        </div>
+        <div class="notif-preview" id="notif-preview" style="display:none"></div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button class="btn btn-gold" onclick="previewNotif()">👁 Pré-visualizar</button>
+          <button class="btn btn-green" onclick="enviarNotifAdmin()">📤 Enviar para todos</button>
+        </div>
+        <div class="status-msg" id="notif-status"></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title"><span>Notificação do Kin do Dia</span><div class="section-title-line"></div></div>
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:.9rem">Envia automaticamente o kin do dia para todos os usuários com notificação ativa.</p>
+      <button class="btn btn-green" onclick="enviarKinDia()">🌀 Enviar Kin do Dia agora</button>
+      <div class="status-msg" id="kin-status"></div>
+    </div>
+  </div>
+
+  <!-- ABA AVISO -->
+  <div id="tab-aviso" class="tab-content">
+    <div class="section">
+      <div class="section-title"><span>Banner de Aviso no App</span><div class="section-title-line"></div></div>
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:.9rem;line-height:1.6">Exibe um banner no topo do app para todos os usuários. Útil para comunicar manutenção, novidades ou lembretes.</p>
+      <div class="aviso-section">
+        <div>
+          <label style="font-size:.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em">Mensagem do aviso</label>
+          <textarea id="aviso-msg" rows="3" style="width:100%;margin-top:.3rem;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.7rem;font-family:inherit;font-size:.95rem;resize:vertical" placeholder="Ex: 🌟 Novo recurso disponível! Agora você pode favoritar kins."></textarea>
+        </div>
+        <div class="toggle-row">
+          <label class="toggle">
+            <input type="checkbox" id="aviso-ativo">
+            <span class="toggle-slider"></span>
+          </label>
+          <span style="font-size:.82rem;color:var(--text2)">Aviso ativo (visível para todos)</span>
+        </div>
+        <div style="display:flex;gap:.6rem">
+          <button class="btn btn-green" onclick="salvarAviso()">💾 Salvar aviso</button>
+          <button class="btn btn-danger" onclick="limparAviso()">✕ Limpar aviso</button>
+        </div>
+        <div class="status-msg" id="aviso-status"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal de confirmação -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div style="font-size:1.8rem;margin-bottom:.5rem" id="confirm-icon">⚠️</div>
+    <p id="confirm-msg">Confirmar ação?</p>
+    <div class="confirm-btns">
+      <button class="btn" onclick="fecharConfirm()">Cancelar</button>
+      <button class="btn btn-green" id="confirm-ok">Confirmar</button>
+    </div>
   </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<script type="module" src="./js/app-admin.js"></script>
-<script>
-function fecharModalVideo(){
-  if(window._fecharModalVideo){ window._fecharModalVideo(); return; }
-  document.getElementById('modal-video').classList.remove('active');
-  const iframe=document.getElementById('modal-video-iframe');
-  if(iframe){iframe.src='';iframe.style.display='';}
-  const kc=document.getElementById('modal-kin-content');
-  if(kc){kc.style.display='none';kc.innerHTML='';}
-  document.body.style.overflow='';
+<script type="module">
+import { initAdminObserver, auth, db } from './js/api.js';
+
+// ─── Estado ───────────────────────────────────────────────────────────────────
+let todosUsuarios = [];
+let filtroAtual = 'todos';
+
+// ─── Tabs ─────────────────────────────────────────────────────────────────────
+window.adminTab = (t, el) => {
+  document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+t).classList.add('active');
+  if (t === 'pendentes') carregarPendentes();
+  if (t === 'aviso') carregarAvisoAtual();
+};
+
+// ─── Carregar usuários ────────────────────────────────────────────────────────
+window.carregarUsuarios = async () => {
+  const list = document.getElementById('user-list');
+  list.innerHTML = '<p style="color:var(--text3);font-style:italic;font-size:.85rem">Carregando...</p>';
+  try {
+    const snap = await db.collection('users').orderBy('criadoEm','desc').get();
+    todosUsuarios = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    atualizarMetricas();
+    renderUsuarios();
+  } catch(e) {
+    list.innerHTML = `<p style="color:#e07050;font-size:.85rem">Erro: ${e.message}</p>`;
+  }
+};
+
+function atualizarMetricas() {
+  document.getElementById('m-total').textContent = todosUsuarios.length;
+  document.getElementById('m-pendentes').textContent = todosUsuarios.filter(u => !u.authorized).length;
+  document.getElementById('m-ativos').textContent = todosUsuarios.filter(u => u.authorized && u.role !== 'admin').length;
+  document.getElementById('m-admins').textContent = todosUsuarios.filter(u => u.role === 'admin').length;
 }
+
+window.setFiltro = (f, el) => {
+  filtroAtual = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderUsuarios();
+};
+
+window.filtrarUsuarios = () => renderUsuarios();
+
+function renderUsuarios() {
+  const q = document.getElementById('search-inp').value.toLowerCase();
+  let lista = todosUsuarios;
+  if (filtroAtual === 'ativos')    lista = lista.filter(u => u.authorized && u.role !== 'admin');
+  if (filtroAtual === 'pendentes') lista = lista.filter(u => !u.authorized);
+  if (filtroAtual === 'admins')    lista = lista.filter(u => u.role === 'admin');
+  if (q) lista = lista.filter(u => (u.nome||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q));
+
+  const list = document.getElementById('user-list');
+  if (!lista.length) { list.innerHTML = '<p style="color:var(--text3);font-style:italic;font-size:.85rem">Nenhum usuário encontrado.</p>'; return; }
+  list.innerHTML = lista.map(u => userRowHTML(u)).join('');
+}
+
+function userRowHTML(u) {
+  const badge = u.role === 'admin'
+    ? `<span class="badge-role badge-admin">Admin</span>`
+    : u.authorized
+      ? `<span class="badge-role badge-user">Ativo</span>`
+      : `<span class="badge-role badge-pending">Pendente</span>`;
+
+  const acesso = u.ultimoAcesso?.toDate ? u.ultimoAcesso.toDate().toLocaleDateString('pt-BR') : '–';
+  const criado = u.criadoEm?.toDate ? u.criadoEm.toDate().toLocaleDateString('pt-BR') : '–';
+
+  const btns = u.role !== 'admin' ? `
+    ${!u.authorized ? `<button class="btn btn-green" onclick="aprovar('${u.id}')" style="font-size:.55rem;padding:3px 9px">✓ Aprovar</button>` : ''}
+    ${u.authorized  ? `<button class="btn btn-danger" onclick="revogar('${u.id}','${u.nome||u.email}')" style="font-size:.55rem;padding:3px 9px">✕ Revogar</button>` : ''}
+    <button class="btn btn-gold" onclick="tornarAdmin('${u.id}','${u.nome||u.email}')" style="font-size:.55rem;padding:3px 9px">⭐ Admin</button>
+    <button class="btn btn-danger" onclick="excluirUsuario('${u.id}','${u.nome||u.email}')" style="font-size:.55rem;padding:3px 9px">🗑</button>
+  ` : `<span style="font-size:.6rem;color:var(--text3);font-style:italic">–</span>`;
+
+  return `<div class="user-row" id="row-${u.id}">
+    <img class="user-row-avatar" src="${u.fotoURL||'./icon-192.png'}" onerror="this.src='./icon-192.png'" alt="">
+    <div class="user-row-info">
+      <div class="user-row-nome">${u.nome||'(sem nome)'}</div>
+      <div class="user-row-email">${u.email||''}</div>
+      <div class="user-row-meta">Criado: ${criado} · Último acesso: ${acesso}</div>
+    </div>
+    ${badge}
+    <div class="user-row-actions">${btns}</div>
+  </div>`;
+}
+
+// ─── Carregar pendentes ───────────────────────────────────────────────────────
+window.carregarPendentes = async () => {
+  const list = document.getElementById('pendentes-list');
+  list.innerHTML = '<p style="color:var(--text3);font-style:italic;font-size:.85rem">Carregando...</p>';
+  try {
+    const snap = await db.collection('users').where('authorized','==',false).get();
+    const pendentes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    if (!pendentes.length) { list.innerHTML = '<p style="color:var(--green2);font-size:.85rem">✓ Nenhum usuário pendente.</p>'; return; }
+    list.innerHTML = pendentes.map(u => `<div class="user-row" id="rowp-${u.id}">
+      <img class="user-row-avatar" src="${u.fotoURL||'./icon-192.png'}" onerror="this.src='./icon-192.png'" alt="">
+      <div class="user-row-info">
+        <div class="user-row-nome">${u.nome||'(sem nome)'}</div>
+        <div class="user-row-email">${u.email||''}</div>
+        <div class="user-row-meta">ID: ${u.id.substring(0,12)}...</div>
+      </div>
+      <span class="badge-role badge-pending">Pendente</span>
+      <div class="user-row-actions">
+        <button class="btn btn-green" onclick="aprovar('${u.id}',true)">✓ Aprovar</button>
+        <button class="btn btn-danger" onclick="excluirUsuario('${u.id}','${u.nome||u.email}')">✕ Rejeitar</button>
+      </div>
+    </div>`).join('');
+  } catch(e) {
+    list.innerHTML = `<p style="color:#e07050;font-size:.85rem">Erro: ${e.message}</p>`;
+  }
+};
+
+// ─── Ações de usuário ─────────────────────────────────────────────────────────
+window.aprovar = async (uid, fromPendentes=false) => {
+  try {
+    await db.collection('users').doc(uid).update({ authorized: true });
+    mostrarStatus(fromPendentes ? 'kin-status' : null, 'Usuário aprovado!', true);
+    carregarUsuarios();
+    if (fromPendentes) carregarPendentes();
+  } catch(e) { alert('Erro: '+e.message); }
+};
+
+window.revogar = (uid, nome) => confirmar(
+  `Revogar acesso de <strong>${nome}</strong>?<br><small>O usuário perderá acesso imediatamente.</small>`,
+  async () => {
+    await db.collection('users').doc(uid).update({ authorized: false });
+    carregarUsuarios();
+  }, '🔒'
+);
+
+window.tornarAdmin = (uid, nome) => confirmar(
+  `Tornar <strong>${nome}</strong> administrador?<br><small>Ele terá acesso total ao painel admin.</small>`,
+  async () => {
+    await db.collection('users').doc(uid).update({ role: 'admin', authorized: true });
+    carregarUsuarios();
+  }, '⭐'
+);
+
+window.excluirUsuario = (uid, nome) => confirmar(
+  `Excluir <strong>${nome}</strong>?<br><small>Esta ação não pode ser desfeita.</small>`,
+  async () => {
+    await db.collection('users').doc(uid).delete();
+    carregarUsuarios();
+  }, '🗑️'
+);
+
+// ─── Notificações ─────────────────────────────────────────────────────────────
+window.previewNotif = () => {
+  const titulo = document.getElementById('notif-titulo').value;
+  const msg = document.getElementById('notif-msg').value;
+  const prev = document.getElementById('notif-preview');
+  prev.style.display = 'block';
+  prev.innerHTML = `<strong>${titulo}</strong><br>${msg}`;
+};
+
+window.enviarNotifAdmin = async () => {
+  const titulo = document.getElementById('notif-titulo').value.trim();
+  const msg = document.getElementById('notif-msg').value.trim();
+  if (!titulo || !msg) { mostrarStatus('notif-status', 'Preencha o título e a mensagem.', false); return; }
+  try {
+    await db.collection('notificacoes').add({
+      titulo, mensagem: msg,
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+      tipo: 'manual'
+    });
+    mostrarStatus('notif-status', '✓ Notificação registrada! Será enviada na próxima sincronização.', true);
+  } catch(e) { mostrarStatus('notif-status', 'Erro: '+e.message, false); }
+};
+
+window.enviarKinDia = async () => {
+  try {
+    const kin = dateToKin(new Date());
+    await db.collection('notificacoes').add({
+      titulo: '🌀 Sincronário das 13 Luas',
+      mensagem: `Kin ${kin} · Abra o app para ver o kin do dia completo!`,
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+      tipo: 'kin-diario'
+    });
+    mostrarStatus('kin-status', `✓ Kin ${kin} registrado para envio!`, true);
+  } catch(e) { mostrarStatus('kin-status', 'Erro: '+e.message, false); }
+};
+
+function dateToKin(dt) {
+  const dtN = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+  const base = new Date(1987, 6, 26);
+  const dias = Math.round((dtN - base) / 86400000);
+  return ((34 - 1 + dias) % 260 + 260) % 260 + 1;
+}
+
+// ─── Aviso ────────────────────────────────────────────────────────────────────
+window.carregarAvisoAtual = async () => {
+  try {
+    const snap = await db.collection('config').doc('aviso').get();
+    if (snap.exists) {
+      const d = snap.data();
+      document.getElementById('aviso-msg').value = d.mensagem || '';
+      document.getElementById('aviso-ativo').checked = !!d.ativo;
+    }
+  } catch(e) {}
+};
+
+window.salvarAviso = async () => {
+  const msg = document.getElementById('aviso-msg').value.trim();
+  const ativo = document.getElementById('aviso-ativo').checked;
+  try {
+    await db.collection('config').doc('aviso').set({
+      mensagem: msg, ativo,
+      versao: Date.now().toString(),
+      atualizadoEm: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    mostrarStatus('aviso-status', ativo ? '✓ Aviso ativado e salvo!' : '✓ Aviso salvo (desativado).', true);
+  } catch(e) { mostrarStatus('aviso-status', 'Erro: '+e.message, false); }
+};
+
+window.limparAviso = async () => {
+  try {
+    await db.collection('config').doc('aviso').set({ mensagem: '', ativo: false, versao: Date.now().toString() });
+    document.getElementById('aviso-msg').value = '';
+    document.getElementById('aviso-ativo').checked = false;
+    mostrarStatus('aviso-status', '✓ Aviso limpo.', true);
+  } catch(e) { mostrarStatus('aviso-status', 'Erro: '+e.message, false); }
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function mostrarStatus(id, msg, ok) {
+  if (!id) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'status-msg ' + (ok ? 'ok' : 'err');
+  setTimeout(() => { el.className = 'status-msg'; }, 4000);
+}
+
+let confirmCallback = null;
+window.confirmar = (msg, cb, icon='⚠️') => {
+  document.getElementById('confirm-msg').innerHTML = msg;
+  document.getElementById('confirm-icon').textContent = icon;
+  confirmCallback = cb;
+  document.getElementById('confirm-overlay').classList.add('active');
+};
+window.fecharConfirm = () => {
+  document.getElementById('confirm-overlay').classList.remove('active');
+  confirmCallback = null;
+};
+document.getElementById('confirm-ok').onclick = async () => {
+  if (confirmCallback) { await confirmCallback(); }
+  fecharConfirm();
+};
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+document.getElementById('btn-logout').onclick = () =>
+  auth.signOut().then(() => window.location.href = './index.html');
+
+initAdminObserver((user) => {
+  document.getElementById('user-name').textContent = user.displayName;
+  document.getElementById('user-avatar').src = user.photoURL||'';
+  carregarUsuarios();
+});
+</script>
+
+<script>
 if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
 </script>
-<audio id="audio-prece" src="./assets/icons/prece.mpeg" preload="auto"></audio>
 </body>
-</html>   
+</html>
