@@ -8,7 +8,7 @@ import {
 import {
   getSeloBase, getSeloCor, getSeloIconURL, concordar, concordarCor,
   ehSeloFeminino, getFaseLunar, getAnoGalactico, getContextoLua,
-  getContextoAnelSolar, daysBetween,
+  getContextoAnelSolar, daysBetween, 
 } from './calculos.js';
 import { isFavorito } from './storage.js';
 import { renderPoema, renderInfoSelo, getPerguntaLua, renderCronografo } from './cartilha.js';
