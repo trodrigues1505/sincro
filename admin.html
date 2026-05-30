@@ -411,11 +411,15 @@ Entrar com Google
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<script type="module" src="./js/app.js"></script>
+<script type="module" src="./js/app-admin.js"></script>
 <script>
 function fecharModalVideo(){
+  if(window._fecharModalVideo){ window._fecharModalVideo(); return; }
   document.getElementById('modal-video').classList.remove('active');
-  document.getElementById('modal-video-iframe').src='';
+  const iframe=document.getElementById('modal-video-iframe');
+  if(iframe){iframe.src='';iframe.style.display='';}
+  const kc=document.getElementById('modal-kin-content');
+  if(kc){kc.style.display='none';kc.innerHTML='';}
   document.body.style.overflow='';
 }
 if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
