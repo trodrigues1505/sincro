@@ -37,14 +37,12 @@ export function getSeloCor(nomeCompleto) {
 
 export function getSeloIconURL(nomeCompleto) {
   if (!nomeCompleto) return './assets/icons/default.png';
-  // remove a cor (última palavra) para pegar o nome base
   const partes = nomeCompleto.trim().split(' ');
   const nomeBase = partes.slice(0, -1).join(' ') || nomeCompleto;
   const mapa = {
     'Dragão':'dragao','Vento':'vento','Noite':'noite','Semente':'semente',
     'Serpente':'serpente','Enlaçador':'enlacador','Enlaçador de Mundos':'enlacador',
     'Mão':'mao','Estrela':'estrela','Lua':'lua',
-    // Cachorro — múltiplas variantes pois o JSON pode usar qualquer uma
     'Cão':'cao','Cachorro':'cao','Cão Branco':'cao','Cachorro Branco':'cao',
     'Macaco':'macaco','Humano':'humano',
     'Caminhante':'caminhante','Caminhante do Céu':'caminhante',
@@ -52,7 +50,8 @@ export function getSeloIconURL(nomeCompleto) {
     'Águia':'aguia','Guerreiro':'guerreiro',
     'Terra':'terra','Espelho':'espelho','Tormenta':'tormenta','Sol':'sol',
   };
-  const arquivo = mapa[nomeBase] || mapa[nomeCompleto] || null;
+  // tenta nomeBase, depois primeiro token, depois nome completo sem cor
+  const arquivo = mapa[nomeBase] || mapa[partes[0]] || mapa[nomeCompleto] || null;
   return arquivo ? `./assets/icons/${arquivo}.png` : './assets/icons/default.png';
 }
 
