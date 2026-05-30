@@ -79,11 +79,12 @@ function celKin(kinNum, nomeCompleto, corSelo, iconURL, largura, altura, extraSt
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export function renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, seloBase, tomNum, fraseCurta) {
   const isFav = isFavorito(kinNum);
+  const safeSelo = seloCompleto.replace(/'/g,"\\'");
   return `
 <div class="section anim-1">
   <div class="kin-hero">
     <div style="display:flex;justify-content:center;margin-bottom:.3rem">${gerarGlifoTom(tomNum, 64)}</div>
-    <div class="selo-icon selo-${corSelo}" style="width:64px;height:64px;border-radius:9px;margin:0 auto .5rem">
+    <div class="selo-icon kin-clicavel selo-${corSelo}" style="width:64px;height:64px;border-radius:9px;margin:0 auto .5rem" onclick="abrirKinModal(${kinNum},'${safeSelo}',false)" title="Ver detalhes do Kin ${kinNum}">
       <img src="${getSeloIconURL(seloCompleto)}" alt="${seloBase}" style="width:100%;height:100%;object-fit:contain">
     </div>
     <div class="kin-title">${nomeCompleto}</div>
@@ -269,13 +270,15 @@ export function renderPlasmaFaseLunar(kinNum, faseLunar) {
   const plasma = DATA.plasmas[diaSemana]||'';
   const plasmaChave = plasma.split(' - ')[0];
   const plasmaSVGUrl = PLASMA_SVGS[plasmaChave.toLowerCase()]||'';
+  const plasmaEmoji = {'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'}[plasmaChave]||'⚡';
   return `
     <div style="margin-bottom:.6rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.3rem">
       <div class="section-title">Plasma · Fase Lunar</div>
       <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px">
-          ${plasmaSVGUrl ? `<img src="${plasmaSVGUrl}" style="width:48px;height:48px;object-fit:contain" alt="${plasmaChave}">` :
-            `<span style="font-size:1.5rem;width:48px;text-align:center">${({'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'}[plasmaChave]||'⚡')}</span>`}
+        <div class="kin-clicavel" style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px" onclick="switchTab('lei',document.querySelector('.tab:nth-child(5)'));setTimeout(()=>{const el=document.getElementById('lei-content');if(el)el.scrollIntoView({behavior:'smooth'})},200)" title="Ver Lei do Tempo · Plasmas">
+          ${plasmaSVGUrl
+            ? `<img src="${plasmaSVGUrl}" style="width:48px;height:48px;object-fit:contain" alt="${plasmaChave}">`
+            : `<span style="font-size:1.5rem;width:48px;text-align:center">${plasmaEmoji}</span>`}
           <div>
             <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${plasmaChave}</div>
             <div style="font-size:.65rem;color:var(--text2);margin-top:.1rem">${plasma.split(' - ')[1]||''}</div>
