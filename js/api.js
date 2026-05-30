@@ -100,24 +100,29 @@ export function initAdminObserver(onAuthorized) {
   const loading = document.getElementById('admin-loading');
 
   auth.onAuthStateChanged(async u => {
+    console.log('[Admin] onAuthStateChanged:', u ? u.email : 'null');
     if (!u) {
-      // Não logado — vai para o index fazer login
+      console.log('[Admin] Sem usuário — redirecionando para index');
       window.location.href = './index.html';
       return;
     }
     try {
+      console.log('[Admin] Verificando Firestore para uid:', u.uid);
       const snap = await db.collection('users').doc(u.uid).get();
+      console.log('[Admin] snap.exists:', snap.exists, 'data:', snap.data());
       if (!snap.exists || !snap.data().authorized) {
+        console.log('[Admin] Não autorizado — redirecionando');
         window.location.href = './index.html';
         return;
       }
       const d = snap.data();
+      console.log('[Admin] role:', d.role);
       if (d.role !== 'admin') {
-        // Logado mas não é admin
+        console.log('[Admin] Não é admin — redirecionando');
         window.location.href = './index.html';
         return;
       }
-      // É admin — mostra o painel
+      console.log('[Admin] Acesso liberado!');
       if (loading) loading.style.display = 'none';
       if (appScreen) appScreen.style.display = '';
       if (appScreen) appScreen.classList.add('active');
@@ -130,7 +135,7 @@ export function initAdminObserver(onAuthorized) {
       currentUserUID = u.uid;
       onAuthorized(u);
     } catch(e) {
-      console.error('[Admin] Erro ao verificar permissões:', e);
+      console.error('[Admin] Erro:', e);
       window.location.href = './index.html';
     }
   });
