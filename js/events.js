@@ -197,18 +197,84 @@ export function abrirSelfDesign(kin) {
 }
 
 // ─── Prece ────────────────────────────────────────────────────────────────────
+const TEXTO_PRECE = `
+<div style="text-align:center;line-height:2.1;font-size:.88rem;color:var(--text)">
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Leste da Luz</div>
+    <div style="color:var(--text2);font-style:italic">Que a sabedoria se abra em aurora sobre nós<br>Para que vejamos as coisas com claridade</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Norte da Noite</div>
+    <div style="color:var(--text2);font-style:italic">Que a sabedoria amadureça entre nós<br>Para que conheçamos tudo desde dentro</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Oeste da Transformação</div>
+    <div style="color:var(--text2);font-style:italic">Que a sabedoria se transforme em ação correta<br>Para que façamos o que tenha que ser feito</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Sul do Sol Eterno</div>
+    <div style="color:var(--text2);font-style:italic">Que a ação correta nos dê a colheita<br>Para que desfrutemos os frutos do ser planetário</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Superior do Paraíso</div>
+    <div style="color:var(--text2);font-style:italic">Onde se reúnem a gente das estrelas e os antepassados<br>Que suas bênçãos cheguem até nós agora</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Interior da Terra</div>
+    <div style="color:var(--text2);font-style:italic">Que o pulsar do coração de cristal do planeta<br>nos abençoe com suas harmonias<br>Para que acabemos com as guerras</div>
+  </div>
+  <div style="margin-bottom:1.2rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Fonte Central da Galáxia</div>
+    <div style="color:var(--text2);font-style:italic">Que está em todas as partes ao mesmo tempo<br>Que tudo se reconheça como luz e amor mútuo</div>
+  </div>
+  <div style="color:var(--gold2);font-family:Cinzel;font-size:.82rem;letter-spacing:.06em;line-height:1.9">
+    Ah Yum Hunab Ku Evam Maya E Ma Ho!<br>
+    Ah Yum Hunab Ku Evam Maya E Ma Ho!<br>
+    Ah Yum Hunab Ku Evam Maya E Ma Ho!<br>
+    <span style="font-size:.68rem;color:var(--text3)">Salve a Harmonia da Mente e da Natureza!</span>
+  </div>
+</div>`;
+
 export function togglePrece(btn) {
-  let audio = document.getElementById('audio-prece');
-  if (!audio) { audio = document.createElement('audio'); audio.id = 'audio-prece'; audio.src = './assets/icons/prece.mpeg'; document.body.appendChild(audio); }
-  if (!audio.paused) { audio.pause(); audio.currentTime = 0; btn.textContent = '▶ ouvir'; btn.classList.remove('tocando'); return; }
-  audio.load();
-  const p = audio.play();
-  if (p !== undefined) {
-    p.then(() => {
-      btn.textContent = '■ parar'; btn.classList.add('tocando');
-      audio.onended = () => { btn.textContent = '▶ ouvir'; btn.classList.remove('tocando'); };
-    }).catch(e => { console.error('Prece erro:', e); window.open('./assets/prece.mpeg','_blank'); });
+  // Abre o modal com o texto da prece + player de áudio
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
+
+  // Esconde iframe, mostra conteúdo da prece
+  iframe.style.display = 'none';
+  iframe.src = '';
+  let kinContainer = document.getElementById('modal-kin-content');
+  if (!kinContainer) {
+    kinContainer = document.createElement('div');
+    kinContainer.id = 'modal-kin-content';
+    kinContainer.style.cssText = 'overflow-y:auto;max-height:70vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(kinContainer, iframe);
   }
+  kinContainer.style.display = 'block';
+
+  // Cria player de áudio inline
+  const audioId = 'prece-modal-audio';
+  kinContainer.innerHTML = `
+    <div style="display:flex;align-items:center;gap:.8rem;background:rgba(165,124,0,.07);border:1px solid var(--border-g);border-radius:8px;padding:.7rem 1rem;margin-bottom:1.1rem">
+      <span style="font-size:1.4rem">🙏</span>
+      <div style="flex:1">
+        <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2);margin-bottom:.3rem">Prece das 7 Direções Galácticas</div>
+        <audio id="${audioId}" src="./assets/icons/prece.mpeg" controls style="width:100%;height:32px;accent-color:var(--gold2)"></audio>
+      </div>
+    </div>
+    ${TEXTO_PRECE}`;
+
+  // Inicia reprodução automática
+  setTimeout(() => {
+    const audio = document.getElementById(audioId);
+    if (audio) audio.play().catch(()=>{});
+  }, 200);
+
+  if (titulo) titulo.textContent = '🙏 Prece das 7 Direções Galácticas';
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 // ─── Compartilhar e exportar ──────────────────────────────────────────────────
@@ -334,4 +400,4 @@ export async function exportarPDFKin() {
   const imgH = (canvas.height * imgW) / canvas.width;
   pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgW, imgH);
   pdf.save(`sincronario-kin-${new Date().toISOString().split('T')[0]}.pdf`);
-} 
+}
