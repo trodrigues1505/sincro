@@ -254,3 +254,180 @@ export function renderLeiDoTempo() {
 export function getPerguntaLua(luaNum) {
   return PERGUNTAS_LUA[luaNum] || '';
 }
+
+// ─── Cronógrafo Diário Digital ────────────────────────────────────────────────
+const CRONOGRAFO_KEY = 'sinc13_cronografo';
+
+function getCronografoData() {
+  try { return JSON.parse(localStorage.getItem(CRONOGRAFO_KEY) || '{}'); } catch { return {}; }
+}
+
+function saveCronografoData(data) {
+  localStorage.setItem(CRONOGRAFO_KEY, JSON.stringify(data));
+}
+
+function dataHoje() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+export function renderCronografo(kinNum, kData, luaNum, diaLua, plasmaHoje) {
+  if (!kData) return '';
+  const hoje = dataHoje();
+  const todos = getCronografoData();
+  const reg = todos[hoje] || {};
+
+  const seloIdx = (kinNum-1) % 20;
+  const tomIdx  = ((kinNum-1) % 13) + 1;
+  const ps = POEMA_SELO[seloIdx] || {};
+  const pt = POEMA_TOM[tomIdx]   || {};
+  const nomeSelo = SELOS_NOMES[seloIdx] || '';
+  const nomeMaia = SELOS_MAIAS[seloIdx] || '';
+  const nomeTom  = TONS_NOMES[tomIdx-1] || '';
+  const familia  = FAMILIAS_TERRESTRES[seloIdx] || '';
+
+  const field = (id, label, val, placeholder='') => `
+    <div style="margin-bottom:.5rem">
+      <label style="font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-family:Cinzel;display:block;margin-bottom:.2rem">${label}</label>
+      <textarea id="cron-${id}" rows="2"
+        style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:.4rem .6rem;font-family:inherit;font-size:.82rem;resize:vertical;transition:border-color .2s"
+        placeholder="${placeholder}"
+        onfocus="this.style.borderColor='var(--green)'"
+        onblur="this.style.borderColor='var(--border)';salvarCronografo()"
+      >${val||''}</textarea>
+    </div>`;
+
+  return `
+<div class="section" id="cronografo-section">
+  <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+    <span>📋 Cronógrafo Diário</span>
+    <span style="font-size:.58rem;color:var(--text3);font-style:italic">${hoje}</span>
+  </div>
+
+  <!-- Dados fixos do dia -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.8rem">
+    ${[
+      ['Kin do Dia', `Kin ${kinNum}`],
+      ['Lua · Dia', `${luaNum}ª Lua · Dia ${diaLua}`],
+      ['Plasma', plasmaHoje || '–'],
+      ['Selo', `${nomeSelo} · ${nomeMaia}`],
+      ['Tom', nomeTom],
+      ['Família', familia],
+    ].map(([lbl, val]) => `
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.4rem .5rem;text-align:center">
+      <div style="font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.15rem">${lbl}</div>
+      <div style="font-family:Cinzel;font-size:.68rem;color:var(--gold2)">${val}</div>
+    </div>`).join('')}
+  </div>
+
+  <!-- Oráculo resumido -->
+  <div style="background:rgba(165,124,0,.05);border:1px solid var(--border-g);border-radius:7px;padding:.6rem .8rem;margin-bottom:.7rem">
+    <div style="font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;font-family:Cinzel;margin-bottom:.4rem">Oráculo do Dia</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.3rem;font-size:.72rem">
+      ${kData.oraculo ? [
+        ['Destino', kData.oraculo.destino || `Kin ${kinNum}`],
+        ['Guia', kData.oraculo.guia ? kData.oraculo.guia.split(' ').slice(0,-1).join(' ') : '–'],
+        ['Análogo', kData.oraculo.analogo ? kData.oraculo.analogo.split(' ').slice(0,-1).join(' ') : '–'],
+        ['Oculto', kData.oraculo.oculto ? kData.oraculo.oculto.split(' ').slice(0,-1).join(' ') : '–'],
+        ['Antípoda', kData.oraculo.antipoda ? kData.oraculo.antipoda.split(' ').slice(0,-1).join(' ') : '–'],
+        ['Onda', `${Math.floor((kinNum-1)/13)+1}ª · Dia ${((kinNum-1)%13)+1}`],
+      ].map(([lbl, val]) => `
+      <div><span style="color:var(--text3)">${lbl}:</span> <span style="color:var(--text)">${val}</span></div>`).join('') : ''}
+    </div>
+  </div>
+
+  <!-- Poema do Kin -->
+  ${pt.poder && ps.qualidade ? `
+  <div style="background:rgba(165,124,0,.05);border:1px solid var(--border-g);border-radius:7px;padding:.6rem .8rem;margin-bottom:.7rem;font-size:.8rem;line-height:1.9;text-align:center;color:var(--text2);font-style:italic">
+    <div style="font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;font-family:Cinzel;margin-bottom:.4rem">Poema Ressonante</div>
+    Eu ${pt.poder} com o fim de ${ps.qualidade},<br>
+    ${pt.acao} ${ps.poder.toLowerCase()},<br>
+    <span style="color:var(--text3);font-size:.75rem">Com o tom ${pt.qualidade} do ${nomeTom.toLowerCase()}.</span>
+  </div>` : ''}
+
+  <!-- Campos editáveis -->
+  <div style="margin-top:.5rem">
+    ${field('afirmacao', 'Afirmação da Semana', reg.afirmacao, 'Escreva sua afirmação da semana...')}
+    ${field('plasma-afirm', 'Afirmação do Plasma', reg.plasma_afirm, 'Afirmação de Padma Sambhava do dia...')}
+    ${field('pergunta', 'Pergunta da Lua', reg.pergunta, PERGUNTAS_LUA[luaNum] || 'Reflexão do dia...')}
+    ${field('intencao', 'Intenção do Dia', reg.intencao, 'O que pretendo cultivar hoje...')}
+    ${field('sincronicidade', 'Sincronicidades', reg.sincronicidade, 'Registro de sincronicidades percebidas...')}
+    ${field('gratidao', 'Gratidão', reg.gratidao, 'Por que sou grato hoje...')}
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.6rem">
+    <div id="cron-status" style="font-size:.68rem;color:var(--text3);font-style:italic"></div>
+    <div style="display:flex;gap:.5rem">
+      <button onclick="verHistoricoCronografo()" style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 10px;font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">📅 Histórico</button>
+      <button onclick="salvarCronografo(true)" style="background:var(--green);border:none;border-radius:4px;color:#fff;padding:4px 12px;font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">💾 Salvar</button>
+    </div>
+  </div>
+</div>`;
+}
+
+// Salva dados do cronógrafo
+window.salvarCronografo = function(feedback = false) {
+  const hoje = dataHoje();
+  const todos = getCronografoData();
+  todos[hoje] = {
+    afirmacao:      document.getElementById('cron-afirmacao')?.value || '',
+    plasma_afirm:   document.getElementById('cron-plasma-afirm')?.value || '',
+    pergunta:       document.getElementById('cron-pergunta')?.value || '',
+    intencao:       document.getElementById('cron-intencao')?.value || '',
+    sincronicidade: document.getElementById('cron-sincronicidade')?.value || '',
+    gratidao:       document.getElementById('cron-gratidao')?.value || '',
+    savedAt: new Date().toISOString(),
+  };
+  saveCronografoData(todos);
+  if (feedback) {
+    const el = document.getElementById('cron-status');
+    if (el) { el.textContent = '✓ Salvo!'; setTimeout(()=>{ el.textContent=''; }, 2000); }
+  }
+};
+
+// Modal de histórico
+window.verHistoricoCronografo = function() {
+  const todos = getCronografoData();
+  const datas = Object.keys(todos).sort().reverse().slice(0, 30);
+  if (!datas.length) { alert('Nenhum registro ainda.'); return; }
+
+  let el = document.getElementById('modal-cronografo');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'modal-cronografo';
+    el.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto';
+    el.onclick = e => { if(e.target===el) el.style.display='none'; document.body.style.overflow=''; };
+    document.body.appendChild(el);
+  }
+
+  el.innerHTML = `
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1.2rem;max-width:480px;width:100%;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem;border-bottom:1px solid var(--border);padding-bottom:.7rem">
+        <span style="font-family:Cinzel;font-size:.82rem;color:var(--gold2)">📅 Histórico do Cronógrafo</span>
+        <button onclick="document.getElementById('modal-cronografo').style.display='none';document.body.style.overflow=''" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:.8rem;font-family:Cinzel">✕ Fechar</button>
+      </div>
+      ${datas.map(data => {
+        const r = todos[data];
+        const campos = [
+          r.afirmacao && ['Afirmação', r.afirmacao],
+          r.plasma_afirm && ['Plasma', r.plasma_afirm],
+          r.pergunta && ['Pergunta da Lua', r.pergunta],
+          r.intencao && ['Intenção', r.intencao],
+          r.sincronicidade && ['Sincronicidades', r.sincronicidade],
+          r.gratidao && ['Gratidão', r.gratidao],
+        ].filter(Boolean);
+        if (!campos.length) return '';
+        return `<div style="margin-bottom:.9rem;padding-bottom:.9rem;border-bottom:1px solid var(--border)">
+          <div style="font-family:Cinzel;font-size:.68rem;color:var(--gold);margin-bottom:.4rem">${data}</div>
+          ${campos.map(([lbl, val]) => `
+          <div style="margin-bottom:.3rem">
+            <span style="font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em">${lbl}: </span>
+            <span style="font-size:.8rem;color:var(--text2);font-style:italic">${val}</span>
+          </div>`).join('')}
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  el.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+};
