@@ -11,7 +11,7 @@ import {
   getContextoAnelSolar, daysBetween,
 } from './calculos.js';
 import { isFavorito } from './storage.js';
-import { renderPoema, renderInfoSelo, getPerguntaLua } from './cartilha.js';
+import { renderPoema, renderInfoSelo, getPerguntaLua, renderCronografo } from './cartilha.js';
 
 // ─── Glifo do Tom ─────────────────────────────────────────────────────────────
 export function gerarGlifoTom(tom, iconSize) {
@@ -342,6 +342,9 @@ export function kinHTML(kinNum, modoNatal = false) {
   const anelHTML    = renderAnelSolar(anel, anoGal);
   const plasmaHTML  = renderPlasmaFaseLunar(kinNum, faseLunar);
   const praticaHTML = renderPraticaDiaria(kinNum, diaOnda, anel.anelKin, seloBase);
+  // plasma do dia para o cronógrafo
+  const plasmaNome  = (DATA.plasmas || [])[((kinNum-1)%7)] || '';
+  const cronHTML    = renderCronografo(kinNum, kD, luaNum, diaLua, plasmaNome.split(' - ')[0]);
   return `
 <div>
 ${heroHTML}${oraculoHTML}${ondaHTML}${poemaHTML}${infoSeloHTML}
@@ -357,5 +360,6 @@ ${heroHTML}${oraculoHTML}${ondaHTML}${poemaHTML}${infoSeloHTML}
   </div>
 ${praticaHTML}
 </div>
+${cronHTML}
 </div>`;
 }
