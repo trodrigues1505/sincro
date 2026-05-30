@@ -306,12 +306,19 @@ window.carregarUsuarios = async () => {
   const list = document.getElementById('user-list');
   list.innerHTML = '<p style="color:var(--text3);font-style:italic;font-size:.85rem">Carregando...</p>';
   try {
-    const snap = await db.collection('users').orderBy('criadoEm','desc').get();
+    const snap = await db.collection('users').get();
     todosUsuarios = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    // ordena localmente por data de criação (suporta tanto criadoEm quanto createdAt)
+    todosUsuarios.sort((a,b) => {
+      const ta = (a.criadoEm || a.createdAt)?.toDate?.()?.getTime() || 0;
+      const tb = (b.criadoEm || b.createdAt)?.toDate?.()?.getTime() || 0;
+      return tb - ta;
+    });
     atualizarMetricas();
     renderUsuarios();
   } catch(e) {
     list.innerHTML = `<p style="color:#e07050;font-size:.85rem">Erro: ${e.message}</p>`;
+    console.error('[Admin] carregarUsuarios:', e);
   }
 };
 
@@ -351,20 +358,25 @@ function userRowHTML(u) {
       ? `<span class="badge-role badge-user">Ativo</span>`
       : `<span class="badge-role badge-pending">Pendente</span>`;
 
-  const acesso = u.ultimoAcesso?.toDate ? u.ultimoAcesso.toDate().toLocaleDateString('pt-BR') : '–';
-  const criado = u.criadoEm?.toDate ? u.criadoEm.toDate().toLocaleDateString('pt-BR') : '–';
+  // suporta variações de nomes de campo entre usuários antigos e novos
+  const nome = u.nome || u.displayName || '(sem nome)';
+  const foto = u.fotoURL || u.photoURL || './icon-192.png';
+  const dataCriacao = (u.criadoEm || u.createdAt)?.toDate?.();
+  const dataAcesso  = (u.ultimoAcesso)?.toDate?.();
+  const criado  = dataCriacao ? dataCriacao.toLocaleDateString('pt-BR') : '–';
+  const acesso  = dataAcesso  ? dataAcesso.toLocaleDateString('pt-BR')  : '–';
 
   const btns = u.role !== 'admin' ? `
     ${!u.authorized ? `<button class="btn btn-green" onclick="aprovar('${u.id}')" style="font-size:.55rem;padding:3px 9px">✓ Aprovar</button>` : ''}
-    ${u.authorized  ? `<button class="btn btn-danger" onclick="revogar('${u.id}','${u.nome||u.email}')" style="font-size:.55rem;padding:3px 9px">✕ Revogar</button>` : ''}
-    <button class="btn btn-gold" onclick="tornarAdmin('${u.id}','${u.nome||u.email}')" style="font-size:.55rem;padding:3px 9px">⭐ Admin</button>
-    <button class="btn btn-danger" onclick="excluirUsuario('${u.id}','${u.nome||u.email}')" style="font-size:.55rem;padding:3px 9px">🗑</button>
-  ` : `<span style="font-size:.6rem;color:var(--text3);font-style:italic">–</span>`;
+    ${u.authorized  ? `<button class="btn btn-danger" onclick="revogar('${u.id}','${nome.replace(/'/g,"\\'")}')" style="font-size:.55rem;padding:3px 9px">✕ Revogar</button>` : ''}
+    <button class="btn btn-gold" onclick="tornarAdmin('${u.id}','${nome.replace(/'/g,"\\'")}')" style="font-size:.55rem;padding:3px 9px">⭐ Admin</button>
+    <button class="btn btn-danger" onclick="excluirUsuario('${u.id}','${nome.replace(/'/g,"\\'")}')" style="font-size:.55rem;padding:3px 9px">🗑</button>
+  ` : `<span style="font-size:.6rem;color:var(--text3);font-style:italic">Admin</span>`;
 
   return `<div class="user-row" id="row-${u.id}">
-    <img class="user-row-avatar" src="${u.fotoURL||'./icon-192.png'}" onerror="this.src='./icon-192.png'" alt="">
+    <img class="user-row-avatar" src="${foto}" onerror="this.src='./icon-192.png'" alt="">
     <div class="user-row-info">
-      <div class="user-row-nome">${u.nome||'(sem nome)'}</div>
+      <div class="user-row-nome">${nome}</div>
       <div class="user-row-email">${u.email||''}</div>
       <div class="user-row-meta">Criado: ${criado} · Último acesso: ${acesso}</div>
     </div>
