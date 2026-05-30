@@ -11,6 +11,7 @@ import {
   getContextoAnelSolar, daysBetween,
 } from './calculos.js';
 import { isFavorito } from './storage.js';
+import { renderPoema, renderInfoSelo, getPerguntaLua } from './cartilha.js';
 
 // ─── Glifo do Tom ─────────────────────────────────────────────────────────────
 export function gerarGlifoTom(tom, iconSize) {
@@ -217,7 +218,7 @@ export function renderCastelo(kinNum) {
   return { casteloNum, casteloTexto: CASTELO_NOMES[casteloNum]||'Castelo', casteloImg, ondasHTML };
 }
 
-export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum) {
+export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum, perguntaLua) {
   const art = ANIMAIS_FEM.has(luaAnimal) ? 'da ' : 'do ';
   const luaKinCorSelo = luaKinData ? getSeloCor(luaKinData.selo) : 'red';
   const luaKinIconURL = luaKinData ? getSeloIconURL(luaKinData.selo) : '';
@@ -229,6 +230,7 @@ export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKin
     <div style="margin-bottom:1.1rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.9rem">
       <div class="section-title">Lua Galáctica · ${luaNum} de 13</div>
       <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">Lua Galáctica ${art}${luaAnimal}</div>
+      ${perguntaLua ? `<div style="background:rgba(165,124,0,.07);border-left:2px solid var(--gold);padding:.4rem .7rem;border-radius:0 5px 5px 0;margin-bottom:.7rem;font-style:italic;font-size:.82rem;color:var(--gold2)">${perguntaLua}</div>` : ''}
       <div style="display:flex;align-items:center;gap:.75rem">
         <div class="${clicavel}" style="text-align:center" ${clickAttr}>
           <div style="display:flex;justify-content:center;margin-bottom:.2rem">${luaKinData?gerarGlifoTom(luaKinData.tom,54):''}</div>
@@ -331,15 +333,18 @@ export function kinHTML(kinNum, modoNatal = false) {
   const heroHTML    = renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, seloBase, kD.tom, kD.frase_curta||'');
   const oraculoHTML = renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, kD.tom);
   const ondaHTML    = renderOndaEncantada(kinNum);
-  if (modoNatal) return `<div>${heroHTML}${oraculoHTML}${ondaHTML}</div>`;
+  const poemaHTML   = renderPoema(kinNum, kD);
+  const infoSeloHTML = renderInfoSelo(kinNum);
+  if (modoNatal) return `<div>${heroHTML}${oraculoHTML}${ondaHTML}${poemaHTML}${infoSeloHTML}</div>`;
   const { casteloNum, casteloTexto, casteloImg, ondasHTML } = renderCastelo(kinNum);
-  const luaHTML     = renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum);
+  const perguntaLua = getPerguntaLua(luaNum);
+  const luaHTML     = renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum, perguntaLua);
   const anelHTML    = renderAnelSolar(anel, anoGal);
   const plasmaHTML  = renderPlasmaFaseLunar(kinNum, faseLunar);
   const praticaHTML = renderPraticaDiaria(kinNum, diaOnda, anel.anelKin, seloBase);
   return `
 <div>
-${heroHTML}${oraculoHTML}${ondaHTML}
+${heroHTML}${oraculoHTML}${ondaHTML}${poemaHTML}${infoSeloHTML}
 <div class="grid-2">
   <div class="section">
     <div class="section-title">Castelo · 52 dias</div>
