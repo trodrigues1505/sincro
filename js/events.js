@@ -123,8 +123,10 @@ export async function renderSelos() {
   const ICONE_MAPA = {
     'Dragão':'dragao','Vento':'vento','Noite':'noite','Semente':'semente',
     'Serpente':'serpente','Enlaçador':'enlacador','Enlaçador de Mundos':'enlacador',
-    'Mão':'mao','Estrela':'estrela','Lua':'lua','Cão':'cao','Macaco':'macaco',
-    'Humano':'humano','Caminhante':'caminhante','Caminhante do Céu':'caminhante',
+    'Mão':'mao','Estrela':'estrela','Lua':'lua',
+    'Cão':'cao','Cachorro':'cao',  // ambas as variantes do JSON
+    'Macaco':'macaco','Humano':'humano',
+    'Caminhante':'caminhante','Caminhante do Céu':'caminhante',
     'Mago':'mago','Feiticeiro':'mago','Águia':'aguia','Guerreiro':'guerreiro',
     'Terra':'terra','Espelho':'espelho','Tormenta':'tormenta','Sol':'sol',
   };
@@ -132,17 +134,18 @@ export async function renderSelos() {
 
   grid.innerHTML = selos.map((s, i) => {
     const nomeCompleto = s.nome || '';
-    const partes = nomeCompleto.split(' ');
+    const partes = nomeCompleto.trim().split(' ');
     const cor = CORES[i % 4];
-    const nomeBase = partes.slice(0, -1).join(' ') || nomeCompleto;
-    const iconeKey = ICONE_MAPA[nomeBase] || ICONE_MAPA[partes[0]] || 'default';
+    // extrai base sem a cor — mas protege se só tiver 1 palavra
+    const nomeBase = partes.length > 1 ? partes.slice(0, -1).join(' ') : nomeCompleto;
+    // tenta pelo nomeBase, depois pelo primeiro token (ex: "Enlaçador"), depois pelo nome completo
+    const iconeKey = ICONE_MAPA[nomeBase] || ICONE_MAPA[partes[0]] || ICONE_MAPA[nomeCompleto] || 'default';
     const iconURL = `./assets/icons/${iconeKey}.png`;
     const safe = nomeCompleto.replace(/'/g,"\\'");
-    // nome maia — índice baseado na posição no grid
     const maias = ['IMIX','IK','AKBAL','KAN','CHICCHAN','CIMI','MANIK','LAMAT','MULUC','OC','CHUEN','EB','BEN','IX','MEN','CIB','CABAN','ETZNAB','CAUAC','AHAU'];
     const nomeMaia = maias[i] || '';
     return `<div class="selo-card" onclick="abrirModalSelo('${safe}','${cor}','${iconURL}',DATA.selos[${i}])">
-      <div class="selo-icon selo-${cor}" style="width:56px;height:56px;margin:0 auto"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.style.opacity='.3'"></div>
+      <div class="selo-icon selo-${cor}" style="width:56px;height:56px;margin:0 auto"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='<span style=font-size:1.8rem>${['🐉','💨','🌌','🌱','🐍','☯️','✋','⭐','🌙','🐕','🐒','👤','🚶','🧙','🦅','⚔️','🌍','🪞','⛈️','☀️'][i]||'🌀'}</span>'"></div>
       <div class="selo-card-nome">${nomeCompleto}</div>
       <div style="font-size:.55rem;color:var(--gold);letter-spacing:.1em;font-family:Cinzel;margin:.1rem 0">${nomeMaia}</div>
       <div class="selo-card-acao">${s.acao||''}</div>
