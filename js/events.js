@@ -329,4 +329,4 @@ export async function exportarPDFKin() {
   const imgH = (canvas.height * imgW) / canvas.width;
   pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgW, imgH);
   pdf.save(`sincronario-kin-${new Date().toISOString().split('T')[0]}.pdf`);
-}
+}    
