@@ -206,4 +206,4 @@ export async function limparKinNatal() {
   document.getElementById('perfil-kin-salvo').innerHTML = '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
   document.getElementById('perfil-nasc-inp').value = '';
   window.loadToday && window.loadToday();
-}    
+}
