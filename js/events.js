@@ -5,6 +5,7 @@ import { kinHTML } from './renderer.js';
 import { registrarNoHistorico, toggleFavorito, limparHistorico, limparFavoritos, renderHistorico, renderFavoritos } from './storage.js';
 import { carregarPerfil, salvarKinNatal, limparKinNatal, mostrarKinNatalSalvo } from './api.js';
 import * as Api from './api.js';
+import { renderLeiDoTempo } from './cartilha.js';
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 export function switchTab(t, el) {
@@ -14,6 +15,10 @@ export function switchTab(t, el) {
   document.getElementById('tab-'+t).classList.add('active');
   if (t === 'selos')  renderSelos();
   if (t === 'perfil') { renderHistorico(); renderFavoritos(); }
+  if (t === 'lei') {
+    const el = document.getElementById('lei-content');
+    if (el && el.children.length <= 1) el.innerHTML = renderLeiDoTempo();
+  }
 }
 
 // ─── Onda detalhe ─────────────────────────────────────────────────────────────
@@ -329,4 +334,4 @@ export async function exportarPDFKin() {
   const imgH = (canvas.height * imgW) / canvas.width;
   pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgW, imgH);
   pdf.save(`sincronario-kin-${new Date().toISOString().split('T')[0]}.pdf`);
-}    
+} 
