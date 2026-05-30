@@ -3,7 +3,7 @@
 //  Estratégia: cache-first com fallback à rede
 // ════════════════════════════════════════
 
-const CACHE_VERSION = 'sincronario-v2';
+const CACHE_VERSION = 'sincronario-v3';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -76,6 +76,27 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Deixa navegação entre páginas do próprio site passar direto para a rede
+  // Evita o SW servir index.html quando o usuário navega para admin.html
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).then(response => {
+        if (podeCache(response)) {
+          const clone = response.clone();
+          caches.open(CACHE_VERSION).then(c => c.put(event.request, clone));
+        }
+        return response;
+      }).catch(() => {
+        const pathname = new URL(event.request.url).pathname;
+        if (pathname.includes('admin.html')) {
+          return caches.match('./admin.html') || caches.match('./index.html');
+        }
+        return caches.match('./index.html');
+      })
+    );
+    return;
+  }
+
   // Para assets locais e estáticos: cache-first
   event.respondWith(
     caches.match(event.request).then((cached) => {
@@ -97,6 +118,11 @@ self.addEventListener('fetch', (event) => {
         return response;
       }).catch(() => {
         if (event.request.mode === 'navigate') {
+          // Serve a página correta baseada na URL solicitada
+          const pathname = url.pathname;
+          if (pathname.includes('admin.html')) {
+            return caches.match('./admin.html') || caches.match('./index.html');
+          }
           return caches.match('./index.html');
         }
       });
@@ -153,4 +179,4 @@ self.addEventListener('notificationclick', (event) => {
       return clients.openWindow('./');
     })
   );
-});    
+});
