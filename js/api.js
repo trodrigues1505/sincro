@@ -21,23 +21,60 @@ export let currentUserUID = null;
 export let _kinNatalSalvo = null;
 
 // ─── Login ────────────────────────────────────────────────────────────────────
+// Detecta Safari/iOS que não suporta popup confiável
+function isSafariOuIOS() {
+  const ua = navigator.userAgent;
+  return /iP(ad|hone|od)/i.test(ua) ||
+    (/Safari/i.test(ua) && !/Chrome/i.test(ua) && !/CriOS/i.test(ua));
+}
+
 export function initLogin() {
-  document.getElementById('btn-login').onclick = () => {
-    document.getElementById('login-error').classList.add('hidden');
-    document.getElementById('login-loading').textContent = 'Entrando...';
-    document.getElementById('login-loading').classList.remove('hidden');
-    const provider = new firebase.auth.GoogleAuthProvider();
-    provider.addScope('profile'); provider.addScope('email');
-    auth.signInWithPopup(provider).catch(e => {
-      let msg = e.message;
-      if (e.code === 'auth/popup-blocked')          msg = '⚠️ Popup bloqueado! Verifique as configurações do navegador.';
-      else if (e.code === 'auth/cancelled-popup-request') msg = '⚠️ Login cancelado.';
-      document.getElementById('login-error').textContent = msg;
-      document.getElementById('login-error').classList.remove('hidden');
-      document.getElementById('login-loading').classList.add('hidden');
-    });
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('profile'); provider.addScope('email');
+
+  // Ao carregar, verifica se voltou de um redirect do Google
+  auth.getRedirectResult().then(result => {
+    // Se voltou de redirect sem usuário, não faz nada
+  }).catch(e => {
+    const errEl = document.getElementById('login-error');
+    const loadEl = document.getElementById('login-loading');
+    if (errEl) { errEl.textContent = '⚠️ Erro no login: ' + e.message; errEl.classList.remove('hidden'); }
+    if (loadEl) loadEl.classList.add('hidden');
+  });
+
+  const btnLogin = document.getElementById('btn-login');
+  if (!btnLogin) return;
+
+  btnLogin.onclick = () => {
+    const errEl  = document.getElementById('login-error');
+    const loadEl = document.getElementById('login-loading');
+    if (errEl)  errEl.classList.add('hidden');
+    if (loadEl) { loadEl.textContent = 'Entrando...'; loadEl.classList.remove('hidden'); }
+
+    if (isSafariOuIOS()) {
+      // Safari/iOS: usa redirect (mais confiável, sem popup)
+      auth.signInWithRedirect(provider).catch(e => {
+        if (errEl)  { errEl.textContent = '⚠️ Erro: ' + e.message; errEl.classList.remove('hidden'); }
+        if (loadEl) loadEl.classList.add('hidden');
+      });
+    } else {
+      // Outros navegadores: tenta popup, fallback para redirect
+      auth.signInWithPopup(provider).catch(e => {
+        if (e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request') {
+          // Popup bloqueado — tenta redirect como fallback
+          auth.signInWithRedirect(provider);
+        } else {
+          let msg = e.message;
+          if (e.code === 'auth/popup-blocked') msg = '⚠️ Popup bloqueado. Tentando redirect...';
+          if (errEl)  { errEl.textContent = msg; errEl.classList.remove('hidden'); }
+          if (loadEl) loadEl.classList.add('hidden');
+        }
+      });
+    }
   };
-  document.getElementById('btn-logout').onclick = () => auth.signOut();
+
+  const btnLogout = document.getElementById('btn-logout');
+  if (btnLogout) btnLogout.onclick = () => auth.signOut();
 }
 
 export function mostrarTelaAguardoAprovacao(uid) {
