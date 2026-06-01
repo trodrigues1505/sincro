@@ -20,11 +20,13 @@ export function concordar(selo, tom) {
   // Normaliza para o masculino primeiro (caso venha feminizado do JSON)
   const tomMasc = tom
     .replace('Magnética','Magnético').replace('Elétrica','Elétrico')
+    .replace('Harmônica','Harmônico')
     .replace('Rítmica','Rítmico').replace('Galáctica','Galáctico')
     .replace('Planetária','Planetário').replace('Cósmica','Cósmico');
   if (ehSeloFeminino(selo)) {
     return tomMasc
       .replace('Magnético','Magnética').replace('Elétrico','Elétrica')
+      .replace('Harmônico','Harmônica')
       .replace('Rítmico','Rítmica').replace('Galáctico','Galáctica')
       .replace('Planetário','Planetária').replace('Cósmico','Cósmica');
   }
