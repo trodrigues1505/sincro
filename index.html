@@ -297,8 +297,19 @@ input[type="date"]:focus{outline:none;border-color:var(--green)}
 <img src="./icon-192.png" alt="Sincronário" class="login-logo">
 <div class="login-box">
 <h1>Sincronário das 13 Luas</h1>
-<p style="color:var(--text);font-size:.9rem;margin-bottom:1.7rem">Faça login com sua conta Google</p>
-<button class="btn-google" id="btn-login">
+<p style="color:var(--text);font-size:.9rem;margin-bottom:1.2rem">Faça login com sua conta Google</p>
+
+<!-- Consentimento LGPD -->
+<div style="background:rgba(165,124,0,.06);border:1px solid var(--border-g);border-radius:7px;padding:.8rem .9rem;margin-bottom:1.1rem;text-align:left">
+  <label style="display:flex;align-items:flex-start;gap:.6rem;cursor:pointer">
+    <input type="checkbox" id="lgpd-consent" style="margin-top:3px;flex-shrink:0;accent-color:var(--green2);width:16px;height:16px">
+    <span style="font-size:.78rem;color:var(--text2);line-height:1.6">
+      Li e concordo com a <a href="./privacidade.html" target="_blank" style="color:var(--gold2);text-decoration:underline">Política de Privacidade</a>. Estou ciente de que o app coleta meu nome, e-mail e foto via login com Google, e que posso excluir meus dados a qualquer momento.
+    </span>
+  </label>
+</div>
+
+<button class="btn-google" id="btn-login" disabled style="opacity:.5;cursor:not-allowed">
 <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
 Entrar com Google
 </button>
@@ -440,6 +451,20 @@ Entrar com Google
     </div>
     <div id="historico-lista" class="historico-lista"></div>
   </div>
+  <!-- LGPD: Exclusão de conta e links -->
+  <div class="section" style="border-color:rgba(138,32,24,.2)">
+    <div class="section-title" style="color:rgba(200,100,80,.8)">Privacidade e Dados</div>
+    <p style="font-size:.82rem;color:var(--text3);margin-bottom:.9rem;line-height:1.6">
+      Em conformidade com a <strong style="color:var(--text2)">LGPD (Lei 13.709/2018)</strong>, você pode excluir sua conta e todos os seus dados a qualquer momento.
+    </p>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem">
+      <a href="./privacidade.html" target="_blank" style="background:none;border:1px solid var(--border-g);border-radius:4px;color:var(--gold2);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:5px 12px;text-decoration:none">🔒 Política de Privacidade</a>
+      <a href="mailto:adm.financ.espacoautonomia@gmail.com?subject=LGPD%20-%20Solicita%C3%A7%C3%A3o" style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--text2);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:5px 12px;text-decoration:none">✉ Contato DPO</a>
+    </div>
+    <button onclick="confirmarExcluirConta()" style="background:transparent;border:1px solid rgba(138,32,24,.4);border-radius:4px;color:rgba(200,100,80,.9);font-size:.62rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:7px 14px;width:100%;transition:all .2s">
+      🗑 Excluir minha conta e todos os meus dados
+    </button>
+  </div>
 </div>
 
 </div>
@@ -521,6 +546,25 @@ function fecharModalVideo(){
   const kc=document.getElementById('modal-kin-content');
   if(kc){kc.style.display='none';kc.innerHTML='';}
   document.body.style.overflow='';
+}
+// Habilita botão login ao aceitar LGPD
+document.addEventListener('DOMContentLoaded', () => {
+  const cb = document.getElementById('lgpd-consent');
+  const btn = document.getElementById('btn-login');
+  if (cb && btn) {
+    cb.addEventListener('change', () => {
+      btn.disabled = !cb.checked;
+      btn.style.opacity = cb.checked ? '1' : '.5';
+      btn.style.cursor  = cb.checked ? 'pointer' : 'not-allowed';
+    });
+  }
+});
+// Confirmação de exclusão de conta (delegada ao módulo JS após carregamento)
+function confirmarExcluirConta() {
+  if (window._confirmarExcluirConta) { window._confirmarExcluirConta(); return; }
+  if (confirm('Tem certeza? Esta ação excluirá permanentemente sua conta e todos os seus dados. Esta operação não pode ser desfeita.')) {
+    alert('Função não disponível ainda. Por favor, envie um e-mail para adm.financ.espacoautonomia@gmail.com com o assunto "LGPD - Excluir conta".');
+  }
 }
 if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
 </script>
