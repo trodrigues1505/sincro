@@ -244,3 +244,28 @@ export async function limparKinNatal() {
   document.getElementById('perfil-nasc-inp').value = '';
   window.loadToday && window.loadToday();
 }
+
+// ─── LGPD: Exclusão completa de conta ────────────────────────────────────────
+export async function excluirContaCompleta() {
+  const u = auth.currentUser;
+  if (!u) return;
+  const uid = u.uid;
+  try {
+    // Exclui dados do Firestore em paralelo
+    await Promise.allSettled([
+      db.collection('users').doc(uid).delete(),
+      db.collection('gamificacao').doc(uid).delete(),
+      db.collection('ranking').doc(uid).delete(),
+    ]);
+    // Limpa localStorage
+    const keysToRemove = Object.keys(localStorage).filter(k =>
+      k.startsWith('sinc13_') || k.startsWith('firebase:')
+    );
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+    // Faz logout e recarrega
+    await auth.signOut();
+    window.location.reload();
+  } catch(e) {
+    throw e;
+  }
+}  
