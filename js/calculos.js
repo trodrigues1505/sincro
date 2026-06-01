@@ -17,13 +17,18 @@ export function concordarCor(corBase, nomeBase) {
 }
 
 export function concordar(selo, tom) {
+  // Normaliza para o masculino primeiro (caso venha feminizado do JSON)
+  const tomMasc = tom
+    .replace('Magnética','Magnético').replace('Elétrica','Elétrico')
+    .replace('Rítmica','Rítmico').replace('Galáctica','Galáctico')
+    .replace('Planetária','Planetário').replace('Cósmica','Cósmico');
   if (ehSeloFeminino(selo)) {
-    return tom
+    return tomMasc
       .replace('Magnético','Magnética').replace('Elétrico','Elétrica')
       .replace('Rítmico','Rítmica').replace('Galáctico','Galáctica')
       .replace('Planetário','Planetária').replace('Cósmico','Cósmica');
   }
-  return tom;
+  return tomMasc;
 }
 
 export function getSeloBase(nomeCompleto) {
