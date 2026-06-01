@@ -484,3 +484,123 @@ export async function exportarPDFKin() {
   pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgW, imgH);
   pdf.save(`sincronario-kin-${new Date().toISOString().split('T')[0]}.pdf`);
 }
+
+// ─── Modais informativos ───────────────────────────────────────────────────────
+export function abrirModalPlasma(chave, emoji, chakra, afirm, desc) {
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
+  iframe.style.display = 'none'; iframe.src = '';
+  let box = document.getElementById('modal-kin-content');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'modal-kin-content';
+    box.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(box, iframe);
+  }
+  box.style.display = 'block';
+  const emojis = {'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'};
+  const cores  = {'Dali':'#c9a030','Seli':'#4a9fd4','Gama':'#7c5cbf','Kali':'#c04040','Alfa':'#60a080','Limi':'#6080c0','Silio':'#40a060'};
+  box.innerHTML = `
+    <div style="text-align:center;padding:.5rem 0 1rem">
+      <div style="font-size:3rem;margin-bottom:.5rem">${emoji}</div>
+      <div style="font-family:Cinzel;font-size:1.1rem;color:${cores[chave]||'var(--gold2)'};margin-bottom:.2rem">${chave}</div>
+      <div style="font-size:.75rem;color:var(--text3);margin-bottom:.8rem">${desc}</div>
+      ${chakra ? `<div style="background:rgba(165,124,0,.08);border:1px solid var(--border-g);border-radius:8px;padding:.5rem 1rem;display:inline-block;font-family:Cinzel;font-size:.68rem;color:var(--gold2);margin-bottom:1rem">Chacra: ${chakra}</div>` : ''}
+    </div>
+    <div style="background:rgba(165,124,0,.05);border-left:3px solid ${cores[chave]||'var(--gold)'};padding:.7rem 1rem;border-radius:0 8px 8px 0;font-style:italic;font-size:.88rem;color:var(--text2);line-height:1.8;margin-bottom:.8rem">${afirm}</div>
+    <p style="font-size:.8rem;color:var(--text3);line-height:1.7">Os plasmas radiais são a matéria quântica mínima do universo. Cada dia da semana ativa um plasma diferente, correspondendo a um chacra do corpo quadridimensional. Ao visualizar e recitar a afirmação do plasma, harmonizamos nossa energia com o campo quântico do dia.</p>`;
+  if (titulo) titulo.textContent = `${emoji} Plasma ${chave}`;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+export function abrirModalFaseLunar(emoji, nome, desc) {
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
+  iframe.style.display = 'none'; iframe.src = '';
+  let box = document.getElementById('modal-kin-content');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'modal-kin-content';
+    box.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(box, iframe);
+  }
+  box.style.display = 'block';
+  const infos = {
+    'Nova':      { qual:'Início',      cor:'#6080c0', dica:'Plante intenções, abra-se ao novo.' },
+    'Crescente': { qual:'Expansão',    cor:'#60a060', dica:'Aja, construa, ganhe momentum.' },
+    'Cheia':     { qual:'Plenitude',   cor:'#c9a030', dica:'Integre, celebre, ilumine.' },
+    'Minguante': { qual:'Liberação',   cor:'#c04040', dica:'Desapegue, reflita, agradeça.' },
+  };
+  const info = infos[nome] || { qual:'', cor:'var(--gold2)', dica:'' };
+  box.innerHTML = `
+    <div style="text-align:center;padding:.5rem 0 1rem">
+      <div style="font-size:3.5rem;margin-bottom:.5rem">${emoji}</div>
+      <div style="font-family:Cinzel;font-size:1.1rem;color:${info.cor};margin-bottom:.3rem">Lua ${nome}</div>
+      <div style="font-size:.78rem;color:var(--text3);margin-bottom:.9rem">${info.qual}</div>
+    </div>
+    <div style="background:rgba(165,124,0,.05);border-left:3px solid ${info.cor};padding:.7rem 1rem;border-radius:0 8px 8px 0;font-size:.9rem;color:var(--text2);line-height:1.8;margin-bottom:.8rem;font-style:italic">${desc}</div>
+    ${info.dica ? `<div style="font-family:Cinzel;font-size:.7rem;color:${info.cor};margin-bottom:.8rem;padding:.4rem .8rem;border:1px solid ${info.cor}33;border-radius:6px;display:inline-block">${info.dica}</div>` : ''}
+    <p style="font-size:.8rem;color:var(--text3);line-height:1.7">A lua possui três ciclos: sinódico (29,5 dias), sideral (27 dias) e ápside (28 dias). O Sincronário usa 28 dias — a média dos ciclos lunares — dividido em 4 semanas de 7 dias, cada uma correspondendo a uma cor galáctica: Vermelha, Branca, Azul e Amarela.</p>`;
+  if (titulo) titulo.textContent = `${emoji} Lua ${nome}`;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+export function abrirModalCastelo(casteloNum) {
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
+  iframe.style.display = 'none'; iframe.src = '';
+  let box = document.getElementById('modal-kin-content');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'modal-kin-content';
+    box.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(box, iframe);
+  }
+  box.style.display = 'block';
+  const castelos = [
+    { cor:'Vermelho', dir:'Leste', poder:'Girar',   corte:'Nascimento', desc:'Inicia o Guerreiro. O Leste é o lugar do nascer do Sol, do começo de todos os ciclos. Aqui a consciência desperta e o propósito se estabelece.',    ondas:'Dragão, Mago, Mão e Sol', emoji:'🔴' },
+    { cor:'Branco',   dir:'Norte', poder:'Cruzar',  corte:'Morte',      desc:'Refina o Guerreiro. O Norte é o lugar da sabedoria ancestral e do aprofundamento. Aqui a consciência é purificada e refinada através dos desafios.',  ondas:'Caminhante, Enlaçador, Tormenta e Humano', emoji:'⚪' },
+    { cor:'Azul',     dir:'Oeste', poder:'Queimar',  corte:'Magia',      desc:'Transforma o Guerreiro. O Oeste é o lugar da transformação e da magia. Aqui a consciência mergulha na sombra para emergir transformada.',           ondas:'Serpente, Espelho, Macaco e Semente', emoji:'🔵' },
+    { cor:'Amarelo',  dir:'Sul',   poder:'Doar',     corte:'Inteligência',desc:'Amadurece o Guerreiro. O Sul é o lugar da maturidade e da colheita. Aqui a consciência produz frutos e manifesta sua inteligência cósmica.',        ondas:'Terra, Cão, Noite e Guerreiro', emoji:'🟡' },
+    { cor:'Verde',    dir:'Centro',poder:'Encantar', corte:'Sincronização',desc:'Sincroniza o Guerreiro. O Centro é o lugar do encantamento e da integração. Aqui todos os ciclos convergem e a consciência se sincroniza com o todo.', ondas:'Lua, Vento, Águia e Estrela', emoji:'🟢' },
+  ];
+  const c = castelos[casteloNum] || castelos[0];
+  const kinInicio = casteloNum * 52 + 1;
+  const kinFim    = kinInicio + 51;
+  box.innerHTML = `
+    <div style="text-align:center;padding:.5rem 0 1rem">
+      <div style="font-size:2.5rem;margin-bottom:.5rem">${c.emoji}</div>
+      <div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.2rem">Castelo ${c.cor} · ${c.dir}</div>
+      <div style="font-size:.72rem;color:var(--text3);margin-bottom:.3rem">Poder do ${c.poder} · Corte da ${c.corte}</div>
+      <div style="font-size:.68rem;color:var(--text3)">Kins ${kinInicio} – ${kinFim}</div>
+    </div>
+    <div style="background:rgba(165,124,0,.05);border-left:3px solid var(--gold);padding:.7rem 1rem;border-radius:0 8px 8px 0;font-size:.88rem;color:var(--text2);line-height:1.8;margin-bottom:.8rem">${c.desc}</div>
+    <div style="font-size:.75rem;color:var(--text3);margin-bottom:.3rem;font-family:Cinzel;text-transform:uppercase;letter-spacing:.1em">Ondas Encantadas</div>
+    <div style="font-size:.82rem;color:var(--text2)">${c.ondas}</div>
+    <p style="font-size:.78rem;color:var(--text3);line-height:1.7;margin-top:.8rem">O Tzolkin possui 5 Castelos de 52 dias cada (5 × 52 = 260 kins). Cada castelo contém 4 Ondas Encantadas de 13 dias. Os castelos formam as 4 direções cardeais mais o centro — a geometria sagrada do tempo maia.</p>`;
+  if (titulo) titulo.textContent = `${c.emoji} Castelo ${c.cor} do ${c.dir}`;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+export async function mostrarKinDiaLua(anoGal, luaNum, diaLua) {
+  await DATA_PRONTO;
+  // calcula a data absoluta do dia clicado na lua
+  const inicioAnoGal = new Date(anoGal, 6, 26); // 26/jul
+  const diasOffset   = (luaNum - 1) * 28 + (diaLua - 1);
+  const dataAlvo     = new Date(inicioAnoGal);
+  dataAlvo.setDate(dataAlvo.getDate() + diasOffset);
+  const kinNum = dateToKin(dataAlvo);
+  if (!kinNum || !DATA.kins[kinNum]) return;
+  const kd = DATA.kins[kinNum];
+  const dataStr = dataAlvo.toLocaleDateString('pt-BR', { day:'2-digit', month:'long' });
+  abrirKinModal(kinNum, kd.selo, true, `Lua ${luaNum} · Dia ${diaLua} · ${dataStr}`);
+}
