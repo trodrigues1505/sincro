@@ -268,9 +268,17 @@ export async function renderRanking(currentUid) {
   if (!el) return;
   el.innerHTML = '<div style="color:var(--text3);font-style:italic;font-size:.82rem;padding:.5rem 0">Carregando ranking...</div>';
   try {
-    const snap = await db.collection('ranking').orderBy('pontos','desc').limit(50).get();
+    // Busca admins para excluir do ranking
+    const adminsSnap = await db.collection('users').where('role','==','admin').get();
+    const adminUIDs = new Set(adminsSnap.docs.map(d => d.id));
+
+    const snap = await db.collection('ranking').orderBy('pontos','desc').limit(60).get();
     if (snap.empty) { el.innerHTML = '<div style="color:var(--text3);font-style:italic;font-size:.82rem">Nenhum dado ainda.</div>'; return; }
-    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const items = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(u => !adminUIDs.has(u.id) && !adminUIDs.has(u.uid))
+      .slice(0, 50);
+    if (!items.length) { el.innerHTML = '<div style="color:var(--text3);font-style:italic;font-size:.82rem">Nenhum dado ainda.</div>'; return; }
     el.innerHTML = items.map((u, i) => rankingRowHTML(u, i, currentUid)).join('');
   } catch(e) {
     el.innerHTML = `<div style="color:#e07050;font-size:.82rem">Erro: ${e.message}</div>`;
