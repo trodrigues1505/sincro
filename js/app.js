@@ -190,4 +190,4 @@ initAuthObserver(async (user) => {
   carregarAviso();
   atualizarBotaoNotif();
   if (!localStorage.getItem('sinc13_onboard')) mostrarOnboarding();
-});  
+});
