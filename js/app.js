@@ -10,6 +10,7 @@ import {
   mostrarOnboarding, proximoOnboarding, fecharOnboarding,
   carregarAviso, fecharAviso,
   exportarCalendario28, exportarPDFKin,
+  abrirModalPlasma, abrirModalFaseLunar, abrirModalCastelo, mostrarKinDiaLua,
 } from './events.js';
 import {
   toggleFavorito, limparHistorico, limparFavoritos,
@@ -17,7 +18,7 @@ import {
 } from './storage.js';
 import {
   initLogin, initAuthObserver, carregarPerfil,
-  salvarKinNatal, limparKinNatal,
+  salvarKinNatal, limparKinNatal, excluirContaCompleta,
 } from './api.js';
 import * as Api from './api.js';
 import {
@@ -147,6 +148,18 @@ Object.assign(window, {
   abrirComparacao,
   fecharComparacao,
   renderGamificacaoPerfil,
+  // novos modais
+  abrirModalPlasma, abrirModalFaseLunar, abrirModalCastelo, mostrarKinDiaLua,
+  // LGPD
+  _confirmarExcluirConta: async function() {
+    if (!confirm('Tem certeza? Esta ação excluirá permanentemente sua conta e todos os seus dados.\n\nEsta operação não pode ser desfeita.')) return;
+    if (!confirm('Confirmar exclusão definitiva? Você perderá todo o seu progresso, pontuação e dados.')) return;
+    try {
+      await excluirContaCompleta();
+    } catch(e) {
+      alert('Erro ao excluir conta: ' + e.message + '\n\nEnvie e-mail para adm.financ.espacoautonomia@gmail.com com assunto "LGPD - Excluir conta".');
+    }
+  },
 });
 
 // ─── switchTab estendido para carregar ranking e gamificação ──────────────────
@@ -177,4 +190,4 @@ initAuthObserver(async (user) => {
   carregarAviso();
   atualizarBotaoNotif();
   if (!localStorage.getItem('sinc13_onboard')) mostrarOnboarding();
-});
+});  
