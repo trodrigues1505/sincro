@@ -43,7 +43,7 @@ export function gerarGlifoTom(tom, iconSize) {
 }
 
 // ─── Lua circular ─────────────────────────────────────────────────────────────
-export function gerarLuaCircular(diaAtivo) {
+export function gerarLuaCircular(diaAtivo, anoGal, luaNum) {
   const cores = ['red','white','blue','yellow'];
   const nomesCores = [['red','Vermelha'],['white','Branca'],['blue','Azul'],['yellow','Amarela']];
   const cx = 200, cy = 200, rOut = 178, rIn = 118, rLbl = 148;
@@ -57,9 +57,12 @@ export function gerarLuaCircular(diaAtivo) {
     const x2i = cx+rIn*Math.cos(a2),  y2i = cy+rIn*Math.sin(a2);
     const d = `M${x1o.toFixed(1)} ${y1o.toFixed(1)} A${rOut} ${rOut} 0 0 1 ${x2o.toFixed(1)} ${y2o.toFixed(1)} L${x2i.toFixed(1)} ${y2i.toFixed(1)} A${rIn} ${rIn} 0 0 0 ${x1i.toFixed(1)} ${y1i.toFixed(1)}Z`;
     const ativo = dia === diaAtivo ? ' active' : '';
-    segs   += `<path d="${d}" class="seg ${cor}${ativo}"></path>`;
+    // segmento clicável — onclick mostra o kin desse dia da lua
+    const onclick = (anoGal && luaNum) ? `onclick="mostrarKinDiaLua(${anoGal},${luaNum},${dia})" style="cursor:pointer"` : '';
+    segs   += `<path d="${d}" class="seg ${cor}${ativo}" ${onclick}></path>`;
     const am = ((i+0.5)*360/28 - 90) * Math.PI/180;
-    labels += `<text x="${(cx+rLbl*Math.cos(am)).toFixed(1)}" y="${(cy+rLbl*Math.sin(am)).toFixed(1)}" class="seg-label${ativo}">${dia}</text>`;
+    const labelAtivo = ativo ? ' active' : '';
+    labels += `<text x="${(cx+rLbl*Math.cos(am)).toFixed(1)}" y="${(cy+rLbl*Math.sin(am)).toFixed(1)}" class="seg-label${labelAtivo}" ${onclick} style="cursor:pointer">${dia}</text>`;
   }
   const legenda = nomesCores.map(([cor,nome]) =>
     `<span class="lua-legenda-item"><span class="lua-legenda-dot ${cor}"></span>${nome}</span>`
@@ -142,7 +145,7 @@ export function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNu
     <div class="oraculo-cell-left oraculo-item oraculo-side">${celOraculo(analogo,'Análogo','column-reverse')}</div>
     <div class="oraculo-cell-center oraculo-item oraculo-central">
       <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(tomNum,76)}</div>
-      <div class="selo-icon selo-${corSelo}"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
+      <div class="selo-icon kin-clicavel selo-${corSelo}" onclick="abrirKinModal(${kinNum},'${seloCompleto.replace(/'/g,"\\'")}',true)" title="Kin ${kinNum}"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem;margin-top:.3rem">${seloBase}</div>
       <div style="font-family:Cinzel;font-size:.52rem;color:rgba(165,124,0,.6);letter-spacing:.12em;margin-top:.1rem">KIN ${kinNum}</div>
     </div>
@@ -219,7 +222,7 @@ export function renderCastelo(kinNum) {
   return { casteloNum, casteloTexto: CASTELO_NOMES[casteloNum]||'Castelo', casteloImg, ondasHTML };
 }
 
-export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum, perguntaLua) {
+export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum, perguntaLua, anoGal) {
   const art = ANIMAIS_FEM.has(luaAnimal) ? 'da ' : 'do ';
   const luaKinCorSelo = luaKinData ? getSeloCor(luaKinData.selo) : 'red';
   const luaKinIconURL = luaKinData ? getSeloIconURL(luaKinData.selo) : '';
@@ -242,7 +245,7 @@ export function renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKin
           <div style="font-size:.68rem;color:var(--text);margin-top:.2rem">Dia ${diaLua} de 28</div>
         </div>
       </div>
-      <div style="margin-top:.8rem">${gerarLuaCircular(diaLua)}</div>
+      <div style="margin-top:.8rem">${gerarLuaCircular(diaLua, anoGal, luaNum)}</div>
     </div>`;
 }
 
@@ -269,25 +272,50 @@ export function renderPlasmaFaseLunar(kinNum, faseLunar) {
   const diaSemana = (kinNum-1)%7;
   const plasma = DATA.plasmas[diaSemana]||'';
   const plasmaChave = plasma.split(' - ')[0];
+  const plasmaDesc  = plasma.split(' - ')[1] || '';
   const plasmaSVGUrl = PLASMA_SVGS[plasmaChave.toLowerCase()]||'';
   const plasmaEmoji = {'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'}[plasmaChave]||'⚡';
+  const plasmaChakra = {'Dali':'Coroa','Seli':'Raiz','Gama':'Terceiro Olho','Kali':'Sexual','Alfa':'Laríngeo','Limi':'Plexo Solar','Silio':'Cardíaco'}[plasmaChave]||'';
+  const plasmaAfirm  = {
+    'Dali': 'Meu pai é a consciência intrínseca. Eu sinto o calor.',
+    'Seli': 'Minha mãe é a esfera absoluta. Eu vejo a luz.',
+    'Gama': 'Minha linhagem é a união da consciência. Eu alcanço a paz.',
+    'Kali': 'Meu nome é o glorioso nascido do lótus. Eu cataliso a luz.',
+    'Alfa': 'Meu país é a esfera absoluta não nascida. Eu libero o elétron duplo.',
+    'Limi': 'Eu consumo pensamentos dualísticos. Eu purifico o elétron nêutron mental.',
+    'Silio': 'O meu papel é cumprir as ações de Bhuda. Eu descarrego o elétron nêutron mental.',
+  }[plasmaChave] || '';
+
+  const faseLunarNome = faseLunar.replace(/^[^ ]+ /,'');
+  const faseLunarEmoji = faseLunar.split(' ')[0];
+  const faseDesc = {
+    'Nova': 'Início de um novo ciclo. Momento de intenção, plantio e abertura.',
+    'Crescente': 'Expansão e crescimento. Ação, construção e momentum.',
+    'Cheia': 'Culminação e plenitude. Integração, celebração e clareza.',
+    'Minguante': 'Dissolução e liberação. Gratidão, reflexão e desapego.',
+  }[faseLunarNome] || '';
+
   return `
     <div style="margin-bottom:.6rem;border-top:1px solid var(--border-g);padding-top:.9rem;margin-top:.3rem">
       <div class="section-title">Plasma · Fase Lunar</div>
       <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-        <div class="kin-clicavel" style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px" onclick="switchTab('lei',document.querySelector('.tab:nth-child(5)'));setTimeout(()=>{const el=document.getElementById('lei-content');if(el)el.scrollIntoView({behavior:'smooth'})},200)" title="Ver Lei do Tempo · Plasmas">
+        <div class="kin-clicavel" style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px"
+          onclick="abrirModalPlasma('${plasmaChave}','${plasmaEmoji}','${plasmaChakra}','${plasmaAfirm.replace(/'/g,"\\'").replace(/"/g,'&quot;')}','${plasmaDesc}')"
+          title="Ver informações do Plasma ${plasmaChave}">
           ${plasmaSVGUrl
             ? `<img src="${plasmaSVGUrl}" style="width:48px;height:48px;object-fit:contain" alt="${plasmaChave}">`
             : `<span style="font-size:1.5rem;width:48px;text-align:center">${plasmaEmoji}</span>`}
           <div>
             <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${plasmaChave}</div>
-            <div style="font-size:.65rem;color:var(--text2);margin-top:.1rem">${plasma.split(' - ')[1]||''}</div>
+            <div style="font-size:.65rem;color:var(--text2);margin-top:.1rem">${plasmaDesc}</div>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px">
-          <span style="font-size:2.8rem;width:54px;height:54px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${faseLunar.split(' ')[0]}</span>
+        <div class="kin-clicavel" style="display:flex;align-items:center;gap:.6rem;flex:1;min-width:120px"
+          onclick="abrirModalFaseLunar('${faseLunarEmoji}','${faseLunarNome}','${faseDesc.replace(/'/g,"\\'")}')"
+          title="Ver informações da Fase Lunar">
+          <span style="font-size:2.8rem;width:54px;height:54px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${faseLunarEmoji}</span>
           <div>
-            <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${faseLunar.replace(/^[^ ]+ /,'')}</div>
+            <div style="font-family:Cinzel;font-size:.78rem;color:var(--gold2)">${faseLunarNome}</div>
             <div style="font-size:.65rem;color:var(--text2);margin-top:.1rem">Fase Lunar</div>
           </div>
         </div>
@@ -312,7 +340,7 @@ export function renderPraticaDiaria(kinNum, diaOnda, anelKin, seloBase) {
       <li class="has-btn"><span>Ouça a prece das 7 direções galácticas</span><button class="btn-pratica" onclick="togglePrece(this)">▶ ouvir</button></li>
       <li class="has-btn"><span>Meditação do selo</span><button class="btn-pratica" onclick="abrirModalVideo('${meditacaoURL}','${seloBase}')">▶ ouvir</button></li>
       <li class="has-btn"><span>Ouça o Self Design Sounds</span><button class="btn-pratica" onclick="abrirSelfDesign(${kinNum})">▶ ouvir</button></li>
-      <li class="has-btn"><span>Leitura da página ${selfDesignPagina} do e-book</span><button class="btn-pratica" onclick="abrirEbook('${selfDesignURL}',${selfDesignPagina})">▶ abrir</button></li>
+      <li class="has-btn"><span>Leitura da página ${selfDesignPagina} do e-book</span><button class="btn-pratica" onclick="abrirEbook(${selfDesignPagina})">▶ abrir</button></li>
       <li class="has-btn" style="justify-content:flex-start">${PERGUNTAS_TOM[diaOnda]||''}</li>
     </ul>
   </div>`;
@@ -341,7 +369,7 @@ export function kinHTML(kinNum, modoNatal = false) {
   if (modoNatal) return `<div>${heroHTML}${oraculoHTML}${ondaHTML}${poemaHTML}${infoSeloHTML}</div>`;
   const { casteloNum, casteloTexto, casteloImg, ondasHTML } = renderCastelo(kinNum);
   const perguntaLua = getPerguntaLua(luaNum);
-  const luaHTML     = renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum, perguntaLua);
+  const luaHTML     = renderLuaGalactica(luaNum, diaLua, luaAnimal, luaKinData, luaKinNum, perguntaLua, anoGal);
   const anelHTML    = renderAnelSolar(anel, anoGal);
   const plasmaHTML  = renderPlasmaFaseLunar(kinNum, faseLunar);
   const praticaHTML = renderPraticaDiaria(kinNum, diaOnda, anel.anelKin, seloBase);
@@ -356,7 +384,7 @@ ${heroHTML}${oraculoHTML}${ondaHTML}${poemaHTML}${infoSeloHTML}
     <div class="section-title">Castelo · 52 dias</div>
     <div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.7rem;letter-spacing:.03em">${casteloTexto}</div>
     <div style="margin-bottom:1.1rem">
-      <img src="./assets/icons/castelo-${casteloImg}.png" alt="Castelo" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 0 .8rem 0">
+      <img src="./assets/icons/castelo-${casteloImg}.png" alt="Castelo" class="kin-clicavel" onclick="abrirModalCastelo(${casteloNum})" style="width:80px;height:80px;object-fit:contain;display:block;margin:0 0 .8rem 0" title="Ver detalhes do Castelo">
       ${ondasHTML}
     </div>
     ${luaHTML}${anelHTML}${plasmaHTML}
