@@ -267,9 +267,10 @@ export function fecharModalVideo() {
   document.body.style.overflow = '';
 }
 
-export function abrirEbook(url, pagina) {
-  if (!url || url === '#') return;
-  window.open(url, '_blank');
+const EBOOK_URL = 'https://drive.google.com/file/d/1PU_VNQH61uUjHl-OESKhHH4TKrDS3JgS/view?usp=sharing';
+
+export function abrirEbook(pagina) {
+  window.open(EBOOK_URL, '_blank');
 }
 
 // FIX: abrirSelfDesign abre dentro do modal de vídeo em vez de nova aba
