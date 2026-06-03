@@ -105,8 +105,8 @@ function abrirSelfDesignComPontos(kin) {
   abrirSelfDesign(kin);
   _registrarAtv('SELF_DESIGN');
 }
-function abrirEbookComPontos(url, pag) {
-  abrirEbook(url, pag);
+function abrirEbookComPontos(pagina) {
+  abrirEbook(pagina);
   _registrarAtv('EBOOK');
 }
 function abrirKinNatalComPontos(kinNum, selo, modal) {
