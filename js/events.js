@@ -345,23 +345,20 @@ export function togglePrece(btn) {
       <span style="font-size:1.4rem">🙏</span>
       <div style="flex:1">
         <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2);margin-bottom:.3rem">Prece das 7 Direções Galácticas</div>
-        <div id="${audioId}-container">
-          <audio id="${audioId}"
-            controls
-            preload="none"
-            style="width:100%;height:32px;accent-color:var(--gold2)"
-            onerror="document.getElementById('${audioId}-fallback').style.display='flex'">
-            <source src="https://drive.google.com/uc?export=download&id=1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR" type="audio/mp3">
-            <source src="./assets/prece.mp3" type="audio/mp3">
-          </audio>
-          <div id="${audioId}-fallback" style="display:none;align-items:center;gap:.6rem;margin-top:.4rem;flex-wrap:wrap">
-            <span style="font-size:.72rem;color:var(--text3)">Player indisponível neste dispositivo.</span>
-            <a href="https://drive.google.com/file/d/1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR/view?usp=sharing"
-              target="_blank"
-              style="background:var(--green);color:#fff;border:none;border-radius:4px;padding:5px 12px;font-family:Cinzel;font-size:.6rem;text-decoration:none;text-transform:uppercase;letter-spacing:.07em">
-              🔗 Ouvir no Drive
-            </a>
-          </div>
+        <audio id="${audioId}"
+          src="https://drive.google.com/uc?export=download&id=1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR"
+          controls
+          preload="none"
+          style="width:100%;height:32px;accent-color:var(--gold2)"
+          onerror="document.getElementById('${audioId}-fallback').style.display='flex'">
+        </audio>
+        <div id="${audioId}-fallback" style="display:none;align-items:center;gap:.6rem;margin-top:.4rem">
+          <span style="font-size:.72rem;color:var(--text3)">Player indisponível neste dispositivo.</span>
+          <a href="https://drive.google.com/file/d/1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR/view?usp=sharing"
+            target="_blank"
+            style="background:var(--green);color:#fff;border-radius:4px;padding:5px 12px;font-family:Cinzel;font-size:.6rem;text-decoration:none;text-transform:uppercase;letter-spacing:.07em">
+            🔗 Ouvir no Drive
+          </a>
         </div>
       </div>
     </div>
