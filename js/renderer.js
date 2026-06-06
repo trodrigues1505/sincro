@@ -393,4 +393,4 @@ ${praticaHTML}
 </div>
 ${cronHTML}
 </div>`;
-}    
+}
