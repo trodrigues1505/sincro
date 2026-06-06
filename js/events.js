@@ -604,4 +604,4 @@ export async function mostrarKinDiaLua(anoGal, luaNum, diaLua) {
   const kd = DATA.kins[kinNum];
   const dataStr = dataAlvo.toLocaleDateString('pt-BR', { day:'2-digit', month:'long' });
   abrirKinModal(kinNum, kd.selo, true, `Lua ${luaNum} · Dia ${diaLua} · ${dataStr}`);
-}    
+}   
