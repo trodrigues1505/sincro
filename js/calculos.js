@@ -90,7 +90,7 @@ export function dateToKin(dt) {
   const dtNorm = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
   const base = new Date(1987, 6, 26);
   const dias = daysBetween(base, dtNorm);
-  return ((34 - 1 + dias) % 260 + 260) % 260 + 1;
+  return ((23 + dias) % 260 + 260) % 260 + 1;
 }
 
 export function getFaseLunar(d) {
