@@ -345,7 +345,7 @@ export function togglePrece(btn) {
       <span style="font-size:1.4rem">🙏</span>
       <div style="flex:1">
         <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2);margin-bottom:.3rem">Prece das 7 Direções Galácticas</div>
-        <audio id="${audioId}" src="./assets/icons/prece.mpeg" controls style="width:100%;height:32px;accent-color:var(--gold2)"></audio>
+        <audio id="${audioId}" src="./assets/prece.mp3" controls style="width:100%;height:32px;accent-color:var(--gold2)"></audio>
       </div>
     </div>
     ${TEXTO_PRECE}`;
@@ -604,4 +604,4 @@ export async function mostrarKinDiaLua(anoGal, luaNum, diaLua) {
   const kd = DATA.kins[kinNum];
   const dataStr = dataAlvo.toLocaleDateString('pt-BR', { day:'2-digit', month:'long' });
   abrirKinModal(kinNum, kd.selo, true, `Lua ${luaNum} · Dia ${diaLua} · ${dataStr}`);
-}
+}   
