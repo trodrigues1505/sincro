@@ -90,7 +90,7 @@ export function dateToKin(dt) {
   const dtNorm = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
   const base = new Date(1987, 6, 26);
   const dias = daysBetween(base, dtNorm);
-  return ((13 + dias) % 260 + 260) % 260 + 1;
+  return ((23 + dias) % 260 + 260) % 260 + 1;
 }
 
 export function getFaseLunar(d) {
@@ -179,4 +179,4 @@ export function calcPoemaKin(kinNum, kData, poema_tom, poema_selo, selos_nomes) 
     linha4: `Com o tom ${pt.qualidade} d${daArticle === 'da' ? 'a' : 'o'} ${pt.acao.toLowerCase().replace('ando','ação').replace('endo','ção')},`,
     linha5: guiaLinha,
   };
-}
+}   
