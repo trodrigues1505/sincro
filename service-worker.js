@@ -3,7 +3,7 @@
 //  Estratégia: cache-first com fallback à rede
 // ════════════════════════════════════════
 
-const CACHE_VERSION = 'sincronario-v5';
+const CACHE_VERSION = 'sincronario-v6';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -179,4 +179,4 @@ self.addEventListener('notificationclick', (event) => {
       return clients.openWindow('./');
     })
   );
-});
+});   
