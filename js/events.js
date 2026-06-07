@@ -267,10 +267,51 @@ export function fecharModalVideo() {
   document.body.style.overflow = '';
 }
 
-const EBOOK_URL = 'https://drive.google.com/file/d/1PU_VNQH61uUjHl-OESKhHH4TKrDS3JgS/view?usp=sharing';
+const EBOOK_FILE_ID = '1PU_VNQH61uUjHl-OESKhHH4TKrDS3JgS';
+const EBOOK_URL     = 'https://drive.google.com/file/d/' + EBOOK_FILE_ID + '/view?usp=sharing';
+const EBOOK_EMBED   = 'https://drive.google.com/file/d/' + EBOOK_FILE_ID + '/preview';
 
 export function abrirEbook(pagina) {
-  window.open(EBOOK_URL, '_blank');
+  const ua    = navigator.userAgent;
+  const isIOS = /iP(ad|hone|od)/i.test(ua) || (/Safari/i.test(ua) && !/Chrome/i.test(ua) && !/CriOS/i.test(ua));
+
+  const modal  = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal || !iframe) { window.open(EBOOK_URL, '_blank'); return; }
+
+  // Esconde conteudo de kin/prece anteriores
+  let kinContainer = document.getElementById('modal-kin-content');
+  if (kinContainer) { kinContainer.style.display = 'none'; kinContainer.innerHTML = ''; }
+
+  if (isIOS) {
+    // iOS bloqueia iframes do Drive — mostra botao direto
+    iframe.style.display = 'none';
+    iframe.src = '';
+    if (!kinContainer) {
+      kinContainer = document.createElement('div');
+      kinContainer.id = 'modal-kin-content';
+      kinContainer.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1.5rem;background:var(--bg);border-radius:var(--radius);text-align:center';
+      iframe.parentNode.insertBefore(kinContainer, iframe);
+    }
+    kinContainer.style.display = 'block';
+    kinContainer.innerHTML =
+      '<div style="font-size:2.5rem;margin-bottom:.8rem">\u{1F4D6}</div>'
+      + '<div style="font-family:Cinzel;font-size:.82rem;color:var(--gold2);margin-bottom:.5rem">E-book · Sincronario das 13 Luas</div>'
+      + '<div style="font-size:.78rem;color:var(--text3);margin-bottom:1.2rem">O Safari nao suporta visualizacao de PDF incorporado.<br>Toque abaixo para abrir no Google Drive.</div>'
+      + '<a href="' + EBOOK_URL + '" target="_blank"'
+      + ' style="display:inline-flex;align-items:center;gap:.5rem;background:var(--green);color:#fff;border-radius:6px;padding:10px 20px;font-family:Cinzel;font-size:.7rem;text-decoration:none;text-transform:uppercase;letter-spacing:.07em">'
+      + '\u{1F4D6} Abrir E-book no Drive</a>';
+  } else {
+    // Outros navegadores: embed direto no iframe do modal
+    iframe.style.display = '';
+    iframe.src = EBOOK_EMBED;
+    iframe.style.height = '75vh';
+  }
+
+  if (titulo) titulo.textContent = '\u{1F4D6} E-book · Sincronario das 13 Luas';
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 // FIX: abrirSelfDesign abre dentro do modal de vídeo em vez de nova aba
