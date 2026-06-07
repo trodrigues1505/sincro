@@ -1,402 +1,635 @@
-/**
- * src/pages/admin/criar_aulas.js
- * Criar aulas fixas e avulsas
- */
+// ─── js/events.js — handlers de UI, tabs, modais e ações globais ─────────────
+import { DATA, DATA_PRONTO, SELF_DESIGN, MEDITACOES } from './data.js';
+import { dateToKin, getRelacaoKins, getAnoGalactico, daysBetween } from './calculos.js';
+import { kinHTML } from './renderer.js';
+import { registrarNoHistorico, toggleFavorito, limparHistorico, limparFavoritos, renderHistorico, renderFavoritos } from './storage.js';
+import { carregarPerfil, salvarKinNatal, limparKinNatal, mostrarKinNatalSalvo } from './api.js';
+import * as Api from './api.js';
+import { renderLeiDoTempo } from './cartilha.js';
 
-import { sb }         from '../../lib/supabase.js'
-import { toast, NOMES, CORES, dot, badge, card, modal, fi, inputStyle, fmtDt, prazoLabel,
-          PLANO_BADGES, PLANO_NOMES, PLANO_VALORES, PLANO_OPCOES, DIAS_LABEL, HORARIOS,
-          calcularNivel, NIVEL_LABELS } from '../../modules/utils.js'
-
-export async function renderCriarAulas(container, page) {
-  const sb = window._sb
-  const perfil = window._perfil
-  const tipo = perfil?.tipo
-
-    const [aulasRes, profsRes, cfgRes] = await Promise.all([
-      sb.from('aulas').select('*, professor:perfis!professor_id(nome), horarios:aulas_horarios(*)').order('criado_em', {ascending:false}),
-      sb.from('perfis').select('id,nome').in('tipo',['admin','professor']).order('nome'),
-      sb.from('configuracoes').select('*'),
-    ])
-    const aulas = aulasRes.data || []
-    const profs = profsRes.data || []
-    const cfg = Object.fromEntries((cfgRes.data||[]).map(c=>[c.chave,c.valor]))
-    const fixas = aulas.filter(a=>a.tipo==='fixa')
-    const avulsas = aulas.filter(a=>a.tipo==='avulsa')
-
-    function renderAulaRow(a) {
-      const diasStr = (a.horarios||[]).map(h=>`${DIAS_LABEL[h.dia_semana]||h.dia_semana} ${h.hora_inicio.slice(0,5)}`).join(', ')
-      const statusBadge = a.ativa
-        ? badge('Ativa','#e8f4e8','#1a5a1a')
-        : badge('Inativa','#fceaea','#8a1a1a')
-      return `<div style="display:grid;grid-template-columns:1fr 110px 90px 60px 80px 70px;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid rgba(212,200,158,.3);font-size:12px">
-        <span style="display:flex;align-items:center;gap:6px">${dot(a.modalidade)}<strong>${NOMES[a.modalidade]}</strong><span style="font-size:10px;color:var(--txt2)">${diasStr}</span></span>
-        <span style="font-size:11px;color:var(--txt2)">${a.professor?.nome||'—'}</span>
-        <span style="font-size:11px">${a.vagas} vagas</span>
-        <span>${statusBadge}</span>
-        <button onclick="gerarOcorrenciasAula('${a.id}')" style="padding:3px 8px;background:rgba(31,56,31,.08);color:var(--verde);border:1px solid rgba(31,56,31,.2);border-radius:4px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif">Gerar</button>
-        <div style="display:flex;gap:3px">
-          <button onclick="editarAula('${a.id}')" style="padding:3px 7px;background:#e8f4e8;color:#1a5a1a;border:none;border-radius:4px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif" title="Editar">✎</button>
-          <button onclick="excluirAula('${a.id}')" style="padding:3px 7px;background:#fceaea;color:#8a1a1a;border:none;border-radius:4px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif" title="Excluir">✕</button>
-        </div>
-      </div>`
+// ─── Tabs ─────────────────────────────────────────────────────────────────────
+export function switchTab(t, el) {
+  document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+  (el || event.target).classList.add('active');
+  document.getElementById('tab-'+t).classList.add('active');
+  if (t === 'selos')  renderSelos();
+  if (t === 'perfil') {
+    renderHistorico();
+    renderFavoritos();
+    renderCronografoPerfil();
+  }
+  if (t === 'lei') {
+    const el = document.getElementById('lei-content');
+    if (el && el.children.length <= 1) {
+      import('./cartilha.js').then(({ renderLeiDoTempo, renderTabelaGuia }) => {
+        el.innerHTML = renderLeiDoTempo() + renderTabelaGuia();
+      });
     }
+  }
+}
 
-    const diasCheckboxes = ['seg','ter','qua','qui','sex','sab','dom'].map(d=>
-      `<label style="display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--borda);border-radius:20px;font-size:11px;cursor:pointer">
-        <input type="checkbox" name="dia" value="${d}" style="accent-color:var(--verde)"> ${DIAS_LABEL[d].slice(0,3)}
-      </label>`
-    ).join('')
+function renderCronografoPerfil() {
+  const el = document.getElementById('perfil-cronografo-preview');
+  if (!el) return;
+  try {
+    const hoje = new Date();
+    const key = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(hoje.getDate()).padStart(2,'0')}`;
+    const todos = JSON.parse(localStorage.getItem('sinc13_cronografo') || '{}');
+    const reg = todos[key] || {};
+    const campos = [
+      reg.afirmacao      && ['Afirmação',       reg.afirmacao],
+      reg.intencao       && ['Intenção',         reg.intencao],
+      reg.sincronicidade && ['Sincronicidades',  reg.sincronicidade],
+      reg.gratidao       && ['Gratidão',         reg.gratidao],
+    ].filter(Boolean);
+    if (!campos.length) {
+      el.innerHTML = `<p style="font-size:.82rem;color:var(--text3);font-style:italic">Nenhum registro hoje ainda. Acesse o Kin do Dia para preencher.</p>`;
+      return;
+    }
+    el.innerHTML = `
+      <div style="font-size:.62rem;color:var(--gold);font-family:Cinzel;letter-spacing:.08em;margin-bottom:.5rem">${key}</div>
+      ${campos.map(([lbl, val]) => `
+      <div style="margin-bottom:.4rem">
+        <span style="font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em">${lbl}: </span>
+        <span style="font-size:.8rem;color:var(--text2);font-style:italic">${val.length > 120 ? val.slice(0,120)+'...' : val}</span>
+      </div>`).join('')}`;
+  } catch(e) {
+    el.innerHTML = '';
+  }
+}
 
-    const profsOptions = profs.map(p=>`<option value="${p.id}">${p.nome}</option>`).join('')
+// ─── Onda detalhe ─────────────────────────────────────────────────────────────
+export function mostrarDetalheOnda(el, texto) {
+  const det = document.getElementById('onda-detail');
+  if (!det) return;
+  if (det.textContent === texto && det.classList.contains('visible')) { det.classList.remove('visible'); return; }
+  det.textContent = texto;
+  det.classList.add('visible');
+}
 
-    const modalCriar = modal('modal-criar-aula', 'Nova Aula',
-      `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        ${fi('','Modalidade',`<select id="na-mod" ${inputStyle}><option value="hatha">Hatha Yoga</option><option value="acro">Acro Yoga</option><option value="raja">Raja Yoga</option></select>`)}
-        ${fi('','Tipo',`<select id="na-tipo" ${inputStyle} onchange="toggleTipoAula()"><option value="fixa">Fixa (recorrente)</option><option value="avulsa">Avulsa (única)</option></select>`)}
-      </div>
-      <div id="na-dias-wrap">
-        ${fi('','Dias da semana',`<div style="display:flex;flex-wrap:wrap;gap:6px">${diasCheckboxes}</div>`)}
-      </div>
-      <div id="na-data-wrap" style="display:none">
-        ${fi('','Data',`<input type="date" id="na-data" ${inputStyle}>`)}
-      </div>
-      <div id="na-horas-wrap">
-        <div style="margin-bottom:12px">
-          <label style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt2);font-weight:500;display:block;margin-bottom:6px">Horários (selecione um ou mais)</label>
-          <div style="display:flex;flex-wrap:wrap;gap:6px" id="na-horas-checks">
-            ${HORARIOS.map(h=>`<label style="display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--borda);border-radius:20px;font-size:11px;cursor:pointer"><input type="checkbox" name="hora" value="${h}" style="accent-color:var(--verde)"> ${h}</label>`).join('')}
-          </div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        ${fi('','Duração',`<select id="na-dur" ${inputStyle}><option value="60">60 minutos</option><option value="75">75 minutos</option><option value="90">90 minutos</option></select>`)}
-        ${fi('','Vagas',`<input type="number" id="na-vagas" value="${cfg.vagas_padrao||15}" min="1" max="100" ${inputStyle}>`)}
-      </div>
-      <div style="display:grid;grid-template-columns:1fr;gap:12px">
-        ${fi('','Professor',`<select id="na-prof" ${inputStyle}>${profsOptions}</select>`)}
-      </div>
-      <div id="na-feriado-warn" style="display:none;background:rgba(232,188,79,.1);border:1px solid rgba(232,188,79,.35);border-radius:6px;padding:8px 12px;font-size:12px;color:#7a5a10">⚠ Data coincide com feriado. Verifique antes de confirmar.</div>`,
-      `<button onclick="document.getElementById('modal-criar-aula').style.display='none'" style="padding:7px 14px;background:transparent;border:1px solid var(--borda);border-radius:6px;font-size:12px;cursor:pointer">Cancelar</button>
-       <button onclick="salvarNovaAula()" style="padding:7px 14px;background:var(--verde);color:var(--bege);border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">Criar Aula</button>`
-    )
-
-    const modalGerar = modal('modal-gerar', 'Gerar Ocorrências',
-      `<p style="font-size:13px;color:var(--txt2);margin-bottom:14px">Gera as datas reais da aula no período selecionado, verificando feriados automaticamente.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        ${fi('','De',`<input type="date" id="ger-de" ${inputStyle}>`)}
-        ${fi('','Até',`<input type="date" id="ger-ate" ${inputStyle}>`)}
-      </div>`,
-      `<button onclick="document.getElementById('modal-gerar').style.display='none'" style="padding:7px 14px;background:transparent;border:1px solid var(--borda);border-radius:6px;font-size:12px;cursor:pointer">Cancelar</button>
-       <button onclick="executarGerarOcorrencias()" style="padding:7px 14px;background:var(--verde);color:var(--bege);border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">Gerar</button>`
-    )
-
-    container.innerHTML = `
-      <div class="topbar">
-        <div class="topbar-t">Criar Aulas</div>
-        <button onclick="document.getElementById('modal-criar-aula').style.display='flex'" style="padding:6px 13px;background:var(--verde);color:var(--bege);border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px"><i class="ti ti-plus"></i> Nova Aula</button>
-      </div>
-      <div class="content">
-        <div style="background:rgba(31,56,31,.04);border:1px solid rgba(31,56,31,.12);border-radius:6px;padding:9px 13px;font-size:12px;color:var(--verde);margin-bottom:16px;display:flex;align-items:center;gap:8px">
-          <i class="ti ti-info-circle"></i>
-          <span>Após criar uma aula fixa, clique em <strong>Gerar</strong> para criar as datas do semestre no banco.</span>
-        </div>
-        ${card('Aulas Fixas ('+fixas.length+')', '',
-          `<div style="display:grid;grid-template-columns:1fr 110px 90px 60px 80px 70px;padding:8px 18px;background:rgba(242,236,206,.45);font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt2);font-weight:500;gap:10px">
-            <span>Modalidade / Dias</span><span>Professor</span><span>Vagas</span><span>Status</span><span>Ocorrências</span><span>Ação</span>
-          </div>
-          ${fixas.length===0?'<div style="padding:18px;font-size:12px;color:var(--txt2)">Nenhuma aula fixa criada.</div>':fixas.map(renderAulaRow).join('')}`
-        )}
-        ${card('Aulas Avulsas ('+avulsas.length+')', '',
-          `<div style="display:grid;grid-template-columns:1fr 110px 90px 60px 80px 70px;padding:8px 18px;background:rgba(242,236,206,.45);font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt2);font-weight:500;gap:10px">
-            <span>Modalidade / Data</span><span>Professor</span><span>Vagas</span><span>Status</span><span></span><span>Ação</span>
-          </div>
-          ${avulsas.length===0?'<div style="padding:18px;font-size:12px;color:var(--txt2)">Nenhuma aula avulsa criada.</div>':avulsas.map(renderAulaRow).join('')}`
-        )}
-      </div>
-      ${modalCriar}
-      ${modalGerar}
-    `
-
-    window.toggleTipoAula = function() {
-      const t = document.getElementById('na-tipo').value
-      document.getElementById('na-dias-wrap').style.display = t==='fixa'?'block':'none'
-      document.getElementById('na-data-wrap').style.display = t==='avulsa'?'block':'none'
-      // Verifica feriado para avulsa
-      if (t==='avulsa') {
-        document.getElementById('na-data').addEventListener('change', async function() {
-          const { data: fer } = await sb.from('feriados').select('*').eq('data', this.value)
-          document.getElementById('na-feriado-warn').style.display = (fer&&fer.length)?'block':'none'
-        })
+// ─── Kin do dia e Kin natal ───────────────────────────────────────────────────
+export async function loadToday() {
+  await DATA_PRONTO;
+  const k = dateToKin(new Date());
+  registrarNoHistorico(k);
+  document.getElementById('res-dia').innerHTML = kinHTML(k);
+  const natal = Api._kinNatalSalvo;
+  if (natal) {
+    const relacao = getRelacaoKins(k, natal);
+    if (relacao) {
+      const hero = document.querySelector('#res-dia .kin-hero');
+      if (hero) {
+        const badge = document.createElement('div');
+        badge.style.cssText = 'margin-top:.8rem;display:inline-flex;align-items:center;gap:.4rem;background:rgba(165,124,0,.1);border:1px solid var(--border-g);border-radius:20px;padding:.3rem .8rem;font-family:Cinzel;font-size:.62rem;letter-spacing:.05em';
+        badge.style.color = relacao.cor;
+        badge.innerHTML = `${relacao.icon} <strong>${relacao.label}</strong> com seu Kin Natal · ${relacao.desc}`;
+        hero.appendChild(badge);
       }
     }
+  }
+}
 
-    window.salvarNovaAula = async function() {
-      const mod = document.getElementById('na-mod').value
-      const tipo = document.getElementById('na-tipo').value
-      const dur = document.getElementById('na-dur').value
-      const vagas = document.getElementById('na-vagas').value
-      const prof = document.getElementById('na-prof').value
+export async function calcNatal() {
+  await DATA_PRONTO;
+  const v = document.getElementById('nasc-inp').value;
+  if (!v) return;
+  const [y,m,d] = v.split('-').map(Number);
+  const dt = new Date(y, m-1, d);
+  const k  = dateToKin(dt);
+  registrarNoHistorico(k);
+  document.getElementById('res-natal').innerHTML = kinHTML(k, true);
+  document.getElementById('res-natal').classList.remove('hidden');
+}
 
-      if (tipo === 'fixa') {
-        const dias = [...document.querySelectorAll('input[name="dia"]:checked')].map(el=>el.value)
-        const horas = [...document.querySelectorAll('input[name="hora"]:checked')].map(el=>el.value)
-        if (!dias.length) { toast('Selecione ao menos um dia da semana'); return }
-        if (!horas.length) { toast('Selecione ao menos um horário'); return }
+export function verKinPerfil(kinNum) {
+  const tabNatal = document.querySelector('[onclick*="natal"]');
+  if (tabNatal) switchTab('natal', tabNatal);
+  document.getElementById('nasc-inp').value = '';
+  document.getElementById('res-natal').innerHTML = kinHTML(kinNum, true);
+  document.getElementById('res-natal').classList.remove('hidden');
+  document.getElementById('res-natal').scrollIntoView({ behavior:'smooth', block:'start' });
+}
 
-        // Cria uma aula para cada combinação dia+hora
-        for (const hora of horas) {
-          const { data: novaAula, error: errAula } = await sb.from('aulas').insert({
-            modalidade: mod, tipo, vagas: Number(vagas), duracao_min: Number(dur),
-            professor_id: prof||null, criado_por: window._perfil.id
-          }).select().single()
-          if (errAula) { toast('Erro: '+errAula.message); return }
-          const horarios = dias.map(d => ({ aula_id: novaAula.id, dia_semana: d, hora_inicio: hora+':00' }))
-          const { error: errH } = await sb.from('aulas_horarios').insert(horarios)
-          if (errH) { toast('Erro horários: '+errH.message); return }
-        }
-        document.getElementById('modal-criar-aula').style.display = 'none'
-        toast('✓ Aulas criadas! Clique em "Gerar" para criar as datas.')
-        navigate('criar-aulas')
-      } else {
-        const hora = [...document.querySelectorAll('input[name="hora"]:checked')].map(el=>el.value)[0]
-        const data = document.getElementById('na-data').value
-        if (!data) { toast('Informe a data'); return }
-        if (!hora) { toast('Selecione um horário'); return }
-        const { data: novaAula, error: errAula } = await sb.from('aulas').insert({
-          modalidade: mod, tipo, vagas: Number(vagas), duracao_min: Number(dur),
-          professor_id: prof||null, criado_por: window._perfil.id
-        }).select().single()
-        if (errAula) { toast('Erro: '+errAula.message); return }
-        const dtOc = new Date(data+'T'+hora+':00')
-        const { data: fer } = await sb.from('feriados').select('nome').eq('data', data)
-        await sb.from('ocorrencias').insert({
-          aula_id: novaAula.id, data_hora: dtOc.toISOString(),
-          eh_feriado: !!(fer&&fer.length), nome_feriado: fer?.[0]?.nome||null
-        })
-        document.getElementById('modal-criar-aula').style.display = 'none'
-        toast('✓ Aula avulsa criada!')
-        navigate('criar-aulas')
-      }
-    }
+// ─── Selos ────────────────────────────────────────────────────────────────────
+export async function renderSelos() {
+  await DATA_PRONTO;
+  const grid = document.getElementById('selos-grid');
+  if (!grid || grid.children.length > 0) return;
+  const selosObj = DATA.selos || {};
+  const selos = Array.isArray(selosObj) ? selosObj : Object.values(selosObj);
 
-    window._aulaParaGerar = null
-    window.gerarOcorrenciasAula = function(aulaId) {
-      window._aulaParaGerar = aulaId
-      const hoje = new Date().toISOString().slice(0,10)
-      const em90 = new Date(); em90.setDate(em90.getDate()+90)
-      document.getElementById('ger-de').value = hoje
-      document.getElementById('ger-ate').value = em90.toISOString().slice(0,10)
-      document.getElementById('modal-gerar').style.display = 'flex'
-    }
+  // Mapa nome do selo → nome do arquivo de ícone
+  const ICONE_MAPA = {
+    'Dragão':'dragao','Vento':'vento','Noite':'noite','Semente':'semente',
+    'Serpente':'serpente','Enlaçador':'enlacador','Enlaçador de Mundos':'enlacador',
+    'Mão':'mao','Estrela':'estrela','Lua':'lua',
+    'Cão':'cao','Cachorro':'cao',  // ambas as variantes do JSON
+    'Macaco':'macaco','Humano':'humano',
+    'Caminhante':'caminhante','Caminhante do Céu':'caminhante',
+    'Mago':'mago','Feiticeiro':'mago','Águia':'aguia','Guerreiro':'guerreiro',
+    'Terra':'terra','Espelho':'espelho','Tormenta':'tormenta','Sol':'sol',
+  };
+  const CORES = ['vermelho','branco','azul','amarelo'];
 
-    window.executarGerarOcorrencias = async function() {
-      const de = document.getElementById('ger-de').value
-      const ate = document.getElementById('ger-ate').value
-      if (!de||!ate) { toast('Preencha as datas'); return }
+  grid.innerHTML = selos.map((s, i) => {
+    const nomeCompleto = s.nome || '';
+    const partes = nomeCompleto.trim().split(' ');
+    const cor = CORES[i % 4];
+    // extrai base sem a cor — mas protege se só tiver 1 palavra
+    const nomeBase = partes.length > 1 ? partes.slice(0, -1).join(' ') : nomeCompleto;
+    // tenta pelo nomeBase, depois pelo primeiro token (ex: "Enlaçador"), depois pelo nome completo
+    const iconeKey = ICONE_MAPA[nomeBase] || ICONE_MAPA[partes[0]] || ICONE_MAPA[nomeCompleto] || 'default';
+    const iconURL = `./assets/icons/${iconeKey}.png`;
+    const safe = nomeCompleto.replace(/'/g,"\\'");
+    const maias = ['IMIX','IK','AKBAL','KAN','CHICCHAN','CIMI','MANIK','LAMAT','MULUC','OC','CHUEN','EB','BEN','IX','MEN','CIB','CABAN','ETZNAB','CAUAC','AHAU'];
+    const nomeMaia = maias[i] || '';
+    return `<div class="selo-card" onclick="abrirModalSelo('${safe}','${cor}','${iconURL}',DATA.selos[${i}])">
+      <div class="selo-icon selo-${cor}" style="width:56px;height:56px;margin:0 auto"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='<span style=font-size:1.8rem>${['🐉','💨','🌌','🌱','🐍','☯️','✋','⭐','🌙','🐕','🐒','👤','🚶','🧙','🦅','⚔️','🌍','🪞','⛈️','☀️'][i]||'🌀'}</span>'"></div>
+      <div class="selo-card-nome">${nomeCompleto}</div>
+      <div style="font-size:.55rem;color:var(--gold);letter-spacing:.1em;font-family:Cinzel;margin:.1rem 0">${nomeMaia}</div>
+      <div class="selo-card-acao">${s.acao||''}</div>
+    </div>`;
+  }).join('');
+}
 
-      const btnGerar = document.querySelector('#modal-gerar button[onclick="executarGerarOcorrencias()"]')
-      if (btnGerar) { btnGerar.textContent = 'Gerando...'; btnGerar.disabled = true }
+export function abrirModalSelo(nome, cor, iconURL, dados) {
+  import('./cartilha.js').then(({ gerarInfoSelo }) => {
+    import('./data.js').then(({ SELOS_NOMES, SELOS_MAIAS, POEMA_SELO, FAMILIAS_TERRESTRES, FAMILIAS_DESC, RACAS_RAIZ, RACAS_DESC }) => {
+      // Descobre índice do selo pelo nome
+      const nomeBase = (dados?.nome || nome || '').split(' ').slice(0,-1).join(' ') || nome;
+      const seloIdx = SELOS_NOMES.findIndex(n => n === nomeBase || n === (dados?.nome||'').split(' ').slice(0,-1).join(' '));
+      const nomeMaia   = seloIdx >= 0 ? (SELOS_MAIAS[seloIdx]||'') : '';
+      const familia    = seloIdx >= 0 ? (FAMILIAS_TERRESTRES[seloIdx]||'') : '';
+      const raca       = seloIdx >= 0 ? (RACAS_RAIZ[seloIdx]||'') : '';
+      const palavras   = seloIdx >= 0 ? (POEMA_SELO[seloIdx]||{}) : {};
+      const fdesc      = FAMILIAS_DESC[familia] || {};
+      const rdesc      = RACAS_DESC[raca]       || {};
 
-      try {
-        const { data: aula, error: errAula } = await sb.from('aulas').select('*, horarios:aulas_horarios(*)').eq('id', window._aulaParaGerar).single()
-        if (errAula || !aula) { toast('Erro ao buscar aula: '+(errAula?.message||'não encontrada')); return }
-        if (!aula.horarios?.length) { toast('Esta aula não tem horários cadastrados'); return }
+      const box = document.querySelector('.modal-selo-box');
+      if (!box) return;
 
-        const { data: feriados } = await sb.from('feriados').select('*').gte('data',de).lte('data',ate)
-        const feriadosDatas = new Set((feriados||[]).map(f=>f.data))
-        const diasMap = {seg:1,ter:2,qua:3,qui:4,sex:5,sab:6,dom:0}
+      document.querySelector('.modal-selo-icon').style.borderColor = `var(--${cor})`;
+      document.querySelector('.modal-selo-icon').innerHTML = `<img src="${iconURL}" style="width:100%;height:100%;object-fit:contain">`;
+      document.querySelector('.modal-selo-titulo').textContent = dados?.nome || nome;
+      document.querySelector('.modal-selo-acao').textContent   = '';
+      document.querySelector('.modal-selo-maya').textContent   = '';
 
-        const ocorrencias = []
-        const cursor = new Date(de+'T12:00:00')
-        const fimDate = new Date(ate+'T12:00:00')
-        let iteracoes = 0
+      const descEl = document.querySelector('.modal-selo-desc');
+      descEl.innerHTML = `
+        ${nomeMaia ? `<div style="font-family:Cinzel;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.5rem">${nomeMaia}</div>` : ''}
+        ${palavras.poder || palavras.qualidade ? `
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem">
+          ${[palavras.poder, palavras.qualidade, palavras.essencia].filter(Boolean).map(p =>
+            `<span style="background:rgba(165,124,0,.1);border:1px solid var(--border-g);border-radius:20px;padding:2px 9px;font-size:.6rem;color:var(--gold2);font-family:Cinzel">${p}</span>`
+          ).join('')}
+        </div>` : ''}
+        ${dados?.acao ? `<div style="font-size:.82rem;color:var(--text2);margin-bottom:.5rem;font-style:italic">${dados.acao}</div>` : ''}
+        ${dados?.descricao || dados?.desc ? `<div style="font-size:.82rem;color:var(--text);margin-bottom:.7rem;line-height:1.7">${dados.descricao||dados.desc}</div>` : ''}
+        ${familia || raca ? `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem">
+          ${raca ? `<div style="background:var(--bg2);border-radius:6px;padding:.5rem;border:1px solid var(--border)">
+            <div style="font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Raça Raiz</div>
+            <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2)">${raca}</div>
+            <div style="font-size:.65rem;color:var(--text3);margin-top:.15rem">${rdesc.papel||''}</div>
+          </div>` : ''}
+          ${familia ? `<div style="background:var(--bg2);border-radius:6px;padding:.5rem;border:1px solid var(--border)">
+            <div style="font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Família</div>
+            <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2)">${familia}</div>
+            <div style="font-size:.65rem;color:var(--text3);margin-top:.15rem">${fdesc.desc||''}</div>
+          </div>` : ''}
+        </div>` : ''}`;
 
-        while (cursor <= fimDate && iteracoes < 400) {
-          iteracoes++
-          const diaSemana = cursor.getDay()
-          for (const h of (aula.horarios||[])) {
-            if (diasMap[h.dia_semana] === diaSemana) {
-              const partes = h.hora_inicio.split(':')
-              const hora = Number(partes[0])
-              const min = Number(partes[1]||0)
-              // Usa horário local BR (UTC-3)
-              const dStr = cursor.toISOString().slice(0,10)
-              const dtISO = dStr + 'T' + String(hora).padStart(2,'0') + ':' + String(min).padStart(2,'0') + ':00-03:00'
-              const feriadoNome = feriadosDatas.has(dStr) ? (feriados||[]).find(f=>f.data===dStr)?.nome : null
-              ocorrencias.push({ aula_id: aula.id, data_hora: dtISO, eh_feriado:!!feriadoNome, nome_feriado:feriadoNome||null })
-            }
-          }
-          cursor.setDate(cursor.getDate()+1)
-        }
+      document.getElementById('modal-selo').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+}
 
-        if (!ocorrencias.length) {
-          toast('Nenhuma data gerada. Verifique os dias da semana configurados na aula.')
-          return
-        }
+export function fecharModalSelo() {
+  document.getElementById('modal-selo').classList.remove('active');
+  document.body.style.overflow = '';
+}
 
-        // Insere em lotes de 50
-        let inseridos = 0
-        for (let i=0; i<ocorrencias.length; i+=50) {
-          const lote = ocorrencias.slice(i, i+50)
-          const { error } = await sb.from('ocorrencias').upsert(lote, {onConflict:'aula_id,data_hora', ignoreDuplicates:true})
-          if (error) { toast('Erro ao inserir: '+error.message); return }
-          inseridos += lote.length
-        }
+// ─── Modais de mídia ──────────────────────────────────────────────────────────
+export function abrirModalVideo(url, nomeSeloVideo) {
+  if (!url) return;
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal || !iframe) return;
+  const videoId = url.includes('youtu') ? (url.split(/v=|youtu\.be\//)[1]||'').split(/[?&]/)[0] : '';
+  iframe.src = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : url;
+  if (titulo) titulo.textContent = nomeSeloVideo ? `Meditação · ${nomeSeloVideo}` : 'Meditação';
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 
-        document.getElementById('modal-gerar').style.display = 'none'
-        toast('✓ '+inseridos+' aulas geradas com sucesso!')
-        navigate('criar-aulas')
-      } finally {
-        if (btnGerar) { btnGerar.textContent = 'Gerar'; btnGerar.disabled = false }
-      }
-    }
+// ─── Modal de kin (oráculo, onda, castelo) ────────────────────────────────────
+export function abrirKinModal(kinNum, seloNome, modoResumido = false) {
+  if (!kinNum || !DATA.kins) return;
+  const kD = DATA.kins[String(kinNum)];
+  if (!kD) return;
+  const { kinHTML } = window._renderer || {};
+  // Reusa o modal-video para exibir o kinHTML resumido
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
+  // Esconde o iframe e insere HTML do kin no lugar
+  iframe.style.display = 'none';
+  iframe.src = '';
+  let kinContainer = document.getElementById('modal-kin-content');
+  if (!kinContainer) {
+    kinContainer = document.createElement('div');
+    kinContainer.id = 'modal-kin-content';
+    kinContainer.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(kinContainer, iframe);
+  }
+  kinContainer.style.display = 'block';
+  // importa kinHTML dinamicamente para evitar ciclo em tempo de carga
+  import('./renderer.js').then(({ kinHTML: kh }) => {
+    kinContainer.innerHTML = kh(kinNum, true);
+  });
+  if (titulo) titulo.textContent = `Kin ${kinNum} · ${kD.selo}`;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 
-    window.editarAula = async function(id) {
-      const [aulaRes, profsEditRes] = await Promise.all([
-        sb.from('aulas').select('*, horarios:aulas_horarios(*)').eq('id', id).single(),
-        sb.from('perfis').select('id,nome').in('tipo',['professor','admin']).order('nome'),
-      ])
-      const a = aulaRes.data
-      const profsEdit = profsEditRes.data || []
+export function fecharModalVideo() {
+  const modal = document.getElementById('modal-video');
+  if (!modal) return;
+  modal.classList.remove('active');
+  const iframe = document.getElementById('modal-video-iframe');
+  if (iframe) { iframe.src = ''; iframe.style.display = ''; }
+  const kinContainer = document.getElementById('modal-kin-content');
+  if (kinContainer) { kinContainer.style.display = 'none'; kinContainer.innerHTML = ''; }
+  document.body.style.overflow = '';
+}
 
-      const existente = document.getElementById('modal-editar-aula')
-      if (existente) existente.remove()
+const EBOOK_URL = 'https://drive.google.com/file/d/1PU_VNQH61uUjHl-OESKhHH4TKrDS3JgS/view?usp=sharing';
 
-      const diasCheckboxesEdit = ['seg','ter','qua','qui','sex','sab','dom'].map(d => {
-        const temDia = (a.horarios||[]).some(h => h.dia_semana === d)
-        return '<label style="display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--borda);border-radius:20px;font-size:11px;cursor:pointer">'
-          + '<input type="checkbox" name="edit-dia" value="' + d + '" ' + (temDia?'checked':'') + ' style="accent-color:var(--verde)"> ' + DIAS_LABEL[d].slice(0,3)
-          + '</label>'
-      }).join('')
+export function abrirEbook(pagina) {
+  window.open(EBOOK_URL, '_blank');
+}
 
-      const horasUnicasEdit = [...new Set((a.horarios||[]).map(h=>h.hora_inicio.slice(0,5)))]
-      const horasCheckboxesEdit = HORARIOS.map(h => {
-        const sel = horasUnicasEdit.includes(h)
-        return '<label style="display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--borda);border-radius:20px;font-size:11px;cursor:pointer">'
-          + '<input type="checkbox" name="edit-hora" value="' + h + '" ' + (sel?'checked':'') + ' style="accent-color:var(--verde)"> ' + h
-          + '</label>'
-      }).join('')
+// FIX: abrirSelfDesign abre dentro do modal de vídeo em vez de nova aba
+export function abrirSelfDesign(kin) {
+  const videoId = SELF_DESIGN[String(kin)];
+  if (!videoId) return;
+  abrirModalVideo(`https://youtu.be/${videoId}`, `Self Design Sounds · Kin ${kin}`);
+}
 
-      const profsOptsEdit = '<option value="">Sem professor</option>'
-        + profsEdit.map(p => '<option value="' + p.id + '" ' + (p.id===a.professor_id?'selected':'') + '>' + p.nome + '</option>').join('')
+// ─── Prece ────────────────────────────────────────────────────────────────────
+const TEXTO_PRECE = `
+<div style="text-align:center;line-height:2.1;font-size:.88rem;color:var(--text)">
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Leste da Luz</div>
+    <div style="color:var(--text2);font-style:italic">Que a sabedoria se abra em aurora sobre nós<br>Para que vejamos as coisas com claridade</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Norte da Noite</div>
+    <div style="color:var(--text2);font-style:italic">Que a sabedoria amadureça entre nós<br>Para que conheçamos tudo desde dentro</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Oeste da Transformação</div>
+    <div style="color:var(--text2);font-style:italic">Que a sabedoria se transforme em ação correta<br>Para que façamos o que tenha que ser feito</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Sul do Sol Eterno</div>
+    <div style="color:var(--text2);font-style:italic">Que a ação correta nos dê a colheita<br>Para que desfrutemos os frutos do ser planetário</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Superior do Paraíso</div>
+    <div style="color:var(--text2);font-style:italic">Onde se reúnem a gente das estrelas e os antepassados<br>Que suas bênçãos cheguem até nós agora</div>
+  </div>
+  <div style="margin-bottom:1rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Interior da Terra</div>
+    <div style="color:var(--text2);font-style:italic">Que o pulsar do coração de cristal do planeta<br>nos abençoe com suas harmonias<br>Para que acabemos com as guerras</div>
+  </div>
+  <div style="margin-bottom:1.2rem">
+    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Fonte Central da Galáxia</div>
+    <div style="color:var(--text2);font-style:italic">Que está em todas as partes ao mesmo tempo<br>Que tudo se reconheça como luz e amor mútuo</div>
+  </div>
+  <div style="color:var(--gold2);font-family:Cinzel;font-size:.82rem;letter-spacing:.06em;line-height:1.9">
+    Ah Yum Hunab Ku Evam Maya E Ma Ho!<br>
+    Ah Yum Hunab Ku Evam Maya E Ma Ho!<br>
+    Ah Yum Hunab Ku Evam Maya E Ma Ho!<br>
+    <span style="font-size:.68rem;color:var(--text3)">Salve a Harmonia da Mente e da Natureza!</span>
+  </div>
+</div>`;
 
-      const diasHtml = a.tipo === 'fixa'
-        ? '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">'
-            + '<label style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt2);font-weight:500">Dias da semana</label>'
-            + '<div style="display:flex;flex-wrap:wrap;gap:6px">' + diasCheckboxesEdit + '</div>'
-          + '</div>'
-          + '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">'
-            + '<label style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt2);font-weight:500">Horários</label>'
-            + '<div style="display:flex;flex-wrap:wrap;gap:6px">' + horasCheckboxesEdit + '</div>'
-          + '</div>'
-        : ''
+export function togglePrece(btn) {
+  // Abre o modal com o texto da prece + player de áudio
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
 
-      const div = document.createElement('div')
-      div.id = 'modal-editar-aula'
-      div.style.cssText = 'position:fixed;inset:0;background:rgba(31,56,31,.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px'
-      div.innerHTML = ''
-        + '<div style="background:#fff;border-radius:12px;width:560px;max-width:100%;max-height:90vh;display:flex;flex-direction:column;overflow:hidden">'
-          + '<div style="background:var(--verde);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">'
-            + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;font-weight:500;color:var(--bege)">Editar Aula</div>'
-            + '<button onclick="document.getElementById(\'modal-editar-aula\').remove()" style="background:none;border:none;color:var(--bege);font-size:18px;cursor:pointer;line-height:1">×</button>'
-          + '</div>'
-          + '<div style="overflow-y:auto;flex:1;padding:20px">'
-            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">'
-              + '<div style="display:flex;flex-direction:column;gap:4px">'
-                + '<label style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt2);font-weight:500">Modalidade</label>'
-                + '<select id="edit-mod" style="border:1px solid var(--borda);border-radius:6px;padding:7px 10px;font-size:13px;font-family:\'DM Sans\',sans-serif;outline:none;width:100%">'
-                  + '<option value="hatha" ' + (a.modalidade==='hatha'?'selected':'') + '>Hatha Yoga</option>'
-                  + '<option value="acro" '  + (a.modalidade==='acro' ?'selected':'') + '>Acro Yoga</option>'
-                  + '<option value="raja" '  + (a.modalidade==='raja' ?'selected':'') + '>Raja Yoga</option>'
-                + '</select>'
-              + '</div>'
-              + '<div style="display:flex;flex-direction:column;gap:4px">'
-                + '<label style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt2);font-weight:500">Vagas</label>'
-                + '<input type="number" id="edit-vagas" value="' + a.vagas + '" min="1" max="100" style="border:1px solid var(--borda);border-radius:6px;padding:7px 10px;font-size:13px;font-family:\'DM Sans\',sans-serif;outline:none">'
-              + '</div>'
-            + '</div>'
-            + '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">'
-              + '<label style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt2);font-weight:500">Professor</label>'
-              + '<select id="edit-prof" style="border:1px solid var(--borda);border-radius:6px;padding:7px 10px;font-size:13px;font-family:\'DM Sans\',sans-serif;outline:none;width:100%">'
-                + profsOptsEdit
-              + '</select>'
-            + '</div>'
-            + '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:12px">'
-              + '<label style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt2);font-weight:500">Duração (min)</label>'
-              + '<select id="edit-dur" style="border:1px solid var(--borda);border-radius:6px;padding:7px 10px;font-size:13px;font-family:\'DM Sans\',sans-serif;outline:none;width:100%">'
-                + '<option value="60" ' + (a.duracao_min===60?'selected':'') + '>60 minutos</option>'
-                + '<option value="75" ' + (a.duracao_min===75?'selected':'') + '>75 minutos</option>'
-                + '<option value="90" ' + (a.duracao_min===90?'selected':'') + '>90 minutos</option>'
-              + '</select>'
-            + '</div>'
-            + diasHtml
-            + '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--borda)">'
-              + '<input type="checkbox" id="edit-ativa" ' + (a.ativa?'checked':'') + ' style="accent-color:var(--verde);width:15px;height:15px">'
-              + '<label for="edit-ativa" style="font-size:13px;cursor:pointer">Aula ativa</label>'
-            + '</div>'
-          + '</div>'
-          + '<div style="padding:14px 20px;border-top:1px solid var(--borda);display:flex;justify-content:flex-end;gap:8px;flex-shrink:0">'
-            + '<button onclick="document.getElementById(\'modal-editar-aula\').remove()" style="padding:7px 14px;background:transparent;border:1px solid var(--borda);border-radius:6px;font-size:12px;cursor:pointer">Cancelar</button>'
-            + '<button id="btn-salvar-edicao-aula" data-id="' + a.id + '" data-tipo="' + a.tipo + '" style="padding:7px 14px;background:var(--verde);color:var(--bege);border:none;border-radius:6px;font-size:12px;cursor:pointer">Salvar</button>'
-          + '</div>'
-        + '</div>'
-      document.body.appendChild(div)
-      document.getElementById('btn-salvar-edicao-aula').addEventListener('click', function() {
-        salvarEdicaoAula(this.dataset.id, this.dataset.tipo)
-      })
-    }
+  // Esconde iframe, mostra conteúdo da prece
+  iframe.style.display = 'none';
+  iframe.src = '';
+  let kinContainer = document.getElementById('modal-kin-content');
+  if (!kinContainer) {
+    kinContainer = document.createElement('div');
+    kinContainer.id = 'modal-kin-content';
+    kinContainer.style.cssText = 'overflow-y:auto;max-height:70vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(kinContainer, iframe);
+  }
+  kinContainer.style.display = 'block';
 
-    window.salvarEdicaoAula = async function(id, tipo) {
-      const mod   = document.getElementById('edit-mod').value
-      const vagas = Number(document.getElementById('edit-vagas').value)
-      const prof  = document.getElementById('edit-prof').value || null
-      const dur   = Number(document.getElementById('edit-dur').value)
-      const ativa = document.getElementById('edit-ativa').checked
+  // iOS/Safari bloqueia autoplay e falha silenciosamente no onerror do <audio>.
+  // Nesses casos mostramos direto o botão do Drive, sem tentar o player nativo.
+  const ua = navigator.userAgent;
+  const isIOS = /iP(ad|hone|od)/i.test(ua) || (/Safari/i.test(ua) && !/Chrome/i.test(ua) && !/CriOS/i.test(ua));
+  const DRIVE_URL = 'https://drive.google.com/file/d/1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR/view?usp=sharing';
+  const DRIVE_SRC = 'https://drive.google.com/uc?export=download&id=1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR';
+  const audioId   = 'prece-modal-audio';
 
-      const { error } = await sb.from('aulas').update({
-        modalidade: mod, vagas, professor_id: prof, duracao_min: dur, ativa
-      }).eq('id', id)
-      if (error) { toast('Erro: ' + error.message); return }
+  const playerHTML = isIOS
+    ? `<a href="${DRIVE_URL}" target="_blank"
+          style="display:inline-flex;align-items:center;gap:.5rem;background:var(--green);color:#fff;border-radius:4px;padding:7px 16px;font-family:Cinzel;font-size:.62rem;text-decoration:none;text-transform:uppercase;letter-spacing:.07em;margin-top:.2rem">
+          &#x1F517; Ouvir a Prece no Drive
+        </a>
+        <div style="font-size:.58rem;color:var(--text3);margin-top:.35rem">
+          O Safari bloqueia audio automatico — abre no Drive para ouvir.
+        </div>`
+    : `<audio id="${audioId}" controls preload="none"
+          style="width:100%;height:32px;accent-color:var(--gold2)"
+          onerror="document.getElementById('${audioId}-fallback').style.display='flex';this.style.display='none'">
+          <source src="./assets/prece.mp3" type="audio/mpeg">
+          <source src="${DRIVE_SRC}" type="audio/mpeg">
+        </audio>
+        <div id="${audioId}-fallback" style="display:none;align-items:center;gap:.6rem;margin-top:.4rem">
+          <a href="${DRIVE_URL}" target="_blank"
+            style="background:var(--green);color:#fff;border-radius:4px;padding:6px 14px;font-family:Cinzel;font-size:.62rem;text-decoration:none;text-transform:uppercase;letter-spacing:.07em;display:inline-flex;align-items:center;gap:.4rem">
+            &#x1F517; Ouvir a Prece no Drive
+          </a>
+        </div>`;
 
-      if (tipo === 'fixa') {
-        const dias  = [...document.querySelectorAll('input[name="edit-dia"]:checked')].map(el=>el.value)
-        const horas = [...document.querySelectorAll('input[name="edit-hora"]:checked')].map(el=>el.value)
-        if (!dias.length || !horas.length) { toast('Selecione ao menos um dia e um horário'); return }
-        await sb.from('aulas_horarios').delete().eq('aula_id', id)
-        const novosHorarios = []
-        for (const hora of horas) {
-          for (const dia of dias) {
-            novosHorarios.push({ aula_id: id, dia_semana: dia, hora_inicio: hora + ':00' })
-          }
-        }
-        const { error: errH } = await sb.from('aulas_horarios').insert(novosHorarios)
-        if (errH) { toast('Erro ao salvar horários: ' + errH.message); return }
-      }
+  kinContainer.innerHTML =
+    '<div style="display:flex;align-items:center;gap:.8rem;background:rgba(165,124,0,.07);border:1px solid var(--border-g);border-radius:8px;padding:.7rem 1rem;margin-bottom:1.1rem">'
+    + '<span style="font-size:1.4rem">&#x1F64F;</span>'
+    + '<div style="flex:1">'
+    + '<div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2);margin-bottom:.3rem">Prece das 7 Direcoes Galacticas</div>'
+    + playerHTML
+    + '</div></div>'
+    + TEXTO_PRECE;
 
-      document.getElementById('modal-editar-aula').remove()
-      toast('✓ Aula atualizada')
-      navigate('criar-aulas')
-    }
+  // Autoplay apenas em navegadores que suportam (nao iOS)
+  if (!isIOS) {
+    setTimeout(() => {
+      const audio = document.getElementById(audioId);
+      if (audio) audio.play().catch(() => {});
+    }, 200);
+  }
 
-    window.excluirAula = async function(id) {
-      if (!confirm('Excluir esta aula e todas as suas ocorrências futuras?')) return
-      const hoje = new Date().toISOString()
-      // Remove ocorrências futuras e suas confirmações
-      const { data: ocs } = await sb.from('ocorrencias').select('id').eq('aula_id', id).gte('data_hora', hoje)
-      if (ocs?.length) {
-        for (const oc of ocs) await sb.from('confirmacoes').delete().eq('ocorrencia_id', oc.id)
-        await sb.from('ocorrencias').delete().eq('aula_id', id).gte('data_hora', hoje)
-      }
-      await sb.from('aulas_horarios').delete().eq('aula_id', id)
-      await sb.from('aulas').delete().eq('id', id)
-      toast('Aula excluída')
-      navigate('criar-aulas')
-    }
+  if (titulo) titulo.textContent = '🙏 Prece das 7 Direções Galácticas';
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
 
-    window.toggleAulaStatus = async function(id, ativa) {
-      await sb.from('aulas').update({ativa: !ativa}).eq('id', id)
-      toast(ativa ? 'Aula pausada' : 'Aula ativada')
-      navigate('criar-aulas')
-    }
+// ─── Compartilhar e exportar ──────────────────────────────────────────────────
+export async function compartilharKin() {
+  const area = document.getElementById('export-area');
+  if (!area) return;
+  if (navigator.share) {
+    try { await navigator.share({ title: 'Sincronário das 13 Luas', text: area.querySelector('.kin-title')?.textContent||'', url: window.location.href }); } catch(e) {}
+  } else {
+    navigator.clipboard?.writeText(window.location.href);
+    alert('Link copiado!');
+  }
+}
+
+export async function exportPNG() {
+  const area = document.getElementById('export-area');
+  const canvas = await html2canvas(area, { backgroundColor:'#0a0c14', scale:2 });
+  const link = document.createElement('a');
+  link.download = `sincronario-${new Date().toISOString().split('T')[0]}.png`;
+  link.href = canvas.toDataURL(); link.click();
+}
+
+// ─── Notificações ─────────────────────────────────────────────────────────────
+export function atualizarBotaoNotif() {
+  const btn = document.getElementById('btn-notif');
+  if (!btn) return;
+  const ativo = Notification?.permission === 'granted' && localStorage.getItem('sinc13_notif') === '1';
+  btn.textContent = ativo ? 'Desativar' : 'Ativar';
+  btn.classList.toggle('ativo', ativo);
+}
+
+export async function toggleNotificacao() {
+  if (Notification?.permission !== 'granted') {
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') return;
+  }
+  const ativo = localStorage.getItem('sinc13_notif') === '1';
+  localStorage.setItem('sinc13_notif', ativo ? '0' : '1');
+  if (!ativo) agendarNotificacaoDiaria();
+  atualizarBotaoNotif();
+}
+
+function agendarNotificacaoDiaria() {
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({ type: 'SCHEDULE_NOTIF' });
+  }
+}
+
+// ─── Onboarding ───────────────────────────────────────────────────────────────
+let onboardStep = 0;
+const ONBOARD_STEPS = 5;
+
+export function mostrarOnboarding() {
+  document.getElementById('onboarding').classList.add('active');
+  onboardStep = 0; atualizarOnboarding();
+}
+
+function atualizarOnboarding() {
+  document.querySelectorAll('.onboarding-step').forEach((s,i) => s.classList.toggle('active', i===onboardStep));
+  document.querySelectorAll('.onboarding-dot').forEach((d,i) => d.classList.toggle('active', i===onboardStep));
+}
+
+export function proximoOnboarding() {
+  onboardStep++;
+  if (onboardStep >= ONBOARD_STEPS) fecharOnboarding(); else atualizarOnboarding();
+}
+
+export function fecharOnboarding() {
+  document.getElementById('onboarding').classList.remove('active');
+  localStorage.setItem('sinc13_onboard','1');
+}
+
+// ─── Aviso banner ─────────────────────────────────────────────────────────────
+export async function carregarAviso() {
+  try {
+    const snap = await Api.db.collection('config').doc('aviso').get();
+    if (!snap.exists) return;
+    const d = snap.data();
+    if (!d.ativo || !d.mensagem) return;
+    const chave = 'sinc13_aviso_' + (d.versao||'1');
+    if (localStorage.getItem(chave)) return;
+    const banner = document.createElement('div');
+    banner.className = 'aviso-banner';
+    banner.innerHTML = `<span class="aviso-banner-icon">📢</span><span class="aviso-banner-texto">${d.mensagem}</span><button class="aviso-banner-close" onclick="fecharAviso(this,'${chave}')">✕</button>`;
+    document.querySelector('.container')?.prepend(banner);
+  } catch(e) {}
+}
+
+export function fecharAviso(btn, chave) {
+  localStorage.setItem(chave, '1');
+  btn.closest('.aviso-banner').remove();
+}
+
+// ─── Exportar calendário e PDF ────────────────────────────────────────────────
+export async function exportarCalendario28() {
+  await DATA_PRONTO;
+  const hoje = new Date();
+  const anoGal = getAnoGalactico();
+  const dias = daysBetween(new Date(anoGal,6,26), hoje);
+  const luaAtual = Math.floor(dias/28)+1;
+  const inicioLua = new Date(anoGal,6,26);
+  inicioLua.setDate(inicioLua.getDate() + (luaAtual-1)*28);
+  const rows = [];
+  for (let i = 0; i < 28; i++) {
+    const d = new Date(inicioLua); d.setDate(d.getDate()+i);
+    const k = dateToKin(d);
+    const kD = DATA.kins[k];
+    if (!kD) continue;
+    rows.push(`${d.toLocaleDateString('pt-BR')}\tKin ${k}\t${kD.selo}\t${kD.tom_nome}`);
+  }
+  const blob = new Blob([rows.join('\n')], { type:'text/plain;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `calendario-lua-${luaAtual}.txt`; a.click();
+}
+
+export async function exportarPDFKin() {
+  const area = document.getElementById('export-area');
+  if (!area || typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') return;
+  const canvas = await html2canvas(area, { backgroundColor:'#0a0c14', scale:2 });
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation:'portrait', unit:'px', format:'a4' });
+  const imgW = pdf.internal.pageSize.getWidth();
+  const imgH = (canvas.height * imgW) / canvas.width;
+  pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgW, imgH);
+  pdf.save(`sincronario-kin-${new Date().toISOString().split('T')[0]}.pdf`);
+}
+
+// ─── Modais informativos ───────────────────────────────────────────────────────
+export function abrirModalPlasma(chave, emoji, chakra, afirm, desc) {
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
+  iframe.style.display = 'none'; iframe.src = '';
+  let box = document.getElementById('modal-kin-content');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'modal-kin-content';
+    box.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(box, iframe);
+  }
+  box.style.display = 'block';
+  const emojis = {'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'};
+  const cores  = {'Dali':'#c9a030','Seli':'#4a9fd4','Gama':'#7c5cbf','Kali':'#c04040','Alfa':'#60a080','Limi':'#6080c0','Silio':'#40a060'};
+  box.innerHTML = `
+    <div style="text-align:center;padding:.5rem 0 1rem">
+      <div style="font-size:3rem;margin-bottom:.5rem">${emoji}</div>
+      <div style="font-family:Cinzel;font-size:1.1rem;color:${cores[chave]||'var(--gold2)'};margin-bottom:.2rem">${chave}</div>
+      <div style="font-size:.75rem;color:var(--text3);margin-bottom:.8rem">${desc}</div>
+      ${chakra ? `<div style="background:rgba(165,124,0,.08);border:1px solid var(--border-g);border-radius:8px;padding:.5rem 1rem;display:inline-block;font-family:Cinzel;font-size:.68rem;color:var(--gold2);margin-bottom:1rem">Chacra: ${chakra}</div>` : ''}
+    </div>
+    <div style="background:rgba(165,124,0,.05);border-left:3px solid ${cores[chave]||'var(--gold)'};padding:.7rem 1rem;border-radius:0 8px 8px 0;font-style:italic;font-size:.88rem;color:var(--text2);line-height:1.8;margin-bottom:.8rem">${afirm}</div>
+    <p style="font-size:.8rem;color:var(--text3);line-height:1.7">Os plasmas radiais são a matéria quântica mínima do universo. Cada dia da semana ativa um plasma diferente, correspondendo a um chacra do corpo quadridimensional. Ao visualizar e recitar a afirmação do plasma, harmonizamos nossa energia com o campo quântico do dia.</p>`;
+  if (titulo) titulo.textContent = `${emoji} Plasma ${chave}`;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+export function abrirModalFaseLunar(emoji, nome, desc) {
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
+  iframe.style.display = 'none'; iframe.src = '';
+  let box = document.getElementById('modal-kin-content');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'modal-kin-content';
+    box.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(box, iframe);
+  }
+  box.style.display = 'block';
+  const infos = {
+    'Nova':      { qual:'Início',      cor:'#6080c0', dica:'Plante intenções, abra-se ao novo.' },
+    'Crescente': { qual:'Expansão',    cor:'#60a060', dica:'Aja, construa, ganhe momentum.' },
+    'Cheia':     { qual:'Plenitude',   cor:'#c9a030', dica:'Integre, celebre, ilumine.' },
+    'Minguante': { qual:'Liberação',   cor:'#c04040', dica:'Desapegue, reflita, agradeça.' },
+  };
+  const info = infos[nome] || { qual:'', cor:'var(--gold2)', dica:'' };
+  box.innerHTML = `
+    <div style="text-align:center;padding:.5rem 0 1rem">
+      <div style="font-size:3.5rem;margin-bottom:.5rem">${emoji}</div>
+      <div style="font-family:Cinzel;font-size:1.1rem;color:${info.cor};margin-bottom:.3rem">Lua ${nome}</div>
+      <div style="font-size:.78rem;color:var(--text3);margin-bottom:.9rem">${info.qual}</div>
+    </div>
+    <div style="background:rgba(165,124,0,.05);border-left:3px solid ${info.cor};padding:.7rem 1rem;border-radius:0 8px 8px 0;font-size:.9rem;color:var(--text2);line-height:1.8;margin-bottom:.8rem;font-style:italic">${desc}</div>
+    ${info.dica ? `<div style="font-family:Cinzel;font-size:.7rem;color:${info.cor};margin-bottom:.8rem;padding:.4rem .8rem;border:1px solid ${info.cor}33;border-radius:6px;display:inline-block">${info.dica}</div>` : ''}
+    <p style="font-size:.8rem;color:var(--text3);line-height:1.7">A lua possui três ciclos: sinódico (29,5 dias), sideral (27 dias) e ápside (28 dias). O Sincronário usa 28 dias — a média dos ciclos lunares — dividido em 4 semanas de 7 dias, cada uma correspondendo a uma cor galáctica: Vermelha, Branca, Azul e Amarela.</p>`;
+  if (titulo) titulo.textContent = `${emoji} Lua ${nome}`;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+export function abrirModalCastelo(casteloNum) {
+  const modal = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal) return;
+  iframe.style.display = 'none'; iframe.src = '';
+  let box = document.getElementById('modal-kin-content');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'modal-kin-content';
+    box.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(box, iframe);
+  }
+  box.style.display = 'block';
+  const castelos = [
+    { cor:'Vermelho', dir:'Leste', poder:'Girar',   corte:'Nascimento', desc:'Inicia o Guerreiro. O Leste é o lugar do nascer do Sol, do começo de todos os ciclos. Aqui a consciência desperta e o propósito se estabelece.',    ondas:'Dragão, Mago, Mão e Sol', emoji:'🔴' },
+    { cor:'Branco',   dir:'Norte', poder:'Cruzar',  corte:'Morte',      desc:'Refina o Guerreiro. O Norte é o lugar da sabedoria ancestral e do aprofundamento. Aqui a consciência é purificada e refinada através dos desafios.',  ondas:'Caminhante, Enlaçador, Tormenta e Humano', emoji:'⚪' },
+    { cor:'Azul',     dir:'Oeste', poder:'Queimar',  corte:'Magia',      desc:'Transforma o Guerreiro. O Oeste é o lugar da transformação e da magia. Aqui a consciência mergulha na sombra para emergir transformada.',           ondas:'Serpente, Espelho, Macaco e Semente', emoji:'🔵' },
+    { cor:'Amarelo',  dir:'Sul',   poder:'Doar',     corte:'Inteligência',desc:'Amadurece o Guerreiro. O Sul é o lugar da maturidade e da colheita. Aqui a consciência produz frutos e manifesta sua inteligência cósmica.',        ondas:'Terra, Cão, Noite e Guerreiro', emoji:'🟡' },
+    { cor:'Verde',    dir:'Centro',poder:'Encantar', corte:'Sincronização',desc:'Sincroniza o Guerreiro. O Centro é o lugar do encantamento e da integração. Aqui todos os ciclos convergem e a consciência se sincroniza com o todo.', ondas:'Lua, Vento, Águia e Estrela', emoji:'🟢' },
+  ];
+  const c = castelos[casteloNum] || castelos[0];
+  const kinInicio = casteloNum * 52 + 1;
+  const kinFim    = kinInicio + 51;
+  box.innerHTML = `
+    <div style="text-align:center;padding:.5rem 0 1rem">
+      <div style="font-size:2.5rem;margin-bottom:.5rem">${c.emoji}</div>
+      <div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.2rem">Castelo ${c.cor} · ${c.dir}</div>
+      <div style="font-size:.72rem;color:var(--text3);margin-bottom:.3rem">Poder do ${c.poder} · Corte da ${c.corte}</div>
+      <div style="font-size:.68rem;color:var(--text3)">Kins ${kinInicio} – ${kinFim}</div>
+    </div>
+    <div style="background:rgba(165,124,0,.05);border-left:3px solid var(--gold);padding:.7rem 1rem;border-radius:0 8px 8px 0;font-size:.88rem;color:var(--text2);line-height:1.8;margin-bottom:.8rem">${c.desc}</div>
+    <div style="font-size:.75rem;color:var(--text3);margin-bottom:.3rem;font-family:Cinzel;text-transform:uppercase;letter-spacing:.1em">Ondas Encantadas</div>
+    <div style="font-size:.82rem;color:var(--text2)">${c.ondas}</div>
+    <p style="font-size:.78rem;color:var(--text3);line-height:1.7;margin-top:.8rem">O Tzolkin possui 5 Castelos de 52 dias cada (5 × 52 = 260 kins). Cada castelo contém 4 Ondas Encantadas de 13 dias. Os castelos formam as 4 direções cardeais mais o centro — a geometria sagrada do tempo maia.</p>`;
+  if (titulo) titulo.textContent = `${c.emoji} Castelo ${c.cor} do ${c.dir}`;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+export async function mostrarKinDiaLua(anoGal, luaNum, diaLua) {
+  await DATA_PRONTO;
+  // calcula a data absoluta do dia clicado na lua
+  const inicioAnoGal = new Date(anoGal, 6, 26); // 26/jul
+  const diasOffset   = (luaNum - 1) * 28 + (diaLua - 1);
+  const dataAlvo     = new Date(inicioAnoGal);
+  dataAlvo.setDate(dataAlvo.getDate() + diasOffset);
+  const kinNum = dateToKin(dataAlvo);
+  if (!kinNum || !DATA.kins[kinNum]) return;
+  const kd = DATA.kins[kinNum];
+  const dataStr = dataAlvo.toLocaleDateString('pt-BR', { day:'2-digit', month:'long' });
+  abrirKinModal(kinNum, kd.selo, true, `Lua ${luaNum} · Dia ${diaLua} · ${dataStr}`);
 }
