@@ -268,4 +268,4 @@ export async function excluirContaCompleta() {
   } catch(e) {
     throw e;
   }
-}  
+}
