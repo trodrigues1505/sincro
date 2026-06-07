@@ -66,6 +66,15 @@ export function isLeapDay(d) {
   return d.getMonth() === 1 && d.getDate() === 29;
 }
 
+// ─── daysBetween ─────────────────────────────────────────────────────────────
+// Diferença simples em dias corridos entre duas datas (sem descontar bissextos).
+// Usado para calcular dia/lua do ano galáctico em renderer.js.
+export function daysBetween(f, t) {
+  const fNorm = new Date(f.getFullYear(), f.getMonth(), f.getDate());
+  const tNorm = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+  return Math.round((tNorm - fNorm) / 86400000);
+}
+
 // ─── dateToKin ────────────────────────────────────────────────────────────────
 // O calendário das 13 Luas não usa anos bissextos: 29/fev é tratado como 28/fev.
 // A contagem de dias usa diferença calendária direta (Math.round) sem descontar
@@ -153,4 +162,4 @@ export function calcPoemaKin(kinNum, kData, poema_tom, poema_selo, selos_nomes) 
     linha4: `Com o tom ${pt.qualidade} d${daArticle === 'da' ? 'a' : 'o'} ${pt.acao.toLowerCase().replace('ando','ação').replace('endo','ção')},`,
     linha5: guiaLinha,
   };
-}    
+}   
