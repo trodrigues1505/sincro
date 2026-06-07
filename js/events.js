@@ -58,4 +58,4 @@ export function togglePrece(btn) {
   if (titulo) titulo.textContent = '🙏 Prece das 7 Direções Galácticas';
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-}
+}   
