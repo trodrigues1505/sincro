@@ -66,30 +66,15 @@ export function isLeapDay(d) {
   return d.getMonth() === 1 && d.getDate() === 29;
 }
 
-export function countLeapDays(f, t) {
-  let count = 0;
-  for (let y = f.getFullYear(); y <= t.getFullYear(); y++) {
-    if ((y % 4 === 0 && y % 100 !== 0) || y % 400 === 0) {
-      const leapDay = new Date(y, 1, 29);
-      if (leapDay > f && leapDay <= t) count++;
-    }
-  }
-  return count;
-}
-
-export function daysBetween(f, t) {
-  if (f > t) return -daysBetween(t, f);
-  const fNorm = new Date(f.getFullYear(), f.getMonth(), f.getDate());
-  const tNorm = new Date(t.getFullYear(), t.getMonth(), t.getDate());
-  const totalDays = Math.round((tNorm - fNorm) / 86400000);
-  return totalDays - countLeapDays(fNorm, tNorm);
-}
-
+// ─── dateToKin ────────────────────────────────────────────────────────────────
+// O calendário das 13 Luas não usa anos bissextos: 29/fev é tratado como 28/fev.
+// A contagem de dias usa diferença calendária direta (Math.round) sem descontar
+// os dias bissextos acumulados — isso produz o offset correto com base = 23.
 export function dateToKin(dt) {
   if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
   const dtNorm = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-  const base = new Date(1987, 6, 26);
-  const dias = daysBetween(base, dtNorm);
+  const base   = new Date(1987, 6, 26); // 26 de julho de 1987
+  const dias   = Math.round((dtNorm - base) / 86400000);
   return ((23 + dias) % 260 + 260) % 260 + 1;
 }
 
@@ -109,8 +94,8 @@ export function getAnoGalactico() {
 }
 
 export function getContextoLua(diasPassados) {
-  const luaNum = Math.floor(diasPassados / 28) + 1;
-  const diaLua = (diasPassados % 28) || 28;
+  const luaNum    = Math.floor(diasPassados / 28) + 1;
+  const diaLua    = (diasPassados % 28) || 28;
   const luaKinNum = LUA_KINS[luaNum - 1] || 1;
   const luaAnimal = LUAS_ANIMAIS[luaNum - 1] || '';
   const luaKinData = (DATA.kins || {})[String(luaKinNum)] || null;
@@ -121,7 +106,7 @@ export function getContextoAnelSolar(anoGal) {
   const anelKin = dateToKin(new Date(anoGal, 6, 26));
   const s = (anelKin - 1) % 20, t = (anelKin - 1) % 13;
   const nome = SELOS_NOMES[s], tom = TONS_NOMES[t], corBase = CORES_CICLO[s];
-  const cor = concordarCor(corBase, nome);
+  const cor  = concordarCor(corBase, nome);
   const selo = (DATA.selos || {})[s] || {};
   return {
     anelKin, anelTomNum: t + 1,
@@ -139,44 +124,33 @@ export function getRelacaoKins(kinDia, kinNatal) {
   if (!kd || !kd.oraculo) return null;
   const seloNatal = (DATA.kins[String(kinNatal)] || {}).selo || '';
   const { guia, analogo, antipoda, oculto } = kd.oraculo;
-  if (seloNatal && guia    && seloNatal === guia)    return { label:'Guia',                desc:'Seu kin natal guia o kin de hoje',              cor:'var(--gold2)', icon:'🔮' };
-  if (seloNatal && analogo && seloNatal === analogo) return { label:'Análogo',             desc:'Seu kin natal é análogo ao de hoje',            cor:'var(--green2)',icon:'🌱' };
-  if (seloNatal && antipoda && seloNatal === antipoda) return { label:'Antípoda',          desc:'Seu kin natal é antípoda ao de hoje',           cor:'#6080c0',      icon:'⚡' };
-  if (seloNatal && oculto  && seloNatal === oculto)  return { label:'Oculto',              desc:'Seu kin natal está oculto no kin de hoje',      cor:'rgba(165,124,0,.8)', icon:'🌙' };
-  if (kinDia === kinNatal)                            return { label:'Sincronicidade Total',desc:'Hoje é exatamente o seu Kin Natal!',           cor:'var(--gold3)', icon:'✨' };
+  if (seloNatal && guia     && seloNatal === guia)     return { label:'Guia',                 desc:'Seu kin natal guia o kin de hoje',           cor:'var(--gold2)',        icon:'🔮' };
+  if (seloNatal && analogo  && seloNatal === analogo)  return { label:'Análogo',              desc:'Seu kin natal é análogo ao de hoje',         cor:'var(--green2)',       icon:'🌱' };
+  if (seloNatal && antipoda && seloNatal === antipoda) return { label:'Antípoda',             desc:'Seu kin natal é antípoda ao de hoje',        cor:'#6080c0',            icon:'⚡' };
+  if (seloNatal && oculto   && seloNatal === oculto)   return { label:'Oculto',               desc:'Seu kin natal está oculto no kin de hoje',   cor:'rgba(165,124,0,.8)', icon:'🌙' };
+  if (kinDia === kinNatal)                             return { label:'Sincronicidade Total', desc:'Hoje é exatamente o seu Kin Natal!',         cor:'var(--gold3)',        icon:'✨' };
   return null;
-}
-
-// ─── Poema Ressonante do Kin ─────────────────────────────────────────────────
-export function gerarPoemaKin(kinNum) {
-  const { POEMA_TOM, POEMA_SELO, SELOS_NOMES, SELOS_MAIAS,
-          FAMILIAS_TERRESTRES, FAMILIAS_DESC, RACAS_RAIZ, RACAS_DESC } = require('./data.js');
-  // usar imports estáticos via parâmetros passados
-  return kinNum; // placeholder — lógica abaixo no renderer
 }
 
 export function calcPoemaKin(kinNum, kData, poema_tom, poema_selo, selos_nomes) {
   if (!kData) return null;
-  const seloIdx = (kinNum - 1) % 20;
-  const tomIdx  = ((kinNum - 1) % 13) + 1;
+  const seloIdx  = (kinNum - 1) % 20;
+  const tomIdx   = ((kinNum - 1) % 13) + 1;
   const ps = poema_selo[seloIdx];
   const pt = poema_tom[tomIdx];
   if (!ps || !pt) return null;
   const nomeSelo = selos_nomes[seloIdx] || '';
-  // detecta gênero do selo
   const femininos = new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
-  const isFem = femininos.has(nomeSelo);
-  const artigo = isFem ? 'a' : 'o';
+  const isFem    = femininos.has(nomeSelo);
   const daArticle = isFem ? 'da' : 'do';
-  // linha do guia
   const guiaLinha = kData.oraculo?.guia
     ? `Eu sou guiado pelo poder ${daArticle} ${kData.oraculo.guia.split(' ').slice(0,-1).join(' ')}`
     : `Eu sou guiado pelo meu próprio poder duplicado`;
   return {
     linha1: `Eu ${pt.poder} com o fim de ${ps.qualidade},`,
     linha2: `${pt.acao} ${ps.poder},`,
-    linha3: `Sel${isFem?'a':'o'} ${artigo} ${nomeSelo} d${daArticle} ${ps.essencia},`,
+    linha3: `Sel${isFem?'a':'o'} ${isFem?'a':'o'} ${nomeSelo} d${daArticle} ${ps.essencia},`,
     linha4: `Com o tom ${pt.qualidade} d${daArticle === 'da' ? 'a' : 'o'} ${pt.acao.toLowerCase().replace('ando','ação').replace('endo','ção')},`,
     linha5: guiaLinha,
   };
-}
+}    
