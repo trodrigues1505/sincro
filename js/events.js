@@ -267,7 +267,7 @@ export function fecharModalVideo() {
   document.body.style.overflow = '';
 }
 
-const EBOOK_URL = 'https://drive.google.com/file/d/1JK4uyne4lU1ORPyFhEMkwzrx-0MVAve8/view?usp=sharing';
+const EBOOK_URL = 'https://drive.google.com/file/d/1PU_VNQH61uUjHl-OESKhHH4TKrDS3JgS/view?usp=sharing';
 
 export function abrirEbook(pagina) {
   window.open(EBOOK_URL, '_blank');
