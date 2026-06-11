@@ -615,7 +615,7 @@ export async function renderEnquetePerfil(uid) {
     if (meuVoto === undefined) {
       // Ainda nao votou — mostra botao para votar
       el.innerHTML = '<p style="font-size:.85rem;color:var(--text2);margin-bottom:.7rem">' + d.pergunta + '</p>'
-        + '<button onclick="verificarEnquete('' + uid + '')" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Responder enquete</button>';
+        + '<button onclick="verificarEnqueteBtn(\'' + uid + '\'')" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Responder enquete</button>';
       return;
     }
 
