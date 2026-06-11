@@ -1,197 +1,594 @@
-// ─── js/app.js — ponto de entrada, inicialização e bridge global ──────────────
-import { DATA, DATA_PRONTO } from './data.js';
-import {
-  switchTab, mostrarDetalheOnda, loadToday, calcNatal, verKinPerfil,
-  renderSelos, abrirModalSelo, fecharModalSelo,
-  abrirKinModal, fecharModalVideo,
-  abrirModalVideo, abrirEbook, abrirSelfDesign,
-  togglePrece, compartilharKin, exportPNG,
-  atualizarBotaoNotif, toggleNotificacao,
-  mostrarOnboarding, proximoOnboarding, fecharOnboarding,
-  carregarAviso, fecharAviso,
-  exportarCalendario28, exportarPDFKin,
-  abrirModalPlasma, abrirModalFaseLunar, abrirModalCastelo, mostrarKinDiaLua,
-  verificarEnquete, renderEnquetePerfil,
-  verificarEnquete,
-  renderEnquetePerfil,
-} from './events.js';
-import {
-  toggleFavorito, limparHistorico, limparFavoritos,
-  renderHistorico, renderFavoritos,
-} from './storage.js';
-import {
-  initLogin, initAuthObserver, carregarPerfil,
-  salvarKinNatal, limparKinNatal, excluirContaCompleta,
-} from './api.js';
-import * as Api from './api.js';
-import {
-  registrarAtividade, renderGamificacaoPerfil,
-  renderRanking, abrirComparacao,
-} from './gamificacao.js';
-import { calcOraculo, calcGuia } from './cartilha.js';
-
-// Função global para a tabela guia
-window.calcularTabelaGuia = function() {
-  const inp = document.getElementById('tabela-guia-inp');
-  const kinNum = parseInt(inp?.value);
-  if (!kinNum || kinNum < 1 || kinNum > 260) return;
-
-  Promise.all([
-    import('./cartilha.js'),
-    import('./data.js'),
-  ]).then(([cartilha, data]) => {
-    const { calcOraculo } = cartilha;
-    const { SELOS_NOMES, TONS_NOMES, POEMA_TOM, POEMA_SELO, SELOS_MAIAS } = data;
-
-    const seloIdx = (kinNum - 1) % 20;
-    const tomIdx  = ((kinNum - 1) % 13) + 1;
-    const oraculo = calcOraculo(kinNum);
-    const nomeSelo = SELOS_NOMES[seloIdx] || '';
-    const nomeTom  = TONS_NOMES[tomIdx-1] || '';
-    const nomeMaia = SELOS_MAIAS[seloIdx]  || '';
-    const ps = POEMA_SELO[seloIdx] || {};
-    const pt = POEMA_TOM[tomIdx]   || {};
-
-    const linhas = document.getElementById('tabela-guia-linhas');
-    const poema  = document.getElementById('tabela-guia-poema');
-    const res    = document.getElementById('tabela-guia-resultado');
-    if (!linhas || !res) return;
-
-    const row = (label, val, cor='var(--text)') =>
-      `<div style="display:flex;justify-content:space-between;align-items:center;padding:.35rem .6rem;background:var(--bg2);border-radius:5px;border:1px solid var(--border)">
-        <span style="font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-family:Cinzel">${label}</span>
-        <span style="font-family:Cinzel;font-size:.75rem;color:${cor}">${val}</span>
-      </div>`;
-
-    linhas.innerHTML = [
-      row('Kin', `${kinNum} de 260`, 'var(--gold2)'),
-      row('Selo Solar', `${nomeSelo} · ${nomeMaia}`, 'var(--gold2)'),
-      row('Tom Galáctico', `${tomIdx} · ${nomeTom}`, 'var(--text)'),
-      row('Kin Guia', oraculo.guia, 'var(--green2)'),
-      row('Kin Análogo', oraculo.analogo, 'var(--text)'),
-      row('Kin Antípoda', oraculo.antipoda, 'var(--text)'),
-      row('Kin Oculto', oraculo.oculto, 'var(--text3)'),
-      row('Palavras-chave', [ps.poder, ps.qualidade, ps.essencia].filter(Boolean).join(' · '), 'var(--gold)'),
-    ].join('');
-
-    poema.innerHTML = pt.poder && ps.qualidade ? `
-      <div style="font-size:.6rem;color:var(--gold);font-family:Cinzel;letter-spacing:.1em;margin-bottom:.5rem">POEMA RESSONANTE · KIN ${kinNum}</div>
-      Eu ${pt.poder} com o fim de ${ps.qualidade},<br>
-      ${pt.acao} ${ps.poder.toLowerCase()},<br>
-      <span style="color:var(--text3);font-size:.8rem">Com o tom ${pt.qualidade} do ${nomeTom.toLowerCase()}.</span>` : '';
-
-    res.style.display = 'block';
-  });
-};
-
-// ─── Bridge de gamificação para onclick= no HTML ──────────────────────────────
-function _registrarAtv(acao) {
-  if (!window._currentUID) return;
-  const u = Api.auth.currentUser;
-  registrarAtividade(
-    window._currentUID, acao,
-    u?.displayName||'', u?.photoURL||'',
-    Api._kinNatalSalvo
-  );
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Sincronário das 13 Luas</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#009739">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="13 Luas">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#071209;--bg2:#0a1a0c;--card:#0d1f0f;--card2:#112613;
+  --green:#009739;--green2:#00b544;--green3:#006828;
+  --gold:#A57C00;--gold2:#c9a030;--gold3:#e0c070;
+  --border:rgba(0,151,57,.20);--border2:rgba(0,151,57,.40);--border-g:rgba(165,124,0,.28);
+  --text:#c0dcc4;--text2:#5a8860;--text3:#2e5034;
+  --red:#8a2018;--white:#a8b890;--blue:#1a4860;--radius:8px;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:16px;line-height:1.65;min-height:100vh}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.anim-1{animation:fadeUp .28s .00s both}.anim-2{animation:fadeUp .28s .08s both}
+.anim-3{animation:fadeUp .28s .16s both}.anim-4{animation:fadeUp .28s .24s both}
+.skeleton{background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:400px 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}
+.skeleton-hero{height:160px;border-radius:var(--radius);margin-bottom:.6rem}
+.skeleton-row{height:14px;margin:.4rem 0}
+.skeleton-row.w60{width:60%}
+.skeleton-row.w80{width:80%}
+.skeleton-row.w40{width:40%}
+.skeleton-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;margin:.8rem 0}
+.skeleton-card{height:60px;border-radius:6px}
+.login-container{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:max(1.5rem,env(safe-area-inset-top,0px)) 1.5rem 1.5rem;gap:1.8rem}
+.login-logo{width:88px;height:88px;border-radius:18px;animation:fadeUp .35s both;box-shadow:0 0 40px rgba(0,151,57,.18)}
+.login-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:2rem 2.4rem 2.4rem;max-width:360px;width:100%;text-align:center;animation:fadeUp .4s .08s both}
+.login-box h1{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold2);margin-bottom:.3rem;letter-spacing:.06em}
+.login-divider{width:24px;height:1px;background:var(--gold);margin:.9rem auto;opacity:.5}
+.login-box p{color:var(--text2);margin-bottom:1.7rem;font-size:.92rem}
+.btn-google{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:10px 20px;font-family:'Cinzel',serif;font-size:.76rem;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:border-color .2s;letter-spacing:.04em}
+.btn-google:hover{border-color:var(--green2)}
+.error-msg{background:rgba(138,32,24,.12);border:1px solid rgba(138,32,24,.3);color:#b06858;padding:.7rem .9rem;border-radius:6px;margin-top:1rem;font-size:.82rem}
+.loading{color:var(--text3);margin-top:1rem;font-style:italic;font-size:.84rem}
+.container{max-width:960px;margin:0 auto;padding:max(1rem,env(safe-area-inset-top,0px)) 1rem 1rem;display:none}
+.container.active{display:block}
+h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:center;margin-bottom:.2rem;letter-spacing:.06em}
+.user-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem 1rem;margin-bottom:.9rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px}
+.user-avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--green3)}
+.btn-logout,.btn-admin,.btn-export{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text2);padding:5px 11px;font-family:'Cinzel',serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
+.btn-logout:hover,.btn-export:hover{border-color:var(--green3);color:var(--text2)}
+.btn-admin{border-color:var(--border-g);color:var(--gold)}
+.btn-admin:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
+.tabs{display:flex;margin-bottom:.9rem;border-bottom:1px solid var(--border)}
+.tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-family:'Cinzel',serif;font-size:.66rem;padding:8px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.09em;transition:color .2s,border-color .2s;margin-bottom:-1px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold2);border-bottom-color:var(--gold)}
+.tab-content{display:none}.tab-content.active{display:block}
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:.6rem}
+.section-title{font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold);text-transform:uppercase;letter-spacing:.13em;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border-g)}
+.kin-hero{text-align:center;padding:1.8rem 1.3rem 1.4rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2);position:relative;overflow:hidden}
+.kin-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green3),var(--green2),var(--green3),transparent)}
+.kin-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.45}
+.kin-num{font-family:'Cinzel',serif;font-size:.58rem;color:rgba(165,124,0,.7);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.5rem}
+.kin-title{font-family:'Cinzel',serif;font-size:1.6rem;margin:.25rem 0 .45rem;letter-spacing:.03em;color:var(--gold2);line-height:1.2}
+.kin-subtitle{color:rgba(165,124,0,.8);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em}
+.kin-frase{color:var(--text);font-size:.95rem;font-style:italic;margin:.9rem auto 0;padding:.85rem 1.1rem;background:rgba(0,151,57,.08);border-left:2px solid var(--gold3);max-width:640px;line-height:1.9}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px;margin:.8rem 0}
+.card{background:var(--bg2);border-radius:6px;padding:.85rem .95rem;border:1px solid var(--border);transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.card-label{font-size:.62rem;color:var(--text2);text-transform:uppercase;letter-spacing:.11em;margin-bottom:4px}
+.card-val{font-family:'Cinzel',serif;font-size:.84rem;color:var(--gold3)}
+.selo-icon{border-radius:6px;display:flex;align-items:center;justify-content:center;border:none;margin:0 auto .5rem;overflow:hidden}
+.selo-red,.selo-vermelho,.selo-vermelha{background:rgba(138,32,24,.13)}
+.selo-white,.selo-branco,.selo-branca{background:rgba(168,184,144,.07)}
+.selo-blue,.selo-azul{background:rgba(26,72,96,.13)}
+.selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11)}
+/* kins clicáveis — cursor pointer + feedback de toque no mobile */
+.kin-clicavel{cursor:pointer;-webkit-tap-highlight-color:rgba(165,124,0,.18);transition:transform .12s,opacity .12s}
+.kin-clicavel:hover{opacity:.85;transform:scale(1.05)}
+.kin-clicavel:active{transform:scale(.93);opacity:.7}
+.oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
 
-// Wrappers que registram pontos ao chamar a ação
-function togglePreceComPontos(btn) {
-  togglePrece(btn);
-  _registrarAtv('PRECE');
+.oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
+.oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
+.oraculo-cell-bottom{grid-column:2;grid-row:3}
+.oraculo-item{text-align:center;position:relative;z-index:1}
+.oraculo-central .selo-icon{width:90px;height:90px;border-radius:11px;box-shadow:0 0 0 2px var(--gold),0 0 18px rgba(165,124,0,.18)}
+.oraculo-side .selo-icon{width:60px;height:60px;border-radius:7px}
+.oraculo-side-icon{width:54px!important;height:54px!important;border-radius:7px;border:1px solid rgba(255,255,255,.06);box-shadow:none!important}
+.oraculo-nome{font-size:.62rem;margin-top:.3rem;color:var(--text);font-family:'Cinzel',serif;letter-spacing:.03em;line-height:1.3;max-width:90px;word-break:break-word}
+.oraculo-central .oraculo-nome{font-size:.7rem;color:var(--gold3);max-width:100px}
+.onda-wrap{display:flex;justify-content:center;margin:.7rem 0}
+.onda-L{display:grid;grid-template-columns:repeat(5,var(--cell));grid-template-rows:repeat(5,var(--cell));--cell:52px;gap:4px}
+.onda-L .onda-kin:nth-child(1) {grid-column:1;grid-row:1}
+.onda-L .onda-kin:nth-child(2) {grid-column:1;grid-row:2}
+.onda-L .onda-kin:nth-child(3) {grid-column:1;grid-row:3}
+.onda-L .onda-kin:nth-child(4) {grid-column:1;grid-row:4}
+.onda-L .onda-kin:nth-child(5) {grid-column:1;grid-row:5}
+.onda-L .onda-kin:nth-child(6) {grid-column:2;grid-row:5}
+.onda-L .onda-kin:nth-child(7) {grid-column:3;grid-row:5}
+.onda-L .onda-kin:nth-child(8) {grid-column:4;grid-row:5}
+.onda-L .onda-kin:nth-child(9) {grid-column:5;grid-row:5}
+.onda-L .onda-kin:nth-child(10){grid-column:5;grid-row:4}
+.onda-L .onda-kin:nth-child(11){grid-column:5;grid-row:3}
+.onda-L .onda-kin:nth-child(12){grid-column:5;grid-row:2}
+.onda-L .onda-kin:nth-child(13){grid-column:4;grid-row:2}
+.onda-kin{width:var(--cell);height:var(--cell);border-radius:5px;display:flex;align-items:center;justify-content:center;border:1px solid;cursor:pointer;overflow:hidden;transition:transform .14s,box-shadow .14s;position:relative}
+.onda-kin:hover{transform:scale(1.06)}
+.onda-kin.active{box-shadow:0 0 0 3px var(--green2);border-color:var(--green2)!important;border-width:2px}
+.onda-detail{background:var(--card2);border:1px solid var(--border-g);border-radius:6px;padding:.5rem .75rem;margin:.5rem auto 0;text-align:center;font-size:.72rem;color:var(--gold3);font-family:'Cinzel',serif;letter-spacing:.03em;min-height:1.8rem;display:none;max-width:320px}
+.onda-detail.visible{display:block}
+.cor-red,.cor-vermelho,.cor-vermelha{background:rgba(138,32,24,.13);border-color:rgba(138,32,24,.35)}
+.cor-white,.cor-branco,.cor-branca{background:rgba(168,184,144,.05);border-color:rgba(168,184,144,.18)}
+.cor-blue,.cor-azul{background:rgba(26,72,96,.13);border-color:rgba(26,72,96,.35)}
+.cor-yellow,.cor-amarelo,.cor-amarela{background:rgba(165,124,0,.11);border-color:rgba(165,124,0,.3)}
+.praticas-list{list-style:none;padding:0}
+.praticas-list li{padding:.65rem .9rem;margin-bottom:4px;background:var(--bg2);border-radius:5px;border-left:2px solid var(--green);display:flex;align-items:flex-start;gap:8px;font-size:.9rem;line-height:1.5;transition:border-color .2s}
+.praticas-list li:hover{border-left-color:var(--gold)}
+.praticas-list li::before{content:'·';color:var(--green2);font-size:1.1rem;flex-shrink:0;line-height:1.3}
+.praticas-list li.has-btn::before{display:none}
+.praticas-list li.has-btn{align-items:center;justify-content:space-between}
+.hidden{display:none}
+input[type="date"]{background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 10px;font-family:inherit;color-scheme:dark;font-size:.87rem;transition:border-color .2s}
+input[type="date"]:focus{outline:none;border-color:var(--green)}
+.btn-calc{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold2);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
+.btn-calc:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:.6rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.55rem}
+.info-text{color:var(--text);font-size:.88rem;line-height:1.65;margin:.28rem 0}
+.info-box{background:var(--bg2);padding:.75rem .85rem;border-radius:5px;border-left:2px solid var(--gold);margin:.55rem 0}
+.lua-circular{width:100%;max-width:380px;margin:0 auto;display:block}
+.lua-circular .seg{fill:var(--bg2);stroke-width:1;transition:fill .2s}
+.lua-circular .seg.red,.lua-circular .seg.vermelho{fill:rgba(138,32,24,.10);stroke:rgba(138,32,24,.38)}
+.lua-circular .seg.white,.lua-circular .seg.branco{fill:rgba(168,184,144,.04);stroke:rgba(168,184,144,.2)}
+.lua-circular .seg.blue,.lua-circular .seg.azul{fill:rgba(26,72,96,.10);stroke:rgba(26,72,96,.38)}
+.lua-circular .seg.yellow,.lua-circular .seg.amarelo{fill:rgba(165,124,0,.09);stroke:rgba(165,124,0,.32)}
+.lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
+.lua-circular .seg-label{font-family:'Cinzel',serif;font-size:9px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
+.lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
+.lua-circular .center-text{font-family:'Cinzel',serif;fill:var(--green2);text-anchor:middle}
+.lua-circular .center-num{font-size:20px;dominant-baseline:central;font-weight:600}
+.lua-circular .center-sub{font-size:8px;fill:var(--text2);letter-spacing:.1em;dominant-baseline:central}
+.lua-legenda{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-top:.5rem}
+.lua-legenda-item{display:flex;align-items:center;gap:4px;font-family:'Cinzel',serif;font-size:.55rem;color:var(--text2);text-transform:uppercase;letter-spacing:.07em}
+.lua-legenda-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.lua-legenda-dot.red{background:rgba(138,32,24,.6);border:1px solid rgba(138,32,24,.5)}
+.lua-legenda-dot.white{background:rgba(168,184,144,.3);border:1px solid rgba(168,184,144,.45)}
+.lua-legenda-dot.blue{background:rgba(26,72,96,.6);border:1px solid rgba(26,72,96,.5)}
+.lua-legenda-dot.yellow{background:rgba(165,124,0,.55);border:1px solid rgba(165,124,0,.5)}
+.btn-share{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-share:hover{background:rgba(165,124,0,.12);border-color:var(--gold2)}
+.btn-pratica{background:transparent;color:var(--green2);border:1px solid var(--green3);border-radius:4px;padding:3px 10px;font-size:.6rem;font-family:'Cinzel',serif;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:border-color .2s,color .2s;letter-spacing:.04em}
+.btn-pratica:hover,.btn-pratica:focus-visible{border-color:var(--green2);color:var(--green2);outline:none}
+.btn-pratica.tocando{color:var(--gold2);border-color:var(--gold)}
+.historico-lista{display:flex;flex-direction:column;gap:4px;margin-top:.4rem}
+.historico-item{display:flex;align-items:center;gap:.6rem;padding:.45rem .55rem;background:var(--bg2);border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:border-color .2s}
+.historico-item:hover{border-color:var(--border2)}
+.historico-item-icon{width:32px;height:32px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.historico-item-info{flex:1;min-width:0}
+.historico-item-nome{font-size:.72rem;font-family:'Cinzel',serif;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.historico-item-sub{font-size:.6rem;color:var(--text3);margin-top:1px}
+.historico-item-kin{font-size:.6rem;font-family:'Cinzel',serif;color:var(--text3);flex-shrink:0}
+.btn-fav{background:none;border:none;cursor:pointer;font-size:1rem;line-height:1;padding:2px;opacity:.5;transition:opacity .2s,transform .15s}
+.btn-fav:hover{opacity:1;transform:scale(1.15)}
+.btn-fav.ativo{opacity:1;filter:drop-shadow(0 0 4px var(--gold))}
+.historico-vazio{font-size:.8rem;color:var(--text3);font-style:italic;padding:.4rem 0}
+.btn-cal{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text2);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.btn-cal:hover{border-color:var(--green);color:var(--green)}
+.export-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
+.selos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem;margin-top:.3rem}
+.selo-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:.9rem .8rem;text-align:center;cursor:pointer;transition:border-color .2s,transform .15s;display:flex;flex-direction:column;align-items:center}
+.selo-card:hover{border-color:var(--border-g);transform:translateY(-2px)}
+.selo-card-nome{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold2);margin-bottom:.2rem;margin-top:.4rem}
+.selo-card-acao{font-size:.62rem;color:var(--text3);font-style:italic}
+.modal-selo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:100;align-items:center;justify-content:center;padding:1rem}
+.modal-selo.active{display:flex}
+.modal-selo-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:1.5rem;max-width:440px;width:100%;max-height:85vh;overflow-y:auto;animation:fadeUp .25s both;position:relative}
+.modal-selo-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.modal-selo-icon{width:64px;height:64px;border-radius:9px;overflow:hidden;border:1px solid;flex-shrink:0}
+.modal-selo-titulo{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:.2rem}
+.modal-selo-acao{font-size:.72rem;color:var(--green2);text-transform:uppercase;letter-spacing:.08em}
+.modal-selo-maya{font-size:.68rem;color:var(--text3);margin-top:.15rem}
+.modal-selo-desc{color:var(--text);font-size:.88rem;line-height:1.75}
+.modal-selo-close{position:absolute;top:1rem;right:1rem;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:4px 9px;cursor:pointer;font-size:.7rem;transition:all .2s}
+.modal-selo-close:hover{border-color:var(--text2);color:var(--text2)}
+.perfil-hero{text-align:center;padding:1.5rem;background:var(--card2);border-radius:var(--radius);margin-bottom:.6rem;border:1px solid var(--border2)}
+.perfil-avatar{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);margin:0 auto .7rem;display:block}
+.perfil-nome{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold2);margin-bottom:.2rem}
+.perfil-email{font-size:.72rem;color:var(--text3);margin-bottom:1rem}
+.perfil-kin-card{background:var(--bg2);border:1px solid var(--border-g);border-radius:8px;padding:1rem;text-align:center;margin-bottom:.6rem}
+.perfil-kin-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.perfil-kin-nome{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:.2rem}
+.perfil-kin-sub{font-size:.72rem;color:var(--text2)}
+.perfil-sem-kin{color:var(--text3);font-style:italic;font-size:.88rem;padding:1.2rem 0}
+.btn-salvar-natal{background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold2);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;margin-top:.6rem}
+.btn-salvar-natal:hover{background:rgba(165,124,0,.15);border-color:var(--gold2)}
+.btn-limpar-natal{background:transparent;border:1px solid rgba(138,32,24,.35);border-radius:5px;color:rgba(138,32,24,.8);font-family:'Cinzel',serif;font-size:.6rem;padding:6px 12px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s;margin-top:.4rem}
+.btn-limpar-natal:hover{background:rgba(138,32,24,.12)}
+.notif-banner{background:var(--card2);border:1px solid var(--border-g);border-radius:8px;padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-bottom:.6rem}
+.notif-banner p{color:var(--text2);font-size:.82rem;flex:1}
+.btn-notif{background:var(--green);border:none;border-radius:5px;color:#fff;font-family:'Cinzel',serif;font-size:.63rem;padding:7px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;transition:all .2s;white-space:nowrap}
+.btn-notif:hover{background:var(--green2)}
+.btn-notif.ativo{background:transparent;border:1px solid var(--green3);color:var(--green2)}
+.onboarding{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.onboarding.active{display:flex}
+.onboarding-box{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:2.4rem 2rem;max-width:420px;width:100%;text-align:center;animation:fadeUp .3s both}
+.onboarding-step{display:none}.onboarding-step.active{display:block}
+.onboarding-emoji{font-size:2.8rem;margin-bottom:1rem;display:block}
+.onboarding-titulo{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);margin-bottom:.7rem}
+.onboarding-texto{color:var(--text2);font-size:.9rem;line-height:1.75;margin-bottom:1.5rem}
+.onboarding-dots{display:flex;justify-content:center;gap:6px;margin-bottom:1.2rem}
+.onboarding-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:background .2s}
+.onboarding-dot.active{background:var(--green)}
+.onboarding-btns{display:flex;gap:.6rem;justify-content:center}
+.btn-onboard-next{background:var(--green);border:none;border-radius:6px;color:#fff;font-family:'Cinzel',serif;font-size:.72rem;padding:9px 20px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}
+.btn-onboard-next:hover{background:var(--green2)}
+.btn-onboard-skip{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text3);font-family:'Cinzel',serif;font-size:.68rem;padding:9px 16px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}
+.btn-onboard-skip:hover{border-color:var(--text2);color:var(--text2)}
+.aviso-banner{background:var(--card2);border:1px solid var(--border-g);border-radius:8px;padding:.85rem 1rem;margin-bottom:.7rem;display:flex;align-items:flex-start;gap:.8rem;animation:fadeUp .3s both}
+.aviso-banner-icon{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
+.aviso-banner-texto{color:var(--text);font-size:.88rem;line-height:1.6;flex:1}
+.aviso-banner-close{background:transparent;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;padding:0;flex-shrink:0}
+.aviso-banner-close:hover{color:var(--text2)}
+@media(max-width:600px){
+  body{font-size:15px}.container{padding:.75rem .65rem}h1{font-size:1.2rem}
+  .user-bar{padding:.6rem .7rem;flex-direction:column;align-items:flex-start}
+  .user-bar>div:last-child{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+  .btn-logout,.btn-admin,.btn-export{width:100%;text-align:center;font-size:.56rem;padding:5px 6px}
+  .section{padding:.85rem}.kin-hero{padding:1.2rem .9rem 1rem}.kin-title{font-size:1.2rem}
+  .kin-frase{font-size:.83rem;padding:.75rem .85rem}
+  .oraculo-wrap{max-width:290px}.oraculo-central .selo-icon{width:62px;height:62px}
+  .oraculo-side .selo-icon{width:48px;height:48px}.oraculo-nome{font-size:.56rem;max-width:80px}
+  .onda-L{--cell:36px;gap:3px}.cards{grid-template-columns:1fr 1fr;gap:5px}
+  .grid-2,.grid-3{grid-template-columns:1fr;gap:.55rem}
+  input[type="date"]{width:100%}.btn-calc{width:100%;margin-top:5px}
+  .tab{padding:7px 10px;font-size:.58rem}.lua-circular{max-width:260px}
 }
-function abrirModalVideoComPontos(url, nome) {
-  abrirModalVideo(url, nome);
-  _registrarAtv('MEDITACAO');
+@media(max-width:400px){
+  .container{padding:.65rem .5rem}h1{font-size:1rem}.kin-title{font-size:1rem}
+  .oraculo-wrap{max-width:256px}.oraculo-central .selo-icon{width:54px;height:54px}
+  .oraculo-side .selo-icon{width:42px;height:42px}.onda-L{--cell:36px;gap:3px}
+  .cards{grid-template-columns:1fr}.lua-circular{max-width:220px}
 }
-function abrirSelfDesignComPontos(kin) {
-  abrirSelfDesign(kin);
-  _registrarAtv('SELF_DESIGN');
-}
-function abrirEbookComPontos(pagina) {
-  abrirEbook(pagina);
-  _registrarAtv('EBOOK');
-}
-function abrirKinNatalComPontos(kinNum, selo, modal) {
-  abrirKinModal(kinNum, selo, modal);
-  _registrarAtv('KIN_NATAL');
-}
-function toggleFavoritoComPontos(kinNum, btn) {
-  toggleFavorito(kinNum, btn);
-  _registrarAtv('FAVORITAR');
-}
-function fecharComparacao() {
-  const m = document.getElementById('modal-comparacao');
-  if (m) m.classList.remove('active');
-  document.body.style.overflow = '';
-}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.modal-video{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-video.active{display:flex}
+.modal-video-box{background:var(--card);border:1px solid var(--border2);border-radius:12px;width:100%;max-width:600px;overflow:hidden;animation:fadeUp .2s both;position:relative}
+.modal-video-header{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;border-bottom:1px solid var(--border)}
+.modal-video-titulo{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold2);letter-spacing:.05em}
+.modal-video-close{background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text3);padding:3px 8px;cursor:pointer;font-size:.68rem;transition:all .2s;font-family:'Cinzel',serif}
+.modal-video-close:hover{border-color:var(--text2);color:var(--text)}
+.modal-video iframe{width:100%;aspect-ratio:16/9;display:block;border:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
 
-// ─── Expõe globalmente para onclick= no HTML ──────────────────────────────────
-Object.assign(window, {
-  DATA,
-  switchTab, mostrarDetalheOnda, loadToday, calcNatal, verKinPerfil,
-  renderSelos, abrirModalSelo, fecharModalSelo,
-  abrirKinModal: abrirKinNatalComPontos,
-  fecharModalVideo,
-  _fecharModalVideo: fecharModalVideo,
-  abrirModalVideo: abrirModalVideoComPontos,
-  abrirEbook: abrirEbookComPontos,
-  abrirSelfDesign: abrirSelfDesignComPontos,
-  togglePrece: togglePreceComPontos,
-  compartilharKin, exportPNG,
-  atualizarBotaoNotif, toggleNotificacao,
-  mostrarOnboarding, proximoOnboarding, fecharOnboarding,
-  carregarAviso, fecharAviso,
-  exportarCalendario28, exportarPDFKin,
-  toggleFavorito: toggleFavoritoComPontos,
-  limparHistorico, limparFavoritos,
-  salvarKinNatal, limparKinNatal,
-  // gamificação
-  renderRanking,
-  abrirComparacao,
-  fecharComparacao,
-  renderGamificacaoPerfil,
-  // novos modais
-  abrirModalPlasma, abrirModalFaseLunar, abrirModalCastelo, mostrarKinDiaLua,
-  // LGPD
-  _confirmarExcluirConta: async function() {
-    if (!confirm('Tem certeza? Esta ação excluirá permanentemente sua conta e todos os seus dados.\n\nEsta operação não pode ser desfeita.')) return;
-    if (!confirm('Confirmar exclusão definitiva? Você perderá todo o seu progresso, pontuação e dados.')) return;
-    try {
-      await excluirContaCompleta();
-    } catch(e) {
-      alert('Erro ao excluir conta: ' + e.message + '\n\nEnvie e-mail para adm.financ.espacoautonomia@gmail.com com assunto "LGPD - Excluir conta".');
-    }
-  },
+<!-- ONBOARDING -->
+<div class="onboarding" id="onboarding">
+  <div class="onboarding-box">
+    <div class="onboarding-dots">
+      <div class="onboarding-dot active"></div><div class="onboarding-dot"></div>
+      <div class="onboarding-dot"></div><div class="onboarding-dot"></div>
+      <div class="onboarding-dot"></div>
+    </div>
+    <div class="onboarding-step active"><span class="onboarding-emoji">🌀</span>
+      <div class="onboarding-titulo">Bem-vindo ao Sincronário das 13 Luas</div>
+      <p class="onboarding-texto">Uma ferramenta viva da Lei do Tempo. Revela o padrão galáctico do seu dia e do dia em que você nasceu.</p></div>
+    <div class="onboarding-step"><span class="onboarding-emoji">☀️</span>
+      <div class="onboarding-titulo">O Kin do Dia</div>
+      <p class="onboarding-texto">Cada dia tem um <strong style="color:var(--gold2)">Kin</strong> — combinação de um Selo Solar com um Tom Galáctico. São 260 combinações que se repetem em ciclo de 260 dias.</p></div>
+    <div class="onboarding-step"><span class="onboarding-emoji">🔮</span>
+      <div class="onboarding-titulo">O Oráculo do Destino</div>
+      <p class="onboarding-texto">Cada Kin tem 5 posições: <strong style="color:var(--gold2)">Ser Central, Guia, Análogo, Antípoda e Oculto</strong>. Juntos revelam as forças que atuam no dia.</p></div>
+    <div class="onboarding-step"><span class="onboarding-emoji">🌊</span>
+      <div class="onboarding-titulo">Onda Encantada</div>
+      <p class="onboarding-texto">Os 13 dias a partir do seu Kin formam uma <strong style="color:var(--gold2)">Onda Encantada</strong>. O primeiro dia define o propósito de toda a jornada.</p></div>
+    <div class="onboarding-step"><span class="onboarding-emoji">🎯</span>
+      <div class="onboarding-titulo">Seu Kin Natal</div>
+      <p class="onboarding-texto">Vá à aba <strong style="color:var(--gold2)">Perfil</strong> e salve sua data de nascimento. Seu Kin Natal revela sua essência e missão permanente.</p></div>
+    <div class="onboarding-btns">
+      <button class="btn-onboard-skip" onclick="fecharOnboarding()">Pular</button>
+      <button class="btn-onboard-next" id="btn-onboard-next" onclick="proximoOnboarding()">Próximo →</button>
+    </div>
+  </div>
+</div>
+
+<!-- AVISO CONTAINER -->
+<div id="aviso-container"></div>
+
+<div id="login-screen" class="login-container">
+<img src="./icon-192.png" alt="Sincronário" class="login-logo">
+<div class="login-box">
+<h1>Sincronário das 13 Luas</h1>
+<p style="color:var(--text);font-size:.9rem;margin-bottom:1.2rem">Faça login com sua conta Google</p>
+
+<!-- Consentimento LGPD -->
+<div style="background:rgba(165,124,0,.06);border:1px solid var(--border-g);border-radius:7px;padding:.8rem .9rem;margin-bottom:1.1rem;text-align:left">
+  <label style="display:flex;align-items:flex-start;gap:.6rem;cursor:pointer">
+    <input type="checkbox" id="lgpd-consent" style="margin-top:3px;flex-shrink:0;accent-color:var(--green2);width:16px;height:16px">
+    <span style="font-size:.78rem;color:var(--text2);line-height:1.6">
+      Li e concordo com a <a href="./privacidade.html" target="_blank" style="color:var(--gold2);text-decoration:underline">Política de Privacidade</a>. Estou ciente de que o app coleta meu nome, e-mail e foto via login com Google, e que posso excluir meus dados a qualquer momento.
+    </span>
+  </label>
+</div>
+
+<button class="btn-google" id="btn-login" disabled style="opacity:.5;cursor:not-allowed">
+<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
+Entrar com Google
+</button>
+<div id="login-error" class="error-msg hidden"></div>
+<div id="login-loading" class="loading hidden">Entrando...</div>
+</div>
+<!-- TELA AGUARDO APROVAÇÃO (hidden por padrão, ativada via JS) -->
+<div id="tela-aguardo" class="login-box hidden" style="margin-top:0">
+  <div style="text-align:center">
+    <div style="font-size:2rem;margin-bottom:.8rem;animation:spin 2s linear infinite">⏳</div>
+    <div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.4rem">Aguardando Aprovação</div>
+    <p style="font-size:.85rem;color:var(--text);margin:.3rem 0 .8rem;line-height:1.5">Sua conta foi criada com sucesso!<br>Aguarde a aprovação do administrador.</p>
+    <p id="aguardo-uid" style="font-size:.82rem;color:var(--text3);margin:.3rem 0;line-height:1.5"></p>
+    <p style="font-size:.82rem;color:var(--text3);margin:.3rem 0;line-height:1.5">Assim que aprovado, você terá acesso imediato.<br>Esta página será atualizada automaticamente.</p>
+    <button onclick="auth.signOut()" style="margin-top:1rem;padding:7px 14px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:4px;cursor:pointer;font-family:Cinzel;font-size:.75rem;text-transform:uppercase;letter-spacing:.07em">Voltar ao Login</button>
+  </div>
+</div>
+</div>
+
+<div id="app-screen" class="container">
+<div class="user-bar">
+<div style="display:flex;align-items:center;gap:12px">
+<img id="user-avatar" class="user-avatar" src="" alt="">
+<div>
+<div id="user-name" style="font-family:Cinzel;color:var(--text)"></div>
+<div id="user-role" style="font-size:0.75rem;color:var(--gold);text-transform:uppercase"></div>
+</div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button id="btn-admin" class="btn-admin hidden" onclick="window.location.href='admin.html'">Painel Admin</button>
+<button class="btn-export" onclick="exportPNG()">📸 Exportar PNG</button>
+<button class="btn-logout" id="btn-logout">Sair</button>
+</div>
+</div>
+
+<h1>🌀 Sincronário das 13 Luas</h1>
+<p style="text-align:center;color:var(--text2);margin-bottom:2rem;font-style:italic">Calculadora Completa · Lei do Tempo</p>
+
+<div class="tabs">
+<button class="tab active" onclick="switchTab('dia',this)">Kin do Dia</button>
+<button class="tab" onclick="switchTab('natal',this)">Kin Natal</button>
+<button class="tab" onclick="switchTab('selos',this)">Selos</button>
+<button class="tab" onclick="switchTab('ranking',this)">🏆 Ranking</button>
+<button class="tab" onclick="switchTab('lei',this)">📖 Lei do Tempo</button>
+<button class="tab" onclick="switchTab('perfil',this)">Perfil</button>
+</div>
+
+<div id="export-area">
+<div id="tab-dia" class="tab-content active">
+<div id="res-dia"><div class="section skeleton-hero skeleton"></div><div class="section"><div class="skeleton skeleton-row w60"></div><div class="skeleton skeleton-row w80" style="margin-top:.6rem"></div><div class="skeleton skeleton-row w40" style="margin-top:.4rem"></div><div class="skeleton-cards"><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div></div></div></div>
+</div>
+
+<div id="tab-natal" class="tab-content">
+<div class="section">
+<div style="font-family:Cinzel;font-size:0.75rem;color:var(--gold);text-transform:uppercase;margin-bottom:1rem">Kin Natal</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<label style="color:var(--text2);font-style:italic">Data de Nascimento</label>
+<input type="date" id="nasc-inp">
+<button class="btn-calc" onclick="calcNatal()">Calcular</button>
+</div>
+<div id="res-natal" class="hidden" style="margin-top:1.5rem"></div>
+</div>
+</div>
+</div>
+
+<!-- ABA LEI DO TEMPO -->
+<div id="tab-lei" class="tab-content">
+  <div id="lei-content">
+    <div style="color:var(--text3);font-style:italic;font-size:.85rem;text-align:center;padding:1rem">Carregando...</div>
+  </div>
+</div>
+
+<!-- ABA RANKING -->
+<div id="tab-ranking" class="tab-content">
+  <div class="section">
+    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Top 50 · Ranking Público</span>
+      <button onclick="renderRanking(window._currentUID)" style="background:none;border:none;color:var(--gold2);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:0">↺ Atualizar</button>
+    </div>
+    <p style="font-size:.75rem;color:var(--text3);font-style:italic;margin-bottom:.8rem">Clique em qualquer jogador para comparar com você.</p>
+    <div id="ranking-lista"></div>
+  </div>
+</div>
+
+<!-- ABA SELOS -->
+<div id="tab-selos" class="tab-content">
+<div class="section">
+  <div class="section-title">Os 20 Selos Solares</div>
+  <div class="selos-grid" id="selos-grid"></div>
+</div>
+</div>
+
+<!-- ABA PERFIL -->
+<div id="tab-perfil" class="tab-content">
+  <div class="section perfil-hero">
+    <img id="perfil-avatar" class="perfil-avatar" src="" alt="">
+    <div class="perfil-nome" id="perfil-nome"></div>
+    <div class="perfil-email" id="perfil-email"></div>
+  </div>
+  <!-- GAMIFICAÇÃO NO PERFIL -->
+  <div class="section">
+    <div class="section-title">Minha Pontuação</div>
+    <div id="gamificacao-perfil"></div>
+  </div>
+  <div class="section">
+    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+      <span>📋 Cronógrafo Diário</span>
+      <button onclick="verHistoricoCronografo()" style="background:none;border:1px solid var(--border-g);color:var(--gold2);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:3px 9px;border-radius:4px">📅 Ver Histórico</button>
+    </div>
+    <div id="perfil-cronografo-preview"></div>
+  </div>
+  <div class="section">
+    <div class="section-title">Notificação Diária</div>
+    <div class="notif-banner">
+      <p>Receba o Kin do dia toda manhã no seu celular.</p>
+      <button class="btn-notif" id="btn-notif" onclick="toggleNotificacao()">Ativar</button>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Meu Kin Natal</div>
+    <div id="perfil-kin-salvo"></div>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.8rem">
+      <label style="color:var(--text2);font-size:.85rem;font-style:italic">Data de Nascimento</label>
+      <input type="date" id="perfil-nasc-inp">
+      <button class="btn-salvar-natal" onclick="salvarKinNatal()">Salvar</button>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Kins Favoritos</span>
+      <button onclick="limparFavoritos()" style="background:none;border:none;color:var(--text3);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:0">Limpar</button>
+    </div>
+    <div id="favoritos-lista" class="historico-lista"></div>
+  </div>
+  <div class="section">
+    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Histórico de Consultas</span>
+      <button onclick="limparHistorico()" style="background:none;border:none;color:var(--text3);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:0">Limpar</button>
+    </div>
+    <div id="historico-lista" class="historico-lista"></div>
+  </div>
+  <!-- ENQUETE -->
+  <div class="section" id="perfil-enquete-section">
+    <div class="section-title">📊 Enquete</div>
+    <div id="perfil-enquete-conteudo">
+      <p style="color:var(--text3);font-style:italic;font-size:.85rem">Carregando...</p>
+    </div>
+  </div>
+  <!-- LGPD: Exclusão de conta e links -->
+  <div class="section" style="border-color:rgba(138,32,24,.2)">
+    <div class="section-title" style="color:rgba(200,100,80,.8)">Privacidade e Dados</div>
+    <p style="font-size:.82rem;color:var(--text3);margin-bottom:.9rem;line-height:1.6">
+      Em conformidade com a <strong style="color:var(--text2)">LGPD (Lei 13.709/2018)</strong>, você pode excluir sua conta e todos os seus dados a qualquer momento.
+    </p>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem">
+      <a href="./privacidade.html" target="_blank" style="background:none;border:1px solid var(--border-g);border-radius:4px;color:var(--gold2);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:5px 12px;text-decoration:none">🔒 Política de Privacidade</a>
+      <a href="mailto:adm.financ.espacoautonomia@gmail.com?subject=LGPD%20-%20Solicita%C3%A7%C3%A3o" style="background:none;border:1px solid var(--border);border-radius:4px;color:var(--text2);font-size:.6rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:5px 12px;text-decoration:none">✉ Contato DPO</a>
+    </div>
+    <button onclick="confirmarExcluirConta()" style="background:transparent;border:1px solid rgba(138,32,24,.4);border-radius:4px;color:rgba(200,100,80,.9);font-size:.62rem;font-family:Cinzel;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;padding:7px 14px;width:100%;transition:all .2s">
+      🗑 Excluir minha conta e todos os meus dados
+    </button>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- MODAL MEDITAÇÃO / SELF DESIGN -->
+<div class="modal-video" id="modal-video" onclick="if(event.target===this)fecharModalVideo()">
+  <div class="modal-video-box">
+    <div class="modal-video-header">
+      <span class="modal-video-titulo" id="modal-video-titulo">🎧 Meditação do Selo</span>
+      <button class="modal-video-close" onclick="fecharModalVideo()">✕ Fechar</button>
+    </div>
+    <iframe id="modal-video-iframe" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+  </div>
+</div>
+
+<div class="modal-selo" id="modal-selo">
+  <div class="modal-selo-box">
+    <button class="modal-selo-close" onclick="fecharModalSelo()">✕ Fechar</button>
+    <div class="modal-selo-header">
+      <div class="modal-selo-icon" id="modal-selo-icon"></div>
+      <div>
+        <div class="modal-selo-titulo" id="modal-selo-titulo"></div>
+        <div class="modal-selo-acao" id="modal-selo-acao"></div>
+        <div class="modal-selo-maya" id="modal-selo-maya"></div>
+      </div>
+    </div>
+    <div class="modal-selo-desc" id="modal-selo-desc"></div>
+  </div>
+</div>
+
+<style>
+/* ── Cronógrafo ── */
+#cronografo-section textarea:focus{border-color:var(--green)!important;outline:none}
+#cronografo-section textarea{transition:border-color .2s}
+.ranking-row{display:flex;align-items:center;gap:.65rem;padding:.6rem .7rem;border-radius:7px;border:1px solid var(--border);background:var(--bg2);margin-bottom:5px;cursor:pointer;transition:border-color .2s,background .15s}
+.ranking-row:hover{border-color:var(--border2);background:var(--card)}
+.ranking-row-me{border-color:var(--gold)!important;background:rgba(165,124,0,.06)!important}
+.ranking-row-me:hover{background:rgba(165,124,0,.1)!important}
+.ranking-pos{font-family:'Cinzel',serif;font-size:.9rem;min-width:28px;text-align:center;color:var(--gold2)}
+.ranking-avatar{width:34px;height:34px;border-radius:50%;border:1px solid var(--green3);flex-shrink:0}
+.ranking-info{flex:1;min-width:0}
+.ranking-nome{font-family:'Cinzel',serif;font-size:.75rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ranking-right{text-align:right;flex-shrink:0}
+.ranking-pts{font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold2);font-weight:600}
+.ranking-titulo{font-size:.58rem;color:var(--text3)}
+/* Modal comparação */
+.modal-comparacao{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-comparacao.active{display:flex}
+.modal-comparacao-box{background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:1.1rem;max-width:380px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-comparacao-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;border-bottom:1px solid var(--border);padding-bottom:.6rem}
+.modal-comparacao-header span{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold2);text-transform:uppercase;letter-spacing:.08em}
+</style>
+
+<!-- Modal de comparação -->
+<div class="modal-comparacao" id="modal-comparacao" onclick="if(event.target===this)fecharComparacao()">
+  <div class="modal-comparacao-box">
+    <div class="modal-comparacao-header">
+      <span>Comparação</span>
+      <button onclick="fecharComparacao()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:.75rem;font-family:Cinzel">✕ Fechar</button>
+    </div>
+    <div id="comparacao-content"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script type="module" src="./js/app.js"></script>
+<script>
+// Delega para a versão do módulo quando disponível (limpa também o modal-kin-content)
+function fecharModalVideo(){
+  if(window._fecharModalVideo){ window._fecharModalVideo(); return; }
+  document.getElementById('modal-video').classList.remove('active');
+  const iframe=document.getElementById('modal-video-iframe');
+  if(iframe){iframe.src='';iframe.style.display='';}
+  const kc=document.getElementById('modal-kin-content');
+  if(kc){kc.style.display='none';kc.innerHTML='';}
+  document.body.style.overflow='';
+}
+// Habilita botão login ao aceitar LGPD
+document.addEventListener('DOMContentLoaded', () => {
+  const cb = document.getElementById('lgpd-consent');
+  const btn = document.getElementById('btn-login');
+  if (cb && btn) {
+    cb.addEventListener('change', () => {
+      btn.disabled = !cb.checked;
+      btn.style.opacity = cb.checked ? '1' : '.5';
+      btn.style.cursor  = cb.checked ? 'pointer' : 'not-allowed';
+    });
+  }
 });
-
-// ─── switchTab estendido para carregar ranking e gamificação ──────────────────
-const _switchTabOrig = switchTab;
-window.switchTab = function(t, el) {
-  _switchTabOrig(t, el);
-  if (t === 'ranking') renderRanking(window._currentUID);
-  if (t === 'perfil')  { renderGamificacaoPerfil(window._currentUID); renderEnquetePerfil(window._currentUID); }
-};
-
-// ─── Inicialização ────────────────────────────────────────────────────────────
-initLogin();
-
-initAuthObserver(async (user) => {
-  window._currentUID = user.uid;
-  await DATA_PRONTO;
-
-  // Registra acesso do dia e ganha pontos
-  registrarAtividade(
-    user.uid, 'ACESSAR_DIA',
-    user.displayName||'', user.photoURL||'',
-    Api._kinNatalSalvo
-  );
-
-  // Atualiza snapshot público com nome/foto/kinNatal
-  loadToday();
-  carregarPerfil(user);
-  carregarAviso();
-  verificarEnquete(user.uid);
-  atualizarBotaoNotif();
-  if (!localStorage.getItem('sinc13_onboard')) mostrarOnboarding();
-});  
+// Confirmação de exclusão de conta (delegada ao módulo JS após carregamento)
+function confirmarExcluirConta() {
+  if (window._confirmarExcluirConta) { window._confirmarExcluirConta(); return; }
+  if (confirm('Tem certeza? Esta ação excluirá permanentemente sua conta e todos os seus dados. Esta operação não pode ser desfeita.')) {
+    alert('Função não disponível ainda. Por favor, envie um e-mail para adm.financ.espacoautonomia@gmail.com com o assunto "LGPD - Excluir conta".');
+  }
+}
+// Força desinstalação de todos os SWs antigos e limpa todo cache
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    // Desregistra todos os SWs existentes
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map(r => r.unregister()));
+    // Apaga todos os caches
+    const cacheNames = await caches.keys();
+    await Promise.all(cacheNames.map(n => caches.delete(n)));
+    // Registra o novo SW
+    navigator.serviceWorker.register('./service-worker.js?' + Date.now())
+      .then(r => console.log('✓ SW registrado:', r.scope))
+      .catch(e => console.warn('SW erro:', e));
+  });
+}
+</script>
+<audio id="audio-prece" src="./assets/icons/prece.mpeg" preload="auto"></audio>
+</body>
+</html>    
