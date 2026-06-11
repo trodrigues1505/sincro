@@ -194,4 +194,4 @@ initAuthObserver(async (user) => {
   verificarEnquete(user.uid);
   atualizarBotaoNotif();
   if (!localStorage.getItem('sinc13_onboard')) mostrarOnboarding();
-});    
+});
