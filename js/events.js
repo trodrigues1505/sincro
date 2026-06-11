@@ -268,22 +268,19 @@ export function fecharModalVideo() {
 }
 
 const EBOOK_FILE_ID = '1PU_VNQH61uUjHl-OESKhHH4TKrDS3JgS';
-const EBOOK_URL     = 'https://drive.google.com/file/d/' + EBOOK_FILE_ID + '/view?usp=sharing';
 const EBOOK_EMBED   = 'https://drive.google.com/file/d/' + EBOOK_FILE_ID + '/preview';
+const EBOOK_URL     = 'https://drive.google.com/file/d/' + EBOOK_FILE_ID + '/view?usp=sharing';
 
 export function abrirEbook(pagina) {
   const modal  = document.getElementById('modal-video');
   const iframe = document.getElementById('modal-video-iframe');
   const titulo = document.getElementById('modal-video-titulo');
   if (!modal || !iframe) { window.open(EBOOK_URL, '_blank'); return; }
-
-  const kinContainer = document.getElementById('modal-kin-content');
-  if (kinContainer) { kinContainer.style.display = 'none'; kinContainer.innerHTML = ''; }
-
+  const kc = document.getElementById('modal-kin-content');
+  if (kc) { kc.style.display = 'none'; kc.innerHTML = ''; }
   iframe.style.display = '';
   iframe.style.height  = '75vh';
   iframe.src = EBOOK_EMBED;
-
   if (titulo) titulo.textContent = '📖 E-book · Sincronário das 13 Luas';
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -340,45 +337,38 @@ export function togglePrece(btn) {
   const iframe = document.getElementById('modal-video-iframe');
   const titulo = document.getElementById('modal-video-titulo');
   if (!modal) return;
-
   iframe.style.display = 'none';
   iframe.src = '';
-
-  let kinContainer = document.getElementById('modal-kin-content');
-  if (!kinContainer) {
-    kinContainer = document.createElement('div');
-    kinContainer.id = 'modal-kin-content';
-    kinContainer.style.cssText = 'overflow-y:auto;max-height:70vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
-    iframe.parentNode.insertBefore(kinContainer, iframe);
+  let kc = document.getElementById('modal-kin-content');
+  if (!kc) {
+    kc = document.createElement('div');
+    kc.id = 'modal-kin-content';
+    kc.style.cssText = 'overflow-y:auto;max-height:70vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
+    iframe.parentNode.insertBefore(kc, iframe);
   }
-  kinContainer.style.display = 'block';
-
-  const AUDIO_LOCAL   = './assets/prece.mp3';
-  const DRIVE_FILE_ID = '1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR';
-  const DRIVE_EMBED   = 'https://drive.google.com/file/d/' + DRIVE_FILE_ID + '/preview';
-  const audioId    = 'prece-modal-audio';
-  const fallbackId = 'prece-modal-fallback';
-
-  kinContainer.innerHTML = [
-    '<div style="background:rgba(165,124,0,.07);border:1px solid var(--border-g);border-radius:8px;padding:.7rem 1rem;margin-bottom:1.1rem">',
-      '<div style="display:flex;align-items:center;gap:.8rem">',
-        '<span style="font-size:1.4rem">🙏</span>',
-        '<div style="flex:1">',
-          '<div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2);margin-bottom:.4rem">Prece das 7 Direções Galácticas</div>',
-          '<audio id="' + audioId + '" controls preload="auto" style="width:100%;height:36px;accent-color:var(--gold2)">',
-            '<source src="' + AUDIO_LOCAL + '" type="audio/mpeg">',
-          '</audio>',
-        '</div>',
-      '</div>',
-      '<div id="' + fallbackId + '" style="display:none;margin-top:.7rem;flex-direction:column;gap:.5rem">',
-        '<div style="font-size:.65rem;color:var(--text3);font-style:italic">Áudio indisponível — ouça pelo Drive:</div>',
-        '<iframe src="' + DRIVE_EMBED + '" style="width:100%;height:80px;border:none;border-radius:6px" allow="autoplay"></iframe>',
-      '</div>',
-    '</div>',
-    TEXTO_PRECE,
-  ].join('');
-
-  // Apos 3s: se audio nao carregou, exibe iframe do Drive dentro do modal
+  kc.style.display = 'block';
+  const AUDIO_SRC   = './assets/prece.mp3';
+  const DRIVE_ID    = '1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR';
+  const DRIVE_EMBED = 'https://drive.google.com/file/d/' + DRIVE_ID + '/preview';
+  const audioId     = 'prece-modal-audio';
+  const fallbackId  = 'prece-modal-fallback';
+  kc.innerHTML = `
+    <div style="background:rgba(165,124,0,.07);border:1px solid var(--border-g);border-radius:8px;padding:.7rem 1rem;margin-bottom:1.1rem">
+      <div style="display:flex;align-items:center;gap:.8rem">
+        <span style="font-size:1.4rem">🙏</span>
+        <div style="flex:1">
+          <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2);margin-bottom:.4rem">Prece das 7 Direções Galácticas</div>
+          <audio id="${audioId}" controls preload="auto" style="width:100%;height:36px;accent-color:var(--gold2)">
+            <source src="${AUDIO_SRC}" type="audio/mpeg">
+          </audio>
+        </div>
+      </div>
+      <div id="${fallbackId}" style="display:none;margin-top:.7rem;flex-direction:column;gap:.5rem">
+        <div style="font-size:.65rem;color:var(--text3);font-style:italic">Áudio indisponível — ouça pelo Drive:</div>
+        <iframe src="${DRIVE_EMBED}" style="width:100%;height:80px;border:none;border-radius:6px" allow="autoplay"></iframe>
+      </div>
+    </div>
+    ${TEXTO_PRECE}`;
   setTimeout(() => {
     const audio    = document.getElementById(audioId);
     const fallback = document.getElementById(fallbackId);
@@ -390,7 +380,6 @@ export function togglePrece(btn) {
       audio.play().catch(() => {});
     }
   }, 3000);
-
   if (titulo) titulo.textContent = '🙏 Prece das 7 Direções Galácticas';
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -466,40 +455,28 @@ export function fecharOnboarding() {
 }
 
 // ─── Aviso banner ─────────────────────────────────────────────────────────────
-// ─── Enquete bloqueante ───────────────────────────────────────────────────────
+// ─── Enquete ───────────────────────────────────────────────────────────────────
 export async function verificarEnquete(uid) {
   try {
     const snap = await Api.db.collection('config').doc('enquete_ativa').get();
     if (!snap.exists || !snap.data().ativa) return;
     const d = snap.data();
-
-    // Verifica se esse usuario ja votou
-    const enqueteSnap = await Api.db.collection('enquetes').doc(d.enqueteId).get();
-    if (!enqueteSnap.exists) return;
-    const votos = enqueteSnap.data().votos || {};
-    if (votos[uid] !== undefined) return; // ja votou
-
-    // Renderiza modal bloqueante
+    const eSnap = await Api.db.collection('enquetes').doc(d.enqueteId).get();
+    if (!eSnap.exists) return;
+    if ((eSnap.data().votos || {})[uid] !== undefined) return;
     _mostrarModalEnquete(uid, d);
-  } catch(e) {
-    console.warn('[Enquete] erro ao verificar:', e);
-  }
+  } catch(e) { console.warn('[Enquete]', e); }
 }
 
 function _mostrarModalEnquete(uid, d) {
-  // Remove modal anterior se existir
   document.getElementById('modal-enquete')?.remove();
-
   const multipla = !!d.multipla;
-  const opcoesHTML = d.opcoes.map((o, i) => {
-    const tipo = multipla ? 'checkbox' : 'radio';
-    return `<label style="display:flex;align-items:center;gap:.7rem;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:.6rem .9rem;cursor:pointer;transition:border-color .2s;font-size:.88rem;color:var(--text)"
-      onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
-      <input type="${tipo}" name="enq-opt" value="${o.replace(/"/g,'&quot;')}" style="accent-color:var(--green2);width:16px;height:16px;flex-shrink:0">
+  const opcoesHTML = d.opcoes.map(o =>
+    `<label style="display:flex;align-items:center;gap:.7rem;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:.6rem .9rem;cursor:pointer;font-size:.88rem;color:var(--text)">
+      <input type="${multipla ? 'checkbox' : 'radio'}" name="enq-opt" value="${o.replace(/"/g,'&quot;')}" style="accent-color:var(--green2);width:16px;height:16px;flex-shrink:0">
       ${o}
-    </label>`;
-  }).join('');
-
+    </label>`
+  ).join('');
   const el = document.createElement('div');
   el.id = 'modal-enquete';
   el.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
@@ -507,92 +484,80 @@ function _mostrarModalEnquete(uid, d) {
     <div style="background:var(--card);border:1px solid var(--border2);border-radius:12px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;animation:fadeUp .25s both;padding:1.5rem">
       <div style="text-align:center;margin-bottom:1.2rem">
         <div style="font-size:1.8rem;margin-bottom:.4rem">📊</div>
-        <div style="font-family:Cinzel,serif;font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem">Enquete · Sincronario das 13 Luas</div>
+        <div style="font-family:Cinzel,serif;font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem">Enquete · Sincronário das 13 Luas</div>
         <div style="font-family:Cinzel,serif;font-size:.95rem;color:var(--gold2);line-height:1.5">${d.pergunta}</div>
-        <div style="font-size:.68rem;color:var(--text3);margin-top:.3rem">${multipla ? 'Selecione uma ou mais opcoes' : 'Selecione uma opcao'}</div>
+        <div style="font-size:.68rem;color:var(--text3);margin-top:.3rem">${multipla ? 'Selecione uma ou mais opções' : 'Selecione uma opção'}</div>
       </div>
       <div id="enq-opcoes-aluno" style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem">
         ${opcoesHTML}
       </div>
       <div style="display:flex;gap:.6rem;justify-content:flex-end;flex-wrap:wrap">
-        <button onclick="_cancelarEnquete()" style="background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text3);padding:7px 14px;font-family:Cinzel,serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Agora nao</button>
-        <button onclick="_enviarVotoEnquete('${uid}','${d.enqueteId}',${multipla})" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Votar</button>
+        <button onclick="_cancelarEnquete()" style="background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text3);padding:7px 14px;font-family:Cinzel,serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Agora não</button>
+        <button onclick="_enviarVotoEnquete()" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Votar</button>
       </div>
       <div id="enq-msg-aluno" style="margin-top:.6rem;font-size:.75rem;text-align:center;min-height:1em"></div>
     </div>`;
+  el.dataset.uid = uid;
+  el.dataset.enqueteId = d.enqueteId;
+  el.dataset.multipla  = multipla ? '1' : '';
   document.body.appendChild(el);
 }
 
-window.verificarEnqueteBtn = function(uid) { verificarEnquete(uid); };
 window._cancelarEnquete = function() {
   document.getElementById('modal-enquete')?.remove();
 };
 
-window._enviarVotoEnquete = async function(uid, enqueteId, multipla) {
-  const inputs = document.querySelectorAll('#enq-opcoes-aluno input[name="enq-opt"]');
-  const selecionadas = [...inputs].filter(i => i.checked).map(i => i.value);
+window._enviarVotoEnquete = async function() {
+  const modal = document.getElementById('modal-enquete');
+  if (!modal) return;
+  const uid       = modal.dataset.uid;
+  const enqueteId = modal.dataset.enqueteId;
+  const multipla  = !!modal.dataset.multipla;
+  const selecionadas = [...modal.querySelectorAll('#enq-opcoes-aluno input[name="enq-opt"]')].filter(i => i.checked).map(i => i.value);
   const msgEl = document.getElementById('enq-msg-aluno');
-
-  if (!selecionadas.length) {
-    if (msgEl) msgEl.textContent = 'Selecione pelo menos uma opcao.';
-    return;
-  }
+  if (!selecionadas.length) { if (msgEl) msgEl.textContent = 'Selecione pelo menos uma opção.'; return; }
   const voto = multipla ? selecionadas : selecionadas[0];
-
   try {
-    await Api.db.collection('enquetes').doc(enqueteId).update({
-      [`votos.${uid}`]: voto
-    });
-    // Apos votar, busca resultados atualizados e exibe no proprio modal
+    await Api.db.collection('enquetes').doc(enqueteId).update({ [`votos.${uid}`]: voto });
     const snap = await Api.db.collection('enquetes').doc(enqueteId).get();
-    const dados = snap.data();
-    _mostrarResultadoEnquete(dados, voto);
-    // Atualiza secao do perfil se estiver visivel
+    _mostrarResultadoEnquete(modal, snap.data(), voto);
     renderEnquetePerfil(uid);
   } catch(e) {
-    if (msgEl) { msgEl.style.color = '#e07050'; msgEl.textContent = 'Erro ao registrar: ' + e.message; }
+    if (msgEl) { msgEl.style.color = '#e07050'; msgEl.textContent = 'Erro: ' + e.message; }
   }
 };
 
-function _mostrarResultadoEnquete(dados, meuVoto) {
-  const modal = document.getElementById('modal-enquete');
-  if (!modal) return;
+function _mostrarResultadoEnquete(modal, dados, meuVoto) {
   const votos = dados.votos || {};
-  const totalVotos = Object.keys(votos).length;
+  const total = Object.keys(votos).length;
   const contagem = {};
   (dados.opcoes || []).forEach(o => contagem[o] = 0);
-  Object.values(votos).forEach(v => {
-    const sel = Array.isArray(v) ? v : [v];
-    sel.forEach(s => { if (contagem[s] !== undefined) contagem[s]++; });
-  });
-  const minhasRespostas = Array.isArray(meuVoto) ? meuVoto : [meuVoto];
-
+  Object.values(votos).forEach(v => { (Array.isArray(v) ? v : [v]).forEach(s => { if (s in contagem) contagem[s]++; }); });
+  const minhas = Array.isArray(meuVoto) ? meuVoto : [meuVoto];
   const barras = (dados.opcoes || []).map(o => {
     const cnt = contagem[o] || 0;
-    const pct = totalVotos ? Math.round(cnt / totalVotos * 100) : 0;
-    const destaque = minhasRespostas.includes(o);
-    return '<div style="margin-bottom:.55rem">'
-      + '<div style="display:flex;justify-content:space-between;font-size:.78rem;color:' + (destaque ? 'var(--gold2)' : 'var(--text2)') + ';margin-bottom:.2rem">'
-      + '<span>' + (destaque ? '✓ ' : '') + o + '</span>'
-      + '<span>' + cnt + ' (' + pct + '%)</span>'
-      + '</div>'
-      + '<div style="background:var(--bg2);border-radius:4px;height:8px;overflow:hidden;border:1px solid var(--border)">'
-      + '<div style="height:8px;border-radius:4px;background:' + (destaque ? 'var(--gold2)' : 'var(--green)') + ';width:' + pct + '%;transition:width .5s"></div>'
-      + '</div>'
-      + '</div>';
+    const pct = total ? Math.round(cnt / total * 100) : 0;
+    const dest = minhas.includes(o);
+    return `<div style="margin-bottom:.55rem">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:${dest ? 'var(--gold2)' : 'var(--text2)'};margin-bottom:.2rem">
+        <span>${dest ? '✓ ' : ''}${o}</span><span>${cnt} (${pct}%)</span>
+      </div>
+      <div style="background:var(--bg2);border-radius:4px;height:8px;overflow:hidden;border:1px solid var(--border)">
+        <div style="height:8px;border-radius:4px;background:${dest ? 'var(--gold2)' : 'var(--green)'};width:${pct}%;transition:width .5s"></div>
+      </div>
+    </div>`;
   }).join('');
-
-  modal.querySelector('div').innerHTML =
-    '<div style="text-align:center;margin-bottom:1rem">'
-    + '<div style="font-size:1.8rem;margin-bottom:.3rem">✅</div>'
-    + '<div style="font-family:Cinzel,serif;font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">Voto registrado!</div>'
-    + '<div style="font-family:Cinzel,serif;font-size:.88rem;color:var(--gold2);line-height:1.5">' + dados.pergunta + '</div>'
-    + '<div style="font-size:.65rem;color:var(--text3);margin-top:.3rem">' + totalVotos + ' voto(s) no total</div>'
-    + '</div>'
-    + barras
-    + '<div style="text-align:right;margin-top:.8rem">'
-    + '<button onclick="document.getElementById(\'modal-enquete\').remove()" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 18px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Fechar</button>'
-    + '</div>';
+  modal.querySelector('div').innerHTML = `
+    <div style="text-align:center;margin-bottom:1rem">
+      <div style="font-size:1.8rem;margin-bottom:.3rem">✅</div>
+      <div style="font-family:Cinzel,serif;font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">Voto registrado!</div>
+      <div style="font-family:Cinzel,serif;font-size:.88rem;color:var(--gold2);line-height:1.5">${dados.pergunta}</div>
+      <div style="font-size:.65rem;color:var(--text3);margin-top:.3rem">${total} voto(s) no total</div>
+    </div>
+    ${barras}
+    <div style="text-align:right;margin-top:.8rem">
+      <button onclick="document.getElementById('modal-enquete').remove()" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 18px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Fechar</button>
+    </div>`;
 }
 
 export async function renderEnquetePerfil(uid) {
@@ -605,47 +570,37 @@ export async function renderEnquetePerfil(uid) {
       return;
     }
     const d = snap.data();
-    const enqueteSnap = await Api.db.collection('enquetes').doc(d.enqueteId).get();
-    if (!enqueteSnap.exists) { el.innerHTML = '<p style="color:var(--text3);font-size:.85rem">–</p>'; return; }
-    const dados = enqueteSnap.data();
-    const votos = dados.votos || {};
+    const eSnap = await Api.db.collection('enquetes').doc(d.enqueteId).get();
+    if (!eSnap.exists) { el.innerHTML = '<p style="color:var(--text3);font-size:.85rem">–</p>'; return; }
+    const dados  = eSnap.data();
+    const votos  = dados.votos || {};
     const meuVoto = votos[uid];
-    const totalVotos = Object.keys(votos).length;
-
+    const total  = Object.keys(votos).length;
     if (meuVoto === undefined) {
-      // Ainda nao votou — mostra botao para votar
-      el.innerHTML = '<p style="font-size:.85rem;color:var(--text2);margin-bottom:.7rem">' + d.pergunta + '</p>'
-        + '<button onclick="verificarEnqueteBtn(\'' + uid + '\'')" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Responder enquete</button>';
+      el.innerHTML = `<p style="font-size:.85rem;color:var(--text2);margin-bottom:.7rem">${d.pergunta}</p>
+        <button onclick="verificarEnquete('${uid}')" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Responder enquete</button>`;
       return;
     }
-
-    // Ja votou — mostra resultado
     const contagem = {};
     (dados.opcoes || []).forEach(o => contagem[o] = 0);
-    Object.values(votos).forEach(v => {
-      const sel = Array.isArray(v) ? v : [v];
-      sel.forEach(s => { if (contagem[s] !== undefined) contagem[s]++; });
-    });
-    const minhasRespostas = Array.isArray(meuVoto) ? meuVoto : [meuVoto];
-
+    Object.values(votos).forEach(v => { (Array.isArray(v) ? v : [v]).forEach(s => { if (s in contagem) contagem[s]++; }); });
+    const minhas = Array.isArray(meuVoto) ? meuVoto : [meuVoto];
     const barras = (dados.opcoes || []).map(o => {
       const cnt = contagem[o] || 0;
-      const pct = totalVotos ? Math.round(cnt / totalVotos * 100) : 0;
-      const destaque = minhasRespostas.includes(o);
-      return '<div style="margin-bottom:.5rem">'
-        + '<div style="display:flex;justify-content:space-between;font-size:.76rem;color:' + (destaque ? 'var(--gold2)' : 'var(--text2)') + ';margin-bottom:.2rem">'
-        + '<span>' + (destaque ? '✓ ' : '') + o + '</span>'
-        + '<span>' + cnt + ' (' + pct + '%)</span>'
-        + '</div>'
-        + '<div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;border:1px solid var(--border)">'
-        + '<div style="height:7px;border-radius:4px;background:' + (destaque ? 'var(--gold2)' : 'var(--green)') + ';width:' + pct + '%;transition:width .5s"></div>'
-        + '</div>'
-        + '</div>';
+      const pct = total ? Math.round(cnt / total * 100) : 0;
+      const dest = minhas.includes(o);
+      return `<div style="margin-bottom:.5rem">
+        <div style="display:flex;justify-content:space-between;font-size:.76rem;color:${dest ? 'var(--gold2)' : 'var(--text2)'};margin-bottom:.2rem">
+          <span>${dest ? '✓ ' : ''}${o}</span><span>${cnt} (${pct}%)</span>
+        </div>
+        <div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;border:1px solid var(--border)">
+          <div style="height:7px;border-radius:4px;background:${dest ? 'var(--gold2)' : 'var(--green)'};width:${pct}%;transition:width .5s"></div>
+        </div>
+      </div>`;
     }).join('');
-
-    el.innerHTML = '<div style="font-family:Cinzel,serif;font-size:.78rem;color:var(--gold2);margin-bottom:.7rem">' + d.pergunta + '</div>'
-      + barras
-      + '<div style="font-size:.62rem;color:var(--text3);margin-top:.4rem">' + totalVotos + ' voto(s) registrado(s)</div>';
+    el.innerHTML = `<div style="font-family:Cinzel,serif;font-size:.78rem;color:var(--gold2);margin-bottom:.7rem">${d.pergunta}</div>
+      ${barras}
+      <div style="font-size:.62rem;color:var(--text3);margin-top:.4rem">${total} voto(s) registrado(s)</div>`;
   } catch(e) {
     el.innerHTML = '<p style="color:#e07050;font-size:.82rem">Erro: ' + e.message + '</p>';
   }
