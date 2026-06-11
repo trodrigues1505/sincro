@@ -12,8 +12,6 @@ import {
   exportarCalendario28, exportarPDFKin,
   abrirModalPlasma, abrirModalFaseLunar, abrirModalCastelo, mostrarKinDiaLua,
   verificarEnquete, renderEnquetePerfil,
-  verificarEnquete,
-  renderEnquetePerfil,
 } from './events.js';
 import {
   toggleFavorito, limparHistorico, limparFavoritos,
