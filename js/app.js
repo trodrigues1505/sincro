@@ -11,6 +11,7 @@ import {
   carregarAviso, fecharAviso,
   exportarCalendario28, exportarPDFKin,
   abrirModalPlasma, abrirModalFaseLunar, abrirModalCastelo, mostrarKinDiaLua,
+  verificarEnquete,
 } from './events.js';
 import {
   toggleFavorito, limparHistorico, limparFavoritos,
@@ -188,6 +189,7 @@ initAuthObserver(async (user) => {
   loadToday();
   carregarPerfil(user);
   carregarAviso();
+  verificarEnquete(user.uid);
   atualizarBotaoNotif();
   if (!localStorage.getItem('sinc13_onboard')) mostrarOnboarding();
 });
