@@ -523,6 +523,7 @@ function _mostrarModalEnquete(uid, d) {
   document.body.appendChild(el);
 }
 
+window.verificarEnqueteBtn = function(uid) { verificarEnquete(uid); };
 window._cancelarEnquete = function() {
   document.getElementById('modal-enquete')?.remove();
 };
@@ -542,12 +543,113 @@ window._enviarVotoEnquete = async function(uid, enqueteId, multipla) {
     await Api.db.collection('enquetes').doc(enqueteId).update({
       [`votos.${uid}`]: voto
     });
-    if (msgEl) { msgEl.style.color = 'var(--green2)'; msgEl.textContent = '✓ Voto registrado! Obrigado.'; }
-    setTimeout(() => document.getElementById('modal-enquete')?.remove(), 1200);
+    // Apos votar, busca resultados atualizados e exibe no proprio modal
+    const snap = await Api.db.collection('enquetes').doc(enqueteId).get();
+    const dados = snap.data();
+    _mostrarResultadoEnquete(dados, voto);
+    // Atualiza secao do perfil se estiver visivel
+    renderEnquetePerfil(uid);
   } catch(e) {
     if (msgEl) { msgEl.style.color = '#e07050'; msgEl.textContent = 'Erro ao registrar: ' + e.message; }
   }
 };
+
+function _mostrarResultadoEnquete(dados, meuVoto) {
+  const modal = document.getElementById('modal-enquete');
+  if (!modal) return;
+  const votos = dados.votos || {};
+  const totalVotos = Object.keys(votos).length;
+  const contagem = {};
+  (dados.opcoes || []).forEach(o => contagem[o] = 0);
+  Object.values(votos).forEach(v => {
+    const sel = Array.isArray(v) ? v : [v];
+    sel.forEach(s => { if (contagem[s] !== undefined) contagem[s]++; });
+  });
+  const minhasRespostas = Array.isArray(meuVoto) ? meuVoto : [meuVoto];
+
+  const barras = (dados.opcoes || []).map(o => {
+    const cnt = contagem[o] || 0;
+    const pct = totalVotos ? Math.round(cnt / totalVotos * 100) : 0;
+    const destaque = minhasRespostas.includes(o);
+    return '<div style="margin-bottom:.55rem">'
+      + '<div style="display:flex;justify-content:space-between;font-size:.78rem;color:' + (destaque ? 'var(--gold2)' : 'var(--text2)') + ';margin-bottom:.2rem">'
+      + '<span>' + (destaque ? '✓ ' : '') + o + '</span>'
+      + '<span>' + cnt + ' (' + pct + '%)</span>'
+      + '</div>'
+      + '<div style="background:var(--bg2);border-radius:4px;height:8px;overflow:hidden;border:1px solid var(--border)">'
+      + '<div style="height:8px;border-radius:4px;background:' + (destaque ? 'var(--gold2)' : 'var(--green)') + ';width:' + pct + '%;transition:width .5s"></div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  modal.querySelector('div').innerHTML =
+    '<div style="text-align:center;margin-bottom:1rem">'
+    + '<div style="font-size:1.8rem;margin-bottom:.3rem">✅</div>'
+    + '<div style="font-family:Cinzel,serif;font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">Voto registrado!</div>'
+    + '<div style="font-family:Cinzel,serif;font-size:.88rem;color:var(--gold2);line-height:1.5">' + dados.pergunta + '</div>'
+    + '<div style="font-size:.65rem;color:var(--text3);margin-top:.3rem">' + totalVotos + ' voto(s) no total</div>'
+    + '</div>'
+    + barras
+    + '<div style="text-align:right;margin-top:.8rem">'
+    + '<button onclick="document.getElementById('modal-enquete').remove()" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 18px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Fechar</button>'
+    + '</div>';
+}
+
+export async function renderEnquetePerfil(uid) {
+  const el = document.getElementById('perfil-enquete-conteudo');
+  if (!el) return;
+  try {
+    const snap = await Api.db.collection('config').doc('enquete_ativa').get();
+    if (!snap.exists || !snap.data().ativa) {
+      el.innerHTML = '<p style="color:var(--text3);font-style:italic;font-size:.85rem">Nenhuma enquete ativa no momento.</p>';
+      return;
+    }
+    const d = snap.data();
+    const enqueteSnap = await Api.db.collection('enquetes').doc(d.enqueteId).get();
+    if (!enqueteSnap.exists) { el.innerHTML = '<p style="color:var(--text3);font-size:.85rem">–</p>'; return; }
+    const dados = enqueteSnap.data();
+    const votos = dados.votos || {};
+    const meuVoto = votos[uid];
+    const totalVotos = Object.keys(votos).length;
+
+    if (meuVoto === undefined) {
+      // Ainda nao votou — mostra botao para votar
+      el.innerHTML = '<p style="font-size:.85rem;color:var(--text2);margin-bottom:.7rem">' + d.pergunta + '</p>'
+        + '<button onclick="verificarEnquete('' + uid + '')" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Responder enquete</button>';
+      return;
+    }
+
+    // Ja votou — mostra resultado
+    const contagem = {};
+    (dados.opcoes || []).forEach(o => contagem[o] = 0);
+    Object.values(votos).forEach(v => {
+      const sel = Array.isArray(v) ? v : [v];
+      sel.forEach(s => { if (contagem[s] !== undefined) contagem[s]++; });
+    });
+    const minhasRespostas = Array.isArray(meuVoto) ? meuVoto : [meuVoto];
+
+    const barras = (dados.opcoes || []).map(o => {
+      const cnt = contagem[o] || 0;
+      const pct = totalVotos ? Math.round(cnt / totalVotos * 100) : 0;
+      const destaque = minhasRespostas.includes(o);
+      return '<div style="margin-bottom:.5rem">'
+        + '<div style="display:flex;justify-content:space-between;font-size:.76rem;color:' + (destaque ? 'var(--gold2)' : 'var(--text2)') + ';margin-bottom:.2rem">'
+        + '<span>' + (destaque ? '✓ ' : '') + o + '</span>'
+        + '<span>' + cnt + ' (' + pct + '%)</span>'
+        + '</div>'
+        + '<div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;border:1px solid var(--border)">'
+        + '<div style="height:7px;border-radius:4px;background:' + (destaque ? 'var(--gold2)' : 'var(--green)') + ';width:' + pct + '%;transition:width .5s"></div>'
+        + '</div>'
+        + '</div>';
+    }).join('');
+
+    el.innerHTML = '<div style="font-family:Cinzel,serif;font-size:.78rem;color:var(--gold2);margin-bottom:.7rem">' + d.pergunta + '</div>'
+      + barras
+      + '<div style="font-size:.62rem;color:var(--text3);margin-top:.4rem">' + totalVotos + ' voto(s) registrado(s)</div>';
+  } catch(e) {
+    el.innerHTML = '<p style="color:#e07050;font-size:.82rem">Erro: ' + e.message + '</p>';
+  }
+}
 
 export async function carregarAviso() {
   try {
