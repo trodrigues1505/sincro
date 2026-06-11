@@ -162,4 +162,4 @@ export function calcPoemaKin(kinNum, kData, poema_tom, poema_selo, selos_nomes) 
     linha4: `Com o tom ${pt.qualidade} d${daArticle === 'da' ? 'a' : 'o'} ${pt.acao.toLowerCase().replace('ando','ação').replace('endo','ção')},`,
     linha5: guiaLinha,
   };
-}   
+}
