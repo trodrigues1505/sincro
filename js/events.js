@@ -591,7 +591,7 @@ function _mostrarResultadoEnquete(dados, meuVoto) {
     + '</div>'
     + barras
     + '<div style="text-align:right;margin-top:.8rem">'
-    + '<button onclick="document.getElementById('modal-enquete').remove()" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 18px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Fechar</button>'
+    + '<button onclick="document.getElementById(\'modal-enquete\').remove()" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 18px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Fechar</button>'
     + '</div>';
 }
 
@@ -823,4 +823,4 @@ export async function mostrarKinDiaLua(anoGal, luaNum, diaLua) {
   const kd = DATA.kins[kinNum];
   const dataStr = dataAlvo.toLocaleDateString('pt-BR', { day:'2-digit', month:'long' });
   abrirKinModal(kinNum, kd.selo, true, `Lua ${luaNum} · Dia ${diaLua} · ${dataStr}`);
-}    
+}
