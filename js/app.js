@@ -11,7 +11,9 @@ import {
   carregarAviso, fecharAviso,
   exportarCalendario28, exportarPDFKin,
   abrirModalPlasma, abrirModalFaseLunar, abrirModalCastelo, mostrarKinDiaLua,
+  verificarEnquete, renderEnquetePerfil,
   verificarEnquete,
+  renderEnquetePerfil,
 } from './events.js';
 import {
   toggleFavorito, limparHistorico, limparFavoritos,
@@ -168,7 +170,7 @@ const _switchTabOrig = switchTab;
 window.switchTab = function(t, el) {
   _switchTabOrig(t, el);
   if (t === 'ranking') renderRanking(window._currentUID);
-  if (t === 'perfil')  renderGamificacaoPerfil(window._currentUID);
+  if (t === 'perfil')  { renderGamificacaoPerfil(window._currentUID); renderEnquetePerfil(window._currentUID); }
 };
 
 // ─── Inicialização ────────────────────────────────────────────────────────────
@@ -192,4 +194,4 @@ initAuthObserver(async (user) => {
   verificarEnquete(user.uid);
   atualizarBotaoNotif();
   if (!localStorage.getItem('sinc13_onboard')) mostrarOnboarding();
-});
+});    
