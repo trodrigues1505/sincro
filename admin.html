@@ -114,6 +114,18 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);text-align:cen
 .toggle input:checked + .toggle-slider{background:var(--green)}
 .toggle input:checked + .toggle-slider::before{transform:translateX(16px)}
 
+/* ── Enquete ── */
+.enquete-opcao-row{display:flex;gap:.4rem;align-items:center;margin-bottom:.4rem}
+.enquete-opcao-inp{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:.45rem .7rem;font-family:inherit;font-size:.88rem;transition:border-color .2s}
+.enquete-opcao-inp:focus{outline:none;border-color:var(--green)}
+.enquete-result-bar{height:8px;border-radius:4px;background:var(--green);transition:width .4s}
+.enquete-result-row{margin-bottom:.55rem}
+.enquete-result-label{display:flex;justify-content:space-between;font-size:.75rem;color:var(--text2);margin-bottom:.2rem}
+.enquete-result-track{background:var(--bg2);border-radius:4px;height:8px;overflow:hidden;border:1px solid var(--border)}
+.enquete-hist-item{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:.7rem .9rem;margin-bottom:.5rem}
+.enquete-hist-pergunta{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold2);margin-bottom:.4rem}
+.enquete-hist-meta{font-size:.58rem;color:var(--text3);margin-top:.3rem}
+
 /* ── Status msg ── */
 .status-msg{padding:.55rem .8rem;border-radius:6px;font-size:.82rem;margin-top:.3rem;display:none}
 .status-msg.ok{display:block;background:rgba(0,151,57,.1);border:1px solid rgba(0,151,57,.25);color:var(--green2)}
@@ -167,6 +179,7 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);text-align:cen
     <button class="tab" onclick="adminTab('pendentes',this)">⏳ Pendentes</button>
     <button class="tab" onclick="adminTab('notificacao',this)">📢 Notificação</button>
     <button class="tab" onclick="adminTab('aviso',this)">📌 Aviso</button>
+    <button class="tab" onclick="adminTab('enquete',this)">📊 Enquete</button>
   </div>
 
   <!-- ABA USUÁRIOS -->
@@ -266,6 +279,61 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);text-align:cen
     </div>
   </div>
 
+
+  <!-- ABA ENQUETE -->
+  <div id="tab-enquete" class="tab-content">
+    <!-- Criar nova enquete -->
+    <div class="section">
+      <div class="section-title"><span>Criar Nova Enquete</span><div class="section-title-line"></div></div>
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:.9rem;line-height:1.6">A enquete ficará ativa para todos os alunos. Ao abrir o app, serão obrigados a votar antes de continuar.</p>
+      <div style="display:flex;flex-direction:column;gap:.7rem">
+        <div>
+          <label style="font-size:.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em">Pergunta</label>
+          <input id="enq-pergunta" class="search-inp" style="width:100%;margin-top:.3rem" placeholder="Ex: O que mais te conecta com o Sincronário?">
+        </div>
+        <div>
+          <label style="font-size:.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em">Opções de resposta</label>
+          <div id="enq-opcoes" style="margin-top:.4rem">
+            <div class="enquete-opcao-row"><input class="enquete-opcao-inp" placeholder="Opção 1"><button class="btn btn-danger" onclick="removerOpcao(this)" style="font-size:.6rem;padding:3px 7px">✕</button></div>
+            <div class="enquete-opcao-row"><input class="enquete-opcao-inp" placeholder="Opção 2"><button class="btn btn-danger" onclick="removerOpcao(this)" style="font-size:.6rem;padding:3px 7px">✕</button></div>
+          </div>
+          <button class="btn btn-gold" onclick="adicionarOpcao()" style="margin-top:.4rem;font-size:.58rem;padding:3px 9px">+ Adicionar opção</button>
+        </div>
+        <div class="toggle-row">
+          <label class="toggle"><input type="checkbox" id="enq-multipla"><span class="toggle-slider"></span></label>
+          <span style="font-size:.82rem;color:var(--text2)">Permitir múltiplas respostas</span>
+        </div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button class="btn btn-green" onclick="publicarEnquete()">📊 Publicar enquete</button>
+          <button class="btn btn-danger" onclick="encerrarEnquete()">✕ Encerrar enquete ativa</button>
+        </div>
+        <div class="status-msg" id="enq-status"></div>
+      </div>
+    </div>
+    <!-- Enquete ativa atual -->
+    <div class="section">
+      <div class="section-title">
+        <span>Enquete Ativa</span>
+        <button class="btn btn-gold" onclick="carregarEnqueteAtiva()" style="font-size:.55rem;padding:3px 9px">↺ Atualizar</button>
+        <div class="section-title-line"></div>
+      </div>
+      <div id="enq-ativa-conteudo">
+        <p style="color:var(--text3);font-style:italic;font-size:.85rem">Carregando...</p>
+      </div>
+    </div>
+    <!-- Histórico de enquetes -->
+    <div class="section">
+      <div class="section-title">
+        <span>Histórico de Enquetes</span>
+        <button class="btn btn-gold" onclick="carregarHistoricoEnquetes()" style="font-size:.55rem;padding:3px 9px">↺ Atualizar</button>
+        <div class="section-title-line"></div>
+      </div>
+      <div id="enq-historico">
+        <p style="color:var(--text3);font-style:italic;font-size:.85rem">Carregando...</p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- Modal de confirmação -->
@@ -299,6 +367,7 @@ window.adminTab = (t, el) => {
   document.getElementById('tab-'+t).classList.add('active');
   if (t === 'pendentes') carregarPendentes();
   if (t === 'aviso') carregarAvisoAtual();
+  if (t === 'enquete') { carregarEnqueteAtiva(); carregarHistoricoEnquetes(); }
 };
 
 // ─── Carregar usuários ────────────────────────────────────────────────────────
@@ -548,6 +617,137 @@ document.getElementById('confirm-ok').onclick = async () => {
   fecharConfirm();
 };
 
+// ─── Enquetes ─────────────────────────────────────────────────────────────────
+window.adicionarOpcao = () => {
+  const container = document.getElementById('enq-opcoes');
+  const n = container.children.length + 1;
+  const row = document.createElement('div');
+  row.className = 'enquete-opcao-row';
+  row.innerHTML = `<input class="enquete-opcao-inp" placeholder="Opcao ${n}"><button class="btn btn-danger" onclick="removerOpcao(this)" style="font-size:.6rem;padding:3px 7px">x</button>`;
+  container.appendChild(row);
+};
+
+window.removerOpcao = (btn) => {
+  const rows = document.querySelectorAll('.enquete-opcao-row');
+  if (rows.length <= 2) { mostrarStatus('enq-status', 'Minimo de 2 opcoes.', false); return; }
+  btn.closest('.enquete-opcao-row').remove();
+};
+
+window.publicarEnquete = async () => {
+  const pergunta = document.getElementById('enq-pergunta').value.trim();
+  const multipla = document.getElementById('enq-multipla').checked;
+  const opcoes = [...document.querySelectorAll('.enquete-opcao-inp')]
+    .map(i => i.value.trim()).filter(Boolean);
+  if (!pergunta) { mostrarStatus('enq-status', 'Preencha a pergunta.', false); return; }
+  if (opcoes.length < 2) { mostrarStatus('enq-status', 'Adicione pelo menos 2 opcoes.', false); return; }
+  try {
+    // Encerra a enquete anterior se existir
+    const ativaSnap = await db.collection('config').doc('enquete_ativa').get();
+    if (ativaSnap.exists && ativaSnap.data().enqueteId) {
+      await db.collection('enquetes').doc(ativaSnap.data().enqueteId).update({ encerrada: true });
+    }
+    // Cria nova enquete no historico
+    const ref = await db.collection('enquetes').add({
+      pergunta, opcoes, multipla,
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+      encerrada: false,
+      votos: {},
+    });
+    // Marca como ativa
+    await db.collection('config').doc('enquete_ativa').set({
+      enqueteId: ref.id, pergunta, opcoes, multipla, ativa: true,
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    mostrarStatus('enq-status', '✓ Enquete publicada! Os alunos serao notificados.', true);
+    document.getElementById('enq-pergunta').value = '';
+    document.querySelectorAll('.enquete-opcao-inp').forEach((inp, i) => { inp.value = ''; inp.placeholder = 'Opcao ' + (i+1); });
+    carregarEnqueteAtiva();
+  } catch(e) { mostrarStatus('enq-status', 'Erro: '+e.message, false); }
+};
+
+window.encerrarEnquete = async () => {
+  try {
+    const snap = await db.collection('config').doc('enquete_ativa').get();
+    if (!snap.exists || !snap.data().ativa) { mostrarStatus('enq-status', 'Nenhuma enquete ativa.', false); return; }
+    const { enqueteId } = snap.data();
+    await db.collection('config').doc('enquete_ativa').set({ ativa: false });
+    if (enqueteId) await db.collection('enquetes').doc(enqueteId).update({ encerrada: true });
+    mostrarStatus('enq-status', '✓ Enquete encerrada.', true);
+    carregarEnqueteAtiva();
+  } catch(e) { mostrarStatus('enq-status', 'Erro: '+e.message, false); }
+};
+
+window.carregarEnqueteAtiva = async () => {
+  const el = document.getElementById('enq-ativa-conteudo');
+  try {
+    const snap = await db.collection('config').doc('enquete_ativa').get();
+    if (!snap.exists || !snap.data().ativa) {
+      el.innerHTML = '<p style="color:var(--text3);font-style:italic;font-size:.85rem">Nenhuma enquete ativa no momento.</p>';
+      return;
+    }
+    const d = snap.data();
+    // Busca votos
+    const enqueteSnap = await db.collection('enquetes').doc(d.enqueteId).get();
+    const votos = enqueteSnap.exists ? (enqueteSnap.data().votos || {}) : {};
+    const totalVotos = Object.keys(votos).length;
+    const contagem = {};
+    d.opcoes.forEach(o => contagem[o] = 0);
+    Object.values(votos).forEach(v => {
+      const selecionadas = Array.isArray(v) ? v : [v];
+      selecionadas.forEach(s => { if (contagem[s] !== undefined) contagem[s]++; });
+    });
+    el.innerHTML = `
+      <div style="font-family:Cinzel;font-size:.8rem;color:var(--gold2);margin-bottom:.7rem">${d.pergunta}</div>
+      <div style="font-size:.65rem;color:var(--text3);margin-bottom:.8rem">${totalVotos} voto(s) registrado(s) · ${d.multipla ? 'Multipla escolha' : 'Unica escolha'}</div>
+      ${d.opcoes.map(o => {
+        const cnt = contagem[o] || 0;
+        const pct = totalVotos ? Math.round(cnt / totalVotos * 100) : 0;
+        return `<div class="enquete-result-row">
+          <div class="enquete-result-label"><span>${o}</span><span>${cnt} (${pct}%)</span></div>
+          <div class="enquete-result-track"><div class="enquete-result-bar" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join('')}
+      <div style="font-size:.6rem;color:var(--text3);margin-top:.5rem">ID: ${d.enqueteId}</div>`;
+  } catch(e) {
+    el.innerHTML = `<p style="color:#e07050;font-size:.85rem">Erro: ${e.message}</p>`;
+  }
+};
+
+window.carregarHistoricoEnquetes = async () => {
+  const el = document.getElementById('enq-historico');
+  try {
+    const snap = await db.collection('enquetes').orderBy('criadoEm','desc').limit(20).get();
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--text3);font-style:italic;font-size:.85rem">Nenhuma enquete ainda.</p>'; return; }
+    el.innerHTML = snap.docs.map(doc => {
+      const d = doc.data();
+      const votos = d.votos || {};
+      const totalVotos = Object.keys(votos).length;
+      const contagem = {};
+      (d.opcoes||[]).forEach(o => contagem[o] = 0);
+      Object.values(votos).forEach(v => {
+        const selecionadas = Array.isArray(v) ? v : [v];
+        selecionadas.forEach(s => { if (contagem[s] !== undefined) contagem[s]++; });
+      });
+      const data = d.criadoEm?.toDate?.()?.toLocaleDateString('pt-BR') || '–';
+      const barras = (d.opcoes||[]).map(o => {
+        const cnt = contagem[o] || 0;
+        const pct = totalVotos ? Math.round(cnt / totalVotos * 100) : 0;
+        return `<div class="enquete-result-row">
+          <div class="enquete-result-label"><span>${o}</span><span>${cnt} (${pct}%)</span></div>
+          <div class="enquete-result-track"><div class="enquete-result-bar" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join('');
+      return `<div class="enquete-hist-item">
+        <div class="enquete-hist-pergunta">${d.pergunta}</div>
+        ${barras}
+        <div class="enquete-hist-meta">${data} · ${totalVotos} voto(s) · ${d.encerrada ? 'Encerrada' : 'Ativa'}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = `<p style="color:#e07050;font-size:.85rem">Erro: ${e.message}</p>`;
+  }
+};
+
 // ─── Init ─────────────────────────────────────────────────────────────────────
 document.getElementById('btn-logout').onclick = () =>
   auth.signOut().then(() => window.location.href = './index.html');
@@ -563,4 +763,4 @@ initAdminObserver((user) => {
 if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
 </script>
 </body>
-</html>
+</html>    
