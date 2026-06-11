@@ -466,6 +466,89 @@ export function fecharOnboarding() {
 }
 
 // ─── Aviso banner ─────────────────────────────────────────────────────────────
+// ─── Enquete bloqueante ───────────────────────────────────────────────────────
+export async function verificarEnquete(uid) {
+  try {
+    const snap = await Api.db.collection('config').doc('enquete_ativa').get();
+    if (!snap.exists || !snap.data().ativa) return;
+    const d = snap.data();
+
+    // Verifica se esse usuario ja votou
+    const enqueteSnap = await Api.db.collection('enquetes').doc(d.enqueteId).get();
+    if (!enqueteSnap.exists) return;
+    const votos = enqueteSnap.data().votos || {};
+    if (votos[uid] !== undefined) return; // ja votou
+
+    // Renderiza modal bloqueante
+    _mostrarModalEnquete(uid, d);
+  } catch(e) {
+    console.warn('[Enquete] erro ao verificar:', e);
+  }
+}
+
+function _mostrarModalEnquete(uid, d) {
+  // Remove modal anterior se existir
+  document.getElementById('modal-enquete')?.remove();
+
+  const multipla = !!d.multipla;
+  const opcoesHTML = d.opcoes.map((o, i) => {
+    const tipo = multipla ? 'checkbox' : 'radio';
+    return `<label style="display:flex;align-items:center;gap:.7rem;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:.6rem .9rem;cursor:pointer;transition:border-color .2s;font-size:.88rem;color:var(--text)"
+      onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+      <input type="${tipo}" name="enq-opt" value="${o.replace(/"/g,'&quot;')}" style="accent-color:var(--green2);width:16px;height:16px;flex-shrink:0">
+      ${o}
+    </label>`;
+  }).join('');
+
+  const el = document.createElement('div');
+  el.id = 'modal-enquete';
+  el.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
+  el.innerHTML = `
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:12px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;animation:fadeUp .25s both;padding:1.5rem">
+      <div style="text-align:center;margin-bottom:1.2rem">
+        <div style="font-size:1.8rem;margin-bottom:.4rem">📊</div>
+        <div style="font-family:Cinzel,serif;font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem">Enquete · Sincronario das 13 Luas</div>
+        <div style="font-family:Cinzel,serif;font-size:.95rem;color:var(--gold2);line-height:1.5">${d.pergunta}</div>
+        <div style="font-size:.68rem;color:var(--text3);margin-top:.3rem">${multipla ? 'Selecione uma ou mais opcoes' : 'Selecione uma opcao'}</div>
+      </div>
+      <div id="enq-opcoes-aluno" style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem">
+        ${opcoesHTML}
+      </div>
+      <div style="display:flex;gap:.6rem;justify-content:flex-end;flex-wrap:wrap">
+        <button onclick="_cancelarEnquete()" style="background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text3);padding:7px 14px;font-family:Cinzel,serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Agora nao</button>
+        <button onclick="_enviarVotoEnquete('${uid}','${d.enqueteId}',${multipla})" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Votar</button>
+      </div>
+      <div id="enq-msg-aluno" style="margin-top:.6rem;font-size:.75rem;text-align:center;min-height:1em"></div>
+    </div>`;
+  document.body.appendChild(el);
+}
+
+window._cancelarEnquete = function() {
+  document.getElementById('modal-enquete')?.remove();
+};
+
+window._enviarVotoEnquete = async function(uid, enqueteId, multipla) {
+  const inputs = document.querySelectorAll('#enq-opcoes-aluno input[name="enq-opt"]');
+  const selecionadas = [...inputs].filter(i => i.checked).map(i => i.value);
+  const msgEl = document.getElementById('enq-msg-aluno');
+
+  if (!selecionadas.length) {
+    if (msgEl) msgEl.textContent = 'Selecione pelo menos uma opcao.';
+    return;
+  }
+  const voto = multipla ? selecionadas : selecionadas[0];
+
+  try {
+    await Api.db.collection('enquetes').doc(enqueteId).update({
+      [`votos.${uid}`]: voto
+    });
+    if (msgEl) { msgEl.style.color = 'var(--green2)'; msgEl.textContent = '✓ Voto registrado! Obrigado.'; }
+    setTimeout(() => document.getElementById('modal-enquete')?.remove(), 1200);
+  } catch(e) {
+    if (msgEl) { msgEl.style.color = '#e07050'; msgEl.textContent = 'Erro ao registrar: ' + e.message; }
+  }
+};
+
 export async function carregarAviso() {
   try {
     const snap = await Api.db.collection('config').doc('aviso').get();
@@ -638,4 +721,4 @@ export async function mostrarKinDiaLua(anoGal, luaNum, diaLua) {
   const kd = DATA.kins[kinNum];
   const dataStr = dataAlvo.toLocaleDateString('pt-BR', { day:'2-digit', month:'long' });
   abrirKinModal(kinNum, kd.selo, true, `Lua ${luaNum} · Dia ${diaLua} · ${dataStr}`);
-}   
+}    
