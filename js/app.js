@@ -4,7 +4,7 @@ import {
   switchTab, mostrarDetalheOnda, loadToday, calcNatal, verKinPerfil,
   renderSelos, abrirModalSelo, fecharModalSelo,
   abrirKinModal, fecharModalVideo,
-  abrirModalVideo, abrirEbook, abrirSelfDesign,
+  abrirModalVideo, abrirEbook, abrirSelfDesign, abrirTextoSolsticio,
   togglePrece, compartilharKin, exportPNG,
   atualizarBotaoNotif, toggleNotificacao,
   mostrarOnboarding, proximoOnboarding, fecharOnboarding,
@@ -110,6 +110,10 @@ function abrirEbookComPontos(pagina) {
   abrirEbook(pagina);
   _registrarAtv('EBOOK');
 }
+function abrirTextoSolsticioComPontos() {
+  abrirTextoSolsticio();
+  _registrarAtv('SOLSTICIO_INVERNO');
+}
 function abrirKinNatalComPontos(kinNum, selo, modal) {
   abrirKinModal(kinNum, selo, modal);
   _registrarAtv('KIN_NATAL');
@@ -135,6 +139,7 @@ Object.assign(window, {
   abrirModalVideo: abrirModalVideoComPontos,
   abrirEbook: abrirEbookComPontos,
   abrirSelfDesign: abrirSelfDesignComPontos,
+  abrirTextoSolsticio: abrirTextoSolsticioComPontos,
   togglePrece: togglePreceComPontos,
   compartilharKin, exportPNG,
   atualizarBotaoNotif, toggleNotificacao,
@@ -192,4 +197,4 @@ initAuthObserver(async (user) => {
   verificarEnquete(user.uid);
   atualizarBotaoNotif();
   if (!localStorage.getItem('sinc13_onboard')) mostrarOnboarding();
-});
+});       
