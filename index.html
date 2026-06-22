@@ -79,12 +79,10 @@ h1{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold2);text-align:cen
 .selo-white,.selo-branco,.selo-branca{background:rgba(168,184,144,.07)}
 .selo-blue,.selo-azul{background:rgba(26,72,96,.13)}
 .selo-yellow,.selo-amarelo,.selo-amarela{background:rgba(165,124,0,.11)}
-/* kins clicáveis — cursor pointer + feedback de toque no mobile */
 .kin-clicavel{cursor:pointer;-webkit-tap-highlight-color:rgba(165,124,0,.18);transition:transform .12s,opacity .12s}
 .kin-clicavel:hover{opacity:.85;transform:scale(1.05)}
 .kin-clicavel:active{transform:scale(.93);opacity:.7}
 .oraculo-wrap{display:grid;grid-template-columns:1fr 90px 1fr;grid-template-rows:auto auto auto;gap:10px;align-items:center;justify-items:center;max-width:400px;margin:.8rem auto;position:relative}
-
 .oraculo-cell-top{grid-column:2;grid-row:1}.oraculo-cell-left{grid-column:1;grid-row:2}
 .oraculo-cell-center{grid-column:2;grid-row:2}.oraculo-cell-right{grid-column:3;grid-row:2}
 .oraculo-cell-bottom{grid-column:2;grid-row:3}
@@ -421,6 +419,16 @@ Entrar com Google
     </div>
     <div id="perfil-cronografo-preview"></div>
   </div>
+  <!-- SOLSTÍCIO DE INVERNO -->
+  <div class="section">
+    <div class="section-title">❄️ Solstício de Inverno</div>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:.8rem;line-height:1.6">
+      Leia o texto especial do Solstício de Inverno e ganhe <strong style="color:var(--gold2)">10 pontos</strong> — apenas uma vez.
+    </p>
+    <button onclick="abrirTextoSolsticio()" style="background:transparent;border:1px solid var(--border-g);border-radius:5px;color:var(--gold2);font-family:'Cinzel',serif;font-size:.63rem;padding:7px 15px;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:all .2s" onmouseover="this.style.background='rgba(165,124,0,.12)'" onmouseout="this.style.background='transparent'">
+      ❄️ Abrir Texto
+    </button>
+  </div>
   <div class="section">
     <div class="section-title">Notificação Diária</div>
     <div class="notif-banner">
@@ -576,13 +584,10 @@ function confirmarExcluirConta() {
 // Força desinstalação de todos os SWs antigos e limpa todo cache
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
-    // Desregistra todos os SWs existentes
     const regs = await navigator.serviceWorker.getRegistrations();
     await Promise.all(regs.map(r => r.unregister()));
-    // Apaga todos os caches
     const cacheNames = await caches.keys();
     await Promise.all(cacheNames.map(n => caches.delete(n)));
-    // Registra o novo SW
     navigator.serviceWorker.register('./service-worker.js?' + Date.now())
       .then(r => console.log('✓ SW registrado:', r.scope))
       .catch(e => console.warn('SW erro:', e));
