@@ -10,6 +10,7 @@ export const PONTOS = {
   MEDITACAO:         20,
   SELF_DESIGN:       20,
   EBOOK:             10,
+  SOLSTICIO_INVERNO: 10,
   COMPLETAR_TUDO:    30,
   KIN_NATAL:         10,
   FAVORITAR:          5,
@@ -17,6 +18,9 @@ export const PONTOS = {
   BONUS_1_COMPLETO:  50,  // 1º a completar tudo no dia
   BONUS_1_PRECE:     25,  // 1º a ouvir a prece
 };
+
+// Ações que só podem ser realizadas uma vez na vida do usuário (não por dia)
+const ACOES_UNICAS = ['SOLSTICIO_INVERNO'];
 
 // Multiplicadores de streak (dias consecutivos)
 export const STREAK_MULT = [
@@ -88,8 +92,14 @@ export async function registrarAtividade(uid, acao, nomeUsuario, fotoURL, kinNat
   let { streak = 0, ultimoDia, atividades = {}, pontos = 0 } = ativ;
   const atividadesHoje = atividades[dataHoje] || {};
 
-  // Já fez essa ação hoje?
-  if (atividadesHoje[acao]) return 0;
+  // Ações únicas vitalícias: verifica se já foi feita em qualquer dia
+  if (ACOES_UNICAS.includes(acao)) {
+    const jaFez = Object.values(atividades).some(diaAtiv => diaAtiv[acao]);
+    if (jaFez) return 0;
+  } else {
+    // Ações diárias: já fez hoje?
+    if (atividadesHoje[acao]) return 0;
+  }
 
   // Streak: se ultimoDia foi ontem, incrementa; se foi hoje, mantém; senão reseta
   const ontem = new Date(); ontem.setDate(ontem.getDate()-1);
@@ -106,7 +116,6 @@ export async function registrarAtividade(uid, acao, nomeUsuario, fotoURL, kinNat
   if (acao === 'COMPLETAR_TUDO' || acao === 'PRECE') {
     const tipoBonus = acao === 'COMPLETAR_TUDO' ? 'bonus_1_completo' : 'bonus_1_prece';
     const pontosBonus = acao === 'COMPLETAR_TUDO' ? PONTOS.BONUS_1_COMPLETO : PONTOS.BONUS_1_PRECE;
-    const hoje24 = new Date(); hoje24.setHours(0,0,0,0);
     const snap = await db.collection('bonuses_dia').doc(dataHoje).get();
     const bData = snap.exists ? snap.data() : {};
     if (!bData[tipoBonus]) {
@@ -126,7 +135,6 @@ export async function registrarAtividade(uid, acao, nomeUsuario, fotoURL, kinNat
   const todasFeitas = tarefasObrig.every(t => novasAtivHoje[t]);
   if (todasFeitas && !atividadesHoje.COMPLETAR_TUDO) {
     novasAtivHoje.COMPLETAR_TUDO = true;
-    // Registra bônus de completar tudo recursivamente sem loop
     const snapB = await db.collection('bonuses_dia').doc(dataHoje).get();
     const bData = snapB.exists ? snapB.data() : {};
     let bExtra = 0;
@@ -202,6 +210,10 @@ export async function renderGamificacaoPerfil(uid) {
     const mult = getMultStreak(streak);
     const dataHoje = hoje();
     const atividadesHoje = atividades[dataHoje] || {};
+
+    // Verifica se SOLSTICIO_INVERNO já foi feito em algum dia
+    const solsticioFeito = Object.values(atividades).some(d => d['SOLSTICIO_INVERNO']);
+
     const tarefas = [
       { acao:'ACESSAR_DIA', label:'Acessar o kin do dia', pts: PONTOS.ACESSAR_DIA },
       { acao:'PRECE',       label:'Prece das 7 direções', pts: PONTOS.PRECE },
@@ -255,6 +267,11 @@ export async function renderGamificacaoPerfil(uid) {
           <span style="font-size:.6rem;color:${atividadesHoje[t.acao]?'var(--gold)':'var(--text3)'}">+${t.pts} pts</span>
         </div>`).join('')}
       ${atividadesHoje.COMPLETAR_TUDO ? `<div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--gold2)"><span>🏆</span><span style="flex:1">Todas as tarefas concluídas hoje!</span><span style="font-size:.6rem;color:var(--gold)">+${PONTOS.COMPLETAR_TUDO} pts</span></div>` : ''}
+      <div style="margin-top:.3rem;padding-top:.5rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:${solsticioFeito?'var(--green2)':'var(--text2)'}">
+        <span>${solsticioFeito?'✓':'○'}</span>
+        <span style="flex:1">Solstício de Inverno</span>
+        <span style="font-size:.6rem;color:${solsticioFeito?'var(--gold)':'var(--text3)'}">${solsticioFeito?'conquistado':'+'+PONTOS.SOLSTICIO_INVERNO+' pts'}</span>
+      </div>
     </div>`;
   } catch(e) {
     el.innerHTML = `<div style="color:#e07050;font-size:.8rem">Erro ao carregar pontuação.</div>`;
