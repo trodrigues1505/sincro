@@ -409,4 +409,4 @@ export async function abrirComparacao(uid2) {
   }
 }
 
-export { getTitulo, getMultStreak, mostrarToast };
+export { getTitulo, getMultStreak, mostrarToast };       
