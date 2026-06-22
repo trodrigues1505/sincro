@@ -286,6 +286,26 @@ export function abrirEbook(pagina) {
   document.body.style.overflow = 'hidden';
 }
 
+// ─── Solstício de Inverno ─────────────────────────────────────────────────────
+const SOLSTICIO_FILE_ID = '1jrlNwUDhukWczKBUWKSDpnwAzOQSqWPT';
+const SOLSTICIO_EMBED   = 'https://drive.google.com/file/d/' + SOLSTICIO_FILE_ID + '/preview';
+const SOLSTICIO_URL     = 'https://drive.google.com/file/d/' + SOLSTICIO_FILE_ID + '/view?usp=sharing';
+
+export function abrirTextoSolsticio() {
+  const modal  = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal || !iframe) { window.open(SOLSTICIO_URL, '_blank'); return; }
+  const kc = document.getElementById('modal-kin-content');
+  if (kc) { kc.style.display = 'none'; kc.innerHTML = ''; }
+  iframe.style.display = '';
+  iframe.style.height  = '75vh';
+  iframe.src = SOLSTICIO_EMBED;
+  if (titulo) titulo.textContent = '❄️ Solstício de Inverno';
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
 // FIX: abrirSelfDesign abre dentro do modal de vídeo em vez de nova aba
 export function abrirSelfDesign(kin) {
   const videoId = SELF_DESIGN[String(kin)];
@@ -778,4 +798,4 @@ export async function mostrarKinDiaLua(anoGal, luaNum, diaLua) {
   const kd = DATA.kins[kinNum];
   const dataStr = dataAlvo.toLocaleDateString('pt-BR', { day:'2-digit', month:'long' });
   abrirKinModal(kinNum, kd.selo, true, `Lua ${luaNum} · Dia ${diaLua} · ${dataStr}`);
-}
+}   
