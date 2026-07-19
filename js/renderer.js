@@ -107,6 +107,8 @@ export function renderHeroKin(kinNum, kD, nomeCompleto, corSelo, seloCompleto, s
 }
 
 // ─── Oráculo — central sem style inline de tamanho (CSS controla) ────────────
+// FIX: posicionamento corrigido conforme referência oficial —
+// topo=Guia, esquerda=Antípoda, direita=Análogo, base=Oculto
 export function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNum) {
   const { guia, analogo, antipoda, oculto } = kD.oraculo;
 
@@ -142,15 +144,15 @@ export function renderOraculo(kinNum, kD, corSelo, seloBase, seloCompleto, tomNu
       <circle cx="50" cy="50" r="32" fill="none" stroke="rgba(165,124,0,.12)" stroke-width=".3"/>
     </svg>
     <div class="oraculo-cell-top oraculo-item oraculo-side">${celOraculo(guia,'Guia')}</div>
-    <div class="oraculo-cell-left oraculo-item oraculo-side">${celOraculo(analogo,'Análogo','column-reverse')}</div>
+    <div class="oraculo-cell-left oraculo-item oraculo-side">${celOraculo(antipoda,'Antípoda','column-reverse')}</div>
     <div class="oraculo-cell-center oraculo-item oraculo-central">
       <div style="display:flex;justify-content:center;margin-bottom:.2rem">${gerarGlifoTom(tomNum,76)}</div>
       <div class="selo-icon kin-clicavel selo-${corSelo}" onclick="abrirKinModal(${kinNum},'${seloCompleto.replace(/'/g,"\\'")}',true)" title="Kin ${kinNum}"><img src="${getSeloIconURL(seloCompleto)}" style="width:100%;height:100%;object-fit:contain"></div>
       <div class="oraculo-nome" style="color:var(--gold2);font-size:.63rem;margin-top:.3rem">${seloBase}</div>
       <div style="font-family:Cinzel;font-size:.52rem;color:rgba(165,124,0,.6);letter-spacing:.12em;margin-top:.1rem">KIN ${kinNum}</div>
     </div>
-    <div class="oraculo-cell-right oraculo-item oraculo-side">${celOraculo(oculto,'Oculto','column-reverse')}</div>
-    <div class="oraculo-cell-bottom oraculo-item oraculo-side">${celOraculo(antipoda,'Antípoda')}</div>
+    <div class="oraculo-cell-right oraculo-item oraculo-side">${celOraculo(analogo,'Análogo','column-reverse')}</div>
+    <div class="oraculo-cell-bottom oraculo-item oraculo-side">${celOraculo(oculto,'Oculto')}</div>
   </div>
 </div>`;
 }
@@ -393,4 +395,4 @@ ${praticaHTML}
 </div>
 ${cronHTML}
 </div>`;
-}
+}   
