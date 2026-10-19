@@ -63,6 +63,22 @@ export function gerarInfoSelo(kinNum) {
 }
 
 // ─── HTML do Poema Ressonante ─────────────────────────────────────────────────
+// gerarPoema() é a ÚNICA fonte do texto. Todas as telas (card do Kin, cronógrafo e tabela guia)
+// usam poemaLinhasHTML(), então o poema completo (5 linhas) aparece igual em todas.
+function linhasHTML(p) {
+  return `<div class="poema-l1">${p.linha1}</div>
+    <div>${p.linha2}</div>
+    <div>${p.linha3}</div>
+    <div>${p.linha4}</div>
+    <div class="poema-l5">${p.linha5}</div>`;
+}
+
+// Só as 5 linhas (sem moldura), para quem monta o próprio cartão. '' se não houver dados.
+export function poemaLinhasHTML(kinNum, kData) {
+  const p = gerarPoema(kinNum, kData);
+  return p ? linhasHTML(p) : '';
+}
+
 export function renderPoema(kinNum, kData) {
   const p = gerarPoema(kinNum, kData);
   if (!p) return '';
@@ -71,11 +87,7 @@ export function renderPoema(kinNum, kData) {
   <div class="section-title">Poema Ressonante do Kin</div>
   <div class="poema-centro">
     <div class="poema-meta">${p.nomeMaia} · Kin ${kinNum}</div>
-    <div class="poema-l1">${p.linha1}</div>
-    <div>${p.linha2}</div>
-    <div>${p.linha3}</div>
-    <div>${p.linha4}</div>
-    <div class="poema-l5">${p.linha5}</div>
+    ${linhasHTML(p)}
   </div>
 </div>`;
 }
@@ -279,8 +291,6 @@ export function renderCronografo(kinNum, kData, luaNum, diaLua, plasmaHoje) {
 
   const seloIdx = (kinNum-1) % 20;
   const tomIdx  = ((kinNum-1) % 13) + 1;
-  const ps = POEMA_SELO[seloIdx] || {};
-  const pt = POEMA_TOM[tomIdx]   || {};
   const nomeSelo = SELOS_NOMES[seloIdx] || '';
   const nomeMaia = SELOS_MAIAS[seloIdx] || '';
   const nomeTom  = TONS_NOMES[tomIdx-1] || '';
@@ -335,14 +345,14 @@ export function renderCronografo(kinNum, kData, luaNum, diaLua, plasmaHoje) {
     </div>
   </div>
 
-  <!-- Poema do Kin -->
-  ${pt.poder && ps.qualidade ? `
-  <div class="poema" style="margin:0 0 var(--s3);text-align:center">
-    <div class="poema-label">Poema ressonante</div>
-    Eu ${pt.poder} com o fim de ${ps.qualidade},<br>
-    ${pt.acao} ${(ps.poder || '').toLowerCase()},<br>
-    <span class="poema-fim">Com o tom ${pt.qualidade} do ${nomeTom.toLowerCase()}.</span>
-  </div>` : ''}
+  <!-- Poema do Kin (mesma função das demais telas) -->
+  ${(() => {
+    const linhas = poemaLinhasHTML(kinNum, kData);
+    return linhas ? `<div class="cron-box">
+    <div class="cron-box-title">Poema ressonante</div>
+    <div class="poema-centro" style="padding:0">${linhas}</div>
+  </div>` : '';
+  })()}
 
   <!-- Campos editáveis -->
   <div>
