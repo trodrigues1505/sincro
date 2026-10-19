@@ -639,6 +639,7 @@ export async function carregarAviso() {
     if (!d.ativo || !d.mensagem) return;
     const chave = 'sinc13_aviso_' + (d.versao||'1');
     if (localStorage.getItem(chave)) return;
+    if (document.querySelector('.aviso-banner')) return; // já exibido
     const banner = document.createElement('div');
     banner.className = 'aviso-banner';
     banner.innerHTML = `<span class="aviso-banner-icon"><svg class="ico" aria-hidden="true"><use href="#i-bell"/></svg></span><span class="aviso-banner-texto">${d.mensagem}</span><button class="aviso-banner-close" onclick="fecharAviso(this,'${chave}')" aria-label="Fechar aviso"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>`;
