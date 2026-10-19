@@ -453,7 +453,12 @@ export function togglePrece(btn) {
   const ctx = prepararModalConteudo();
   if (!ctx) return false;
   const { modal, titulo, box: kc } = ctx;
-  const AUDIO_SRC   = './assets/prece.mp3';
+  // O index.html referencia ./assets/icons/prece.mpeg e este código usava ./assets/prece.mp3.
+  // O navegador tenta as <source> em ordem e usa a primeira que existir.
+  const AUDIO_SRCS  = [
+    ['./assets/prece.mp3', 'audio/mpeg'],
+    ['./assets/icons/prece.mpeg', 'audio/mpeg'],
+  ];
   const DRIVE_ID    = '1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR';
   const DRIVE_EMBED = 'https://drive.google.com/file/d/' + DRIVE_ID + '/preview';
   const audioId     = 'prece-modal-audio';
@@ -462,25 +467,35 @@ export function togglePrece(btn) {
     <div class="prece-player">
       <div class="prece-player-titulo">Prece das 7 Direções Galácticas</div>
       <audio id="${audioId}" class="prece-audio" controls preload="auto">
-        <source src="${AUDIO_SRC}" type="audio/mpeg">
+        ${AUDIO_SRCS.map(([src, tipo]) => `<source src="${src}" type="${tipo}">`).join('')}
       </audio>
+      <!-- o iframe do Drive só ganha src quando o áudio local falha (antes carregava escondido
+           e podia tocar junto com o áudio local) -->
       <div id="${fallbackId}" class="prece-fallback" style="display:none">
-        <div class="small muted">Áudio indisponível. Ouça pelo Drive:</div>
-        <iframe src="${DRIVE_EMBED}" style="width:100%;height:80px;border:none;border-radius:8px" allow="autoplay"></iframe>
+        <div class="small muted">Áudio local indisponível. Ouça pelo Drive:</div>
+        <iframe class="prece-drive" data-src="${DRIVE_EMBED}" allow="autoplay" title="Prece das 7 Direções Galácticas"></iframe>
       </div>
     </div>
     ${TEXTO_PRECE}`;
-  setTimeout(() => {
-    const audio    = document.getElementById(audioId);
-    const fallback = document.getElementById(fallbackId);
-    if (!audio || !fallback) return;
-    if (audio.error || audio.readyState < 2) {
-      audio.style.display = 'none';
-      fallback.style.display = 'flex';
-    } else {
-      audio.play().catch(() => {});
-    }
-  }, 3000);
+
+  const audio    = document.getElementById(audioId);
+  const fallback = document.getElementById(fallbackId);
+  const usarDrive = () => {
+    if (!audio || !fallback || fallback.style.display === 'flex') return;
+    audio.pause();
+    audio.style.display = 'none';
+    const f = fallback.querySelector('iframe');
+    if (f && !f.src) f.src = f.dataset.src;
+    fallback.style.display = 'flex';
+  };
+  if (audio) {
+    // se a ÚLTIMA fonte falhar, nenhuma existe: vai para o Drive.
+    // (audio.error não é preenchido quando falha uma <source>; o evento 'error' é da <source>)
+    const fontes = audio.querySelectorAll('source');
+    fontes[fontes.length - 1].addEventListener('error', usarDrive);
+    // toca assim que houver dados suficientes (conexão lenta não cai no Drive por engano)
+    audio.addEventListener('canplay', () => { audio.play().catch(() => {}); }, { once: true });
+  }
   if (titulo) titulo.textContent = 'Prece das 7 Direções Galácticas';
   abrirModalConteudo(modal);
   return true;
