@@ -5,7 +5,13 @@ import { kinHTML } from './renderer.js';
 import { registrarNoHistorico, toggleFavorito, limparHistorico, limparFavoritos, renderHistorico, renderFavoritos } from './storage.js';
 import { carregarPerfil, salvarKinNatal, limparKinNatal, mostrarKinNatalSalvo } from './api.js';
 import * as Api from './api.js';
-import { renderLeiDoTempo } from './cartilha.js';
+import { renderLeiDoTempo, esc } from './cartilha.js';
+
+// Feedback visual (toast definido no index.html); cai para alert() se não existir
+function avisar(msg, tipo) {
+  if (window.mostrarToast) window.mostrarToast(msg, tipo);
+  else alert(msg);
+}
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 export function switchTab(t, el) {
@@ -13,6 +19,7 @@ export function switchTab(t, el) {
   document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
   (el || event.target).classList.add('active');
   document.getElementById('tab-'+t).classList.add('active');
+  window.scrollTo(0, 0);
   if (t === 'selos')  renderSelos();
   if (t === 'perfil') {
     renderHistorico();
@@ -21,6 +28,7 @@ export function switchTab(t, el) {
   }
   if (t === 'lei') {
     const el = document.getElementById('lei-content');
+    // o placeholder tem 1 filho; depois de renderizado passa de 1
     if (el && el.children.length <= 1) {
       import('./cartilha.js').then(({ renderLeiDoTempo, renderTabelaGuia }) => {
         el.innerHTML = renderLeiDoTempo() + renderTabelaGuia();
@@ -44,15 +52,15 @@ function renderCronografoPerfil() {
       reg.gratidao       && ['Gratidão',         reg.gratidao],
     ].filter(Boolean);
     if (!campos.length) {
-      el.innerHTML = `<p style="font-size:.82rem;color:var(--text3);font-style:italic">Nenhum registro hoje ainda. Acesse o Kin do Dia para preencher.</p>`;
+      el.innerHTML = `<div class="historico-vazio">Nenhum registro hoje ainda. Abra o Kin do Dia para preencher.</div>`;
       return;
     }
     el.innerHTML = `
-      <div style="font-size:.62rem;color:var(--gold);font-family:Cinzel;letter-spacing:.08em;margin-bottom:.5rem">${key}</div>
+      <div class="hist-data">${esc(key)}</div>
       ${campos.map(([lbl, val]) => `
-      <div style="margin-bottom:.4rem">
-        <span style="font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em">${lbl}: </span>
-        <span style="font-size:.8rem;color:var(--text2);font-style:italic">${val.length > 120 ? val.slice(0,120)+'...' : val}</span>
+      <div class="hist-campo">
+        <span class="hist-lbl">${lbl}:</span>
+        <span class="hist-val">${esc(val.length > 120 ? val.slice(0,120)+'...' : val)}</span>
       </div>`).join('')}`;
   } catch(e) {
     el.innerHTML = '';
@@ -81,7 +89,7 @@ export async function loadToday() {
       const hero = document.querySelector('#res-dia .kin-hero');
       if (hero) {
         const badge = document.createElement('div');
-        badge.style.cssText = 'margin-top:.8rem;display:inline-flex;align-items:center;gap:.4rem;background:rgba(165,124,0,.1);border:1px solid var(--border-g);border-radius:20px;padding:.3rem .8rem;font-family:Cinzel;font-size:.62rem;letter-spacing:.05em';
+        badge.className = 'relacao-badge';
         badge.style.color = relacao.cor;
         badge.innerHTML = `${relacao.icon} <strong>${relacao.label}</strong> com seu Kin Natal · ${relacao.desc}`;
         hero.appendChild(badge);
@@ -93,7 +101,7 @@ export async function loadToday() {
 export async function calcNatal() {
   await DATA_PRONTO;
   const v = document.getElementById('nasc-inp').value;
-  if (!v) return;
+  if (!v) { avisar('Informe a data de nascimento.', 'erro'); return; }
   const [y,m,d] = v.split('-').map(Number);
   const dt = new Date(y, m-1, d);
   const k  = dateToKin(dt);
@@ -145,64 +153,63 @@ export async function renderSelos() {
     const maias = ['IMIX','IK','AKBAL','KAN','CHICCHAN','CIMI','MANIK','LAMAT','MULUC','OC','CHUEN','EB','BEN','IX','MEN','CIB','CABAN','ETZNAB','CAUAC','AHAU'];
     const nomeMaia = maias[i] || '';
     return `<div class="selo-card" onclick="abrirModalSelo('${safe}','${cor}','${iconURL}',DATA.selos[${i}])">
-      <div class="selo-icon selo-${cor}" style="width:56px;height:56px;margin:0 auto"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='<span style=font-size:1.8rem>${['🐉','💨','🌌','🌱','🐍','☯️','✋','⭐','🌙','🐕','🐒','👤','🚶','🧙','🦅','⚔️','🌍','🪞','⛈️','☀️'][i]||'🌀'}</span>'"></div>
+      <div class="selo-icon selo-${cor}" style="width:56px;height:56px;margin:0 auto"><img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" alt="" onerror="this.parentElement.innerHTML='<span style=font-size:1.8rem>${['🐉','💨','🌌','🌱','🐍','☯️','✋','⭐','🌙','🐕','🐒','👤','🚶','🧙','🦅','⚔️','🌍','🪞','⛈️','☀️'][i]||'🌀'}</span>'"></div>
       <div class="selo-card-nome">${nomeCompleto}</div>
-      <div style="font-size:.55rem;color:var(--gold);letter-spacing:.1em;font-family:Cinzel;margin:.1rem 0">${nomeMaia}</div>
+      <div class="selo-card-maya">${nomeMaia}</div>
       <div class="selo-card-acao">${s.acao||''}</div>
     </div>`;
   }).join('');
 }
 
 export function abrirModalSelo(nome, cor, iconURL, dados) {
-  import('./cartilha.js').then(({ gerarInfoSelo }) => {
-    import('./data.js').then(({ SELOS_NOMES, SELOS_MAIAS, POEMA_SELO, FAMILIAS_TERRESTRES, FAMILIAS_DESC, RACAS_RAIZ, RACAS_DESC }) => {
-      // Descobre índice do selo pelo nome
-      const nomeBase = (dados?.nome || nome || '').split(' ').slice(0,-1).join(' ') || nome;
-      const seloIdx = SELOS_NOMES.findIndex(n => n === nomeBase || n === (dados?.nome||'').split(' ').slice(0,-1).join(' '));
-      const nomeMaia   = seloIdx >= 0 ? (SELOS_MAIAS[seloIdx]||'') : '';
-      const familia    = seloIdx >= 0 ? (FAMILIAS_TERRESTRES[seloIdx]||'') : '';
-      const raca       = seloIdx >= 0 ? (RACAS_RAIZ[seloIdx]||'') : '';
-      const palavras   = seloIdx >= 0 ? (POEMA_SELO[seloIdx]||{}) : {};
-      const fdesc      = FAMILIAS_DESC[familia] || {};
-      const rdesc      = RACAS_DESC[raca]       || {};
+  import('./data.js').then(({ SELOS_NOMES, SELOS_MAIAS, POEMA_SELO, FAMILIAS_TERRESTRES, FAMILIAS_DESC, RACAS_RAIZ, RACAS_DESC }) => {
+    // Descobre índice do selo pelo nome
+    const nomeBase = (dados?.nome || nome || '').split(' ').slice(0,-1).join(' ') || nome;
+    const seloIdx = SELOS_NOMES.findIndex(n => n === nomeBase || n === (dados?.nome||'').split(' ').slice(0,-1).join(' '));
+    const nomeMaia   = seloIdx >= 0 ? (SELOS_MAIAS[seloIdx]||'') : '';
+    const familia    = seloIdx >= 0 ? (FAMILIAS_TERRESTRES[seloIdx]||'') : '';
+    const raca       = seloIdx >= 0 ? (RACAS_RAIZ[seloIdx]||'') : '';
+    const palavras   = seloIdx >= 0 ? (POEMA_SELO[seloIdx]||{}) : {};
+    const fdesc      = FAMILIAS_DESC[familia] || {};
+    const rdesc      = RACAS_DESC[raca]       || {};
 
-      const box = document.querySelector('.modal-selo-box');
-      if (!box) return;
+    const box = document.querySelector('.modal-selo-box');
+    if (!box) return;
 
-      document.querySelector('.modal-selo-icon').style.borderColor = `var(--${cor})`;
-      document.querySelector('.modal-selo-icon').innerHTML = `<img src="${iconURL}" style="width:100%;height:100%;object-fit:contain">`;
-      document.querySelector('.modal-selo-titulo').textContent = dados?.nome || nome;
-      document.querySelector('.modal-selo-acao').textContent   = '';
-      document.querySelector('.modal-selo-maya').textContent   = '';
+    // var(--vermelho|branco|azul|amarelo) são definidas no index.html
+    document.querySelector('.modal-selo-icon').style.borderColor = `var(--${cor})`;
+    document.querySelector('.modal-selo-icon').innerHTML = `<img src="${iconURL}" style="width:100%;height:100%;object-fit:contain" alt="">`;
+    document.querySelector('.modal-selo-titulo').textContent = dados?.nome || nome;
+    document.querySelector('.modal-selo-acao').textContent   = '';
+    document.querySelector('.modal-selo-maya').textContent   = '';
 
-      const descEl = document.querySelector('.modal-selo-desc');
-      descEl.innerHTML = `
-        ${nomeMaia ? `<div style="font-family:Cinzel;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.5rem">${nomeMaia}</div>` : ''}
-        ${palavras.poder || palavras.qualidade ? `
-        <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem">
-          ${[palavras.poder, palavras.qualidade, palavras.essencia].filter(Boolean).map(p =>
-            `<span style="background:rgba(165,124,0,.1);border:1px solid var(--border-g);border-radius:20px;padding:2px 9px;font-size:.6rem;color:var(--gold2);font-family:Cinzel">${p}</span>`
-          ).join('')}
+    const descEl = document.querySelector('.modal-selo-desc');
+    descEl.innerHTML = `
+      ${nomeMaia ? `<div class="selo-maya-tag">${nomeMaia}</div>` : ''}
+      ${palavras.poder || palavras.qualidade ? `
+      <div class="chips">
+        ${[palavras.poder, palavras.qualidade, palavras.essencia].filter(Boolean).map(p =>
+          `<span class="chip">${p}</span>`
+        ).join('')}
+      </div>` : ''}
+      ${dados?.acao ? `<div class="selo-acao-txt">${dados.acao}</div>` : ''}
+      ${dados?.descricao || dados?.desc ? `<div class="prose" style="margin-bottom:var(--s4)">${dados.descricao||dados.desc}</div>` : ''}
+      ${familia || raca ? `
+      <div class="tile-grid">
+        ${raca ? `<div class="tile">
+          <div class="tile-label">Raça Raiz</div>
+          <div class="tile-title">${raca}</div>
+          <div class="tile-sub">${rdesc.papel||''}</div>
         </div>` : ''}
-        ${dados?.acao ? `<div style="font-size:.82rem;color:var(--text2);margin-bottom:.5rem;font-style:italic">${dados.acao}</div>` : ''}
-        ${dados?.descricao || dados?.desc ? `<div style="font-size:.82rem;color:var(--text);margin-bottom:.7rem;line-height:1.7">${dados.descricao||dados.desc}</div>` : ''}
-        ${familia || raca ? `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.5rem">
-          ${raca ? `<div style="background:var(--bg2);border-radius:6px;padding:.5rem;border:1px solid var(--border)">
-            <div style="font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Raça Raiz</div>
-            <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2)">${raca}</div>
-            <div style="font-size:.65rem;color:var(--text3);margin-top:.15rem">${rdesc.papel||''}</div>
-          </div>` : ''}
-          ${familia ? `<div style="background:var(--bg2);border-radius:6px;padding:.5rem;border:1px solid var(--border)">
-            <div style="font-size:.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem">Família</div>
-            <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2)">${familia}</div>
-            <div style="font-size:.65rem;color:var(--text3);margin-top:.15rem">${fdesc.desc||''}</div>
-          </div>` : ''}
-        </div>` : ''}`;
+        ${familia ? `<div class="tile">
+          <div class="tile-label">Família</div>
+          <div class="tile-title">${familia}</div>
+          <div class="tile-sub">${fdesc.desc||''}</div>
+        </div>` : ''}
+      </div>` : ''}`;
 
-      document.getElementById('modal-selo').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
+    document.getElementById('modal-selo').classList.add('active');
+    document.body.style.overflow = 'hidden';
   });
 }
 
@@ -219,41 +226,55 @@ export function abrirModalVideo(url, nomeSeloVideo) {
   const titulo = document.getElementById('modal-video-titulo');
   if (!modal || !iframe) return;
   const videoId = url.includes('youtu') ? (url.split(/v=|youtu\.be\//)[1]||'').split(/[?&]/)[0] : '';
+  // e-book e solstício definem uma altura fixa no iframe; sem limpar, o vídeo herdava 75vh
+  iframe.style.height = '';
   iframe.src = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : url;
   if (titulo) titulo.textContent = nomeSeloVideo ? `Meditação · ${nomeSeloVideo}` : 'Meditação';
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 
+// Prepara o modal de vídeo para exibir HTML no lugar do iframe.
+// Antes esse bloco estava copiado em 5 funções.
+function prepararModalConteudo() {
+  const modal  = document.getElementById('modal-video');
+  const iframe = document.getElementById('modal-video-iframe');
+  const titulo = document.getElementById('modal-video-titulo');
+  if (!modal || !iframe) return null;
+  iframe.style.display = 'none';
+  iframe.style.height = '';
+  iframe.src = '';
+  let box = document.getElementById('modal-kin-content');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'modal-kin-content';
+    box.className = 'kin-modal-body';
+    iframe.parentNode.insertBefore(box, iframe);
+  }
+  box.style.display = 'block';
+  return { modal, iframe, titulo, box };
+}
+
+function abrirModalConteudo(modal) {
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
 // ─── Modal de kin (oráculo, onda, castelo) ────────────────────────────────────
-export function abrirKinModal(kinNum, seloNome, modoResumido = false) {
+// 4º parâmetro (rotulo): texto opcional que antecede o título, ex. "Lua 3 · Dia 12 · 14 de agosto".
+// mostrarKinDiaLua já o enviava, mas a função só aceitava 3 parâmetros e o texto se perdia.
+export function abrirKinModal(kinNum, seloNome, modoResumido = false, rotulo = '') {
   if (!kinNum || !DATA.kins) return;
   const kD = DATA.kins[String(kinNum)];
   if (!kD) return;
-  const { kinHTML } = window._renderer || {};
-  // Reusa o modal-video para exibir o kinHTML resumido
-  const modal = document.getElementById('modal-video');
-  const iframe = document.getElementById('modal-video-iframe');
-  const titulo = document.getElementById('modal-video-titulo');
-  if (!modal) return;
-  // Esconde o iframe e insere HTML do kin no lugar
-  iframe.style.display = 'none';
-  iframe.src = '';
-  let kinContainer = document.getElementById('modal-kin-content');
-  if (!kinContainer) {
-    kinContainer = document.createElement('div');
-    kinContainer.id = 'modal-kin-content';
-    kinContainer.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
-    iframe.parentNode.insertBefore(kinContainer, iframe);
-  }
-  kinContainer.style.display = 'block';
+  const ctx = prepararModalConteudo();
+  if (!ctx) return;
   // importa kinHTML dinamicamente para evitar ciclo em tempo de carga
   import('./renderer.js').then(({ kinHTML: kh }) => {
-    kinContainer.innerHTML = kh(kinNum, true);
+    ctx.box.innerHTML = kh(kinNum, true);
   });
-  if (titulo) titulo.textContent = `Kin ${kinNum} · ${kD.selo}`;
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  if (ctx.titulo) ctx.titulo.textContent = `${rotulo ? rotulo + ' · ' : ''}Kin ${kinNum} · ${kD.selo}`;
+  abrirModalConteudo(ctx.modal);
 }
 
 export function fecharModalVideo() {
@@ -261,7 +282,7 @@ export function fecharModalVideo() {
   if (!modal) return;
   modal.classList.remove('active');
   const iframe = document.getElementById('modal-video-iframe');
-  if (iframe) { iframe.src = ''; iframe.style.display = ''; }
+  if (iframe) { iframe.src = ''; iframe.style.display = ''; iframe.style.height = ''; }
   const kinContainer = document.getElementById('modal-kin-content');
   if (kinContainer) { kinContainer.style.display = 'none'; kinContainer.innerHTML = ''; }
   document.body.style.overflow = '';
@@ -281,7 +302,7 @@ export function abrirEbook(pagina) {
   iframe.style.display = '';
   iframe.style.height  = '75vh';
   iframe.src = EBOOK_EMBED;
-  if (titulo) titulo.textContent = '📖 E-book · Sincronário das 13 Luas';
+  if (titulo) titulo.textContent = 'E-book · Sincronário das 13 Luas';
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -301,7 +322,7 @@ export function abrirTextoSolsticio() {
   iframe.style.display = '';
   iframe.style.height  = '75vh';
   iframe.src = SOLSTICIO_EMBED;
-  if (titulo) titulo.textContent = '❄️ Solstício de Inverno';
+  if (titulo) titulo.textContent = 'Solstício de Inverno';
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -315,77 +336,49 @@ export function abrirSelfDesign(kin) {
 
 // ─── Prece ────────────────────────────────────────────────────────────────────
 const TEXTO_PRECE = `
-<div style="text-align:center;line-height:2.1;font-size:.88rem;color:var(--text)">
-  <div style="margin-bottom:1rem">
-    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Leste da Luz</div>
-    <div style="color:var(--text2);font-style:italic">Que a sabedoria se abra em aurora sobre nós<br>Para que vejamos as coisas com claridade</div>
+<div class="prece">
+  ${[
+    ['Leste da Luz',            'Que a sabedoria se abra em aurora sobre nós<br>Para que vejamos as coisas com claridade'],
+    ['Norte da Noite',          'Que a sabedoria amadureça entre nós<br>Para que conheçamos tudo desde dentro'],
+    ['Oeste da Transformação',  'Que a sabedoria se transforme em ação correta<br>Para que façamos o que tenha que ser feito'],
+    ['Sul do Sol Eterno',       'Que a ação correta nos dê a colheita<br>Para que desfrutemos os frutos do ser planetário'],
+    ['Superior do Paraíso',     'Onde se reúnem a gente das estrelas e os antepassados<br>Que suas bênçãos cheguem até nós agora'],
+    ['Interior da Terra',       'Que o pulsar do coração de cristal do planeta<br>nos abençoe com suas harmonias<br>Para que acabemos com as guerras'],
+  ].map(([casa, verso]) => `
+  <div class="prece-bloco">
+    <div class="prece-dir">Desde a Casa ${casa}</div>
+    <div class="prece-verso">${verso}</div>
+  </div>`).join('')}
+  <div class="prece-bloco">
+    <div class="prece-dir">Desde a Fonte Central da Galáxia</div>
+    <div class="prece-verso">Que está em todas as partes ao mesmo tempo<br>Que tudo se reconheça como luz e amor mútuo</div>
   </div>
-  <div style="margin-bottom:1rem">
-    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Norte da Noite</div>
-    <div style="color:var(--text2);font-style:italic">Que a sabedoria amadureça entre nós<br>Para que conheçamos tudo desde dentro</div>
-  </div>
-  <div style="margin-bottom:1rem">
-    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Oeste da Transformação</div>
-    <div style="color:var(--text2);font-style:italic">Que a sabedoria se transforme em ação correta<br>Para que façamos o que tenha que ser feito</div>
-  </div>
-  <div style="margin-bottom:1rem">
-    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Sul do Sol Eterno</div>
-    <div style="color:var(--text2);font-style:italic">Que a ação correta nos dê a colheita<br>Para que desfrutemos os frutos do ser planetário</div>
-  </div>
-  <div style="margin-bottom:1rem">
-    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Superior do Paraíso</div>
-    <div style="color:var(--text2);font-style:italic">Onde se reúnem a gente das estrelas e os antepassados<br>Que suas bênçãos cheguem até nós agora</div>
-  </div>
-  <div style="margin-bottom:1rem">
-    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Casa Interior da Terra</div>
-    <div style="color:var(--text2);font-style:italic">Que o pulsar do coração de cristal do planeta<br>nos abençoe com suas harmonias<br>Para que acabemos com as guerras</div>
-  </div>
-  <div style="margin-bottom:1.2rem">
-    <div style="font-family:Cinzel;font-size:.58rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem">Desde a Fonte Central da Galáxia</div>
-    <div style="color:var(--text2);font-style:italic">Que está em todas as partes ao mesmo tempo<br>Que tudo se reconheça como luz e amor mútuo</div>
-  </div>
-  <div style="color:var(--gold2);font-family:Cinzel;font-size:.82rem;letter-spacing:.06em;line-height:1.9">
+  <div class="prece-mantra">
     Ah Yum Hunab Ku Evam Maya E Ma Ho!<br>
     Ah Yum Hunab Ku Evam Maya E Ma Ho!<br>
     Ah Yum Hunab Ku Evam Maya E Ma Ho!<br>
-    <span style="font-size:.68rem;color:var(--text3)">Salve a Harmonia da Mente e da Natureza!</span>
+    <span class="prece-fim">Salve a Harmonia da Mente e da Natureza!</span>
   </div>
 </div>`;
 
 export function togglePrece(btn) {
-  const modal  = document.getElementById('modal-video');
-  const iframe = document.getElementById('modal-video-iframe');
-  const titulo = document.getElementById('modal-video-titulo');
-  if (!modal) return;
-  iframe.style.display = 'none';
-  iframe.src = '';
-  let kc = document.getElementById('modal-kin-content');
-  if (!kc) {
-    kc = document.createElement('div');
-    kc.id = 'modal-kin-content';
-    kc.style.cssText = 'overflow-y:auto;max-height:70vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
-    iframe.parentNode.insertBefore(kc, iframe);
-  }
-  kc.style.display = 'block';
+  const ctx = prepararModalConteudo();
+  if (!ctx) return;
+  const { modal, titulo, box: kc } = ctx;
   const AUDIO_SRC   = './assets/prece.mp3';
   const DRIVE_ID    = '1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR';
   const DRIVE_EMBED = 'https://drive.google.com/file/d/' + DRIVE_ID + '/preview';
   const audioId     = 'prece-modal-audio';
   const fallbackId  = 'prece-modal-fallback';
   kc.innerHTML = `
-    <div style="background:rgba(165,124,0,.07);border:1px solid var(--border-g);border-radius:8px;padding:.7rem 1rem;margin-bottom:1.1rem">
-      <div style="display:flex;align-items:center;gap:.8rem">
-        <span style="font-size:1.4rem">🙏</span>
-        <div style="flex:1">
-          <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2);margin-bottom:.4rem">Prece das 7 Direções Galácticas</div>
-          <audio id="${audioId}" controls preload="auto" style="width:100%;height:36px;accent-color:var(--gold2)">
-            <source src="${AUDIO_SRC}" type="audio/mpeg">
-          </audio>
-        </div>
-      </div>
-      <div id="${fallbackId}" style="display:none;margin-top:.7rem;flex-direction:column;gap:.5rem">
-        <div style="font-size:.65rem;color:var(--text3);font-style:italic">Áudio indisponível — ouça pelo Drive:</div>
-        <iframe src="${DRIVE_EMBED}" style="width:100%;height:80px;border:none;border-radius:6px" allow="autoplay"></iframe>
+    <div class="prece-player">
+      <div class="prece-player-titulo">Prece das 7 Direções Galácticas</div>
+      <audio id="${audioId}" class="prece-audio" controls preload="auto">
+        <source src="${AUDIO_SRC}" type="audio/mpeg">
+      </audio>
+      <div id="${fallbackId}" class="prece-fallback" style="display:none">
+        <div class="small muted">Áudio indisponível. Ouça pelo Drive:</div>
+        <iframe src="${DRIVE_EMBED}" style="width:100%;height:80px;border:none;border-radius:8px" allow="autoplay"></iframe>
       </div>
     </div>
     ${TEXTO_PRECE}`;
@@ -400,10 +393,10 @@ export function togglePrece(btn) {
       audio.play().catch(() => {});
     }
   }, 3000);
-  if (titulo) titulo.textContent = '🙏 Prece das 7 Direções Galácticas';
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  if (titulo) titulo.textContent = 'Prece das 7 Direções Galácticas';
+  abrirModalConteudo(modal);
 }
+
 // ─── Compartilhar e exportar ──────────────────────────────────────────────────
 export async function compartilharKin() {
   const area = document.getElementById('export-area');
@@ -412,29 +405,55 @@ export async function compartilharKin() {
     try { await navigator.share({ title: 'Sincronário das 13 Luas', text: area.querySelector('.kin-title')?.textContent||'', url: window.location.href }); } catch(e) {}
   } else {
     navigator.clipboard?.writeText(window.location.href);
-    alert('Link copiado!');
+    avisar('Link copiado.', 'sucesso');
   }
 }
 
-export async function exportPNG() {
+// #export-area só tem conteúdo nas abas Kin do Dia e Kin Natal. Nas demais ele fica com
+// altura 0 e o html2canvas falhava sem nenhuma mensagem.
+function areaExportavel() {
   const area = document.getElementById('export-area');
-  const canvas = await html2canvas(area, { backgroundColor:'#0a0c14', scale:2 });
-  const link = document.createElement('a');
-  link.download = `sincronario-${new Date().toISOString().split('T')[0]}.png`;
-  link.href = canvas.toDataURL(); link.click();
+  if (!area || area.offsetHeight < 10) {
+    avisar('Abra o Kin do Dia ou o Kin Natal para exportar como imagem.', 'erro');
+    return null;
+  }
+  return area;
+}
+
+export async function exportPNG() {
+  const area = areaExportavel();
+  if (!area) return;
+  try {
+    const canvas = await html2canvas(area, { backgroundColor:'#060d09', scale:2 });
+    const link = document.createElement('a');
+    link.download = `sincronario-${new Date().toISOString().split('T')[0]}.png`;
+    link.href = canvas.toDataURL(); link.click();
+  } catch(e) {
+    console.error('[exportPNG]', e);
+    avisar('Não foi possível gerar a imagem. Tente novamente.', 'erro');
+  }
 }
 
 // ─── Notificações ─────────────────────────────────────────────────────────────
+// `Notification?.permission` NÃO protege quando a API não existe: identificador não declarado
+// lança ReferenceError antes do `?.`. É o caso do Safari no iPhone fora do app instalado, e o
+// erro derrubava a inicialização (onboarding incluído) logo depois do login.
+const notifSuportada = () => typeof Notification !== 'undefined';
+
 export function atualizarBotaoNotif() {
   const btn = document.getElementById('btn-notif');
   if (!btn) return;
-  const ativo = Notification?.permission === 'granted' && localStorage.getItem('sinc13_notif') === '1';
+  const ativo = notifSuportada() && Notification.permission === 'granted' && localStorage.getItem('sinc13_notif') === '1';
   btn.textContent = ativo ? 'Desativar' : 'Ativar';
   btn.classList.toggle('ativo', ativo);
 }
 
 export async function toggleNotificacao() {
-  if (Notification?.permission !== 'granted') {
+  if (!notifSuportada()) {
+    avisar('Este navegador não oferece notificações. No iPhone, instale o app na tela de início.', 'erro');
+    return;
+  }
+  if (Notification.permission !== 'granted') {
     const perm = await Notification.requestPermission();
     if (perm !== 'granted') return;
   }
@@ -474,7 +493,6 @@ export function fecharOnboarding() {
   localStorage.setItem('sinc13_onboard','1');
 }
 
-// ─── Aviso banner ─────────────────────────────────────────────────────────────
 // ─── Enquete ───────────────────────────────────────────────────────────────────
 export async function verificarEnquete(uid) {
   try {
@@ -492,30 +510,28 @@ function _mostrarModalEnquete(uid, d) {
   document.getElementById('modal-enquete')?.remove();
   const multipla = !!d.multipla;
   const opcoesHTML = d.opcoes.map(o =>
-    `<label style="display:flex;align-items:center;gap:.7rem;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:.6rem .9rem;cursor:pointer;font-size:.88rem;color:var(--text)">
-      <input type="${multipla ? 'checkbox' : 'radio'}" name="enq-opt" value="${o.replace(/"/g,'&quot;')}" style="accent-color:var(--green2);width:16px;height:16px;flex-shrink:0">
-      ${o}
+    `<label class="enq-opt">
+      <input type="${multipla ? 'checkbox' : 'radio'}" name="enq-opt" value="${esc(o)}">
+      <span>${esc(o)}</span>
     </label>`
   ).join('');
   const el = document.createElement('div');
   el.id = 'modal-enquete';
-  el.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
+  el.className = 'dialog active';
   el.innerHTML = `
-    <div style="background:var(--card);border:1px solid var(--border2);border-radius:12px;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;animation:fadeUp .25s both;padding:1.5rem">
-      <div style="text-align:center;margin-bottom:1.2rem">
-        <div style="font-size:1.8rem;margin-bottom:.4rem">📊</div>
-        <div style="font-family:Cinzel,serif;font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem">Enquete · Sincronário das 13 Luas</div>
-        <div style="font-family:Cinzel,serif;font-size:.95rem;color:var(--gold2);line-height:1.5">${d.pergunta}</div>
-        <div style="font-size:.68rem;color:var(--text3);margin-top:.3rem">${multipla ? 'Selecione uma ou mais opções' : 'Selecione uma opção'}</div>
+    <div class="dialog-box enquete-box">
+      <div class="enq-head">
+        <div class="enq-pergunta">${esc(d.pergunta)}</div>
+        <div class="enq-hint">${multipla ? 'Selecione uma ou mais opções' : 'Selecione uma opção'}</div>
       </div>
-      <div id="enq-opcoes-aluno" style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem">
+      <div id="enq-opcoes-aluno" class="enq-opcoes">
         ${opcoesHTML}
       </div>
-      <div style="display:flex;gap:.6rem;justify-content:flex-end;flex-wrap:wrap">
-        <button onclick="_cancelarEnquete()" style="background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--text3);padding:7px 14px;font-family:Cinzel,serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Agora não</button>
-        <button onclick="_enviarVotoEnquete()" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.6rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Votar</button>
+      <div class="enq-actions">
+        <button class="btn btn-ghost" onclick="_cancelarEnquete()">Agora não</button>
+        <button class="btn btn-primary" onclick="_enviarVotoEnquete()">Votar</button>
       </div>
-      <div id="enq-msg-aluno" style="margin-top:.6rem;font-size:.75rem;text-align:center;min-height:1em"></div>
+      <div id="enq-msg-aluno" class="enq-msg" role="alert"></div>
     </div>`;
   el.dataset.uid = uid;
   el.dataset.enqueteId = d.enqueteId;
@@ -535,7 +551,7 @@ window._enviarVotoEnquete = async function() {
   const multipla  = !!modal.dataset.multipla;
   const selecionadas = [...modal.querySelectorAll('#enq-opcoes-aluno input[name="enq-opt"]')].filter(i => i.checked).map(i => i.value);
   const msgEl = document.getElementById('enq-msg-aluno');
-  if (!selecionadas.length) { if (msgEl) msgEl.textContent = 'Selecione pelo menos uma opção.'; return; }
+  if (!selecionadas.length) { if (msgEl) { msgEl.className = 'enq-msg msg-erro'; msgEl.textContent = 'Selecione pelo menos uma opção.'; } return; }
   const voto = multipla ? selecionadas : selecionadas[0];
   try {
     await Api.db.collection('enquetes').doc(enqueteId).update({ [`votos.${uid}`]: voto });
@@ -543,11 +559,12 @@ window._enviarVotoEnquete = async function() {
     _mostrarResultadoEnquete(modal, snap.data(), voto);
     renderEnquetePerfil(uid);
   } catch(e) {
-    if (msgEl) { msgEl.style.color = '#e07050'; msgEl.textContent = 'Erro: ' + e.message; }
+    if (msgEl) { msgEl.className = 'enq-msg msg-erro'; msgEl.textContent = 'Erro: ' + e.message; }
   }
 };
 
-function _mostrarResultadoEnquete(modal, dados, meuVoto) {
+// Barras de resultado (usadas no modal e no perfil)
+function _barrasEnquete(dados, meuVoto) {
   const votos = dados.votos || {};
   const total = Object.keys(votos).length;
   const contagem = {};
@@ -558,25 +575,28 @@ function _mostrarResultadoEnquete(modal, dados, meuVoto) {
     const cnt = contagem[o] || 0;
     const pct = total ? Math.round(cnt / total * 100) : 0;
     const dest = minhas.includes(o);
-    return `<div style="margin-bottom:.55rem">
-      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:${dest ? 'var(--gold2)' : 'var(--text2)'};margin-bottom:.2rem">
-        <span>${dest ? '✓ ' : ''}${o}</span><span>${cnt} (${pct}%)</span>
+    return `<div class="bar-row${dest ? ' is-mine' : ''}">
+      <div class="bar-head">
+        <span>${esc(o)}${dest ? ' <span class="chip chip-sm">seu voto</span>' : ''}</span>
+        <span>${cnt} (${pct}%)</span>
       </div>
-      <div style="background:var(--bg2);border-radius:4px;height:8px;overflow:hidden;border:1px solid var(--border)">
-        <div style="height:8px;border-radius:4px;background:${dest ? 'var(--gold2)' : 'var(--green)'};width:${pct}%;transition:width .5s"></div>
-      </div>
+      <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
     </div>`;
   }).join('');
+  return { barras, total };
+}
+
+function _mostrarResultadoEnquete(modal, dados, meuVoto) {
+  const { barras, total } = _barrasEnquete(dados, meuVoto);
   modal.querySelector('div').innerHTML = `
-    <div style="text-align:center;margin-bottom:1rem">
-      <div style="font-size:1.8rem;margin-bottom:.3rem">✅</div>
-      <div style="font-family:Cinzel,serif;font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.4rem">Voto registrado!</div>
-      <div style="font-family:Cinzel,serif;font-size:.88rem;color:var(--gold2);line-height:1.5">${dados.pergunta}</div>
-      <div style="font-size:.65rem;color:var(--text3);margin-top:.3rem">${total} voto(s) no total</div>
+    <div class="enq-head">
+      <div class="enq-hint" style="margin:0 0 var(--s2)">Voto registrado</div>
+      <div class="enq-pergunta">${esc(dados.pergunta)}</div>
+      <div class="enq-hint">${total} voto(s) no total</div>
     </div>
     ${barras}
-    <div style="text-align:right;margin-top:.8rem">
-      <button onclick="document.getElementById('modal-enquete').remove()" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 18px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Fechar</button>
+    <div class="enq-actions">
+      <button class="btn btn-primary" onclick="document.getElementById('modal-enquete').remove()">Fechar</button>
     </div>`;
 }
 
@@ -586,46 +606,31 @@ export async function renderEnquetePerfil(uid) {
   try {
     const snap = await Api.db.collection('config').doc('enquete_ativa').get();
     if (!snap.exists || !snap.data().ativa) {
-      el.innerHTML = '<p style="color:var(--text3);font-style:italic;font-size:.85rem">Nenhuma enquete ativa no momento.</p>';
+      el.innerHTML = '<div class="historico-vazio">Nenhuma enquete ativa no momento.</div>';
       return;
     }
     const d = snap.data();
     const eSnap = await Api.db.collection('enquetes').doc(d.enqueteId).get();
-    if (!eSnap.exists) { el.innerHTML = '<p style="color:var(--text3);font-size:.85rem">–</p>'; return; }
+    if (!eSnap.exists) { el.innerHTML = '<div class="historico-vazio">Enquete indisponível.</div>'; return; }
     const dados  = eSnap.data();
     const votos  = dados.votos || {};
     const meuVoto = votos[uid];
-    const total  = Object.keys(votos).length;
     if (meuVoto === undefined) {
-      el.innerHTML = `<p style="font-size:.85rem;color:var(--text2);margin-bottom:.7rem">${d.pergunta}</p>
-        <button onclick="verificarEnquete('${uid}')" style="background:var(--green);border:none;border-radius:5px;color:#fff;padding:7px 16px;font-family:Cinzel,serif;font-size:.62rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em">Responder enquete</button>`;
+      // verificarEnquete precisa estar em window (agora exposta no app.js)
+      el.innerHTML = `<p class="help-text">${esc(d.pergunta)}</p>
+        <button class="btn btn-primary btn-sm" onclick="verificarEnquete('${esc(uid)}')">Responder enquete</button>`;
       return;
     }
-    const contagem = {};
-    (dados.opcoes || []).forEach(o => contagem[o] = 0);
-    Object.values(votos).forEach(v => { (Array.isArray(v) ? v : [v]).forEach(s => { if (s in contagem) contagem[s]++; }); });
-    const minhas = Array.isArray(meuVoto) ? meuVoto : [meuVoto];
-    const barras = (dados.opcoes || []).map(o => {
-      const cnt = contagem[o] || 0;
-      const pct = total ? Math.round(cnt / total * 100) : 0;
-      const dest = minhas.includes(o);
-      return `<div style="margin-bottom:.5rem">
-        <div style="display:flex;justify-content:space-between;font-size:.76rem;color:${dest ? 'var(--gold2)' : 'var(--text2)'};margin-bottom:.2rem">
-          <span>${dest ? '✓ ' : ''}${o}</span><span>${cnt} (${pct}%)</span>
-        </div>
-        <div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;border:1px solid var(--border)">
-          <div style="height:7px;border-radius:4px;background:${dest ? 'var(--gold2)' : 'var(--green)'};width:${pct}%;transition:width .5s"></div>
-        </div>
-      </div>`;
-    }).join('');
-    el.innerHTML = `<div style="font-family:Cinzel,serif;font-size:.78rem;color:var(--gold2);margin-bottom:.7rem">${d.pergunta}</div>
+    const { barras, total } = _barrasEnquete(dados, meuVoto);
+    el.innerHTML = `<div class="enq-pergunta" style="font-size:.9375rem;margin-bottom:var(--s4)">${esc(d.pergunta)}</div>
       ${barras}
-      <div style="font-size:.62rem;color:var(--text3);margin-top:.4rem">${total} voto(s) registrado(s)</div>`;
+      <div class="bar-total">${total} voto(s) registrado(s)</div>`;
   } catch(e) {
-    el.innerHTML = '<p style="color:#e07050;font-size:.82rem">Erro: ' + e.message + '</p>';
+    el.innerHTML = '<div class="gm-erro">Erro: ' + esc(e.message) + '</div>';
   }
 }
 
+// ─── Aviso banner ─────────────────────────────────────────────────────────────
 export async function carregarAviso() {
   try {
     const snap = await Api.db.collection('config').doc('aviso').get();
@@ -636,7 +641,7 @@ export async function carregarAviso() {
     if (localStorage.getItem(chave)) return;
     const banner = document.createElement('div');
     banner.className = 'aviso-banner';
-    banner.innerHTML = `<span class="aviso-banner-icon">📢</span><span class="aviso-banner-texto">${d.mensagem}</span><button class="aviso-banner-close" onclick="fecharAviso(this,'${chave}')">✕</button>`;
+    banner.innerHTML = `<span class="aviso-banner-icon"><svg class="ico" aria-hidden="true"><use href="#i-bell"/></svg></span><span class="aviso-banner-texto">${d.mensagem}</span><button class="aviso-banner-close" onclick="fecharAviso(this,'${chave}')" aria-label="Fechar aviso"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>`;
     document.querySelector('.container')?.prepend(banner);
   } catch(e) {}
 }
@@ -670,120 +675,98 @@ export async function exportarCalendario28() {
 
 export async function exportarPDFKin() {
   const area = document.getElementById('export-area');
-  if (!area || typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') return;
-  const canvas = await html2canvas(area, { backgroundColor:'#0a0c14', scale:2 });
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF({ orientation:'portrait', unit:'px', format:'a4' });
-  const imgW = pdf.internal.pageSize.getWidth();
-  const imgH = (canvas.height * imgW) / canvas.width;
-  pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgW, imgH);
-  pdf.save(`sincronario-kin-${new Date().toISOString().split('T')[0]}.pdf`);
+  // O index.html não carrega a biblioteca jsPDF; antes a função só retornava sem avisar.
+  if (!area || typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+    avisar('Exportação em PDF indisponível no momento.', 'erro');
+    return;
+  }
+  if (!areaExportavel()) return;
+  try {
+    const canvas = await html2canvas(area, { backgroundColor:'#060d09', scale:2 });
+    const { jsPDF } = window.jspdf;
+    // a tela do Kin é bem mais alta que uma A4; com format:'a4' o PDF saía cortado.
+    // Página única com as dimensões da própria imagem (scale:2 → divide por 2).
+    const imgW = canvas.width / 2, imgH = canvas.height / 2;
+    const pdf = new jsPDF({ orientation: imgW > imgH ? 'landscape' : 'portrait', unit:'px', format:[imgW, imgH] });
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgW, imgH);
+    pdf.save(`sincronario-kin-${new Date().toISOString().split('T')[0]}.pdf`);
+  } catch(e) {
+    console.error('[exportarPDFKin]', e);
+    avisar('Não foi possível gerar o PDF.', 'erro');
+  }
 }
 
 // ─── Modais informativos ───────────────────────────────────────────────────────
 export function abrirModalPlasma(chave, emoji, chakra, afirm, desc) {
-  const modal = document.getElementById('modal-video');
-  const iframe = document.getElementById('modal-video-iframe');
-  const titulo = document.getElementById('modal-video-titulo');
-  if (!modal) return;
-  iframe.style.display = 'none'; iframe.src = '';
-  let box = document.getElementById('modal-kin-content');
-  if (!box) {
-    box = document.createElement('div');
-    box.id = 'modal-kin-content';
-    box.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
-    iframe.parentNode.insertBefore(box, iframe);
-  }
-  box.style.display = 'block';
-  const emojis = {'Dali':'☀️','Seli':'🌊','Gama':'👁','Kali':'🔥','Alfa':'🌬️','Limi':'🌙','Silio':'💚'};
-  const cores  = {'Dali':'#c9a030','Seli':'#4a9fd4','Gama':'#7c5cbf','Kali':'#c04040','Alfa':'#60a080','Limi':'#6080c0','Silio':'#40a060'};
-  box.innerHTML = `
-    <div style="text-align:center;padding:.5rem 0 1rem">
-      <div style="font-size:3rem;margin-bottom:.5rem">${emoji}</div>
-      <div style="font-family:Cinzel;font-size:1.1rem;color:${cores[chave]||'var(--gold2)'};margin-bottom:.2rem">${chave}</div>
-      <div style="font-size:.75rem;color:var(--text3);margin-bottom:.8rem">${desc}</div>
-      ${chakra ? `<div style="background:rgba(165,124,0,.08);border:1px solid var(--border-g);border-radius:8px;padding:.5rem 1rem;display:inline-block;font-family:Cinzel;font-size:.68rem;color:var(--gold2);margin-bottom:1rem">Chacra: ${chakra}</div>` : ''}
+  const ctx = prepararModalConteudo();
+  if (!ctx) return;
+  const cores = {'Dali':'#ecc45c','Seli':'#5aa0e0','Gama':'#9b7ee0','Kali':'#e0675f','Alfa':'#6fc2a0','Limi':'#7b9be0','Silio':'#4ade80'};
+  const cor = cores[chave] || 'var(--gold2)';
+  ctx.box.innerHTML = `
+    <div class="im-head" style="--c:${cor}">
+      <div class="im-emoji">${emoji}</div>
+      <div class="im-title">${chave}</div>
+      <div class="im-sub">${desc}</div>
+      ${chakra ? `<div class="im-chip">Chacra: ${chakra}</div>` : ''}
     </div>
-    <div style="background:rgba(165,124,0,.05);border-left:3px solid ${cores[chave]||'var(--gold)'};padding:.7rem 1rem;border-radius:0 8px 8px 0;font-style:italic;font-size:.88rem;color:var(--text2);line-height:1.8;margin-bottom:.8rem">${afirm}</div>
-    <p style="font-size:.8rem;color:var(--text3);line-height:1.7">Os plasmas radiais são a matéria quântica mínima do universo. Cada dia da semana ativa um plasma diferente, correspondendo a um chacra do corpo quadridimensional. Ao visualizar e recitar a afirmação do plasma, harmonizamos nossa energia com o campo quântico do dia.</p>`;
-  if (titulo) titulo.textContent = `${emoji} Plasma ${chave}`;
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+    <div class="im-quote">${afirm}</div>
+    <p class="im-note">Os plasmas radiais são a matéria quântica mínima do universo. Cada dia da semana ativa um plasma diferente, correspondendo a um chacra do corpo quadridimensional. Ao visualizar e recitar a afirmação do plasma, harmonizamos nossa energia com o campo quântico do dia.</p>`;
+  if (ctx.titulo) ctx.titulo.textContent = `Plasma ${chave}`;
+  abrirModalConteudo(ctx.modal);
 }
 
 export function abrirModalFaseLunar(emoji, nome, desc) {
-  const modal = document.getElementById('modal-video');
-  const iframe = document.getElementById('modal-video-iframe');
-  const titulo = document.getElementById('modal-video-titulo');
-  if (!modal) return;
-  iframe.style.display = 'none'; iframe.src = '';
-  let box = document.getElementById('modal-kin-content');
-  if (!box) {
-    box = document.createElement('div');
-    box.id = 'modal-kin-content';
-    box.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
-    iframe.parentNode.insertBefore(box, iframe);
-  }
-  box.style.display = 'block';
+  const ctx = prepararModalConteudo();
+  if (!ctx) return;
   const infos = {
-    'Nova':      { qual:'Início',      cor:'#6080c0', dica:'Plante intenções, abra-se ao novo.' },
-    'Crescente': { qual:'Expansão',    cor:'#60a060', dica:'Aja, construa, ganhe momentum.' },
-    'Cheia':     { qual:'Plenitude',   cor:'#c9a030', dica:'Integre, celebre, ilumine.' },
-    'Minguante': { qual:'Liberação',   cor:'#c04040', dica:'Desapegue, reflita, agradeça.' },
+    'Nova':      { qual:'Início',      cor:'#7b9be0', dica:'Plante intenções, abra-se ao novo.' },
+    'Crescente': { qual:'Expansão',    cor:'#6fc27a', dica:'Aja, construa, ganhe momentum.' },
+    'Cheia':     { qual:'Plenitude',   cor:'#ecc45c', dica:'Integre, celebre, ilumine.' },
+    'Minguante': { qual:'Liberação',   cor:'#e0675f', dica:'Desapegue, reflita, agradeça.' },
   };
   const info = infos[nome] || { qual:'', cor:'var(--gold2)', dica:'' };
-  box.innerHTML = `
-    <div style="text-align:center;padding:.5rem 0 1rem">
-      <div style="font-size:3.5rem;margin-bottom:.5rem">${emoji}</div>
-      <div style="font-family:Cinzel;font-size:1.1rem;color:${info.cor};margin-bottom:.3rem">Lua ${nome}</div>
-      <div style="font-size:.78rem;color:var(--text3);margin-bottom:.9rem">${info.qual}</div>
+  ctx.box.innerHTML = `
+    <div class="im-head" style="--c:${info.cor}">
+      <div class="im-emoji" style="font-size:3.5rem">${emoji}</div>
+      <div class="im-title">Lua ${nome}</div>
+      <div class="im-sub">${info.qual}</div>
     </div>
-    <div style="background:rgba(165,124,0,.05);border-left:3px solid ${info.cor};padding:.7rem 1rem;border-radius:0 8px 8px 0;font-size:.9rem;color:var(--text2);line-height:1.8;margin-bottom:.8rem;font-style:italic">${desc}</div>
-    ${info.dica ? `<div style="font-family:Cinzel;font-size:.7rem;color:${info.cor};margin-bottom:.8rem;padding:.4rem .8rem;border:1px solid ${info.cor}33;border-radius:6px;display:inline-block">${info.dica}</div>` : ''}
-    <p style="font-size:.8rem;color:var(--text3);line-height:1.7">A lua possui três ciclos: sinódico (29,5 dias), sideral (27 dias) e ápside (28 dias). O Sincronário usa 28 dias — a média dos ciclos lunares — dividido em 4 semanas de 7 dias, cada uma correspondendo a uma cor galáctica: Vermelha, Branca, Azul e Amarela.</p>`;
-  if (titulo) titulo.textContent = `${emoji} Lua ${nome}`;
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+    <div class="im-quote">${desc}</div>
+    ${info.dica ? `<div class="im-tip" style="--c:${info.cor}">${info.dica}</div>` : ''}
+    <p class="im-note">A lua possui três ciclos: sinódico (29,5 dias), sideral (27 dias) e ápside (28 dias). O Sincronário usa 28 dias — a média dos ciclos lunares — dividido em 4 semanas de 7 dias, cada uma correspondendo a uma cor galáctica: Vermelha, Branca, Azul e Amarela.</p>`;
+  if (ctx.titulo) ctx.titulo.textContent = `Lua ${nome}`;
+  abrirModalConteudo(ctx.modal);
 }
 
 export function abrirModalCastelo(casteloNum) {
-  const modal = document.getElementById('modal-video');
-  const iframe = document.getElementById('modal-video-iframe');
-  const titulo = document.getElementById('modal-video-titulo');
-  if (!modal) return;
-  iframe.style.display = 'none'; iframe.src = '';
-  let box = document.getElementById('modal-kin-content');
-  if (!box) {
-    box = document.createElement('div');
-    box.id = 'modal-kin-content';
-    box.style.cssText = 'overflow-y:auto;max-height:80vh;padding:1rem;background:var(--bg);border-radius:var(--radius)';
-    iframe.parentNode.insertBefore(box, iframe);
-  }
-  box.style.display = 'block';
+  const ctx = prepararModalConteudo();
+  if (!ctx) return;
   const castelos = [
-    { cor:'Vermelho', dir:'Leste', poder:'Girar',   corte:'Nascimento', desc:'Inicia o Guerreiro. O Leste é o lugar do nascer do Sol, do começo de todos os ciclos. Aqui a consciência desperta e o propósito se estabelece.',    ondas:'Dragão, Mago, Mão e Sol', emoji:'🔴' },
-    { cor:'Branco',   dir:'Norte', poder:'Cruzar',  corte:'Morte',      desc:'Refina o Guerreiro. O Norte é o lugar da sabedoria ancestral e do aprofundamento. Aqui a consciência é purificada e refinada através dos desafios.',  ondas:'Caminhante, Enlaçador, Tormenta e Humano', emoji:'⚪' },
-    { cor:'Azul',     dir:'Oeste', poder:'Queimar',  corte:'Magia',      desc:'Transforma o Guerreiro. O Oeste é o lugar da transformação e da magia. Aqui a consciência mergulha na sombra para emergir transformada.',           ondas:'Serpente, Espelho, Macaco e Semente', emoji:'🔵' },
-    { cor:'Amarelo',  dir:'Sul',   poder:'Doar',     corte:'Inteligência',desc:'Amadurece o Guerreiro. O Sul é o lugar da maturidade e da colheita. Aqui a consciência produz frutos e manifesta sua inteligência cósmica.',        ondas:'Terra, Cão, Noite e Guerreiro', emoji:'🟡' },
-    { cor:'Verde',    dir:'Centro',poder:'Encantar', corte:'Sincronização',desc:'Sincroniza o Guerreiro. O Centro é o lugar do encantamento e da integração. Aqui todos os ciclos convergem e a consciência se sincroniza com o todo.', ondas:'Lua, Vento, Águia e Estrela', emoji:'🟢' },
+    { cor:'Vermelho', dir:'Leste', poder:'Girar',   corte:'Nascimento', desc:'Inicia o Guerreiro. O Leste é o lugar do nascer do Sol, do começo de todos os ciclos. Aqui a consciência desperta e o propósito se estabelece.',    ondas:'Dragão, Mago, Mão e Sol', hex:'#dc5046' },
+    { cor:'Branco',   dir:'Norte', poder:'Cruzar',  corte:'Morte',      desc:'Refina o Guerreiro. O Norte é o lugar da sabedoria ancestral e do aprofundamento. Aqui a consciência é purificada e refinada através dos desafios.',  ondas:'Caminhante, Enlaçador, Tormenta e Humano', hex:'#d8e2d0' },
+    { cor:'Azul',     dir:'Oeste', poder:'Queimar',  corte:'Magia',      desc:'Transforma o Guerreiro. O Oeste é o lugar da transformação e da magia. Aqui a consciência mergulha na sombra para emergir transformada.',           ondas:'Serpente, Espelho, Macaco e Semente', hex:'#5a9fe0' },
+    { cor:'Amarelo',  dir:'Sul',   poder:'Doar',     corte:'Inteligência',desc:'Amadurece o Guerreiro. O Sul é o lugar da maturidade e da colheita. Aqui a consciência produz frutos e manifesta sua inteligência cósmica.',        ondas:'Terra, Cão, Noite e Guerreiro', hex:'#ecc45c' },
+    { cor:'Verde',    dir:'Centro',poder:'Encantar', corte:'Sincronização',desc:'Sincroniza o Guerreiro. O Centro é o lugar do encantamento e da integração. Aqui todos os ciclos convergem e a consciência se sincroniza com o todo.', ondas:'Lua, Vento, Águia e Estrela', hex:'#4ade80' },
   ];
-  const c = castelos[casteloNum] || castelos[0];
-  const kinInicio = casteloNum * 52 + 1;
+  // se o número vier fora de 0–4, a descrição caía no castelo 0 mas a faixa de Kins continuava
+  // calculada com o número recebido
+  const idx = castelos[casteloNum] ? casteloNum : 0;
+  const c = castelos[idx];
+  const kinInicio = idx * 52 + 1;
   const kinFim    = kinInicio + 51;
-  box.innerHTML = `
-    <div style="text-align:center;padding:.5rem 0 1rem">
-      <div style="font-size:2.5rem;margin-bottom:.5rem">${c.emoji}</div>
-      <div style="font-family:Cinzel;font-size:1rem;color:var(--gold2);margin-bottom:.2rem">Castelo ${c.cor} · ${c.dir}</div>
-      <div style="font-size:.72rem;color:var(--text3);margin-bottom:.3rem">Poder do ${c.poder} · Corte da ${c.corte}</div>
-      <div style="font-size:.68rem;color:var(--text3)">Kins ${kinInicio} – ${kinFim}</div>
+  ctx.box.innerHTML = `
+    <div class="im-head" style="--c:${c.hex}">
+      <span class="dot dot-lg" style="--c:${c.hex}"></span>
+      <div class="im-title" style="margin-top:var(--s3)">Castelo ${c.cor} · ${c.dir}</div>
+      <div class="im-sub">Poder do ${c.poder} · Corte da ${c.corte}</div>
+      <div class="im-sub">Kins ${kinInicio} – ${kinFim}</div>
     </div>
-    <div style="background:rgba(165,124,0,.05);border-left:3px solid var(--gold);padding:.7rem 1rem;border-radius:0 8px 8px 0;font-size:.88rem;color:var(--text2);line-height:1.8;margin-bottom:.8rem">${c.desc}</div>
-    <div style="font-size:.75rem;color:var(--text3);margin-bottom:.3rem;font-family:Cinzel;text-transform:uppercase;letter-spacing:.1em">Ondas Encantadas</div>
-    <div style="font-size:.82rem;color:var(--text2)">${c.ondas}</div>
-    <p style="font-size:.78rem;color:var(--text3);line-height:1.7;margin-top:.8rem">O Tzolkin possui 5 Castelos de 52 dias cada (5 × 52 = 260 kins). Cada castelo contém 4 Ondas Encantadas de 13 dias. Os castelos formam as 4 direções cardeais mais o centro — a geometria sagrada do tempo maia.</p>`;
-  if (titulo) titulo.textContent = `${c.emoji} Castelo ${c.cor} do ${c.dir}`;
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+    <div class="im-quote" style="font-style:normal">${c.desc}</div>
+    <div class="tile-label">Ondas Encantadas</div>
+    <div class="tile-title" style="color:var(--text);font-weight:500">${c.ondas}</div>
+    <p class="im-note" style="margin-top:var(--s4)">O Tzolkin possui 5 Castelos de 52 dias cada (5 × 52 = 260 kins). Cada castelo contém 4 Ondas Encantadas de 13 dias. Os castelos formam as 4 direções cardeais mais o centro — a geometria sagrada do tempo maia.</p>`;
+  if (ctx.titulo) ctx.titulo.textContent = `Castelo ${c.cor} do ${c.dir}`;
+  abrirModalConteudo(ctx.modal);
 }
 
 export async function mostrarKinDiaLua(anoGal, luaNum, diaLua) {
@@ -798,4 +781,4 @@ export async function mostrarKinDiaLua(anoGal, luaNum, diaLua) {
   const kd = DATA.kins[kinNum];
   const dataStr = dataAlvo.toLocaleDateString('pt-BR', { day:'2-digit', month:'long' });
   abrirKinModal(kinNum, kd.selo, true, `Lua ${luaNum} · Dia ${diaLua} · ${dataStr}`);
-}   
+}
