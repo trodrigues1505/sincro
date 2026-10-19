@@ -68,7 +68,7 @@ function calcPontos(pts, streak) {
 }
 
 // ─── Registro de atividade ────────────────────────────────────────────────────
-let _cache = null; // cache local para evitar múltiplas leituras por sessão
+let _cache = null; // cache local só para LEITURA (widget do perfil); gravações não usam o cache
 
 async function getAtividade(uid) {
   if (_cache) return _cache;
@@ -79,113 +79,116 @@ async function getAtividade(uid) {
 
 function invalidarCache() { _cache = null; }
 
-async function atualizarFirestore(uid, dados) {
-  await db.collection('gamificacao').doc(uid).set(dados, { merge: true });
-  _cache = { ..._cache, ...dados };
-  // Atualiza snapshot público no ranking
-  const titulo = getTitulo(dados.pontos || _cache.pontos || 0);
-  await db.collection('ranking').doc(uid).set({
-    pontos: dados.pontos ?? _cache.pontos,
-    streak: dados.streak ?? _cache.streak,
-    titulo: titulo.titulo,
-    emoji:  titulo.emoji,
-  }, { merge: true });
+// Por que os pontos duplicavam:
+// o código antigo lia a atividade (ou o cache), conferia "já fez hoje?" e só depois gravava.
+// Duas chamadas quase juntas (clique duplo, o observador de login disparando 2x, dois aparelhos)
+// liam o mesmo estado, as duas passavam na conferência e as duas somavam pontos. O bônus de
+// "1º do dia" tinha o mesmo problema: dois usuários podiam levar o bônus.
+// Agora toda a leitura + conferência + gravação roda dentro de UMA transação do Firestore:
+// se outra gravação acontecer no meio, a transação recomeça com o estado novo.
+//
+// Fila local: chamadas da mesma sessão entram uma depois da outra (evita disputa consigo mesma).
+let _fila = Promise.resolve();
+
+export function registrarAtividade(uid, acao, nomeUsuario, fotoURL, kinNatalNum) {
+  if (!uid) return Promise.resolve(0);
+  const p = _fila.then(() => _registrar(uid, acao, nomeUsuario, fotoURL, kinNatalNum));
+  _fila = p.catch(() => {});
+  return p.catch(e => { console.error('[Gamif] falha ao registrar', acao, e); return 0; });
 }
 
-export async function registrarAtividade(uid, acao, nomeUsuario, fotoURL, kinNatalNum) {
-  if (!uid) return 0;
+async function _registrar(uid, acao, nomeUsuario, fotoURL, kinNatalNum) {
   const dataHoje = hoje();
-  const ativ = await getAtividade(uid);
+  const refG = db.collection('gamificacao').doc(uid);
+  const refR = db.collection('ranking').doc(uid);
+  const refB = db.collection('bonuses_dia').doc(dataHoje);
 
-  // Calcula streak
-  let { streak = 0, ultimoDia, atividades = {}, pontos = 0 } = ativ;
-  const atividadesHoje = atividades[dataHoje] || {};
-
-  // Ações únicas vitalícias: verifica se já foi feita em qualquer dia
-  if (ACOES_UNICAS.includes(acao)) {
-    const jaFez = Object.values(atividades).some(diaAtiv => diaAtiv[acao]);
-    if (jaFez) return 0;
-  } else {
-    // Ações diárias: já fez hoje?
-    if (atividadesHoje[acao]) return 0;
-  }
-
-  // Streak: se ultimoDia foi ontem, incrementa; se foi hoje, mantém; senão reseta
-  const ontem = new Date(); ontem.setDate(ontem.getDate()-1);
-  const ontemStr = `${ontem.getFullYear()}-${String(ontem.getMonth()+1).padStart(2,'0')}-${String(ontem.getDate()).padStart(2,'0')}`;
-  if (ultimoDia === ontemStr) streak++;
-  else if (ultimoDia !== dataHoje) streak = 1;
-
-  // Bônus de primeiro acesso antes das 9h
-  let ptsBase = PONTOS[acao] || 0;
-  if (acao === 'ACESSAR_DIA' && new Date().getHours() < 9) ptsBase += PONTOS.PRIMEIRO_DIA;
-
-  // Bônus 1º a completar tudo / 1º a ouvir prece
-  let ptsBonus = 0;
-  if (acao === 'COMPLETAR_TUDO' || acao === 'PRECE') {
-    const tipoBonus = acao === 'COMPLETAR_TUDO' ? 'bonus_1_completo' : 'bonus_1_prece';
-    const pontosBonus = acao === 'COMPLETAR_TUDO' ? PONTOS.BONUS_1_COMPLETO : PONTOS.BONUS_1_PRECE;
-    const snap = await db.collection('bonuses_dia').doc(dataHoje).get();
-    const bData = snap.exists ? snap.data() : {};
-    if (!bData[tipoBonus]) {
-      ptsBonus = pontosBonus;
-      await db.collection('bonuses_dia').doc(dataHoje).set({ [tipoBonus]: uid }, { merge: true });
-    }
-  }
-
-  // Aplica multiplicador de streak
-  const ptsComMult = calcPontos(ptsBase, streak);
-  const ptsTotal = ptsComMult + ptsBonus;
-  const novoTotal = pontos + ptsTotal;
-
-  // Verifica se completou TODAS as tarefas hoje
-  const tarefasObrig = ['ACESSAR_DIA','PRECE','MEDITACAO','SELF_DESIGN','EBOOK'];
-  const novasAtivHoje = { ...atividadesHoje, [acao]: true };
-  const todasFeitas = tarefasObrig.every(t => novasAtivHoje[t]);
-  if (todasFeitas && !atividadesHoje.COMPLETAR_TUDO) {
-    novasAtivHoje.COMPLETAR_TUDO = true;
-    const snapB = await db.collection('bonuses_dia').doc(dataHoje).get();
+  // A função da transação pode rodar mais de uma vez (retentativa): por isso ela só calcula
+  // e agenda gravações; nada de toast nem de mexer em variáveis de fora aqui dentro.
+  const r = await db.runTransaction(async (tx) => {
+    const [snapG, snapB] = await Promise.all([tx.get(refG), tx.get(refB)]);
+    const ativ = snapG.exists ? snapG.data() : { pontos: 0, streak: 0, ultimoDia: null, atividades: {} };
+    let { streak = 0, ultimoDia, atividades = {}, pontos = 0 } = ativ;
+    const atividadesHoje = atividades[dataHoje] || {};
     const bData = snapB.exists ? snapB.data() : {};
-    let bExtra = 0;
-    if (!bData.bonus_1_completo) {
-      bExtra = PONTOS.BONUS_1_COMPLETO;
-      await db.collection('bonuses_dia').doc(dataHoje).set({ bonus_1_completo: uid }, { merge: true });
+
+    // Ações únicas vitalícias: verifica se já foi feita em qualquer dia
+    if (ACOES_UNICAS.includes(acao)) {
+      const jaFez = Object.values(atividades).some(diaAtiv => diaAtiv[acao]);
+      if (jaFez) return { pts: 0 };
+    } else {
+      // Ações diárias: já fez hoje?
+      if (atividadesHoje[acao]) return { pts: 0 };
     }
-    const ptsCompleto = calcPontos(PONTOS.COMPLETAR_TUDO, streak) + bExtra;
-    const totalComCompleto = novoTotal + ptsCompleto;
-    await atualizarFirestore(uid, {
-      pontos: totalComCompleto, streak,
+
+    // Streak: se ultimoDia foi ontem, incrementa; se foi hoje, mantém; senão reseta
+    const ontem = new Date(); ontem.setDate(ontem.getDate()-1);
+    const ontemStr = `${ontem.getFullYear()}-${String(ontem.getMonth()+1).padStart(2,'0')}-${String(ontem.getDate()).padStart(2,'0')}`;
+    if (ultimoDia === ontemStr) streak++;
+    else if (ultimoDia !== dataHoje) streak = 1;
+
+    // Bônus de primeiro acesso antes das 9h
+    let ptsBase = PONTOS[acao] || 0;
+    if (acao === 'ACESSAR_DIA' && new Date().getHours() < 9) ptsBase += PONTOS.PRIMEIRO_DIA;
+
+    // Bônus 1º a completar tudo / 1º a ouvir prece
+    const bonusNovos = {};
+    let ptsBonus = 0;
+    if (acao === 'COMPLETAR_TUDO' || acao === 'PRECE') {
+      const tipoBonus = acao === 'COMPLETAR_TUDO' ? 'bonus_1_completo' : 'bonus_1_prece';
+      const pontosBonus = acao === 'COMPLETAR_TUDO' ? PONTOS.BONUS_1_COMPLETO : PONTOS.BONUS_1_PRECE;
+      if (!bData[tipoBonus]) { ptsBonus = pontosBonus; bonusNovos[tipoBonus] = uid; }
+    }
+
+    // Aplica multiplicador de streak
+    const ptsTotal = calcPontos(ptsBase, streak) + ptsBonus;
+    let totalFinal = pontos + ptsTotal;
+
+    // Verifica se completou TODAS as tarefas hoje
+    const tarefasObrig = ['ACESSAR_DIA','PRECE','MEDITACAO','SELF_DESIGN','EBOOK'];
+    const novasAtivHoje = { ...atividadesHoje, [acao]: true };
+    const completou = tarefasObrig.every(t => novasAtivHoje[t]) && !atividadesHoje.COMPLETAR_TUDO;
+    let ptsCompleto = 0;
+    if (completou) {
+      novasAtivHoje.COMPLETAR_TUDO = true;
+      let bExtra = 0;
+      if (!bData.bonus_1_completo && !bonusNovos.bonus_1_completo) {
+        bExtra = PONTOS.BONUS_1_COMPLETO;
+        bonusNovos.bonus_1_completo = uid;
+      }
+      ptsCompleto = calcPontos(PONTOS.COMPLETAR_TUDO, streak) + bExtra;
+      totalFinal += ptsCompleto;
+    }
+
+    const titulo = getTitulo(totalFinal);
+    tx.set(refG, {
+      pontos: totalFinal, streak,
       ultimoDia: dataHoje,
       atividades: { ...atividades, [dataHoje]: novasAtivHoje },
-    });
-    await atualizarRankingPublico(uid, nomeUsuario, fotoURL, kinNatalNum, totalComCompleto, streak);
-    invalidarCache();
-    mostrarToast(`+${ptsTotal + ptsCompleto} pts${ptsBonus?` (+${ptsBonus} de bônus)`:''}. Todas as tarefas concluídas!`);
-    return ptsTotal + ptsCompleto;
-  }
+    }, { merge: true });
+    // snapshot público do ranking (antes eram duas gravações separadas)
+    tx.set(refR, {
+      uid, nome: nomeUsuario||'', foto: fotoURL||'',
+      kinNatal: kinNatalNum||null,
+      pontos: totalFinal, streak,
+      titulo: titulo.titulo, emoji: titulo.emoji,
+      atualizadoEm: firebase.firestore.FieldValue.serverTimestamp(),
+    }, { merge: true });
+    if (Object.keys(bonusNovos).length) tx.set(refB, bonusNovos, { merge: true });
 
-  await atualizarFirestore(uid, {
-    pontos: novoTotal, streak,
-    ultimoDia: dataHoje,
-    atividades: { ...atividades, [dataHoje]: novasAtivHoje },
+    return { pts: ptsTotal + ptsCompleto, ptsBonus, completou };
   });
-  await atualizarRankingPublico(uid, nomeUsuario, fotoURL, kinNatalNum, novoTotal, streak);
-  invalidarCache();
-  if (ptsTotal > 0) mostrarToast(`+${ptsTotal} pts${ptsBonus?` (+${ptsBonus} de bônus)`:''}`);
-  return ptsTotal;
-}
 
-async function atualizarRankingPublico(uid, nome, foto, kinNatal, pontos, streak) {
-  if (!uid) return;
-  const titulo = getTitulo(pontos);
-  await db.collection('ranking').doc(uid).set({
-    uid, nome: nome||'', foto: foto||'',
-    kinNatal: kinNatal||null,
-    pontos, streak,
-    titulo: titulo.titulo,
-    emoji: titulo.emoji,
-    atualizadoEm: firebase.firestore.FieldValue.serverTimestamp(),
-  }, { merge: true });
+  invalidarCache();
+  // os pontos já estão gravados; um erro só de exibição do aviso não deve afetar o retorno
+  try {
+    if (r.completou) {
+      mostrarToast(`+${r.pts} pts${r.ptsBonus?` (+${r.ptsBonus} de bônus)`:''}. Todas as tarefas concluídas!`);
+    } else if (r.pts > 0) {
+      mostrarToast(`+${r.pts} pts${r.ptsBonus?` (+${r.ptsBonus} de bônus)`:''}`);
+    }
+  } catch (e) { console.warn('[Gamif] toast', e); }
+  return r.pts;
 }
 
 // ─── Toast de pontos ─────────────────────────────────────────────────────────
