@@ -32,7 +32,10 @@ import { calcOraculo, calcGuia } from './cartilha.js';
 window.calcularTabelaGuia = function() {
   const inp = document.getElementById('tabela-guia-inp');
   const kinNum = parseInt(inp?.value);
-  if (!kinNum || kinNum < 1 || kinNum > 260) return;
+  if (!kinNum || kinNum < 1 || kinNum > 260) {
+    if (window.mostrarToast) window.mostrarToast('Informe um Kin entre 1 e 260.', 'erro');
+    return;
+  }
 
   Promise.all([
     import('./cartilha.js'),
@@ -55,28 +58,34 @@ window.calcularTabelaGuia = function() {
     const res    = document.getElementById('tabela-guia-resultado');
     if (!linhas || !res) return;
 
-    const row = (label, val, cor='var(--text)') =>
-      `<div style="display:flex;justify-content:space-between;align-items:center;padding:.35rem .6rem;background:var(--bg2);border-radius:5px;border:1px solid var(--border)">
-        <span style="font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-family:Cinzel">${label}</span>
-        <span style="font-family:Cinzel;font-size:.75rem;color:${cor}">${val}</span>
+    // Estilos vivem no CSS (.kv-row, .kv-label, .kv-val). Modificadores de cor: is-gold | is-green | is-muted
+    const row = (label, val, mod = '') =>
+      `<div class="kv-row">
+        <span class="kv-label">${label}</span>
+        <span class="kv-val ${mod}">${val}</span>
       </div>`;
 
+    linhas.className = 'kv-list';
     linhas.innerHTML = [
-      row('Kin', `${kinNum} de 260`, 'var(--gold2)'),
-      row('Selo Solar', `${nomeSelo} · ${nomeMaia}`, 'var(--gold2)'),
-      row('Tom Galáctico', `${tomIdx} · ${nomeTom}`, 'var(--text)'),
-      row('Kin Guia', oraculo.guia, 'var(--green2)'),
-      row('Kin Análogo', oraculo.analogo, 'var(--text)'),
-      row('Kin Antípoda', oraculo.antipoda, 'var(--text)'),
-      row('Kin Oculto', oraculo.oculto, 'var(--text3)'),
-      row('Palavras-chave', [ps.poder, ps.qualidade, ps.essencia].filter(Boolean).join(' · '), 'var(--gold)'),
+      row('Kin', `${kinNum} de 260`, 'is-gold'),
+      row('Selo Solar', `${nomeSelo} · ${nomeMaia}`, 'is-gold'),
+      row('Tom Galáctico', `${tomIdx} · ${nomeTom}`),
+      row('Kin Guia', oraculo.guia, 'is-green'),
+      row('Kin Análogo', oraculo.analogo),
+      row('Kin Antípoda', oraculo.antipoda),
+      row('Kin Oculto', oraculo.oculto, 'is-muted'),
+      row('Palavras-chave', [ps.poder, ps.qualidade, ps.essencia].filter(Boolean).join(' · '), 'is-gold'),
     ].join('');
 
+    // ps.poder pode não existir mesmo quando ps.qualidade existe: sem o fallback, .toLowerCase()
+    // lançaria TypeError antes de res.style.display = 'block' e o resultado ficaria oculto.
     poema.innerHTML = pt.poder && ps.qualidade ? `
-      <div style="font-size:.6rem;color:var(--gold);font-family:Cinzel;letter-spacing:.1em;margin-bottom:.5rem">POEMA RESSONANTE · KIN ${kinNum}</div>
-      Eu ${pt.poder} com o fim de ${ps.qualidade},<br>
-      ${pt.acao} ${ps.poder.toLowerCase()},<br>
-      <span style="color:var(--text3);font-size:.8rem">Com o tom ${pt.qualidade} do ${nomeTom.toLowerCase()}.</span>` : '';
+      <div class="poema">
+        <div class="poema-label">Poema ressonante do Kin ${kinNum}</div>
+        Eu ${pt.poder} com o fim de ${ps.qualidade},<br>
+        ${pt.acao} ${(ps.poder || '').toLowerCase()},<br>
+        <span class="poema-fim">Com o tom ${pt.qualidade} do ${nomeTom.toLowerCase()}.</span>
+      </div>` : '';
 
     res.style.display = 'block';
   });
@@ -128,6 +137,20 @@ function fecharComparacao() {
   document.body.style.overflow = '';
 }
 
+// ─── Exclusão de conta (LGPD): duas confirmações, agora com diálogo estilizado ─
+// window.confirmarModal e window.mostrarToast são definidos no index.html.
+// Se não existirem, cai para confirm()/alert() como antes.
+async function _confirmar(titulo, texto, confirmar) {
+  if (window.confirmarModal) {
+    return window.confirmarModal({ titulo, texto, confirmar, perigo: true });
+  }
+  return confirm(titulo + '\n\n' + texto);
+}
+function _avisoErro(msg) {
+  if (window.mostrarToast) window.mostrarToast(msg, 'erro', 8000);
+  else alert(msg);
+}
+
 // ─── Expõe globalmente para onclick= no HTML ──────────────────────────────────
 Object.assign(window, {
   DATA,
@@ -158,12 +181,22 @@ Object.assign(window, {
   abrirModalPlasma, abrirModalFaseLunar, abrirModalCastelo, mostrarKinDiaLua,
   // LGPD
   _confirmarExcluirConta: async function() {
-    if (!confirm('Tem certeza? Esta ação excluirá permanentemente sua conta e todos os seus dados.\n\nEsta operação não pode ser desfeita.')) return;
-    if (!confirm('Confirmar exclusão definitiva? Você perderá todo o seu progresso, pontuação e dados.')) return;
+    const passo1 = await _confirmar(
+      'Excluir conta?',
+      'Esta ação excluirá permanentemente sua conta e todos os seus dados. Esta operação não pode ser desfeita.',
+      'Continuar'
+    );
+    if (!passo1) return;
+    const passo2 = await _confirmar(
+      'Confirmar exclusão definitiva?',
+      'Você perderá todo o seu progresso, pontuação e dados.',
+      'Excluir tudo'
+    );
+    if (!passo2) return;
     try {
       await excluirContaCompleta();
     } catch(e) {
-      alert('Erro ao excluir conta: ' + e.message + '\n\nEnvie e-mail para adm.financ.espacoautonomia@gmail.com com assunto "LGPD - Excluir conta".');
+      _avisoErro('Erro ao excluir conta: ' + e.message + '. Envie e-mail para adm.financ.espacoautonomia@gmail.com com assunto "LGPD - Excluir conta".');
     }
   },
 });
@@ -197,4 +230,4 @@ initAuthObserver(async (user) => {
   verificarEnquete(user.uid);
   atualizarBotaoNotif();
   if (!localStorage.getItem('sinc13_onboard')) mostrarOnboarding();
-});       
+});
