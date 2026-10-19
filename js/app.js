@@ -15,7 +15,7 @@ import {
 } from './events.js';
 import {
   toggleFavorito, limparHistorico, limparFavoritos,
-  renderHistorico, renderFavoritos,
+  renderHistorico, renderFavoritos, isFavorito,
 } from './storage.js';
 import {
   initLogin, initAuthObserver, carregarPerfil,
@@ -46,8 +46,8 @@ window.calcularTabelaGuia = function(manual) {
     import('./cartilha.js'),
     import('./data.js'),
   ]).then(([cartilha, data]) => {
-    const { calcOraculo } = cartilha;
-    const { SELOS_NOMES, TONS_NOMES, POEMA_TOM, POEMA_SELO, SELOS_MAIAS } = data;
+    const { calcOraculo, poemaLinhasHTML } = cartilha;
+    const { SELOS_NOMES, TONS_NOMES, POEMA_SELO, SELOS_MAIAS } = data;
 
     const seloIdx = (kinNum - 1) % 20;
     const tomIdx  = ((kinNum - 1) % 13) + 1;
@@ -56,7 +56,6 @@ window.calcularTabelaGuia = function(manual) {
     const nomeTom  = TONS_NOMES[tomIdx-1] || '';
     const nomeMaia = SELOS_MAIAS[seloIdx]  || '';
     const ps = POEMA_SELO[seloIdx] || {};
-    const pt = POEMA_TOM[tomIdx]   || {};
 
     const linhas = document.getElementById('tabela-guia-linhas');
     const poema  = document.getElementById('tabela-guia-poema');
@@ -82,14 +81,12 @@ window.calcularTabelaGuia = function(manual) {
       row('Palavras-chave', [ps.poder, ps.qualidade, ps.essencia].filter(Boolean).join(' · '), 'is-gold'),
     ].join('');
 
-    // ps.poder pode não existir mesmo quando ps.qualidade existe: sem o fallback, .toLowerCase()
-    // lançaria TypeError antes de res.style.display = 'block' e o resultado ficaria oculto.
-    poema.innerHTML = pt.poder && ps.qualidade ? `
+    // Mesmo poema completo (5 linhas) das demais telas: gerarPoema() em cartilha.js
+    const linhasPoema = poemaLinhasHTML(kinNum, (DATA.kins || {})[kinNum]);
+    poema.innerHTML = linhasPoema ? `
       <div class="poema">
         <div class="poema-label">Poema ressonante do Kin ${kinNum}</div>
-        Eu ${pt.poder} com o fim de ${ps.qualidade},<br>
-        ${pt.acao} ${(ps.poder || '').toLowerCase()},<br>
-        <span class="poema-fim">Com o tom ${pt.qualidade} do ${nomeTom.toLowerCase()}.</span>
+        <div class="poema-centro" style="padding:0">${linhasPoema}</div>
       </div>` : '';
 
     res.style.display = 'block';
@@ -107,34 +104,31 @@ function _registrarAtv(acao) {
   );
 }
 
-// Wrappers que registram pontos ao chamar a ação
+// Wrappers que registram pontos ao chamar a ação.
+// Os pontos só contam se o conteúdo realmente abriu: as funções de events.js devolvem
+// true/false (antes o ponto era dado mesmo com vídeo ausente ou ação sem efeito).
 function togglePreceComPontos(btn) {
-  togglePrece(btn);
-  _registrarAtv('PRECE');
+  if (togglePrece(btn)) _registrarAtv('PRECE');
 }
 function abrirModalVideoComPontos(url, nome) {
-  abrirModalVideo(url, nome);
-  _registrarAtv('MEDITACAO');
+  if (abrirModalVideo(url, nome)) _registrarAtv('MEDITACAO');
 }
 function abrirSelfDesignComPontos(kin) {
-  abrirSelfDesign(kin);
-  _registrarAtv('SELF_DESIGN');
+  if (abrirSelfDesign(kin)) _registrarAtv('SELF_DESIGN');
 }
-function abrirEbookComPontos(pagina) {
-  abrirEbook(pagina);
-  _registrarAtv('EBOOK');
+async function abrirEbookComPontos(pagina) {
+  if (await abrirEbook(pagina)) _registrarAtv('EBOOK');
 }
 function abrirTextoSolsticioComPontos() {
-  abrirTextoSolsticio();
-  _registrarAtv('SOLSTICIO_INVERNO');
+  if (abrirTextoSolsticio()) _registrarAtv('SOLSTICIO_INVERNO');
 }
 function abrirKinNatalComPontos(kinNum, selo, modal, rotulo) {
-  abrirKinModal(kinNum, selo, modal, rotulo);
-  _registrarAtv('KIN_NATAL');
+  if (abrirKinModal(kinNum, selo, modal, rotulo)) _registrarAtv('KIN_NATAL');
 }
 function toggleFavoritoComPontos(kinNum, btn) {
   toggleFavorito(kinNum, btn);
-  _registrarAtv('FAVORITAR');
+  // só pontua ao FAVORITAR; desfavoritar não dá ponto
+  if (isFavorito(kinNum)) _registrarAtv('FAVORITAR');
 }
 function fecharComparacao() {
   const m = document.getElementById('modal-comparacao');
