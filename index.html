@@ -57,6 +57,14 @@
   --white:#a8b890;
   --blue:#1a4860;
 
+  /* usadas por events.js (borda do ícone no modal do selo): var(--vermelho|branco|azul|amarelo) */
+  --vermelho:#dc5046;
+  --branco:#d8e2d0;
+  --azul:#5a9fe0;
+  --amarelo:#ecc45c;
+  --info:#5aa0e0;
+  --warm:#e0875a;
+
   /* estados */
   --danger:#ef6a5b;
   --danger-bg:rgba(239,106,91,.10);
@@ -242,7 +250,7 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
 .h-sub{font-size:.875rem;color:var(--text2);margin-top:2px}
 .help-text{font-size:.875rem;color:var(--text2);line-height:1.6;margin-bottom:var(--s4)}
 .help-text strong{color:var(--gold2);font-weight:600}
-#res-natal{margin-top:var(--s5)}
+#res-natal{margin-top:var(--s3)}
 
 .perfil-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:var(--s3);align-items:start}
 .perfil-col{display:flex;flex-direction:column;gap:var(--s3);min-width:0}
@@ -298,7 +306,7 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
 .oraculo-nome{font-size:.75rem;font-weight:500;margin-top:var(--s1);color:var(--text);line-height:1.3;max-width:96px;word-break:break-word}
 .oraculo-central .oraculo-nome{font-size:.8125rem;font-weight:600;color:var(--gold3);max-width:110px}
 
-.onda-wrap{display:flex;justify-content:center;margin:var(--s4) 0}
+.onda-wrap{display:flex;flex-direction:column;align-items:center;margin:var(--s4) 0}
 .onda-L{display:grid;grid-template-columns:repeat(5,var(--cell));grid-template-rows:repeat(5,var(--cell));--cell:52px;gap:4px}
 .onda-L .onda-kin:nth-child(1) {grid-column:1;grid-row:1}
 .onda-L .onda-kin:nth-child(2) {grid-column:1;grid-row:2}
@@ -343,11 +351,11 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
 .lua-circular .seg.blue,.lua-circular .seg.azul{fill:rgba(80,150,220,.14);stroke:rgba(80,150,220,.42)}
 .lua-circular .seg.yellow,.lua-circular .seg.amarelo{fill:rgba(236,196,92,.13);stroke:rgba(236,196,92,.36)}
 .lua-circular .seg.active{fill:var(--gold);stroke:var(--gold2)}
-.lua-circular .seg-label{font-family:var(--font);font-size:9px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
+.lua-circular .seg-label{font-family:var(--font);font-size:13px;fill:var(--text2);text-anchor:middle;dominant-baseline:central}
 .lua-circular .seg-label.active{fill:#1a1000;font-weight:600}
 .lua-circular .center-text{font-family:var(--font);fill:var(--green2);text-anchor:middle}
-.lua-circular .center-num{font-size:20px;dominant-baseline:central;font-weight:600}
-.lua-circular .center-sub{font-size:8px;fill:var(--text2);letter-spacing:.06em;dominant-baseline:central}
+.lua-circular .center-num{font-size:34px;dominant-baseline:central;font-weight:600}
+.lua-circular .center-sub{font-size:13px;fill:var(--text2);dominant-baseline:central}
 .lua-legenda{display:flex;justify-content:center;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s3)}
 .lua-legenda-item{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text2);text-transform:none;letter-spacing:0}
 .lua-legenda-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
@@ -535,6 +543,247 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENTES RENDERIZADOS PELOS MÓDULOS JS
+   (cartilha.js, events.js, gamificacao.js)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* blocos genéricos */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:var(--s3)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:rgba(236,196,92,.10);color:var(--gold2);border-radius:999px;padding:3px 12px;font-size:.8125rem;font-weight:500}
+.chip-sm{padding:1px 8px;font-size:.6875rem;margin-left:4px;vertical-align:middle}
+.tile{background:var(--bg2);border-radius:var(--r-md);padding:var(--s3) var(--s4)}
+.tile-label{font-size:.75rem;font-weight:500;color:var(--text2);margin-bottom:2px}
+.tile-title{font-size:.9375rem;font-weight:600;color:var(--gold3);line-height:1.4}
+.tile-sub{font-size:.8125rem;color:var(--text2);margin-top:2px;line-height:1.55}
+.tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+.stack{display:flex;flex-direction:column;gap:var(--s2)}
+.prose{font-size:.9375rem;line-height:1.75;color:var(--text)}
+.prose strong{color:var(--gold2);font-weight:600}
+.small{font-size:.8125rem}
+.muted{color:var(--text2)}
+.msg-erro{color:var(--danger)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--c,var(--gold));flex-shrink:0;display:inline-block}
+.dot-lg{width:20px;height:20px}
+.row-line{display:flex;align-items:flex-start;gap:var(--s3);padding:var(--s3) var(--s4);background:var(--bg2);border-radius:var(--r-md)}
+.row-title{font-size:.9375rem;font-weight:600;color:var(--gold2)}
+.row-meta{font-size:.8125rem;font-weight:400;color:var(--text2);margin-left:4px}
+.row-sub{font-size:.8125rem;color:var(--text2);line-height:1.55;margin-top:2px}
+.tint-red{background:rgba(220,80,70,.08)}
+.tint-white{background:rgba(220,230,210,.05)}
+.tint-blue{background:rgba(80,150,220,.08)}
+.tint-yellow{background:rgba(236,196,92,.07)}
+
+/* Lei do Tempo */
+.formula{text-align:center;background:rgba(236,196,92,.07);border-radius:var(--r-lg);padding:var(--s5);margin-top:var(--s4)}
+.formula-big{font-size:1.75rem;font-weight:700;letter-spacing:-.01em;color:var(--gold3)}
+.formula-sub{font-size:.8125rem;color:var(--text2);margin-top:var(--s1)}
+.freq{background:var(--bg2);border-radius:var(--r-md);padding:var(--s4);text-align:center}
+.freq-num{font-size:1.5rem;font-weight:700;color:var(--info);font-variant-numeric:tabular-nums}
+.freq-num.is-warm{color:var(--warm)}
+.freq-title{font-size:.875rem;font-weight:600;margin:2px 0 var(--s2)}
+.freq-desc{font-size:.8125rem;color:var(--text2);line-height:1.6}
+.ciclo{display:flex;align-items:center;gap:var(--s3);padding:var(--s3);background:var(--bg2);border-radius:var(--r-md)}
+.ciclo-chip{min-width:68px;text-align:center;font-size:.8125rem;font-weight:600;color:var(--gold2);background:rgba(236,196,92,.10);padding:4px 8px;border-radius:8px;font-variant-numeric:tabular-nums}
+.ciclo-nome{min-width:104px;font-size:.9375rem;font-weight:600}
+.ciclo-desc{font-size:.8125rem;color:var(--text2);flex:1;line-height:1.5}
+.stat{background:var(--bg2);border-radius:var(--r-md);padding:var(--s4);text-align:center}
+.stat-num{font-size:1.875rem;font-weight:700;color:var(--gold3);line-height:1.1;font-variant-numeric:tabular-nums}
+.stat-title{font-size:.9375rem;font-weight:600;margin-top:2px}
+.stat-sub{font-size:.8125rem;color:var(--text2);margin-top:2px}
+.prece{text-align:center;padding:var(--s2) 0}
+.prece-bloco{margin-bottom:var(--s4)}
+.prece-dir{font-size:.8125rem;font-weight:600;color:var(--gold);margin-bottom:2px}
+.prece-verso{color:var(--text2);font-style:italic;font-size:.9375rem;line-height:1.85}
+.prece-mantra{color:var(--gold2);font-weight:600;line-height:1.9;margin-top:var(--s5)}
+.prece-fim{font-size:.8125rem;font-weight:400;color:var(--text2)}
+.prece-player{background:rgba(236,196,92,.06);border-radius:var(--r-md);padding:var(--s4);margin-bottom:var(--s5)}
+.prece-player-titulo{font-size:.9375rem;font-weight:600;color:var(--gold2);margin-bottom:var(--s3)}
+.prece-audio{width:100%;height:40px;accent-color:var(--gold2)}
+.prece-fallback{margin-top:var(--s3);flex-direction:column;gap:var(--s2)}
+
+/* Poema ressonante */
+.poema-centro{text-align:center;padding:var(--s2) 0;line-height:2.1;font-size:1rem;color:var(--text)}
+.poema-meta{font-size:.8125rem;color:var(--text2);margin-bottom:var(--s3)}
+.poema-l1{color:var(--gold2);font-style:italic}
+.poema-l5{color:var(--gold);margin-top:var(--s2);font-style:italic}
+
+/* Cronógrafo */
+.cron-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s2);margin-bottom:var(--s4)}
+.cron-grid .tile{text-align:center}
+.cron-grid .tile-title{font-size:.8125rem}
+.cron-box{background:rgba(236,196,92,.06);border-radius:var(--r-md);padding:var(--s4);margin-bottom:var(--s3)}
+.cron-box-title{font-size:.8125rem;font-weight:600;color:var(--gold2);margin-bottom:var(--s2)}
+.cron-oraculo{display:grid;grid-template-columns:repeat(2,1fr);gap:4px var(--s4);font-size:.875rem}
+.cron-field{margin-bottom:var(--s3)}
+.cron-field label{display:block;font-size:.8125rem;font-weight:500;color:var(--text2);margin-bottom:6px}
+.cron-field textarea{width:100%}
+.cron-actions{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);margin-top:var(--s4);flex-wrap:wrap}
+.cron-status{font-size:.8125rem;color:var(--green2);min-height:1.2em}
+.hist-dia{padding-bottom:var(--s4);margin-bottom:var(--s4);border-bottom:1px solid var(--border)}
+.hist-dia:last-child{border-bottom:none;margin-bottom:0}
+.hist-data{font-size:.8125rem;font-weight:600;color:var(--gold);margin-bottom:var(--s2)}
+.hist-campo{margin-bottom:6px;font-size:.875rem;line-height:1.6}
+.hist-lbl{color:var(--text2)}
+.hist-val{color:var(--text);font-style:italic}
+.modal-wide{max-width:480px}
+
+/* Kin do dia: relação com o Kin Natal */
+.relacao-badge{display:inline-flex;align-items:center;gap:8px;margin-top:var(--s4);background:rgba(236,196,92,.10);border-radius:999px;padding:6px 14px;font-size:.8125rem;font-weight:500;color:var(--gold2);line-height:1.4}
+
+/* Selos */
+.selo-card-maya{font-size:.75rem;font-weight:600;color:var(--gold);margin:1px 0 2px;letter-spacing:.02em}
+.selo-maya-tag{font-size:.8125rem;font-weight:600;color:var(--gold);margin-bottom:var(--s2)}
+.selo-acao-txt{font-size:.9375rem;color:var(--text2);font-style:italic;margin-bottom:var(--s3)}
+
+/* Modais de conteúdo (kin, plasma, lua, castelo, prece) */
+.kin-modal-body{padding:var(--s5)}
+.im-head{text-align:center;padding:var(--s2) 0 var(--s4)}
+.im-emoji{font-size:3rem;line-height:1;margin-bottom:var(--s3)}
+.im-title{font-size:1.25rem;font-weight:700;letter-spacing:-.01em;color:var(--c,var(--gold2))}
+.im-sub{font-size:.875rem;color:var(--text2);margin-top:4px}
+.im-chip{display:inline-block;margin-top:var(--s3);background:rgba(236,196,92,.10);color:var(--gold2);border-radius:999px;padding:4px 14px;font-size:.8125rem;font-weight:500}
+.im-quote{background:rgba(255,255,255,.04);border-radius:var(--r-md);padding:var(--s4) var(--s5);font-style:italic;font-size:.9375rem;line-height:1.8;color:var(--text);margin:var(--s4) 0}
+.im-tip{display:inline-block;border:1px solid var(--c,var(--gold));color:var(--c,var(--gold2));border-radius:var(--r-md);padding:6px 14px;font-size:.875rem;margin-bottom:var(--s4)}
+.im-note{font-size:.875rem;color:var(--text2);line-height:1.7}
+
+/* Enquete */
+.enquete-box{text-align:left;max-width:440px;max-height:90vh;max-height:90dvh;overflow-y:auto}
+.enq-head{text-align:center;margin-bottom:var(--s5)}
+.enq-pergunta{font-size:1.0625rem;font-weight:600;line-height:1.45;color:var(--text)}
+.enq-hint{font-size:.8125rem;color:var(--text2);margin-top:var(--s1)}
+.enq-opcoes{display:flex;flex-direction:column;gap:var(--s2);margin-bottom:var(--s4)}
+.enq-opt{display:flex;align-items:center;gap:var(--s3);background:var(--bg2);border:1px solid transparent;border-radius:var(--r-md);padding:var(--s3) var(--s4);cursor:pointer;font-size:.9375rem;transition:background .16s,border-color .16s}
+.enq-opt:hover{background:var(--surface-hover)}
+.enq-opt:has(input:checked){border-color:var(--green);background:rgba(34,197,94,.08)}
+.enq-opt input{accent-color:var(--green);width:18px;height:18px;flex-shrink:0}
+.enq-actions{display:flex;gap:var(--s2);justify-content:flex-end;flex-wrap:wrap}
+.enq-msg{margin-top:var(--s3);font-size:.8125rem;text-align:center;min-height:1.2em}
+.bar-row{margin-bottom:var(--s3)}
+.bar-head{display:flex;justify-content:space-between;gap:var(--s3);font-size:.875rem;color:var(--text2);margin-bottom:6px}
+.bar-row.is-mine .bar-head{color:var(--gold2);font-weight:500}
+.bar{background:var(--bg2);border-radius:999px;height:8px;overflow:hidden}
+.bar-fill{height:100%;border-radius:999px;background:var(--green);transition:width .5s var(--ease)}
+.is-mine .bar-fill{background:var(--gold2)}
+.bar-total{font-size:.8125rem;color:var(--text2);margin-top:var(--s2)}
+
+/* Gamificação: widget do perfil */
+.gm-top{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap;margin-bottom:var(--s5)}
+.gm-badge{text-align:center;min-width:64px}
+.gm-badge-icon{width:56px;height:56px;border-radius:var(--r-lg);background:rgba(236,196,92,.10);display:flex;align-items:center;justify-content:center;font-size:1.75rem;margin:0 auto 4px}
+.gm-badge-nome{font-size:.8125rem;font-weight:600;color:var(--gold2)}
+.gm-main{flex:1;min-width:160px}
+.gm-points-row{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2);margin-bottom:2px}
+.gm-points{font-size:1.625rem;font-weight:700;color:var(--gold3);font-variant-numeric:tabular-nums;line-height:1.2}
+.gm-points-label{font-size:.8125rem;color:var(--text2)}
+.gm-next{font-size:.8125rem;color:var(--text2);margin-bottom:var(--s2)}
+.gm-bar{background:var(--bg2);border-radius:999px;height:6px;overflow:hidden}
+.gm-bar-fill{height:100%;border-radius:999px;background:var(--gold);transition:width .5s var(--ease)}
+.gm-bar-fill.is-green{background:var(--green2)}
+.gm-streak{text-align:center;min-width:72px}
+.gm-streak-num{font-size:1.625rem;font-weight:700;color:var(--text2);line-height:1.2;font-variant-numeric:tabular-nums}
+.gm-streak.is-hot .gm-streak-num{color:var(--gold2)}
+.gm-streak-label{font-size:.75rem;color:var(--text2)}
+.gm-mult{font-size:.8125rem;color:var(--gold2);font-weight:600}
+.gm-progress{margin-bottom:var(--s4)}
+.gm-progress-head{display:flex;justify-content:space-between;font-size:.8125rem;color:var(--text2);margin-bottom:6px}
+.gm-tasks{display:flex;flex-direction:column}
+.gm-task{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) 0;font-size:.9375rem;color:var(--text2)}
+.gm-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:transparent}
+.gm-check .ico{width:12px;height:12px;stroke-width:3}
+.gm-task.is-done{color:var(--text)}
+.gm-task.is-done .gm-check{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.gm-task-label{flex:1}
+.gm-task-pts{font-size:.8125rem;color:var(--text3);font-variant-numeric:tabular-nums}
+.gm-task.is-done .gm-task-pts{color:var(--gold)}
+.gm-task--extra{margin-top:var(--s2);padding-top:var(--s3);border-top:1px solid var(--border)}
+.gm-erro{color:var(--danger);font-size:.875rem}
+.gm-empty{color:var(--text2);font-size:.875rem}
+
+/* Gamificação: ranking e comparação */
+.ranking-kin{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:.75rem;color:var(--text2)}
+.ranking-kin .selo-icon{width:18px;height:18px;border-radius:4px;margin:0;flex-shrink:0}
+.ranking-voce{color:var(--gold2);font-size:.75rem;font-weight:500;margin-left:4px}
+.ranking-streak{display:inline-flex;align-items:center;gap:3px;font-size:.75rem;color:var(--gold);margin-top:2px}
+.ranking-streak .ico{width:12px;height:12px}
+.cmp-head{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--s2);align-items:center;margin-bottom:var(--s5);text-align:center}
+.cmp-avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--gold)}
+.cmp-user.is-other .cmp-avatar{box-shadow:0 0 0 2px var(--green)}
+.cmp-nome{font-size:.875rem;font-weight:600;margin-top:6px;color:var(--gold2);overflow-wrap:anywhere}
+.cmp-user.is-other .cmp-nome{color:var(--green2)}
+.cmp-titulo{font-size:.75rem;color:var(--text2)}
+.cmp-vs{font-size:.8125rem;font-weight:600;color:var(--text3)}
+.cmp-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:6px var(--s3);align-items:center}
+.cmp-grid .l{text-align:right}
+.cmp-grid .r{text-align:left}
+.cmp-grid .m{text-align:center;font-size:.8125rem;color:var(--text2)}
+.cmp-big{font-size:1.25rem;font-weight:700;font-variant-numeric:tabular-nums}
+.cmp-big.is-me{color:var(--gold2)}
+.cmp-big.is-other{color:var(--green2)}
+.cmp-streak{font-size:.875rem;color:var(--text2)}
+.cmp-streak.is-hot-me{color:var(--gold2)}
+.cmp-streak.is-hot-other{color:var(--green2)}
+.cmp-sec{margin:var(--s5) 0 var(--s2);font-size:.875rem;font-weight:600}
+.cmp-task{padding:var(--s2) 0;border-bottom:1px solid var(--border)}
+.cmp-ok{color:var(--green2);width:16px;height:16px;stroke-width:2.5}
+.cmp-no{color:var(--text3)}
+
+@media(max-width:600px){
+  .ciclo{flex-wrap:wrap;gap:var(--s2)}
+  .ciclo-nome{min-width:0}
+  .ciclo-desc{flex-basis:100%}
+  .cron-grid{grid-template-columns:1fr 1fr}
+  .cron-oraculo{grid-template-columns:1fr}
+  .tile-grid:has(.freq){grid-template-columns:1fr}
+  .gm-top{gap:var(--s3)}
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   BLOCOS DO renderer.js (tela do Kin)
+   ═══════════════════════════════════════════════════════════════ */
+.hero-wrap{margin-bottom:var(--s3)}
+.hero-wrap .export-btns{margin-top:var(--s3)}
+.kin-glifo{display:flex;justify-content:center;margin-bottom:var(--s2)}
+.kin-selo-hero{width:72px;height:72px;border-radius:var(--r-lg);margin:0 auto var(--s3)}
+.kin-num .btn-fav{margin-left:2px;font-size:1.125rem;min-width:32px;min-height:32px}
+.sub-title{font-size:.9375rem;font-weight:600;color:var(--gold3);margin-bottom:var(--s3)}
+.onda-proposito{font-size:.9375rem;line-height:1.7;margin-bottom:var(--s4)}
+.onda-proposito strong{color:var(--gold2);font-weight:600}
+.or-item{display:flex;flex-direction:column;align-items:center;gap:3px}
+.or-item.is-rev{flex-direction:column-reverse}
+.or-label{font-size:.75rem;font-weight:500;color:var(--text2)}
+.or-nome{font-size:.75rem;color:var(--text);text-align:center;max-width:84px;line-height:1.25}
+.or-kin{font-size:.75rem;font-weight:600;color:var(--gold);margin-top:2px}
+.onda-rows{display:flex;flex-direction:column;gap:var(--s1);margin-top:var(--s2)}
+.onda-row{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s3);border-radius:var(--r-md)}
+.onda-row.is-atual{background:rgba(236,196,92,.08)}
+.onda-row .selo-icon{width:40px;height:40px;flex-shrink:0;margin:0}
+.onda-row-nome{flex:1;font-size:.875rem;line-height:1.3;color:var(--text)}
+.onda-row.is-atual .onda-row-nome{color:var(--gold2);font-weight:600}
+.onda-row-tag{font-size:.75rem;color:var(--gold);white-space:nowrap}
+.castelo-nome{font-size:1rem;font-weight:600;color:var(--gold2);margin-bottom:var(--s3)}
+.castelo-img{width:80px;height:80px;object-fit:contain;display:block;margin:0 0 var(--s3)}
+.subsec{border-top:1px solid var(--border);padding-top:var(--s5);margin-top:var(--s5)}
+.kin-line{display:flex;align-items:center;gap:var(--s4)}
+.kin-line-box{text-align:center;flex-shrink:0}
+.kin-line-nome{font-size:.9375rem;font-weight:600;color:var(--gold2)}
+.kin-line-sub{font-size:.8125rem;color:var(--text2);margin-top:2px;line-height:1.5}
+.quote-gold{background:rgba(236,196,92,.07);border-radius:var(--r-md);padding:var(--s3) var(--s4);font-style:italic;font-size:.9375rem;line-height:1.6;color:var(--gold2);margin-bottom:var(--s4)}
+.pf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:var(--s2)}
+.pf-item{display:flex;align-items:center;gap:var(--s3)}
+.pf-emoji{font-size:2rem;width:48px;text-align:center;flex-shrink:0;line-height:1}
+.pf-img{width:48px;height:48px;object-fit:contain;flex-shrink:0}
+.clicavel{cursor:pointer;-webkit-tap-highlight-color:rgba(236,196,92,.15);transition:background .16s,transform .1s}
+.clicavel:hover{background:var(--surface-hover)}
+.clicavel:active{transform:scale(.99)}
+.pratica-pergunta{justify-content:flex-start!important;font-style:italic;color:var(--gold2)}
+.btn-pratica .ico{width:12px;height:12px;fill:currentColor;stroke-width:1}
+.btn-share .ico,.btn-cal .ico{width:16px;height:16px}
+/* no modal do kin as ações de exportar não fazem sentido (exportam a página, não o modal) */
+.kin-modal-body .export-btns{display:none}
+
 /* .hidden por último: precisa vencer qualquer display definido acima */
 .hidden{display:none}
 </style>
@@ -568,6 +817,11 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
     <symbol id="i-waves" viewBox="0 0 24 24"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></symbol>
     <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
     <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7ZM14 2v4a2 2 0 0 0 2 2h4M10 9H8M16 13H8M16 17H8"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3l14 9-14 9z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
     <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol>
   </defs>
 </svg>
@@ -696,8 +950,8 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
             </div>
             <button class="btn-calc" onclick="calcNatal()">Calcular</button>
           </div>
-          <div id="res-natal" class="hidden"></div>
         </div>
+        <div id="res-natal" class="hidden"></div>
       </div>
     </div>
 
@@ -885,6 +1139,7 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script type="module" src="./js/app.js"></script>
 <script>
