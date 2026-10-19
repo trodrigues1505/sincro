@@ -29,11 +29,16 @@ import {
 import { calcOraculo, calcGuia } from './cartilha.js';
 
 // Função global para a tabela guia
-window.calcularTabelaGuia = function() {
+// manual === true quando vem do botão "Calcular". O campo também chama esta função a cada
+// tecla (oninput), e nesse caso não deve aparecer aviso enquanto a pessoa ainda digita.
+window.calcularTabelaGuia = function(manual) {
   const inp = document.getElementById('tabela-guia-inp');
   const kinNum = parseInt(inp?.value);
   if (!kinNum || kinNum < 1 || kinNum > 260) {
-    if (window.mostrarToast) window.mostrarToast('Informe um Kin entre 1 e 260.', 'erro');
+    // não deixa na tela o resultado de um Kin anterior
+    const antigo = document.getElementById('tabela-guia-resultado');
+    if (antigo) antigo.style.display = 'none';
+    if (manual === true && window.mostrarToast) window.mostrarToast('Informe um Kin entre 1 e 260.', 'erro');
     return;
   }
 
@@ -123,8 +128,8 @@ function abrirTextoSolsticioComPontos() {
   abrirTextoSolsticio();
   _registrarAtv('SOLSTICIO_INVERNO');
 }
-function abrirKinNatalComPontos(kinNum, selo, modal) {
-  abrirKinModal(kinNum, selo, modal);
+function abrirKinNatalComPontos(kinNum, selo, modal, rotulo) {
+  abrirKinModal(kinNum, selo, modal, rotulo);
   _registrarAtv('KIN_NATAL');
 }
 function toggleFavoritoComPontos(kinNum, btn) {
@@ -168,6 +173,7 @@ Object.assign(window, {
   atualizarBotaoNotif, toggleNotificacao,
   mostrarOnboarding, proximoOnboarding, fecharOnboarding,
   carregarAviso, fecharAviso,
+  verificarEnquete,
   exportarCalendario28, exportarPDFKin,
   toggleFavorito: toggleFavoritoComPontos,
   limparHistorico, limparFavoritos,
@@ -200,6 +206,12 @@ Object.assign(window, {
     }
   },
 });
+
+// index.html chama auth.signOut() no botão "Voltar ao login" da tela de aprovação.
+// Se api.js já expôs window.auth, não mexe; senão expõe o mesmo objeto de Api.auth.
+if (!('auth' in window)) {
+  Object.defineProperty(window, 'auth', { get: () => Api.auth, configurable: true });
+}
 
 // ─── switchTab estendido para carregar ranking e gamificação ──────────────────
 const _switchTabOrig = switchTab;
