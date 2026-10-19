@@ -68,7 +68,7 @@ export function isLeapDay(d) {
 
 // ─── daysBetween ─────────────────────────────────────────────────────────────
 // Diferença simples em dias corridos entre duas datas (sem descontar bissextos).
-// Usado para calcular dia/lua do ano galáctico em renderer.js.
+// Usado em renderer.js para o dia/lua do ano galáctico. NÃO usar para Kin: veja dateToKin.
 export function daysBetween(f, t) {
   const fNorm = new Date(f.getFullYear(), f.getMonth(), f.getDate());
   const tNorm = new Date(t.getFullYear(), t.getMonth(), t.getDate());
@@ -76,15 +76,36 @@ export function daysBetween(f, t) {
 }
 
 // ─── dateToKin ────────────────────────────────────────────────────────────────
-// O calendário das 13 Luas não usa anos bissextos: 29/fev é tratado como 28/fev.
-// A contagem de dias usa diferença calendária direta (Math.round) sem descontar
-// os dias bissextos acumulados — isso produz o offset correto com base = 23.
+// O calendário das 13 Luas não conta o 29 de fevereiro: o dia é "pulado" (29/fev usa o mesmo
+// Kin de 28/fev e 1º/mar segue direto). Por isso o número de dias entre duas datas precisa
+// DESCONTAR os 29/fev que existem entre elas.
+//
+// Histórico do erro: a versão anterior contava todos os dias corridos e compensava isso com
+// um offset de 23, calibrado só para 07/06/2026 (Kin 180). Com o desconto correto, o offset
+// certo é 33 (26/07/1987 = Kin 34), e a diferença de 10 é exatamente a quantidade de 29/fev
+// entre 1987 e 2026. A versão antiga só acertava datas sem nenhum 29/fev entre elas e 2026
+// (ou seja, só nascidos depois de 29/02/2024) e passaria a errar o Kin do dia em 01/03/2028.
+// Referências conferidas: 07/06/2026 = 180, 15/05/1985 = 12 (Humano Amarelo),
+// 21/12/2012 = 207, 26/07/1987 = 34.
+
+// Quantidade de 29/fev ocorridos até a data (inclusive). `d` nunca é 29/fev (já normalizado).
+function bissextosAte(d) {
+  const y = d.getFullYear();
+  const anosBissextosAte = (n) => Math.floor(n / 4) - Math.floor(n / 100) + Math.floor(n / 400);
+  const bissextoEsteAno = (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+  // em jan/fev (até 28/fev) o 29/fev deste ano ainda não aconteceu
+  return anosBissextosAte(y - 1) + ((bissextoEsteAno && d.getMonth() >= 2) ? 1 : 0);
+}
+
+const KIN_BASE_DATA   = new Date(1987, 6, 26); // 26 de julho de 1987 = Kin 34
+const KIN_BASE_OFFSET = 33;                    // (33 + 0) % 260 + 1 = 34
+
 export function dateToKin(dt) {
   if (isLeapDay(dt)) return dateToKin(new Date(dt.getFullYear(), 1, 28));
   const dtNorm = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-  const base   = new Date(1987, 6, 26); // 26 de julho de 1987
-  const dias   = Math.round((dtNorm - base) / 86400000);
-  return ((23 + dias) % 260 + 260) % 260 + 1;
+  const diasCorridos = Math.round((dtNorm - KIN_BASE_DATA) / 86400000);
+  const dias = diasCorridos - (bissextosAte(dtNorm) - bissextosAte(KIN_BASE_DATA));
+  return ((KIN_BASE_OFFSET + dias) % 260 + 260) % 260 + 1;
 }
 
 export function getFaseLunar(d) {
@@ -139,27 +160,4 @@ export function getRelacaoKins(kinDia, kinNatal) {
   if (seloNatal && oculto   && seloNatal === oculto)   return { label:'Oculto',               desc:'Seu kin natal está oculto no kin de hoje',   cor:'rgba(165,124,0,.8)', icon:'🌙' };
   if (kinDia === kinNatal)                             return { label:'Sincronicidade Total', desc:'Hoje é exatamente o seu Kin Natal!',         cor:'var(--gold3)',        icon:'✨' };
   return null;
-}
-
-export function calcPoemaKin(kinNum, kData, poema_tom, poema_selo, selos_nomes) {
-  if (!kData) return null;
-  const seloIdx  = (kinNum - 1) % 20;
-  const tomIdx   = ((kinNum - 1) % 13) + 1;
-  const ps = poema_selo[seloIdx];
-  const pt = poema_tom[tomIdx];
-  if (!ps || !pt) return null;
-  const nomeSelo = selos_nomes[seloIdx] || '';
-  const femininos = new Set(['Noite','Serpente','Mão','Estrela','Lua','Águia','Terra','Semente','Tormenta']);
-  const isFem    = femininos.has(nomeSelo);
-  const daArticle = isFem ? 'da' : 'do';
-  const guiaLinha = kData.oraculo?.guia
-    ? `Eu sou guiado pelo poder ${daArticle} ${kData.oraculo.guia.split(' ').slice(0,-1).join(' ')}`
-    : `Eu sou guiado pelo meu próprio poder duplicado`;
-  return {
-    linha1: `Eu ${pt.poder} com o fim de ${ps.qualidade},`,
-    linha2: `${pt.acao} ${ps.poder},`,
-    linha3: `Sel${isFem?'a':'o'} ${isFem?'a':'o'} ${nomeSelo} d${daArticle} ${ps.essencia},`,
-    linha4: `Com o tom ${pt.qualidade} d${daArticle === 'da' ? 'a' : 'o'} ${pt.acao.toLowerCase().replace('ando','ação').replace('endo','ção')},`,
-    linha5: guiaLinha,
-  };
 }
