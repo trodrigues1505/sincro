@@ -15,7 +15,15 @@ const fc = {
 firebase.initializeApp(fc);
 export const auth = firebase.auth();
 export const db   = firebase.firestore();
+// Offline: guarda no aparelho o que o Firestore já leu, para o app abrir sem internet.
+// Precisa ser chamado antes de qualquer outra operação no Firestore.
+db.enablePersistence({ synchronizeTabs: true })
+  .catch(e => console.warn('[Firestore] cache offline indisponível:', e.code));
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+// Última autorização conhecida neste aparelho (só para a interface abrir offline;
+// quem realmente protege os dados são as Security Rules do Firestore).
+const AUTH_CACHE = 'sinc13_auth_';
 
 export let currentUserUID = null;
 export let _kinNatalSalvo = null;
@@ -98,13 +106,26 @@ export function initAuthObserver(onAuthorized) {
         return;
       }
       const uR = db.collection('users').doc(u.uid);
-      let uD = await uR.get();
-      if (!uD.exists) {
-        await uR.set({ email: u.email, nome: u.displayName, authorized: false, role: 'user', criadoEm: firebase.firestore.FieldValue.serverTimestamp() });
-        uD = await uR.get();
+      let d = null;
+      try {
+        let uD = await uR.get();
+        if (!uD.exists) {
+          await uR.set({ email: u.email, nome: u.displayName, authorized: false, role: 'user', criadoEm: firebase.firestore.FieldValue.serverTimestamp() });
+          uD = await uR.get();
+        }
+        if (uD.exists) {
+          d = uD.data();
+          try { localStorage.setItem(AUTH_CACHE + u.uid, JSON.stringify({ authorized: d.authorized === true, role: d.role || 'user' })); } catch (_) {}
+        }
+      } catch (err) {
+        // Sem conexão: usa a última autorização conhecida neste aparelho.
+        // Sem nenhuma, mantém o comportamento anterior (erro).
+        let guardado = null;
+        try { guardado = JSON.parse(localStorage.getItem(AUTH_CACHE + u.uid) || 'null'); } catch (_) {}
+        if (!guardado) throw err;
+        d = guardado;
       }
-      if (uD.exists) {
-        const d = uD.data();
+      if (d) {
         if (d.authorized === true) {
           document.getElementById('login-screen').style.display = 'none';
           document.getElementById('app-screen').classList.add('active');
@@ -185,17 +206,29 @@ export async function carregarPerfil(user) {
   document.getElementById('perfil-nome').textContent  = user.displayName||'';
   document.getElementById('perfil-email').textContent = user.email||'';
   if (!currentUserUID) return;
-  const snap = await db.collection('users').doc(currentUserUID).get();
-  if (snap.exists) {
-    const data = snap.data();
-    if (data.kinNatalData) {
-      document.getElementById('perfil-nasc-inp').value = data.kinNatalData;
-      const kinNatalNum = data.kinNatalNum || dateToKin(new Date(data.kinNatalData+'T12:00:00'));
-      _kinNatalSalvo = kinNatalNum;
-      mostrarKinNatalSalvo(data.kinNatalData, kinNatalNum);
-    } else {
-      document.getElementById('perfil-kin-salvo').innerHTML = '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
+  let data = null;
+  try {
+    const snap = await db.collection('users').doc(currentUserUID).get();
+    data = snap.exists ? snap.data() : null;
+  } catch (e) {
+    console.warn('[Perfil] não foi possível ler o perfil (sem conexão?)', e);
+    return;
+  }
+  if (!data) return;
+  if (data.kinNatalData) {
+    document.getElementById('perfil-nasc-inp').value = data.kinNatalData;
+    // O Kin é SEMPRE recalculado a partir da data de nascimento. O número gravado antes da
+    // correção do cálculo (29/fev) está errado para quem nasceu antes de 29/02/2024.
+    const kinNatalNum = dateToKin(new Date(data.kinNatalData+'T12:00:00'));
+    _kinNatalSalvo = kinNatalNum;
+    mostrarKinNatalSalvo(data.kinNatalData, kinNatalNum);
+    if (data.kinNatalNum !== kinNatalNum) {
+      // corrige o valor guardado no perfil e no ranking público
+      db.collection('users').doc(currentUserUID).update({ kinNatalNum }).catch(() => {});
+      db.collection('ranking').doc(currentUserUID).set({ kinNatal: kinNatalNum }, { merge: true }).catch(() => {});
     }
+  } else {
+    document.getElementById('perfil-kin-salvo').innerHTML = '<p class="perfil-sem-kin">Nenhum Kin Natal salvo ainda.</p>';
   }
 }
 
@@ -211,7 +244,7 @@ export function mostrarKinNatalSalvo(dataStr, kinNum) {
   el.innerHTML = `<div class="perfil-kin-card">
     <div class="perfil-kin-label">Meu Kin Natal</div>
     <div class="perfil-kin-nome">${base} ${kD.tom_nome} ${cor}</div>
-    <div class="perfil-kin-sub">Kin ${kinNum} · ${dataStr}</div>
+    <div class="perfil-kin-sub">Kin ${kinNum} · ${dataStr.split('-').reverse().join('/')}</div>
     <button class="btn-limpar-natal" onclick="limparKinNatal()">Remover</button>
   </div>`;
 }
@@ -219,7 +252,7 @@ export function mostrarKinNatalSalvo(dataStr, kinNum) {
 export async function salvarKinNatal() {
   if (!currentUserUID) return;
   const v = document.getElementById('perfil-nasc-inp').value;
-  if (!v) return;
+  if (!v) { if (window.mostrarToast) window.mostrarToast('Informe a data de nascimento.', 'erro'); return; }
   const dt = new Date(v+'T12:00:00'), k = dateToKin(dt);
   try {
     await db.collection('users').doc(currentUserUID).update({ kinNatalData: v, kinNatalNum: k });
@@ -230,7 +263,11 @@ export async function salvarKinNatal() {
     document.getElementById('nasc-inp').value = v;
     window.calcNatal && window.calcNatal();
     window.loadToday && window.loadToday();
-  } catch(e) { alert('Erro ao salvar: ' + e.message); }
+    if (window.mostrarToast) window.mostrarToast('Kin Natal salvo.', 'sucesso');
+  } catch(e) {
+    if (window.mostrarToast) window.mostrarToast('Erro ao salvar: ' + e.message, 'erro');
+    else alert('Erro ao salvar: ' + e.message);
+  }
 }
 
 export async function limparKinNatal() {
