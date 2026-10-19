@@ -219,12 +219,13 @@ export function fecharModalSelo() {
 }
 
 // ─── Modais de mídia ──────────────────────────────────────────────────────────
+// Retorna true se o conteúdo abriu. O app.js só dá pontos quando isso é true.
 export function abrirModalVideo(url, nomeSeloVideo) {
-  if (!url) return;
+  if (!url) { avisar('Este conteúdo ainda não está disponível.', 'erro'); return false; }
   const modal = document.getElementById('modal-video');
   const iframe = document.getElementById('modal-video-iframe');
   const titulo = document.getElementById('modal-video-titulo');
-  if (!modal || !iframe) return;
+  if (!modal || !iframe) return false;
   const videoId = url.includes('youtu') ? (url.split(/v=|youtu\.be\//)[1]||'').split(/[?&]/)[0] : '';
   // e-book e solstício definem uma altura fixa no iframe; sem limpar, o vídeo herdava 75vh
   iframe.style.height = '';
@@ -232,6 +233,7 @@ export function abrirModalVideo(url, nomeSeloVideo) {
   if (titulo) titulo.textContent = nomeSeloVideo ? `Meditação · ${nomeSeloVideo}` : 'Meditação';
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
+  return true;
 }
 
 // Prepara o modal de vídeo para exibir HTML no lugar do iframe.
@@ -264,17 +266,18 @@ function abrirModalConteudo(modal) {
 // 4º parâmetro (rotulo): texto opcional que antecede o título, ex. "Lua 3 · Dia 12 · 14 de agosto".
 // mostrarKinDiaLua já o enviava, mas a função só aceitava 3 parâmetros e o texto se perdia.
 export function abrirKinModal(kinNum, seloNome, modoResumido = false, rotulo = '') {
-  if (!kinNum || !DATA.kins) return;
+  if (!kinNum || !DATA.kins) return false;
   const kD = DATA.kins[String(kinNum)];
-  if (!kD) return;
+  if (!kD) return false;
   const ctx = prepararModalConteudo();
-  if (!ctx) return;
+  if (!ctx) return false;
   // importa kinHTML dinamicamente para evitar ciclo em tempo de carga
   import('./renderer.js').then(({ kinHTML: kh }) => {
     ctx.box.innerHTML = kh(kinNum, true);
   });
   if (ctx.titulo) ctx.titulo.textContent = `${rotulo ? rotulo + ' · ' : ''}Kin ${kinNum} · ${kD.selo}`;
   abrirModalConteudo(ctx.modal);
+  return true;
 }
 
 export function fecharModalVideo() {
@@ -285,6 +288,8 @@ export function fecharModalVideo() {
   if (iframe) { iframe.src = ''; iframe.style.display = ''; iframe.style.height = ''; }
   const kinContainer = document.getElementById('modal-kin-content');
   if (kinContainer) { kinContainer.style.display = 'none'; kinContainer.innerHTML = ''; }
+  if (_ebook && _ebook.task) { try { _ebook.task.cancel(); } catch (_) {} }
+  _ebook = null;
   document.body.style.overflow = '';
 }
 
@@ -292,19 +297,101 @@ const EBOOK_FILE_ID = '1PU_VNQH61uUjHl-OESKhHH4TKrDS3JgS';
 const EBOOK_EMBED   = 'https://drive.google.com/file/d/' + EBOOK_FILE_ID + '/preview';
 const EBOOK_URL     = 'https://drive.google.com/file/d/' + EBOOK_FILE_ID + '/view?usp=sharing';
 
-export function abrirEbook(pagina) {
-  const modal  = document.getElementById('modal-video');
-  const iframe = document.getElementById('modal-video-iframe');
-  const titulo = document.getElementById('modal-video-titulo');
-  if (!modal || !iframe) { window.open(EBOOK_URL, '_blank'); return; }
-  const kc = document.getElementById('modal-kin-content');
-  if (kc) { kc.style.display = 'none'; kc.innerHTML = ''; }
-  iframe.style.display = '';
-  iframe.style.height  = '75vh';
-  iframe.src = EBOOK_EMBED;
+// ─── E-book ───────────────────────────────────────────────────────────────────
+// O visualizador do Google Drive (/preview) não tem parâmetro de página, então a página
+// pedida (ex.: "Leitura da página 4") nunca era respeitada: abria sempre no começo.
+// Agora o e-book abre num leitor próprio (PDF.js) direto na página certa, com botões
+// anterior/próxima. Ele precisa do arquivo em  ./assets/ebook.pdf  (cópia do PDF do Drive).
+// Enquanto esse arquivo não existir, cai no Drive como antes e avisa o número da página.
+const EBOOK_LOCAL  = './assets/ebook.pdf';
+const PDFJS_URL    = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let _ebook = null; // { pdf, pagina, total, task, token }
+
+function carregarPdfJs() {
+  if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = PDFJS_URL;
+    s.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+      resolve(window.pdfjsLib);
+    };
+    s.onerror = () => reject(new Error('Não foi possível carregar o leitor de PDF.'));
+    document.head.appendChild(s);
+  });
+}
+
+async function renderEbookPagina() {
+  const e = _ebook;
+  const canvas = document.getElementById('pdf-canvas');
+  if (!e || !canvas) return;
+  const token = ++e.token;
+  if (e.task) { try { e.task.cancel(); } catch (_) {} }
+  const page = await e.pdf.getPage(e.pagina);
+  if (token !== e.token || !document.getElementById('pdf-canvas')) return;
+  const base = page.getViewport({ scale: 1 });
+  const largura = canvas.parentElement.clientWidth || 340;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const vp = page.getViewport({ scale: (largura / base.width) * dpr });
+  canvas.width = vp.width;
+  canvas.height = vp.height;
+  canvas.style.width = '100%';
+  canvas.style.height = 'auto';
+  e.task = page.render({ canvasContext: canvas.getContext('2d'), viewport: vp });
+  try { await e.task.promise; } catch (err) { return; } // render cancelado por troca de página
+  document.getElementById('pdf-info').textContent = `Página ${e.pagina} de ${e.total}`;
+  document.getElementById('pdf-prev').disabled = e.pagina <= 1;
+  document.getElementById('pdf-next').disabled = e.pagina >= e.total;
+  const caixa = document.querySelector('#modal-video .modal-video-box');
+  if (caixa) caixa.scrollTop = 0;
+}
+
+window._ebookIr = function(delta) {
+  if (!_ebook) return;
+  const nova = Math.min(_ebook.total, Math.max(1, _ebook.pagina + delta));
+  if (nova === _ebook.pagina) return;
+  _ebook.pagina = nova;
+  renderEbookPagina();
+};
+
+// Retorna Promise<boolean>: true se o e-book abriu (o app.js só dá pontos nesse caso).
+export async function abrirEbook(pagina) {
+  const ctx = prepararModalConteudo();
+  if (!ctx) { window.open(EBOOK_URL, '_blank'); return true; }
+  const { modal, iframe, titulo, box } = ctx;
+  const alvo = Math.max(1, parseInt(pagina, 10) || 1);
+  box.innerHTML = '<div class="historico-vazio">Abrindo o e-book...</div>';
   if (titulo) titulo.textContent = 'E-book · Sincronário das 13 Luas';
-  modal.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  abrirModalConteudo(modal);
+
+  try {
+    const pdfjs = await carregarPdfJs();
+    const pdf = await pdfjs.getDocument(EBOOK_LOCAL).promise;
+    if (!modal.classList.contains('active')) return false; // fechou enquanto carregava
+    _ebook = { pdf, pagina: Math.min(alvo, pdf.numPages), total: pdf.numPages, task: null, token: 0 };
+    box.innerHTML = `
+      <div class="pdf-bar">
+        <button class="btn btn-secondary btn-sm" id="pdf-prev" onclick="_ebookIr(-1)" aria-label="Página anterior"><svg class="ico" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
+        <span class="small muted" id="pdf-info" role="status"></span>
+        <button class="btn btn-secondary btn-sm" id="pdf-next" onclick="_ebookIr(1)" aria-label="Próxima página"><svg class="ico" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
+      </div>
+      <div class="pdf-wrap"><canvas id="pdf-canvas"></canvas></div>`;
+    await renderEbookPagina();
+    return true;
+  } catch (err) {
+    // sem ./assets/ebook.pdf (ou sem conexão para o leitor): usa o Drive, que abre no início
+    console.warn('[E-book] leitor próprio indisponível, usando o Drive:', err && err.message);
+    if (!modal.classList.contains('active')) return false;
+    box.style.display = 'none';
+    box.innerHTML = '';
+    iframe.style.display = '';
+    iframe.style.height  = '75vh';
+    iframe.src = EBOOK_EMBED;
+    if (titulo) titulo.textContent = `E-book · vá até a página ${alvo}`;
+    avisar(`O e-book abre no início. Vá até a página ${alvo}.`);
+    return true;
+  }
 }
 
 // ─── Solstício de Inverno ─────────────────────────────────────────────────────
@@ -316,7 +403,7 @@ export function abrirTextoSolsticio() {
   const modal  = document.getElementById('modal-video');
   const iframe = document.getElementById('modal-video-iframe');
   const titulo = document.getElementById('modal-video-titulo');
-  if (!modal || !iframe) { window.open(SOLSTICIO_URL, '_blank'); return; }
+  if (!modal || !iframe) { window.open(SOLSTICIO_URL, '_blank'); return true; }
   const kc = document.getElementById('modal-kin-content');
   if (kc) { kc.style.display = 'none'; kc.innerHTML = ''; }
   iframe.style.display = '';
@@ -325,13 +412,14 @@ export function abrirTextoSolsticio() {
   if (titulo) titulo.textContent = 'Solstício de Inverno';
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
+  return true;
 }
 
 // FIX: abrirSelfDesign abre dentro do modal de vídeo em vez de nova aba
 export function abrirSelfDesign(kin) {
   const videoId = SELF_DESIGN[String(kin)];
-  if (!videoId) return;
-  abrirModalVideo(`https://youtu.be/${videoId}`, `Self Design Sounds · Kin ${kin}`);
+  if (!videoId) { avisar('O Self Design Sounds deste Kin ainda não está disponível.', 'erro'); return false; }
+  return abrirModalVideo(`https://youtu.be/${videoId}`, `Self Design Sounds · Kin ${kin}`);
 }
 
 // ─── Prece ────────────────────────────────────────────────────────────────────
@@ -363,7 +451,7 @@ const TEXTO_PRECE = `
 
 export function togglePrece(btn) {
   const ctx = prepararModalConteudo();
-  if (!ctx) return;
+  if (!ctx) return false;
   const { modal, titulo, box: kc } = ctx;
   const AUDIO_SRC   = './assets/prece.mp3';
   const DRIVE_ID    = '1hOUbkDrKGOjs_VE1f83pBgkHlcG6lRIR';
@@ -395,6 +483,7 @@ export function togglePrece(btn) {
   }, 3000);
   if (titulo) titulo.textContent = 'Prece das 7 Direções Galácticas';
   abrirModalConteudo(modal);
+  return true;
 }
 
 // ─── Compartilhar e exportar ──────────────────────────────────────────────────
