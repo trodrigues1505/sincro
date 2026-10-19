@@ -3,6 +3,14 @@ import { db } from './api.js';
 import { DATA } from './data.js';
 import { getSeloBase, getSeloCor, getSeloIconURL, dateToKin } from './calculos.js';
 
+// Escapa texto vindo do Firestore (nome, foto, título) antes de usar em innerHTML.
+// Os docs de `ranking` são lidos por todos os usuários, então o conteúdo não é confiável.
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+  ));
+}
+
 // ─── Configuração de pontos ───────────────────────────────────────────────────
 export const PONTOS = {
   ACESSAR_DIA:        5,
@@ -31,6 +39,7 @@ export const STREAK_MULT = [
 ];
 
 // Títulos galácticos por pontuação total
+// (o emoji é gravado no Firestore junto com o título; por isso continua aqui)
 export const TITULOS = [
   { min: 7000, titulo: 'Mago',   emoji: '🌀' },
   { min: 3500, titulo: 'Sol',    emoji: '☀️' },
@@ -151,7 +160,7 @@ export async function registrarAtividade(uid, acao, nomeUsuario, fotoURL, kinNat
     });
     await atualizarRankingPublico(uid, nomeUsuario, fotoURL, kinNatalNum, totalComCompleto, streak);
     invalidarCache();
-    mostrarToast(`+${ptsTotal + ptsCompleto} pts${ptsBonus?` (+${ptsBonus} bônus!)`:''} 🎉 Todas as tarefas concluídas!`);
+    mostrarToast(`+${ptsTotal + ptsCompleto} pts${ptsBonus?` (+${ptsBonus} de bônus)`:''}. Todas as tarefas concluídas!`);
     return ptsTotal + ptsCompleto;
   }
 
@@ -162,7 +171,7 @@ export async function registrarAtividade(uid, acao, nomeUsuario, fotoURL, kinNat
   });
   await atualizarRankingPublico(uid, nomeUsuario, fotoURL, kinNatalNum, novoTotal, streak);
   invalidarCache();
-  if (ptsTotal > 0) mostrarToast(`+${ptsTotal} pts${ptsBonus?` (+${ptsBonus} bônus 🏆!)`:''}`);
+  if (ptsTotal > 0) mostrarToast(`+${ptsTotal} pts${ptsBonus?` (+${ptsBonus} de bônus)`:''}`);
   return ptsTotal;
 }
 
@@ -180,12 +189,15 @@ async function atualizarRankingPublico(uid, nome, foto, kinNatal, pontos, streak
 }
 
 // ─── Toast de pontos ─────────────────────────────────────────────────────────
+// Usa o toast do index.html quando existe (mesma posição e estilo do resto do app).
+// O bloco abaixo é só um plano B caso o index.html seja uma versão antiga.
 function mostrarToast(msg) {
+  if (window.mostrarToast) { window.mostrarToast(msg, 'sucesso'); return; }
   let t = document.getElementById('pts-toast');
   if (!t) {
     t = document.createElement('div');
     t.id = 'pts-toast';
-    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border-g);border-radius:20px;padding:.4rem 1rem;font-family:Cinzel;font-size:.72rem;color:var(--gold2);letter-spacing:.05em;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap';
+    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border-g);border-radius:20px;padding:.4rem 1rem;font-size:.85rem;color:var(--gold2);z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap';
     document.body.appendChild(t);
   }
   t.textContent = msg;
@@ -202,7 +214,7 @@ function mostrarToast(msg) {
 export async function renderGamificacaoPerfil(uid) {
   const el = document.getElementById('gamificacao-perfil');
   if (!el || !uid) return;
-  el.innerHTML = '<div style="color:var(--text3);font-size:.8rem;font-style:italic">Carregando...</div>';
+  el.innerHTML = '<div class="gm-empty">Carregando...</div>';
   try {
     const ativ = await getAtividade(uid);
     const { pontos = 0, streak = 0, atividades = {} } = ativ;
@@ -227,54 +239,62 @@ export async function renderGamificacaoPerfil(uid) {
     // Próximo título
     const prox = TITULOS.slice().reverse().find(t => t.min > pontos);
     const proxFalta = prox ? prox.min - pontos : 0;
+    const pctNivel = prox
+      ? Math.round((pontos-getTitulo(pontos).min)/(prox.min-getTitulo(pontos).min)*100)
+      : 100;
+
+    const check = `<span class="gm-check"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg></span>`;
 
     el.innerHTML = `
-    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem">
-      <div style="text-align:center">
-        <div style="font-size:2.2rem;line-height:1">${titulo.emoji}</div>
-        <div style="font-family:Cinzel;font-size:.65rem;color:var(--gold2);margin-top:.2rem;letter-spacing:.05em">${titulo.titulo}</div>
+    <div class="gm-top">
+      <div class="gm-badge">
+        <div class="gm-badge-icon">${titulo.emoji}</div>
+        <div class="gm-badge-nome">${titulo.titulo}</div>
       </div>
-      <div style="flex:1;min-width:160px">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.25rem">
-          <span style="font-family:Cinzel;font-size:1.3rem;color:var(--gold2);font-weight:600">${pontos.toLocaleString('pt-BR')}</span>
-          <span style="font-size:.6rem;color:var(--text3)">pontos totais</span>
+      <div class="gm-main">
+        <div class="gm-points-row">
+          <span class="gm-points">${pontos.toLocaleString('pt-BR')}</span>
+          <span class="gm-points-label">pontos totais</span>
         </div>
-        ${prox ? `<div style="font-size:.6rem;color:var(--text3);margin-bottom:.3rem">Faltam ${proxFalta} pts para ${prox.emoji} ${prox.titulo}</div>` : '<div style="font-size:.6rem;color:var(--gold);margin-bottom:.3rem">🌀 Nível máximo atingido!</div>'}
-        <div style="background:var(--bg2);border-radius:6px;height:5px;overflow:hidden">
-          ${prox ? `<div style="height:100%;width:${Math.round((pontos-getTitulo(pontos).min)/(prox.min-getTitulo(pontos).min)*100)}%;background:var(--gold);border-radius:6px;transition:width .5s"></div>` : '<div style="height:100%;width:100%;background:var(--gold);border-radius:6px"></div>'}
-        </div>
+        <div class="gm-next">${prox ? `Faltam ${proxFalta} pts para ${prox.titulo}` : 'Nível máximo atingido'}</div>
+        <div class="gm-bar"><div class="gm-bar-fill" style="width:${pctNivel}%"></div></div>
       </div>
-      <div style="text-align:center;min-width:60px">
-        <div style="font-family:Cinzel;font-size:1.3rem;color:${streak>=7?'var(--gold2)':'var(--text2)'};font-weight:600">${streak}</div>
-        <div style="font-size:.58rem;color:var(--text3);letter-spacing:.05em">dias seguidos</div>
-        ${streak>=7?`<div style="font-size:.6rem;color:var(--gold2);margin-top:.1rem">×${mult}</div>`:''}
+      <div class="gm-streak${streak>=7?' is-hot':''}">
+        <div class="gm-streak-num">${streak}</div>
+        <div class="gm-streak-label">dias seguidos</div>
+        ${streak>=7?`<div class="gm-mult">×${mult}</div>`:''}
       </div>
     </div>
-    <div style="margin-bottom:.5rem">
-      <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--text3);margin-bottom:.25rem">
+
+    <div class="gm-progress">
+      <div class="gm-progress-head">
         <span>Progresso de hoje</span>
-        <span>${concluidas}/${tarefas.length} tarefas · ${pct}%</span>
+        <span>${concluidas} de ${tarefas.length} tarefas</span>
       </div>
-      <div style="background:var(--bg2);border-radius:6px;height:6px;overflow:hidden">
-        <div style="height:100%;width:${pct}%;background:var(--green2);border-radius:6px;transition:width .5s"></div>
-      </div>
+      <div class="gm-bar"><div class="gm-bar-fill is-green" style="width:${pct}%"></div></div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:4px">
+
+    <div class="gm-tasks">
       ${tarefas.map(t => `
-        <div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:${atividadesHoje[t.acao]?'var(--green2)':'var(--text2)'}">
-          <span>${atividadesHoje[t.acao]?'✓':'○'}</span>
-          <span style="flex:1">${t.label}</span>
-          <span style="font-size:.6rem;color:${atividadesHoje[t.acao]?'var(--gold)':'var(--text3)'}">+${t.pts} pts</span>
+        <div class="gm-task${atividadesHoje[t.acao]?' is-done':''}">
+          ${check}
+          <span class="gm-task-label">${t.label}</span>
+          <span class="gm-task-pts">+${t.pts} pts</span>
         </div>`).join('')}
-      ${atividadesHoje.COMPLETAR_TUDO ? `<div style="display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:var(--gold2)"><span>🏆</span><span style="flex:1">Todas as tarefas concluídas hoje!</span><span style="font-size:.6rem;color:var(--gold)">+${PONTOS.COMPLETAR_TUDO} pts</span></div>` : ''}
-      <div style="margin-top:.3rem;padding-top:.5rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:${solsticioFeito?'var(--green2)':'var(--text2)'}">
-        <span>${solsticioFeito?'✓':'○'}</span>
-        <span style="flex:1">Solstício de Inverno</span>
-        <span style="font-size:.6rem;color:${solsticioFeito?'var(--gold)':'var(--text3)'}">${solsticioFeito?'conquistado':'+'+PONTOS.SOLSTICIO_INVERNO+' pts'}</span>
+      ${atividadesHoje.COMPLETAR_TUDO ? `
+        <div class="gm-task is-done">
+          ${check}
+          <span class="gm-task-label">Todas as tarefas concluídas hoje</span>
+          <span class="gm-task-pts">+${PONTOS.COMPLETAR_TUDO} pts</span>
+        </div>` : ''}
+      <div class="gm-task gm-task--extra${solsticioFeito?' is-done':''}">
+        ${check}
+        <span class="gm-task-label">Solstício de Inverno</span>
+        <span class="gm-task-pts">${solsticioFeito?'conquistado':'+'+PONTOS.SOLSTICIO_INVERNO+' pts'}</span>
       </div>
     </div>`;
   } catch(e) {
-    el.innerHTML = `<div style="color:#e07050;font-size:.8rem">Erro ao carregar pontuação.</div>`;
+    el.innerHTML = `<div class="gm-erro">Erro ao carregar pontuação.</div>`;
     console.error('[Gamif]', e);
   }
 }
@@ -283,54 +303,55 @@ export async function renderGamificacaoPerfil(uid) {
 export async function renderRanking(currentUid) {
   const el = document.getElementById('ranking-lista');
   if (!el) return;
-  el.innerHTML = '<div style="color:var(--text3);font-style:italic;font-size:.82rem;padding:.5rem 0">Carregando ranking...</div>';
+  el.innerHTML = '<div class="historico-vazio">Carregando ranking...</div>';
   try {
     // Busca admins para excluir do ranking
     const adminsSnap = await db.collection('users').where('role','==','admin').get();
     const adminUIDs = new Set(adminsSnap.docs.map(d => d.id));
 
     const snap = await db.collection('ranking').orderBy('pontos','desc').limit(60).get();
-    if (snap.empty) { el.innerHTML = '<div style="color:var(--text3);font-style:italic;font-size:.82rem">Nenhum dado ainda.</div>'; return; }
+    if (snap.empty) { el.innerHTML = '<div class="historico-vazio">Nenhum dado ainda.</div>'; return; }
     const items = snap.docs
       .map(d => ({ id: d.id, ...d.data() }))
       .filter(u => !adminUIDs.has(u.id) && !adminUIDs.has(u.uid))
       .slice(0, 50);
-    if (!items.length) { el.innerHTML = '<div style="color:var(--text3);font-style:italic;font-size:.82rem">Nenhum dado ainda.</div>'; return; }
+    if (!items.length) { el.innerHTML = '<div class="historico-vazio">Nenhum dado ainda.</div>'; return; }
     el.innerHTML = items.map((u, i) => rankingRowHTML(u, i, currentUid)).join('');
   } catch(e) {
-    el.innerHTML = `<div style="color:#e07050;font-size:.82rem">Erro: ${e.message}</div>`;
+    el.innerHTML = `<div class="gm-erro">Erro: ${esc(e.message)}</div>`;
   }
 }
 
 function rankingRowHTML(u, i, currentUid) {
   const pos = i + 1;
+  const uid = u.id || u.uid || '';
   const isMe = u.id === currentUid || u.uid === currentUid;
-  const medalha = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : `${pos}º`;
   const kinNatalStr = u.kinNatal && DATA.kins ? (() => {
     const kd = DATA.kins[String(u.kinNatal)];
     if (!kd) return '';
     const base = kd.selo.split(' ').slice(0,-1).join(' ');
     const cor = kd.selo.split(' ').pop();
     const icon = getSeloIconURL(kd.selo);
-    return `<div style="display:flex;align-items:center;gap:4px;margin-top:2px">
-      <div class="selo-icon selo-${cor.toLowerCase()}" style="width:18px;height:18px;flex-shrink:0;border-radius:3px;margin:0">
-        <img src="${icon}" style="width:100%;height:100%;object-fit:contain">
+    return `<div class="ranking-kin">
+      <div class="selo-icon selo-${cor.toLowerCase()}">
+        <img src="${icon}" style="width:100%;height:100%;object-fit:contain" alt="">
       </div>
-      <span style="font-size:.58rem;color:var(--text3)">Kin ${u.kinNatal} · ${base} ${cor}</span>
+      <span>Kin ${esc(u.kinNatal)} · ${base} ${cor}</span>
     </div>`;
   })() : '';
 
-  return `<div class="ranking-row${isMe?' ranking-row-me':''}" onclick="abrirComparacao('${u.id||u.uid}')">
-    <div class="ranking-pos">${medalha}</div>
-    <img class="ranking-avatar" src="${u.foto||'./icon-192.png'}" onerror="this.src='./icon-192.png'" alt="">
+  // data-uid em vez de interpolar o id dentro do onclick (evita quebrar o JS do atributo)
+  return `<div class="ranking-row${isMe?' ranking-row-me':''}" data-uid="${esc(uid)}" onclick="abrirComparacao(this.dataset.uid)">
+    <div class="ranking-pos">${pos}º</div>
+    <img class="ranking-avatar" src="${esc(u.foto||'./icon-192.png')}" onerror="this.src='./icon-192.png'" alt="">
     <div class="ranking-info">
-      <div class="ranking-nome">${u.nome||'Anônimo'}${isMe?' <span style="color:var(--gold2);font-size:.55rem">(você)</span>':''}</div>
+      <div class="ranking-nome">${esc(u.nome||'Anônimo')}${isMe?' <span class="ranking-voce">você</span>':''}</div>
       ${kinNatalStr}
     </div>
     <div class="ranking-right">
       <div class="ranking-pts">${(u.pontos||0).toLocaleString('pt-BR')}</div>
-      <div class="ranking-titulo">${u.emoji||'🌱'} ${u.titulo||'Semente'}</div>
-      ${u.streak>0?`<div style="font-size:.55rem;color:var(--gold);margin-top:1px">${u.streak}🔥</div>`:''}
+      <div class="ranking-titulo">${esc(u.emoji||'🌱')} ${esc(u.titulo||'Semente')}</div>
+      ${u.streak>0?`<div class="ranking-streak"><svg class="ico" aria-hidden="true"><use href="#i-flame"/></svg>${esc(u.streak)}</div>`:''}
     </div>
   </div>`;
 }
@@ -342,7 +363,7 @@ export async function abrirComparacao(uid2) {
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   const box = document.getElementById('comparacao-content');
-  box.innerHTML = '<div style="color:var(--text3);font-style:italic;text-align:center;padding:1rem">Carregando...</div>';
+  box.innerHTML = '<div class="historico-vazio">Carregando...</div>';
   try {
     const [snap1, snap2, rank1, rank2] = await Promise.all([
       db.collection('gamificacao').doc(window._currentUID).get(),
@@ -364,49 +385,56 @@ export async function abrirComparacao(uid2) {
       { acao:'EBOOK',       label:'E-book' },
       { acao:'COMPLETAR_TUDO', label:'Todas tarefas' },
     ];
+    const ok  = `<svg class="ico cmp-ok" aria-label="feito" role="img"><use href="#i-check"/></svg>`;
+    const nao = `<span class="cmp-no" aria-label="não feito">–</span>`;
 
     box.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:.5rem;align-items:center;margin-bottom:1rem">
-      <div style="text-align:center">
-        <img src="${r1.foto||'./icon-192.png'}" style="width:48px;height:48px;border-radius:50%;border:2px solid var(--gold)" onerror="this.src='./icon-192.png'">
-        <div style="font-family:Cinzel;font-size:.72rem;color:var(--gold2);margin-top:.3rem">${r1.nome||'Você'}</div>
-        <div style="font-size:.6rem;color:var(--text3)">${r1.emoji||'🌱'} ${r1.titulo||'Semente'}</div>
+    <div class="cmp-head">
+      <div class="cmp-user">
+        <img class="cmp-avatar" src="${esc(r1.foto||'./icon-192.png')}" onerror="this.src='./icon-192.png'" alt="">
+        <div class="cmp-nome">${esc(r1.nome||'Você')}</div>
+        <div class="cmp-titulo">${esc(r1.emoji||'🌱')} ${esc(r1.titulo||'Semente')}</div>
       </div>
-      <div style="font-family:Cinzel;font-size:.7rem;color:var(--text3);text-align:center">VS</div>
-      <div style="text-align:center">
-        <img src="${r2.foto||'./icon-192.png'}" style="width:48px;height:48px;border-radius:50%;border:2px solid var(--green)" onerror="this.src='./icon-192.png'">
-        <div style="font-family:Cinzel;font-size:.72rem;color:var(--green2);margin-top:.3rem">${r2.nome||'Usuário'}</div>
-        <div style="font-size:.6rem;color:var(--text3)">${r2.emoji||'🌱'} ${r2.titulo||'Semente'}</div>
+      <div class="cmp-vs">vs</div>
+      <div class="cmp-user is-other">
+        <img class="cmp-avatar" src="${esc(r2.foto||'./icon-192.png')}" onerror="this.src='./icon-192.png'" alt="">
+        <div class="cmp-nome">${esc(r2.nome||'Usuário')}</div>
+        <div class="cmp-titulo">${esc(r2.emoji||'🌱')} ${esc(r2.titulo||'Semente')}</div>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;margin-bottom:.8rem">
-      <div style="text-align:right;font-family:Cinzel;font-size:1.1rem;color:var(--gold2)">${(d1.pontos||0).toLocaleString('pt-BR')}</div>
-      <div style="text-align:center;font-size:.6rem;color:var(--text3);align-self:center">pontos</div>
-      <div style="text-align:left;font-family:Cinzel;font-size:1.1rem;color:var(--green2)">${(d2.pontos||0).toLocaleString('pt-BR')}</div>
-      <div style="text-align:right;font-size:.75rem;color:${d1.streak>=7?'var(--gold2)':'var(--text3)'}">${d1.streak||0}🔥</div>
-      <div style="text-align:center;font-size:.6rem;color:var(--text3);align-self:center">streak</div>
-      <div style="text-align:left;font-size:.75rem;color:${d2.streak>=7?'var(--green2)':'var(--text3)'}">${d2.streak||0}🔥</div>
+
+    <div class="cmp-grid">
+      <div class="l cmp-big is-me">${(d1.pontos||0).toLocaleString('pt-BR')}</div>
+      <div class="m">pontos</div>
+      <div class="r cmp-big is-other">${(d2.pontos||0).toLocaleString('pt-BR')}</div>
+      <div class="l cmp-streak${d1.streak>=7?' is-hot-me':''}">${d1.streak||0} dias</div>
+      <div class="m">sequência</div>
+      <div class="r cmp-streak${d2.streak>=7?' is-hot-other':''}">${d2.streak||0} dias</div>
     </div>
-    <div style="font-family:Cinzel;font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem">Tarefas de hoje</div>
+
+    <div class="cmp-sec">Tarefas de hoje</div>
     ${tarefas.map(t => `
-    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;align-items:center;padding:.2rem 0;border-bottom:1px solid var(--border)">
-      <div style="text-align:right;font-size:.75rem">${a1[t.acao]?'✓':'–'}</div>
-      <div style="text-align:center;font-size:.62rem;color:var(--text3);padding:0 .5rem">${t.label}</div>
-      <div style="text-align:left;font-size:.75rem">${a2[t.acao]?'✓':'–'}</div>
+    <div class="cmp-grid cmp-task">
+      <div class="l">${a1[t.acao]?ok:nao}</div>
+      <div class="m">${t.label}</div>
+      <div class="r">${a2[t.acao]?ok:nao}</div>
     </div>`).join('')}
+
     ${(()=>{
       const kinNatal1 = r1.kinNatal && DATA.kins ? DATA.kins[String(r1.kinNatal)] : null;
       const kinNatal2 = r2.kinNatal && DATA.kins ? DATA.kins[String(r2.kinNatal)] : null;
       if (!kinNatal1 && !kinNatal2) return '';
-      const fmt = (kd, n) => kd ? `<div style="font-size:.65rem;color:var(--text)">${kd.selo.split(' ').slice(0,-1).join(' ')}<br><span style="font-size:.58rem;color:var(--text3)">Kin ${n}</span></div>` : '<div style="font-size:.65rem;color:var(--text3)">–</div>';
-      return `<div style="margin-top:.8rem;font-family:Cinzel;font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem">Kin Natal</div>
-      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:4px;align-items:center">
-        ${fmt(kinNatal1, r1.kinNatal)}<div></div>${fmt(kinNatal2, r2.kinNatal)}
+      const fmt = (kd, n) => kd
+        ? `<div>${kd.selo.split(' ').slice(0,-1).join(' ')}<br><span class="muted small">Kin ${esc(n)}</span></div>`
+        : '<div class="muted">–</div>';
+      return `<div class="cmp-sec">Kin Natal</div>
+      <div class="cmp-grid">
+        <div class="l">${fmt(kinNatal1, r1.kinNatal)}</div><div class="m"></div><div class="r">${fmt(kinNatal2, r2.kinNatal)}</div>
       </div>`;
     })()}`;
   } catch(e) {
-    box.innerHTML = `<div style="color:#e07050;font-size:.82rem">Erro: ${e.message}</div>`;
+    box.innerHTML = `<div class="gm-erro">Erro: ${esc(e.message)}</div>`;
   }
 }
 
-export { getTitulo, getMultStreak, mostrarToast };       
+export { getTitulo, getMultStreak, mostrarToast };
