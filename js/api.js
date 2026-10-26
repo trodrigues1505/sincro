@@ -29,11 +29,32 @@ export let currentUserUID = null;
 export let _kinNatalSalvo = null;
 
 // ─── Login ────────────────────────────────────────────────────────────────────
-// Detecta Safari/iOS que não suporta popup confiável
-function isSafariOuIOS() {
-  const ua = navigator.userAgent;
-  return /iP(ad|hone|od)/i.test(ua) ||
-    (/Safari/i.test(ua) && !/Chrome/i.test(ua) && !/CriOS/i.test(ua));
+// O app é hospedado no GitHub Pages, mas o authDomain é sincro13luas.firebaseapp.com
+// (outro domínio). O login por REDIRECT depende de o navegador deixar a página ler o
+// armazenamento desse outro domínio na volta do Google; o Safari do iPhone pode bloquear
+// isso e o app volta para a tela de login sem usuário. O login por POPUP não depende disso.
+// Por isso: navegador comum (inclui Safari/Chrome do iPhone) usa popup, com redirect só
+// como reserva. O app instalado na tela inicial (PWA) mantém redirect, porque popup não
+// é confiável nele.
+
+// Marca (só nesta aba) que um login por redirect foi iniciado. Se ao voltar a marca existe
+// mas não há usuário, o retorno foi perdido e a pessoa precisa ver isso na tela.
+const REDIRECT_FLAG = 'sinc13_redirect_pendente';
+
+function ehPWAInstalado() {
+  return window.navigator.standalone === true ||
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+}
+
+function mostrarErroLogin(msg) {
+  const errEl  = document.getElementById('login-error');
+  const loadEl = document.getElementById('login-loading');
+  if (errEl)  { errEl.textContent = msg; errEl.classList.remove('hidden'); }
+  if (loadEl) loadEl.classList.add('hidden');
+}
+
+function textoErroLogin(e) {
+  return '⚠️ Erro no login (' + (e && e.code ? e.code : 'sem código') + '): ' + (e && e.message ? e.message : e);
 }
 
 export function initLogin() {
@@ -42,12 +63,17 @@ export function initLogin() {
 
   // Ao carregar, verifica se voltou de um redirect do Google
   auth.getRedirectResult().then(result => {
-    // Se voltou de redirect sem usuário, não faz nada
+    let pendente = null;
+    try { pendente = sessionStorage.getItem(REDIRECT_FLAG); sessionStorage.removeItem(REDIRECT_FLAG); } catch (_) {}
+    // Iniciou redirect, voltou, e não há usuário: o retorno do Google se perdeu.
+    if (pendente && !(result && result.user) && !auth.currentUser) {
+      console.warn('[Login] voltou do redirect do Google sem usuário');
+      mostrarErroLogin('⚠️ O login com Google voltou sem concluir. Tente novamente; se repetir, avise o administrador.');
+    }
   }).catch(e => {
-    const errEl = document.getElementById('login-error');
-    const loadEl = document.getElementById('login-loading');
-    if (errEl) { errEl.textContent = '⚠️ Erro no login: ' + e.message; errEl.classList.remove('hidden'); }
-    if (loadEl) loadEl.classList.add('hidden');
+    try { sessionStorage.removeItem(REDIRECT_FLAG); } catch (_) {}
+    console.error('[Login] getRedirectResult falhou:', e);
+    mostrarErroLogin(textoErroLogin(e));
   });
 
   const btnLogin = document.getElementById('btn-login');
@@ -59,26 +85,31 @@ export function initLogin() {
     if (errEl)  errEl.classList.add('hidden');
     if (loadEl) { loadEl.textContent = 'Entrando...'; loadEl.classList.remove('hidden'); }
 
-    if (isSafariOuIOS()) {
-      // Safari/iOS: usa redirect (mais confiável, sem popup)
-      auth.signInWithRedirect(provider).catch(e => {
-        if (errEl)  { errEl.textContent = '⚠️ Erro: ' + e.message; errEl.classList.remove('hidden'); }
+    const porRedirect = () => {
+      try { sessionStorage.setItem(REDIRECT_FLAG, '1'); } catch (_) {}
+      return auth.signInWithRedirect(provider).catch(e => {
+        try { sessionStorage.removeItem(REDIRECT_FLAG); } catch (_) {}
+        console.error('[Login] signInWithRedirect falhou:', e);
+        mostrarErroLogin(textoErroLogin(e));
+      });
+    };
+
+    // App instalado na tela inicial: mantém redirect
+    if (ehPWAInstalado()) { porRedirect(); return; }
+
+    // Navegador comum: popup (chamado direto no clique, sem await antes, para o iOS permitir)
+    auth.signInWithPopup(provider).catch(e => {
+      if (e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request') {
+        // Popup bloqueado — tenta redirect como reserva
+        porRedirect();
+      } else if (e.code === 'auth/popup-closed-by-user') {
+        // A pessoa fechou a janela do Google: não é erro
         if (loadEl) loadEl.classList.add('hidden');
-      });
-    } else {
-      // Outros navegadores: tenta popup, fallback para redirect
-      auth.signInWithPopup(provider).catch(e => {
-        if (e.code === 'auth/popup-blocked' || e.code === 'auth/cancelled-popup-request') {
-          // Popup bloqueado — tenta redirect como fallback
-          auth.signInWithRedirect(provider);
-        } else {
-          let msg = e.message;
-          if (e.code === 'auth/popup-blocked') msg = '⚠️ Popup bloqueado. Tentando redirect...';
-          if (errEl)  { errEl.textContent = msg; errEl.classList.remove('hidden'); }
-          if (loadEl) loadEl.classList.add('hidden');
-        }
-      });
-    }
+      } else {
+        console.error('[Login] signInWithPopup falhou:', e);
+        mostrarErroLogin(textoErroLogin(e));
+      }
+    });
   };
 
   const btnLogout = document.getElementById('btn-logout');
@@ -119,10 +150,15 @@ export function initAuthObserver(onAuthorized) {
         }
       } catch (err) {
         // Sem conexão: usa a última autorização conhecida neste aparelho.
-        // Sem nenhuma, mantém o comportamento anterior (erro).
         let guardado = null;
         try { guardado = JSON.parse(localStorage.getItem(AUTH_CACHE + u.uid) || 'null'); } catch (_) {}
-        if (!guardado) throw err;
+        if (!guardado) {
+          // Sem nenhuma: antes o erro era lançado e a tela de login ficava parada sem aviso.
+          // Agora a pessoa vê o motivo na tela.
+          console.error('[Auth] não foi possível ler users/' + u.uid, err);
+          mostrarErroLogin('⚠️ Login feito, mas não foi possível ler seu cadastro (' + (err && (err.code || err.message) || 'erro desconhecido') + '). Verifique a conexão e tente de novo.');
+          return;
+        }
         d = guardado;
       }
       if (d) {
