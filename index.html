@@ -485,6 +485,16 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
 .aviso-banner-close{background:transparent;border:none;color:var(--text2);padding:var(--s1);flex-shrink:0;border-radius:6px}
 .aviso-banner-close:hover{color:var(--text);background:var(--bg2)}
 
+/* Aviso individual do período de teste (js/acesso.js).
+   Classe própria: carregarAviso() trata .aviso-banner como "aviso do admin já exibido". */
+.prazo-banner{background:var(--card2);border:1px solid var(--border-g);border-radius:var(--r-lg);padding:var(--s4);margin-bottom:var(--s3);display:flex;align-items:flex-start;gap:var(--s3);animation:fadeUp .3s both}
+.prazo-banner-icon{flex-shrink:0;margin-top:2px;color:var(--gold2);display:inline-flex}
+.prazo-banner-texto{color:var(--text);font-size:.9375rem;line-height:1.6;flex:1}
+.prazo-banner.is-urgente{background:var(--danger-bg);border-color:rgba(239,106,91,.4)}
+.prazo-banner.is-urgente .prazo-banner-icon{color:var(--danger)}
+.perfil-acesso{margin-top:var(--s3)}
+.perfil-acesso:empty{display:none}
+
 /* Toasts */
 .toast-root{position:fixed;left:50%;transform:translateX(-50%);bottom:max(var(--s5),env(safe-area-inset-bottom,0px));z-index:400;display:flex;flex-direction:column;gap:var(--s2);align-items:center;width:min(92vw,420px);pointer-events:none}
 .toast{pointer-events:auto;width:100%;padding:var(--s3) var(--s4);border-radius:var(--r-md);background:var(--card2);border:1px solid var(--border2);box-shadow:0 12px 32px rgba(0,0,0,.45);color:var(--text);font-size:.875rem;line-height:1.5;opacity:0;transform:translateY(8px);transition:opacity .2s var(--ease),transform .2s var(--ease)}
@@ -904,6 +914,15 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
     <p>Assim que aprovado, você terá acesso imediato. Esta página será atualizada automaticamente.</p>
     <button class="btn btn-secondary" onclick="auth.signOut()">Voltar ao login</button>
   </div>
+
+  <!-- TELA PERÍODO DE TESTE ENCERRADO (hidden por padrão, ativada via JS) -->
+  <div id="tela-encerrado" class="login-box aguardo hidden">
+    <div class="aguardo-icon"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg></div>
+    <h2>Período de teste encerrado</h2>
+    <p>Seus 13 dias de acesso de teste terminaram.</p>
+    <p>Para continuar usando o app, fale com o administrador e peça para tornar seu acesso permanente.</p>
+    <button class="btn btn-secondary" onclick="auth.signOut()">Voltar ao login</button>
+  </div>
 </div>
 
 <!-- APP -->
@@ -1004,6 +1023,7 @@ input[type="date"]:focus,input[type="text"]:focus,input[type="number"]:focus,inp
         <img id="perfil-avatar" class="perfil-avatar" src="" alt="">
         <div class="perfil-nome" id="perfil-nome"></div>
         <div class="perfil-email" id="perfil-email"></div>
+        <div class="perfil-acesso" id="perfil-acesso"></div>
       </div>
 
       <div class="perfil-grid">
