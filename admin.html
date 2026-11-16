@@ -83,6 +83,7 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);text-align:cen
 .badge-user{background:rgba(0,151,57,.1);color:var(--green2);border:1px solid rgba(0,151,57,.2)}
 .badge-pending{background:rgba(138,32,24,.12);color:#e07050;border:1px solid rgba(138,32,24,.25)}
 .badge-blocked{background:rgba(50,50,50,.2);color:var(--text3);border:1px solid var(--border)}
+.badge-trial{background:rgba(90,160,224,.12);color:#7ab6ea;border:1px solid rgba(90,160,224,.28)}
 .user-row-actions{display:flex;gap:.4rem;flex-shrink:0}
 
 /* ── Filtros ── */
@@ -187,7 +188,9 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);text-align:cen
     <div id="metrics" class="metrics">
       <div class="metric-card"><div class="metric-num" id="m-total">–</div><div class="metric-label">Total</div></div>
       <div class="metric-card pending"><div class="metric-num" id="m-pendentes">–</div><div class="metric-label">Pendentes</div></div>
-      <div class="metric-card"><div class="metric-num" id="m-ativos">–</div><div class="metric-label">Ativos</div></div>
+      <div class="metric-card"><div class="metric-num" id="m-ativos">–</div><div class="metric-label">Permanentes</div></div>
+      <div class="metric-card"><div class="metric-num" id="m-teste">–</div><div class="metric-label">Em teste</div></div>
+      <div class="metric-card pending"><div class="metric-num" id="m-expirados">–</div><div class="metric-label">Expirados</div></div>
       <div class="metric-card"><div class="metric-num" id="m-admins">–</div><div class="metric-label">Admins</div></div>
     </div>
     <div class="section">
@@ -196,10 +199,13 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);text-align:cen
         <button class="btn btn-gold" onclick="carregarUsuarios()" style="font-size:.55rem;padding:3px 9px">↺ Atualizar</button>
         <div class="section-title-line"></div>
       </div>
+      <div class="status-msg" id="users-status" style="margin:0 0 .6rem"></div>
       <div class="filter-bar">
         <input class="search-inp" id="search-inp" placeholder="Buscar por nome ou email..." oninput="filtrarUsuarios()">
         <button class="filter-btn active" data-filter="todos" onclick="setFiltro('todos',this)">Todos</button>
-        <button class="filter-btn" data-filter="ativos" onclick="setFiltro('ativos',this)">Ativos</button>
+        <button class="filter-btn" data-filter="teste" onclick="setFiltro('teste',this)">Em teste</button>
+        <button class="filter-btn" data-filter="expirados" onclick="setFiltro('expirados',this)">Expirados</button>
+        <button class="filter-btn" data-filter="ativos" onclick="setFiltro('ativos',this)">Permanentes</button>
         <button class="filter-btn" data-filter="pendentes" onclick="setFiltro('pendentes',this)">Pendentes</button>
         <button class="filter-btn" data-filter="admins" onclick="setFiltro('admins',this)">Admins</button>
       </div>
@@ -217,6 +223,7 @@ h1{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold2);text-align:cen
         <button class="btn btn-gold" onclick="carregarPendentes()" style="font-size:.55rem;padding:3px 9px">↺ Atualizar</button>
         <div class="section-title-line"></div>
       </div>
+      <div class="status-msg" id="pend-status" style="margin:0 0 .6rem"></div>
       <div class="user-list" id="pendentes-list">
         <p style="color:var(--text3);font-style:italic;font-size:.85rem">Carregando...</p>
       </div>
@@ -359,6 +366,30 @@ import { initAdminObserver, auth, db } from './js/api.js';
 let todosUsuarios = [];
 let filtroAtual = 'todos';
 
+// ─── Período de teste ─────────────────────────────────────────────────────────
+// users/{uid}.acessoExpiraEm ausente = acesso permanente; presente = teste que termina nessa data.
+// A barreira real é firestore.rules (hora do servidor); aqui é só o que o painel mostra e grava.
+const DIAS_TESTE = 13;
+const DIA_MS = 86400000;
+
+// Texto vindo do Firestore nunca entra em innerHTML sem passar por aqui
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+  ));
+}
+function expMs(u) { const e = u.acessoExpiraEm; return e && e.toMillis ? e.toMillis() : null; }
+function nomeDe(u) { return u.nome || u.displayName || '(sem nome)'; }
+
+// admin | pendente | expirado | teste | permanente
+function estadoAcesso(u) {
+  if (u.role === 'admin') return 'admin';
+  if (!u.authorized) return 'pendente';
+  const e = expMs(u);
+  if (e === null) return 'permanente';
+  return e <= Date.now() ? 'expirado' : 'teste';
+}
+
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 window.adminTab = (t, el) => {
   document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
@@ -392,10 +423,14 @@ window.carregarUsuarios = async () => {
 };
 
 function atualizarMetricas() {
+  const c = { admin: 0, pendente: 0, expirado: 0, teste: 0, permanente: 0 };
+  todosUsuarios.forEach(u => c[estadoAcesso(u)]++);
   document.getElementById('m-total').textContent = todosUsuarios.length;
-  document.getElementById('m-pendentes').textContent = todosUsuarios.filter(u => !u.authorized).length;
-  document.getElementById('m-ativos').textContent = todosUsuarios.filter(u => u.authorized && u.role !== 'admin').length;
-  document.getElementById('m-admins').textContent = todosUsuarios.filter(u => u.role === 'admin').length;
+  document.getElementById('m-pendentes').textContent = c.pendente;
+  document.getElementById('m-ativos').textContent = c.permanente;
+  document.getElementById('m-teste').textContent = c.teste;
+  document.getElementById('m-expirados').textContent = c.expirado;
+  document.getElementById('m-admins').textContent = c.admin;
 }
 
 window.setFiltro = (f, el) => {
@@ -407,12 +442,12 @@ window.setFiltro = (f, el) => {
 
 window.filtrarUsuarios = () => renderUsuarios();
 
+const FILTROS = { ativos: 'permanente', teste: 'teste', expirados: 'expirado', pendentes: 'pendente', admins: 'admin' };
+
 function renderUsuarios() {
   const q = document.getElementById('search-inp').value.toLowerCase();
   let lista = todosUsuarios;
-  if (filtroAtual === 'ativos')    lista = lista.filter(u => u.authorized && u.role !== 'admin');
-  if (filtroAtual === 'pendentes') lista = lista.filter(u => !u.authorized);
-  if (filtroAtual === 'admins')    lista = lista.filter(u => u.role === 'admin');
+  if (FILTROS[filtroAtual]) lista = lista.filter(u => estadoAcesso(u) === FILTROS[filtroAtual]);
   if (q) lista = lista.filter(u => (u.nome||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q));
 
   const list = document.getElementById('user-list');
@@ -420,37 +455,64 @@ function renderUsuarios() {
   list.innerHTML = lista.map(u => userRowHTML(u)).join('');
 }
 
-function userRowHTML(u) {
-  const badge = u.role === 'admin'
-    ? `<span class="badge-role badge-admin">Admin</span>`
-    : u.authorized
-      ? `<span class="badge-role badge-user">Ativo</span>`
-      : `<span class="badge-role badge-pending">Pendente</span>`;
+function badgeHTML(u) {
+  switch (estadoAcesso(u)) {
+    case 'admin':    return `<span class="badge-role badge-admin">Admin</span>`;
+    case 'pendente': return `<span class="badge-role badge-pending">Pendente</span>`;
+    case 'expirado': return `<span class="badge-role badge-blocked">Teste encerrado</span>`;
+    case 'teste': {
+      const d = Math.ceil((expMs(u) - Date.now()) / DIA_MS);
+      return `<span class="badge-role badge-trial">Teste · ${d} ${d === 1 ? 'dia' : 'dias'}</span>`;
+    }
+    default:         return `<span class="badge-role badge-user">Permanente</span>`;
+  }
+}
 
+// Botões de cada linha. Nome e id vão em data-* (escapados) e os handlers leem this.dataset,
+// em vez de interpolar texto dentro do onclick (nome com aspas ou < quebrava o atributo).
+function acoesHTML(u, daAbaPendentes = false) {
+  const e = estadoAcesso(u);
+  if (e === 'admin') return `<span style="font-size:.6rem;color:var(--text3);font-style:italic">Admin</span>`;
+  const d = `data-uid="${esc(u.id)}" data-nome="${esc(nomeDe(u))}"`;
+  const mini = 'style="font-size:.55rem;padding:3px 9px"';
+  const btn = (cls, fn, rotulo, extra = '') =>
+    `<button class="btn ${cls}" ${d} ${mini} onclick="${fn}(this.dataset.uid, this.dataset.nome${extra})">${rotulo}</button>`;
+  const b = [];
+  if (e === 'pendente') {
+    b.push(btn('btn-green', 'aprovarTeste', `✓ Teste ${DIAS_TESTE} dias`, `, ${daAbaPendentes}`));
+    b.push(btn('btn-gold',  'aprovarPermanente', '✓ Permanente', `, ${daAbaPendentes}`));
+    if (daAbaPendentes) b.push(btn('btn-danger', 'excluirUsuario', '✕ Rejeitar'));
+  }
+  if (e === 'teste' || e === 'expirado') b.push(btn('btn-green', 'tornarPermanente', 'Tornar permanente'));
+  if (e === 'teste')      b.push(btn('btn-danger', 'revogar', '✕ Encerrar acesso'));
+  if (e === 'permanente') b.push(btn('btn-danger', 'revogar', '✕ Revogar'));
+  if (!daAbaPendentes) {
+    b.push(btn('btn-gold', 'tornarAdmin', '⭐ Admin'));
+    b.push(btn('btn-danger', 'excluirUsuario', '🗑'));
+  }
+  return b.join('');
+}
+
+function userRowHTML(u) {
+  const nome = nomeDe(u);
   // suporta variações de nomes de campo entre usuários antigos e novos
-  const nome = u.nome || u.displayName || '(sem nome)';
   const foto = u.fotoURL || u.photoURL || './icon-192.png';
   const dataCriacao = (u.criadoEm || u.createdAt)?.toDate?.();
   const dataAcesso  = (u.ultimoAcesso)?.toDate?.();
   const criado  = dataCriacao ? dataCriacao.toLocaleDateString('pt-BR') : '–';
   const acesso  = dataAcesso  ? dataAcesso.toLocaleDateString('pt-BR')  : '–';
+  const fim = estadoAcesso(u) === 'teste' || estadoAcesso(u) === 'expirado'
+    ? ` · Teste até: ${new Date(expMs(u)).toLocaleDateString('pt-BR')}` : '';
 
-  const btns = u.role !== 'admin' ? `
-    ${!u.authorized ? `<button class="btn btn-green" onclick="aprovar('${u.id}')" style="font-size:.55rem;padding:3px 9px">✓ Aprovar</button>` : ''}
-    ${u.authorized  ? `<button class="btn btn-danger" onclick="revogar('${u.id}','${nome.replace(/'/g,"\\'")}')" style="font-size:.55rem;padding:3px 9px">✕ Revogar</button>` : ''}
-    <button class="btn btn-gold" onclick="tornarAdmin('${u.id}','${nome.replace(/'/g,"\\'")}')" style="font-size:.55rem;padding:3px 9px">⭐ Admin</button>
-    <button class="btn btn-danger" onclick="excluirUsuario('${u.id}','${nome.replace(/'/g,"\\'")}')" style="font-size:.55rem;padding:3px 9px">🗑</button>
-  ` : `<span style="font-size:.6rem;color:var(--text3);font-style:italic">Admin</span>`;
-
-  return `<div class="user-row" id="row-${u.id}">
-    <img class="user-row-avatar" src="${foto}" onerror="this.src='./icon-192.png'" alt="">
+  return `<div class="user-row" id="row-${esc(u.id)}">
+    <img class="user-row-avatar" src="${esc(foto)}" onerror="this.src='./icon-192.png'" alt="">
     <div class="user-row-info">
-      <div class="user-row-nome">${nome}</div>
-      <div class="user-row-email">${u.email||''}</div>
-      <div class="user-row-meta">Criado: ${criado} · Último acesso: ${acesso}</div>
+      <div class="user-row-nome">${esc(nome)}</div>
+      <div class="user-row-email">${esc(u.email||'')}</div>
+      <div class="user-row-meta">Criado: ${criado} · Último acesso: ${acesso}${fim}</div>
     </div>
-    ${badge}
-    <div class="user-row-actions">${btns}</div>
+    ${badgeHTML(u)}
+    <div class="user-row-actions">${acoesHTML(u)}</div>
   </div>`;
 }
 
@@ -462,55 +524,93 @@ window.carregarPendentes = async () => {
     const snap = await db.collection('users').where('authorized','==',false).get();
     const pendentes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     if (!pendentes.length) { list.innerHTML = '<p style="color:var(--green2);font-size:.85rem">✓ Nenhum usuário pendente.</p>'; return; }
-    list.innerHTML = pendentes.map(u => `<div class="user-row" id="rowp-${u.id}">
-      <img class="user-row-avatar" src="${u.fotoURL||'./icon-192.png'}" onerror="this.src='./icon-192.png'" alt="">
+    list.innerHTML = pendentes.map(u => `<div class="user-row" id="rowp-${esc(u.id)}">
+      <img class="user-row-avatar" src="${esc(u.fotoURL||u.photoURL||'./icon-192.png')}" onerror="this.src='./icon-192.png'" alt="">
       <div class="user-row-info">
-        <div class="user-row-nome">${u.nome||'(sem nome)'}</div>
-        <div class="user-row-email">${u.email||''}</div>
-        <div class="user-row-meta">ID: ${u.id.substring(0,12)}...</div>
+        <div class="user-row-nome">${esc(nomeDe(u))}</div>
+        <div class="user-row-email">${esc(u.email||'')}</div>
+        <div class="user-row-meta">ID: ${esc(u.id.substring(0,12))}...</div>
       </div>
       <span class="badge-role badge-pending">Pendente</span>
-      <div class="user-row-actions">
-        <button class="btn btn-green" onclick="aprovar('${u.id}',true)">✓ Aprovar</button>
-        <button class="btn btn-danger" onclick="excluirUsuario('${u.id}','${u.nome||u.email}')">✕ Rejeitar</button>
-      </div>
+      <div class="user-row-actions">${acoesHTML({ ...u, authorized: false, role: 'user' }, true)}</div>
     </div>`).join('');
   } catch(e) {
-    list.innerHTML = `<p style="color:#e07050;font-size:.85rem">Erro: ${e.message}</p>`;
+    list.innerHTML = `<p style="color:#e07050;font-size:.85rem">Erro: ${esc(e.message)}</p>`;
   }
 };
 
 // ─── Ações de usuário ─────────────────────────────────────────────────────────
-window.aprovar = async (uid, fromPendentes=false) => {
+// Aprovar como TESTE: libera por 13 dias a partir de agora; ao fim o acesso fecha sozinho.
+window.aprovarTeste = async (uid, nome, daAbaPendentes = false) => {
+  const st = daAbaPendentes ? 'pend-status' : 'users-status';
   try {
-    await db.collection('users').doc(uid).update({ authorized: true });
-    mostrarStatus(fromPendentes ? 'kin-status' : null, 'Usuário aprovado!', true);
+    const fim = firebase.firestore.Timestamp.fromMillis(Date.now() + DIAS_TESTE * DIA_MS);
+    await db.collection('users').doc(uid).update({ authorized: true, acessoExpiraEm: fim });
+    mostrarStatus(st, `✓ ${nome}: teste de ${DIAS_TESTE} dias liberado (até ${fim.toDate().toLocaleDateString('pt-BR')}).`, true);
     carregarUsuarios();
-    if (fromPendentes) carregarPendentes();
-  } catch(e) { alert('Erro: '+e.message); }
+    if (daAbaPendentes) carregarPendentes();
+  } catch(e) { mostrarStatus(st, 'Erro: ' + e.message, false); }
 };
 
-window.revogar = (uid, nome) => confirmar(
-  `Revogar acesso de <strong>${nome}</strong>?<br><small>O usuário perderá acesso imediatamente.</small>`,
+// Aprovar como PERMANENTE: sem acessoExpiraEm.
+window.aprovarPermanente = async (uid, nome, daAbaPendentes = false) => {
+  const st = daAbaPendentes ? 'pend-status' : 'users-status';
+  try {
+    await db.collection('users').doc(uid).update({
+      authorized: true,
+      acessoExpiraEm: firebase.firestore.FieldValue.delete(),
+    });
+    mostrarStatus(st, `✓ ${nome}: acesso permanente liberado.`, true);
+    carregarUsuarios();
+    if (daAbaPendentes) carregarPendentes();
+  } catch(e) { mostrarStatus(st, 'Erro: ' + e.message, false); }
+};
+
+// Migra de teste (ou teste encerrado) para permanente.
+window.tornarPermanente = (uid, nome) => confirmar(
+  `Tornar <strong>${esc(nome)}</strong> usuário permanente?<br><small>O prazo de teste deixa de valer.</small>`,
   async () => {
-    await db.collection('users').doc(uid).update({ authorized: false });
+    try {
+      await db.collection('users').doc(uid).update({
+        authorized: true,
+        acessoExpiraEm: firebase.firestore.FieldValue.delete(),
+      });
+      mostrarStatus('users-status', `✓ ${nome} agora é permanente.`, true);
+    } catch(e) { mostrarStatus('users-status', 'Erro: ' + e.message, false); }
+    carregarUsuarios();
+  }, '✅'
+);
+
+window.revogar = (uid, nome) => confirmar(
+  `Revogar acesso de <strong>${esc(nome)}</strong>?<br><small>O usuário perderá acesso imediatamente.</small>`,
+  async () => {
+    try { await db.collection('users').doc(uid).update({ authorized: false }); }
+    catch(e) { mostrarStatus('users-status', 'Erro: ' + e.message, false); }
     carregarUsuarios();
   }, '🔒'
 );
 
+// Admin não tem prazo: remove acessoExpiraEm junto.
 window.tornarAdmin = (uid, nome) => confirmar(
-  `Tornar <strong>${nome}</strong> administrador?<br><small>Ele terá acesso total ao painel admin.</small>`,
+  `Tornar <strong>${esc(nome)}</strong> administrador?<br><small>Ele terá acesso total ao painel admin.</small>`,
   async () => {
-    await db.collection('users').doc(uid).update({ role: 'admin', authorized: true });
+    try {
+      await db.collection('users').doc(uid).update({
+        role: 'admin', authorized: true,
+        acessoExpiraEm: firebase.firestore.FieldValue.delete(),
+      });
+    } catch(e) { mostrarStatus('users-status', 'Erro: ' + e.message, false); }
     carregarUsuarios();
   }, '⭐'
 );
 
 window.excluirUsuario = (uid, nome) => confirmar(
-  `Excluir <strong>${nome}</strong>?<br><small>Esta ação não pode ser desfeita.</small>`,
+  `Excluir <strong>${esc(nome)}</strong>?<br><small>Esta ação não pode ser desfeita.</small>`,
   async () => {
-    await db.collection('users').doc(uid).delete();
+    try { await db.collection('users').doc(uid).delete(); }
+    catch(e) { mostrarStatus('users-status', 'Erro: ' + e.message, false); }
     carregarUsuarios();
+    if (document.getElementById('tab-pendentes').classList.contains('active')) carregarPendentes();
   }, '🗑️'
 );
 
@@ -763,4 +863,4 @@ initAdminObserver((user) => {
 if("serviceWorker"in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js").then(r=>console.log("✓ SW:",r.scope)).catch(()=>{});});}
 </script>
 </body>
-</html>    
+</html>
