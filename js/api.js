@@ -2,6 +2,10 @@
 import { DATA_PRONTO, DATA } from './data.js';
 import { dateToKin } from './calculos.js';
 import { renderHistorico, renderFavoritos } from './storage.js';
+import {
+  expiraEmMs, acessoEncerrado,
+  mostrarAvisoPrazo, mostrarAcessoPerfil, agendarFimDoPrazo,
+} from './acesso.js';
 
 // Config Firebase (client-side — protegida pelas Security Rules do Firestore)
 const fc = {
@@ -116,12 +120,35 @@ export function initLogin() {
   if (btnLogout) btnLogout.onclick = () => auth.signOut();
 }
 
+// As telas "aguardando aprovação" e "teste encerrado" têm a classe .aguardo;
+// a caixa de login principal é a única .login-box sem ela.
 export function mostrarTelaAguardoAprovacao(uid) {
-  document.querySelector('.login-box:not(#tela-aguardo)').classList.add('hidden');
+  document.querySelector('.login-box:not(.aguardo)').classList.add('hidden');
+  document.getElementById('tela-encerrado')?.classList.add('hidden');
   document.getElementById('aguardo-uid').textContent = `✓ Conta identificada: ${uid.substring(0,8)}...`;
   document.getElementById('tela-aguardo').classList.remove('hidden');
   document.getElementById('login-loading').classList.add('hidden');
   document.getElementById('login-error').classList.add('hidden');
+}
+
+// Período de teste (13 dias) terminou e o acesso não foi tornado permanente.
+export function mostrarTelaPeriodoEncerrado() {
+  document.getElementById('login-screen').style.display = '';
+  document.getElementById('app-screen').classList.remove('active');
+  document.querySelector('.login-box:not(.aguardo)').classList.add('hidden');
+  document.getElementById('tela-aguardo').classList.add('hidden');
+  document.getElementById('tela-encerrado').classList.remove('hidden');
+  document.getElementById('login-loading').classList.add('hidden');
+  document.getElementById('login-error').classList.add('hidden');
+}
+
+// Volta à caixa de login. Sem isto, depois de "Voltar ao login" a tela de aguardo (ou de
+// teste encerrado) continuava na tela, porque a caixa de login ficou escondida.
+function mostrarTelaLogin() {
+  document.querySelector('.login-box:not(.aguardo)')?.classList.remove('hidden');
+  document.getElementById('tela-aguardo')?.classList.add('hidden');
+  document.getElementById('tela-encerrado')?.classList.add('hidden');
+  document.getElementById('login-loading')?.classList.add('hidden');
 }
 
 // ─── Auth state observer ──────────────────────────────────────────────────────
@@ -134,6 +161,7 @@ export function initAuthObserver(onAuthorized) {
       if (!u) {
         document.getElementById('login-screen').style.display = '';
         document.getElementById('app-screen').classList.remove('active');
+        mostrarTelaLogin();
         return;
       }
       const uR = db.collection('users').doc(u.uid);
@@ -146,7 +174,7 @@ export function initAuthObserver(onAuthorized) {
         }
         if (uD.exists) {
           d = uD.data();
-          try { localStorage.setItem(AUTH_CACHE + u.uid, JSON.stringify({ authorized: d.authorized === true, role: d.role || 'user' })); } catch (_) {}
+          try { localStorage.setItem(AUTH_CACHE + u.uid, JSON.stringify({ authorized: d.authorized === true, role: d.role || 'user', expMs: expiraEmMs(d) })); } catch (_) {}
         }
       } catch (err) {
         // Sem conexão: usa a última autorização conhecida neste aparelho.
@@ -163,6 +191,10 @@ export function initAuthObserver(onAuthorized) {
       }
       if (d) {
         if (d.authorized === true) {
+          // Acesso de teste: sem acessoExpiraEm = permanente (expMs === null).
+          // Isto só controla a interface; as Security Rules barram os dados pela hora do servidor.
+          const expMs = expiraEmMs(d);
+          if (acessoEncerrado(expMs)) { mostrarTelaPeriodoEncerrado(); return; }
           document.getElementById('login-screen').style.display = 'none';
           document.getElementById('app-screen').classList.add('active');
           document.getElementById('user-avatar').src = u.photoURL||'';
@@ -173,6 +205,9 @@ export function initAuthObserver(onAuthorized) {
           db.collection('users').doc(u.uid).update({ ultimoAcesso: firebase.firestore.FieldValue.serverTimestamp() }).catch(()=>{});
           currentUserUID = u.uid;
           if (authCheckInterval) { clearInterval(authCheckInterval); authCheckInterval = null; }
+          mostrarAvisoPrazo(u.uid, expMs);
+          mostrarAcessoPerfil(expMs);
+          agendarFimDoPrazo(expMs, () => window.location.reload());
           onAuthorized(u);
         } else {
           mostrarTelaAguardoAprovacao(u.uid);
